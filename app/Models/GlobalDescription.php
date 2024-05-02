@@ -16,8 +16,6 @@ class GlobalDescription extends Model
         'description',
     ];
 
-    public $timestamps = false;
-
     protected static function boot()
     {
         parent::boot();
