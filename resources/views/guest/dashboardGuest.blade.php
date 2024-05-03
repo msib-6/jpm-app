@@ -10,7 +10,7 @@
                         <p class="text-lg">Lorem ipsum dolor sit amet consectetur. Pretium dignissim egestas sagittis ut. Tellus viverra urna lorem praesent blandit fringilla. Consequat in turpis massa accumsan. Viverra ornare ac egestas est sed ut at faucibus auctor. Lacus ut amet massa risus elementum dictum amet. Interdum semper augue amet a placerat augue in. Imperdiet nec urna venenatis quis.</p>
                     </div>
                     <div class="logo-container">
-<!--                        <img src="{{ asset('image/kosong.png') }}" alt="Kosong" class="logo">-->
+                        <!-- <img src="{{ asset('image/kosong.png') }}" alt="Kosong" class="logo"> -->
                     </div>
                 </div>
             </div>
@@ -21,24 +21,24 @@
             <div class="custom-card">
                 @foreach($lines as $line)
                 <div>
-                    <button class="btn-secondary w-40 h-16 text-lg my-2" onclick="handleLineClick('{{ $line['name'] }}')">{{ $line['name'] }}</button>
+                    <a href="{{ route('dashboard', ['line' => $line->id]) }}" class="btn-secondary w-40 h-16 text-lg my-2">{{ $line->name }}</a>
                 </div>
                 @endforeach
             </div>
             @if($selectedLine)
             <div class="custom-card">
-                @foreach($lines[$selectedLineIndex]['data'] as $year => $months)
+                @foreach($years as $year)
                 <div>
-                    <button class="btn-secondary w-40 h-16 text-lg my-2" onclick="handleYearClick('{{ $year }}')">{{ $year }}</button>
+                    <a href="{{ route('dashboard', ['line' => $selectedLine->id, 'year' => $year->year]) }}" class="btn-secondary w-40 h-16 text-lg my-2">{{ $year->year }}</a>
                 </div>
                 @endforeach
             </div>
             @endif
             @if($selectedYear)
             <div class="custom-card">
-                @foreach(explode(', ', $lines[$selectedLineIndex]['data'][$selectedYear]) as $month)
+                @foreach($months as $month)
                 <div>
-                    <a href="{{ url('/guestview/'.$month) }}" class="text-lg my-2">{{ $month }}</a>
+                    <a href="{{ route('dashboard', ['line' => $selectedLine->id, 'year' => $selectedYear->year, 'month' => $month->month]) }}" class="text-lg my-2">{{ $month->month }}</a>
                 </div>
                 @endforeach
             </div>
@@ -47,7 +47,7 @@
 
         <!-- Button for history -->
         <div class="mt-8 ml-4 w-4/5">
-            <button class="btn-primary w-full h-16 text-2xl mt-12" onclick="handleHistoryClick()">History</button>
+            <a href="#" class="btn-primary w-full h-16 text-2xl mt-12">History</a>
         </div>
     </div>
 </x-guest-layout>

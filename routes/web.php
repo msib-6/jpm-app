@@ -32,11 +32,13 @@ Route::middleware('auth')->group(function () {
 });
 
 //Show Guest Dashboard
-Route::get('/dashboardGuest', function () {
-    return view('guest.dashboardGuest');
-});
+//Route::get('/dashboardGuest', function () {
+//    return view('guest.dashboardGuest');
+//});
 
-Route::get('/machineoperation', [MachineController::class, 'showAllMachineOperation']);
+//Route::get('/machineoperation', [MachineController::class, 'showAllMachineOperation']);
+
+Route::get('/dashboardGuest', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');
 
 
 require __DIR__.'/auth.php';
