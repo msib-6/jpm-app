@@ -27,7 +27,7 @@
         <div class="custom-card">
             @foreach($lines as $line)
             <div>
-                <a href="{{ route('dashboard', ['line' => $line->id]) }}" class="btn-secondary w-40 h-16 text-lg my-2">{{ $line->name }}</a>
+                <a href="{{ route('guest.dashboardGuest', ['line' => $line->id]) }}" class="btn-secondary w-40 h-16 text-lg my-2">{{ $line->machine_name }}</a>
             </div>
             @endforeach
         </div>
@@ -35,7 +35,7 @@
         <div class="custom-card">
             @foreach($years as $year)
             <div>
-                <a href="{{ route('dashboard', ['line' => $selectedLine->id, 'year' => $year->year]) }}" class="btn-secondary w-40 h-16 text-lg my-2">{{ $year->year }}</a>
+                <a href="{{ route('guest.dashboardGuest', ['line' => $selectedLine->id, 'year' => $year->year]) }}" class="btn-secondary w-40 h-16 text-lg my-2">{{ $year->year }}</a>
             </div>
             @endforeach
         </div>
@@ -44,7 +44,7 @@
         <div class="custom-card">
             @foreach($months as $month)
             <div>
-                <a href="{{ route('dashboard', ['line' => $selectedLine->id, 'year' => $selectedYear->year, 'month' => $month->month]) }}" class="text-lg my-2">{{ $month->month }}</a>
+                <a href="{{ route('guest.dashboardGuest', ['line' => $selectedLine->id, 'year' => $selectedYear[0]->year, 'month' => $month->month]) }}" class="text-lg my-2">{{ $month->month }}</a>
             </div>
             @endforeach
         </div>

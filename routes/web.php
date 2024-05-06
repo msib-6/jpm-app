@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\MachineController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,5 +31,15 @@ Route::middleware('auth')->group(function () {
 Route::get('/reset', function () {
     return view('auth.reset-password');
 });
+
+//Show Guest Dashboard
+//Route::get('/dashboardGuest', function () {
+//    return view('guest.dashboardGuest');
+//});
+
+//Route::get('/machineoperation', [MachineController::class, 'showAllMachineOperation']);
+
+Route::get('/dashboardGuest', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');
+
 
 require __DIR__.'/auth.php';
