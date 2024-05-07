@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="background-login">
-        <div class="wrp">
+      <div class="wrp">
             <div class="wrapper">
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
@@ -58,3 +58,4 @@
     </div>
 </body>
 </html>
+
