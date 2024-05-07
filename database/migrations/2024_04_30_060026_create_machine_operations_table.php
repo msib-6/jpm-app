@@ -10,7 +10,7 @@ class CreateMachineOperationsTable extends Migration
     {
         Schema::create('machine_operations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('machine_id')->constrained('machine_data');
+            $table->foreignId('machine_id')->constrained('machine_data')->onDelete('cascade');
             $table->string('year');
             $table->string('month');
             $table->string('week');
