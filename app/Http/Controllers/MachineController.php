@@ -155,8 +155,11 @@ class MachineController extends Controller
 
     }
 
-//    public function showAllMachineOperation()
-//    {
+
+
+
+    //Function to show all machine operation
+//    public function showAllMachineOperation() {
 //        $machineOperations = MachineOperation::all();
 //        return view('machineOperations', ['machineOperations' => $machineOperations]);
 //    }
@@ -196,13 +199,6 @@ class MachineController extends Controller
             'selectedYear' => $selectedYear,
             'selectedMonth' => $selectedMonth,
         ]);
-    }
-
-
-    //Function to show all machine operation
-    public function showAllMachineOperation() {
-        $machineOperations = MachineOperation::all();
-        return view('machineOperations', ['machineOperations' => $machineOperations]);
     }
 
 }
