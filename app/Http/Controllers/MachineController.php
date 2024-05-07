@@ -167,30 +167,21 @@ class MachineController extends Controller
 //  Coba function year and button
     public function showAllMachineOperation(Request $request)
     {
-        $lines = MachineData::distinct()->select('machine_id', 'machine_name')->get();
+        $lines = Machine::distinct()->select('id', 'machine_name')->get();
         $selectedLine = null;
         $selectedYear = null;
         $selectedMonth = null;
 
         if ($request->has('line')) {
-            $selectedLine = MachineData::find($request->line);
+            $selectedLine = Machine::find($request->line);
         }
 
         if ($selectedLine && $request->has('year')) {
-            $selectedYear = MachineData::where('machine_id', $selectedLine->machine_id)
-                ->where('year', $request->year)
-                ->distinct()
-                ->select('year')
-                ->get();
+            $selectedYear = $selectedLine->machineData()->where('year', $request->year)->distinct()->pluck('year');
         }
 
         if ($selectedYear && $request->has('month')) {
-            $selectedMonth = MachineData::where('machine_id', $selectedLine->machine_id)
-                ->where('year', $selectedYear->year)
-                ->where('month', $request->month)
-                ->distinct()
-                ->select('month')
-                ->get();
+            $selectedMonth = $selectedLine->machineData()->where('year', $request->year)->where('month', $request->month)->distinct()->pluck('month');
         }
 
         return view('guest.dashboardGuest', [
@@ -200,5 +191,7 @@ class MachineController extends Controller
             'selectedMonth' => $selectedMonth,
         ]);
     }
+
+
 
 }

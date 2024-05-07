@@ -37,9 +37,10 @@ Route::get('/reset', function () {
 //    return view('guest.dashboardGuest');
 //});
 
-//Route::get('/machineoperation', [MachineController::class, 'showAllMachineOperation']);
+// web.php
 
-Route::get('/dashboardGuest', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');
+Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');
+
 
 
 require __DIR__.'/auth.php';
