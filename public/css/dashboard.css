@@ -1,0 +1,178 @@
+* {
+    font-family: Arial, sans-serif;
+}
+
+
+.background-login{
+    background: url('../modern-podium-product-design-against-backdrop-tropical-forest.jpg'); /* Ganti dengan path gambar Anda */
+    background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
+    background-position: center; /* Mengatur posisi gambar agar terletak di tengah latar belakang */
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+  .wrapper{
+    width: 22em;
+    background: #ececec ;
+    -webkit-backdrop-filter: blur(30px);
+    opacity: 1;
+    backdrop-filter: blur(5px);
+    color: gray;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2) ;
+    border-radius: 10px;
+    padding: 30px 30px;
+    align-items: center;
+    justify-content: center;
+}
+.wrp{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.wrapper h1{
+    font-size: 33px;
+    text-align: center;
+}
+.wrapper h1{
+    font-size: 33px;
+    text-align: center;
+}
+
+
+.wrapper .input-box{
+
+    position: relative;
+    outline: #101010;
+    width: 100%;
+    height: 50px;
+    margin: 5px 0;
+    border-radius: 10px;
+}
+
+.input-box input{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border:none;
+    outline: none;
+    border: 2px solid gray;
+    border-radius: 100px;
+    font-size: 24px;
+    color: black;
+    padding: 20px 25px 20px 20px;
+}
+.input-box input::placeholder{
+    color: rgb(211, 208, 208);
+}
+.wrapper .forgot{
+    display: flex;
+    justify-content: space-between;
+    margin: -15px 0 15px;
+    margin-left: 230px;
+    padding-top:10px  ;
+}
+.forgot label input {
+    accent-color: #ebe9e9;
+    margin-left: 40px;
+}
+.forgot a:hover{
+    text-decoration: underline;
+}
+a {
+    text-decoration: none;
+    color: black;
+    font-size: 14.5px;
+  }
+.button1{
+    width: 100%;
+    height: 45px;
+    margin: 10px 0;
+    background: #4494B9;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #f7f7f7;
+    font-weight: 700;
+}
+.button1:hover {
+    background-color: #126E99;
+    color: white;
+}
+
+.button2{
+    width: 100%;
+    height: 45px;
+    margin: 10px 0;
+    background: #09B3B0;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #f9f9f9;
+    font-weight: 700;
+}
+.button2:hover {
+    background-color: #07A9A8;
+    color: white;
+  }
+
+
+
+.logo {
+    flex-shrink: 0;
+    justify-content:center ;
+    align-items: center;
+    width: 200px;
+    height: 100px;
+    margin-left: 50px;
+    background: url(../logo_kalbe.png)
+      no-repeat center;
+    background-size: cover;
+    z-index: 4;
+  }
+
+  .welcome{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    flex-basis: auto;
+    position: relative;
+    margin-right: 50px;
+    width: 369px;
+    height: 60px;
+    color: #5c5e64;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 60px;
+    text-align: center;
+    white-space: nowrap;
+    z-index: 4;
+  }
+
+  .silakan {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-shrink: 0;
+    flex-basis: auto;
+    position: relative;
+    width: 369px;
+    height: 27px;
+    color: #5c5e64;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 27px;
+    text-align: center;
+    margin-right: 30px; /* Atur sesuai kebutuhan Anda */
+  }
