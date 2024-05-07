@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* resources/css/app.css */
+
+body{
+    background-color: #F8F9FB;
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.big-card-container {
+    width: 30%;
+    min-width: 30%;
+    /*max-width: 30%;*/
+    flex-direction: column;
+    align-items: center;
+}
+
+.big-card {
+    background-color: #202444;
+    width: 100%;
+    border-radius: 20px;
+}
+
+.button-kembali-1{
+    margin-right: 2rem;
+    margin-left: 3rem;
+}
+
+.button-menuju-3{
+
+}
+
+.logo-container {
+    margin-right: 3rem;
+    margin-bottom: 1rem;
+}
+
+
+.content-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.text-container {
+    flex-grow: 1;
+    margin: 3rem 3rem 0.3rem;
+}
+
+
+.custom-card {
+    flex: 1;
+    max-width: calc(33.333% - 70px);
+    height: 500px;
+    margin: 0 40px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+}
+
