@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AuditModel extends Model
+class Audit extends Model
 {
     USE hasFactory;
-    protected $table = 'audit_models';
+    protected $table = 'audit';
 
     protected $fillable = [
         'user_id',

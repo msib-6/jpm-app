@@ -10,11 +10,14 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Card;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Hash;
+
 
 class UserResource extends Resource
 {
@@ -30,9 +33,28 @@ class UserResource extends Resource
                 ->schema([
                     TextInput::make('name'),
                     TextInput::make('email')->email(),
+                    Select::make('role')
+                        ->options([
+                            'Line1' => 'Line 1',
+                            'Line2' => 'Line 2',
+                            'Line3' => 'Line 3',
+                            'Line4' => 'Line 4',
+                            'Line5' => 'Line 5',
+                            'Line7' => 'Line 7',
+                            'Line8a' => 'Line 8A',
+                            'Line8b' => 'Line 8B',
+                            'Line10' => 'Line 10',
+                            'Line11' => 'Line 11',
+                            'Line12' => 'Line 12',
+                            'Line13' => 'Line 13',
+                            'Line14' => 'Line 14',
+                        ])
+                        ->native(false),
                     TextInput::make('password')
                         ->password()
-                        ->revealable()
+                        ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
+                        ->dehydrated(fn (?string $state): bool => filled($state))
+                        ->required(fn (string $operation): bool => $operation === 'create')
                 ]),
             ]);
     }
@@ -47,6 +69,9 @@ class UserResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('email')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('role')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('created_at')

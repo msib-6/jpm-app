@@ -22,6 +22,10 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+<<<<<<< HEAD
+//Middleware route to edit, update, and delete profile
+=======
+>>>>>>> 7e5ef429ae469a48b18f046df1b5c9f8eb58b2bc
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

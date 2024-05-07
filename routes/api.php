@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\Machine;
+use App\Http\Controllers\MachineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/getallmachineoperation', function () {
+    return $request->user();
+});
+
+Route::post('/addMachine', [MachineController::class, 'addMachine']);
+Route::post('/addWeeklyMachine', [MachineController::class, 'addWeeklyMachine']);
+Route::post('/addMachineOperation/{machineID}', [MachineController::class, 'addMachineOperation']);

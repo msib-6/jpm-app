@@ -16,6 +16,4 @@ class Machine extends Model
         'category',
         'line',
     ];
-
-    public $timestamps = false;
 }
