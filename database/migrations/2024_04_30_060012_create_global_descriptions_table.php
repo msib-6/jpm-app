@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('month');
             $table->string('week');
             $table->string('description');
+            $table->timestamps();
         });
     }
 
