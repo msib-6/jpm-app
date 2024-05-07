@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('year');
             $table->string('month');
             $table->string('week');
+            $table->dateTime('date');
             $table->timestamps();
         });
     }
