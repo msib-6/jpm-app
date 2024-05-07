@@ -1,0 +1,8 @@
+    
+    
+    <!-- komponen Navbar -->
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link href="{{ asset('css/navbar.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/Navbar/script.js') }}"></script>
+
+     <!--use @include buat masukin Navbar ex:('Navbar.NavMGR')-->
