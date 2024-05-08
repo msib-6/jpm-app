@@ -28,6 +28,8 @@ menuBar.addEventListener('click', function () {
 
 
 
+
+
 const searchButton = document.querySelector('#content nav form .form-input button');
 const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');
 const searchForm = document.querySelector('#content nav form');
@@ -66,11 +68,15 @@ window.addEventListener('resize', function () {
 
 
 const switchMode = document.getElementById('switch-mode');
+const brandText = document.querySelector('#sidebar .brand .text');
 
 switchMode.addEventListener('change', function () {
-	if(this.checked) {
-		document.body.classList.add('dark');
-	} else {
-		document.body.classList.remove('dark');
-	}
-})
+    if (this.checked) {
+        document.body.classList.add('dark');
+        brandText.style.color = 'white'; // Atur warna teks menjadi putih saat mode gelap diaktifkan
+    } else {
+        document.body.classList.remove('dark');
+        brandText.style.color = ''; // Hapus aturan warna teks jika mode gelap dinonaktifkan
+    }
+});
+

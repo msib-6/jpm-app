@@ -35,6 +35,16 @@ Route::middleware('auth')->group(function () {
 Route::get('/reset', function () {
     return view('auth.reset-password');
 });
+Route::get('/summary', function () {
+    return view('history.summary');
+});
+Route::get('/auditlog', function () {
+    return view('history.auditlog');
+});
+Route::get('/navbar', function () {
+    return view('Navbar.aku');
+});
+
 
 //Show Guest Dashboard
 //Route::get('/dashboardGuest', function () {
