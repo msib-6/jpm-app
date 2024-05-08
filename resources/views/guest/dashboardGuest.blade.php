@@ -33,16 +33,18 @@
                 <h3 class="text-3xl mb-8 font-bold">PILIH LINE</h3>
                 <!-- Line -->
                 <div class="custom-card">
-
-
-                    @foreach($lines as $line)
+                    @foreach($machines as $machine)
                     <div>
-                        <a href="{{ route('guest.dashboardGuest', ['line' => $line->id]) }}" class="btn-secondary w-40 h-16 text-lg my-2">{{ $line->name }}</a>
+                        <!-- Ubah wire:click untuk mengarahkan ke Bagian 3 -->
+<!--                        <button class="btn {{ $selectedLine === $machine->id ? 'btn-danger' : 'btn-secondary' }} w-48 h-16 text-lg ml-4 mb-4 text-left" wire:click="handleLineClick({{ $machine->id }})">{{ $machine->line }}</button>-->
+                        <button class="btn {{ $selectedLine === $machine->id ? 'btn-danger' : 'btn-secondary' }} w-48 h-16 text-lg ml-4 mb-4 text-left" onclick="selectLine('{{ $machine->id }}')">{{ $machine->line }}</button>
+
                     </div>
                     @endforeach
                 </div>
             </div>
             <div class="logo-container self-start">
+                <!-- Tetapkan tombol kembali ke Bagian 1 -->
                 <a href="#bagian-1" id="kembali-ke-bagian-1" class="text-white button-kembali-1 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-12 py-2.5 text-left inline-flex items-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
                     <svg class="rotate-180 w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -61,9 +63,9 @@
                 <!-- Year -->
                 <div class="custom-card">
                     @if($selectedLine)
-                    @foreach($selectedYear as $year)
+                    @foreach($selectedLineYears as $year)
                     <div>
-                        <a href="{{ route('guest.dashboardGuest', ['line' => $selectedLine->id, 'year' => $year->year]) }}" class="btn-secondary w-40 h-16 text-lg my-2">{{ $year->year }}</a>
+                        <button class="btn {{ $selectedYear === $year ? 'btn-danger' : 'btn-secondary' }} w-48 h-16 text-lg ml-4 mb-4 text-left" wire:click="handleYearClick('{{ $year }}')">{{ $year }}</button>
                     </div>
                     @endforeach
                     @endif
@@ -80,6 +82,7 @@
         </div>
     </div>
 
+
     <!-- Bagian 4 (Choose Month) -->
     <div id="bagian-4" class="big-card-container flex items-center justify-center h-screen hidden">
         <div class="big-card dark:bg-blue-900 text-white p-6 rounded-lg flex flex-col items-start">
@@ -90,13 +93,16 @@
                     @if($selectedYear)
                     @foreach($selectedMonth as $month)
                     <div>
-                        <a href="{{ route('guest.dashboardGuest', ['line' => $selectedLine->id, 'year' => $request->year, 'month' => $month->month]) }}" class="btn-secondary w-40 h-16 text-lg my-2">{{ $month->month }}</a>
+                        <a href="/guestview/{{ $month }}" class="text-decoration-none">
+                            <button class="btn {{ $selectedMonth === $month ? 'btn-danger' : 'btn-secondary' }} w-48 h-16 text-lg ml-4 mb-4 text-left" wire:click="handleMonthClick('{{ $month }}')">{{ $month }}</button>
+                        </a>
                     </div>
                     @endforeach
                     @endif
                 </div>
             </div>
             <div class="logo-container self-start flex justify-between">
+                <!-- Tetapkan tombol kembali ke Bagian 3 -->
                 <a href="#bagian-3" id="kembali-ke-bagian-3" class="text-white button-kembali-1 bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-12 py-2.5 text-left inline-flex items-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800">
                     <svg class="rotate-180 w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -108,6 +114,7 @@
     </div>
 
     <script>
+
         document.getElementById('pindah-ke-bagian-2').addEventListener('click', function() {
             document.getElementById('bagian-1').classList.add('hidden');
             document.getElementById('bagian-2').classList.remove('hidden');
@@ -127,6 +134,17 @@
             document.getElementById('bagian-4').classList.add('hidden');
             document.getElementById('bagian-3').classList.remove('hidden');
         });
+
+        // Tambahkan fungsi JavaScript untuk mengarahkan ke Bagian 3 saat line dipilih
+        function selectLine(lineId) {
+            // Sembunyikan Bagian 2
+            document.getElementById('bagian-2').classList.add('hidden');
+            // Tampilkan Bagian 3
+            document.getElementById('bagian-3').classList.remove('hidden');
+            // Panggil fungsi handleLineClick untuk mengatur selectedLine di sisi server
+            Livewire.emit('handleLineClick', lineId);
+        }
+
     </script>
 
 </div>
