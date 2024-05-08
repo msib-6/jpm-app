@@ -29,11 +29,10 @@ body{
     background-color: #202444;
     width: 100%;
     border-radius: 20px;
+    padding: 4rem;
 }
 
 .button-kembali-1{
-    margin-right: 2rem;
-    margin-left: 3rem;
 }
 
 .button-menuju-3{
@@ -41,8 +40,6 @@ body{
 }
 
 .logo-container {
-    margin-right: 3rem;
-    margin-bottom: 1rem;
 }
 
 
@@ -53,7 +50,6 @@ body{
 
 .text-container {
     flex-grow: 1;
-    margin: 3rem 3rem 0.3rem;
 }
 
 

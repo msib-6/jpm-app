@@ -44,3 +44,4 @@ Route::get('/showmachine',[MachineController::class, 'showAllMachines']);
 Route::get('/showweeklymachine',[MachineController::class, 'showAllWeeklyMachine']);
 Route::get('/showmachineoperation', [MachineController::class, 'showAllMachineOperation']);
 Route::get('/showglobaldescription', [MachineController::class, 'showAllGlobalDescription']);
+Route::get('/showcodeline', [MachineController::class, 'showCodeLine']);

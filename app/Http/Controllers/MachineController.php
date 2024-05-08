@@ -433,31 +433,29 @@ class MachineController extends Controller
     }
 
     //Function to show all machine operation
-    public function showAllMachineOperation(Request $request) {
-        $lines = MachineData::distinct()->select('machine_id', 'machine_name')->get();
+//    public function showAllMachineOperation() {
+//        $machineOperations = MachineOperation::all();
+//        return view('machineOperations', ['machineOperations' => $machineOperations]);
+//    }
+
+//  Coba function year and button
+    public function showAllMachineOperation(Request $request)
+    {
+        $lines = Machine::distinct()->select('id', 'machine_name')->get();
         $selectedLine = null;
         $selectedYear = null;
         $selectedMonth = null;
 
         if ($request->has('line')) {
-            $selectedLine = MachineData::find($request->line);
+            $selectedLine = Machine::find($request->line);
         }
 
         if ($selectedLine && $request->has('year')) {
-            $selectedYear = MachineData::where('machine_id', $selectedLine->machine_id)
-                ->where('year', $request->year)
-                ->distinct()
-                ->select('year')
-                ->get();
+            $selectedYear = $selectedLine->machineData()->where('year', $request->year)->distinct()->pluck('year');
         }
 
         if ($selectedYear && $request->has('month')) {
-            $selectedMonth = MachineData::where('machine_id', $selectedLine->machine_id)
-                ->where('year', $selectedYear->year)
-                ->where('month', $request->month)
-                ->distinct()
-                ->select('month')
-                ->get();
+            $selectedMonth = $selectedLine->machineData()->where('year', $request->year)->where('month', $request->month)->distinct()->pluck('month');
         }
 
         return view('guest.dashboardGuest', [
@@ -472,6 +470,21 @@ class MachineController extends Controller
         $globalDescription = GlobalDescription::all();
         return response()->json($globalDescription);
         //return view('globalDescriptions', ['globalDescriptions' => $globalDescriptions]);
+    }
+
+    public function showCodeLine() {
+        // Retrieve all machine operations with the related machine's line
+        $machineOperations = MachineOperation::with('machine')->get();
+
+        // Extract code from machine operations and line from related machines
+        $data = $machineOperations->map(function ($operation) {
+            return [
+                'code' => $operation->code,
+                'line' => $operation->machine->line
+            ];
+        });
+
+        return response()->json($data);
     }
     //----------------------------------------------------------------------------------------
 

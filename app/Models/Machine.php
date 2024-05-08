@@ -16,4 +16,9 @@ class Machine extends Model
         'category',
         'line',
     ];
+
+    public function machineOperations()
+    {
+        return $this->hasMany(MachineOperation::class);
+    }
 }
