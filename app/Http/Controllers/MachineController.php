@@ -473,6 +473,21 @@ class MachineController extends Controller
         return response()->json($globalDescription);
         //return view('globalDescriptions', ['globalDescriptions' => $globalDescriptions]);
     }
+
+    public function showCodeLine() {
+        // Retrieve all machine operations with the related machine's line
+        $machineOperations = MachineOperation::with('machine')->get();
+
+        // Extract code from machine operations and line from related machines
+        $data = $machineOperations->map(function ($operation) {
+            return [
+                'code' => $operation->code,
+                'line' => $operation->machine->line
+            ];
+        });
+
+        return response()->json($data);
+    }
     //----------------------------------------------------------------------------------------
 
 }
