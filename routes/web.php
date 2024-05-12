@@ -41,9 +41,9 @@ Route::get('/summary', function () {
 Route::get('/auditlog', function () {
     return view('history.auditlog');
 });
-Route::get('/navbar', function () {
-    return view('Navbar.aku');
-});
+
+
+
 
 
 //Show Guest Dashboard
