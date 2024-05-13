@@ -43,17 +43,16 @@ Route::get('/auditlog', function () {
 });
 
 
-
-
-
 //Show Guest Dashboard
-//Route::get('/dashboardGuest', function () {
-//    return view('guest.dashboardGuest');
-//});
+Route::get('/pjl/dashboard', function () {
+    return view('pjl.dashboard');
+});
 
-// web.php
 
-Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');
+//Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');
+Route::get('/guest/dashboard', function () {
+    return view('guest.dashboardGuest');
+});
 
 
 
