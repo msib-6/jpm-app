@@ -439,8 +439,7 @@ class MachineController extends Controller
 //    }
 
 //  Coba function year and button
-    public function showAllMachineOperation(Request $request)
-    {
+    public function showAllMachineOperation(Request $request) {
         $lines = Machine::distinct()->select('id', 'machine_name')->get();
         $selectedLine = null;
         $selectedYear = null;
@@ -466,12 +465,14 @@ class MachineController extends Controller
         ]);
     }
 
+    //Show All global description below the table, take data from global description database
     public function showAllGlobalDescription() {
         $globalDescription = GlobalDescription::all();
         return response()->json($globalDescription);
         //return view('globalDescriptions', ['globalDescriptions' => $globalDescriptions]);
     }
-
+    
+    //Show all code AND line to the table, take data from both machine and machineoperation database using relationship.
     public function showCodeLine() {
         // Retrieve all machine operations with the related machine's line
         $machineOperations = MachineOperation::with('machine')->get();
