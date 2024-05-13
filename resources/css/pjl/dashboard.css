@@ -1,0 +1,87 @@
+* {
+    font-family: Arial, sans-serif;
+}
+
+.ant-modal-content {
+    width: 34.375em; /* Atur lebar modal */
+    height: 15.625em;
+    padding: 3.125em; /* Atur padding di dalam modal */
+}
+
+.form-select {
+    border-radius: 0.625em;
+    width: 32em;
+    height: 4vh;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.isi-week-bulan{
+    font-size: 0.5em;
+}
+
+.year-item {
+    margin-right: 2.375em;
+    font-size: 1.25em;
+    background-color: transparent;
+    padding: 0.625em 1.25em;
+    cursor: pointer;
+    height: auto;
+    border: none; /* Menjadikan border menjadi tidak terlihat */
+}
+
+/* Warna latar belakang saat hover */
+.year-item:hover {
+    background-color: #8333D3;
+}
+
+/* Warna latar belakang saat aktif */
+.year-item:active {
+    background-color: #8333D3;
+}
+
+
+.add-year-btn {
+    background-color: #F5EEFB;
+    color: #8333D3;
+    height: 2.5em;
+    margin-right: 0.625em;
+}
+
+.summary-container {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.month-item {
+    font-size: 2em;
+    padding: 0.3em;
+    padding-left: 2em;
+}
+
+.add-month-btn {
+    background-color: #F5EEFB;
+    color: #8333D3;
+    font-size: 1.5em;
+    font-weight: bold;
+    height: 3.5em;
+    width: 100%;
+}
+
+.week-item {
+    margin-right: 3.375em;
+    font-size: 1.25em;
+}
+
+.add-week-btn {
+    background-color: #F5EEFB;
+    color: #8333D3;
+    height: 2.5em;
+}
+
+.weeks-container {
+    display: flex;
+    align-items: center;
+}

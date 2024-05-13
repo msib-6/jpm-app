@@ -42,6 +42,8 @@ Route::delete('deleteglobaldescription/{globaldDescriptionID}', [MachineControll
 //Show Machine Route
 Route::get('/showmachine',[MachineController::class, 'showAllMachines']);
 Route::get('/showweeklymachine',[MachineController::class, 'showAllWeeklyMachine']);
-Route::get('/showmachineoperation', [MachineController::class, 'showAllMachineOperation']);
+//Route::get('/showmachineoperation', [MachineController::class, 'showAllMachineOperation']);
 Route::get('/showglobaldescription', [MachineController::class, 'showAllGlobalDescription']);
 Route::get('/showcodeline', [MachineController::class, 'showCodeLine']);
+Route::get('/showcodeline2', [MachineController::class, 'showCodeLine2']);
+Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation']);

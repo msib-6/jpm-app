@@ -96,6 +96,9 @@ body {
 	width: 100%;
 	margin-top: 48px;
 }
+
+
+
 #sidebar .side-menu li {
 	height: 48px;
 	background: transparent;
@@ -159,6 +162,11 @@ body {
 	display: flex;
 	justify-content: center;
 }
+#sidebar.dark .brand {
+	color: white; /* atau warna putih lainnya */
+}
+
+
 
 /* SIDEBAR */
 
@@ -177,6 +185,8 @@ body {
 	width: calc(100% - 60px);
 	left: 60px;
 }
+
+
 
 
 
@@ -240,6 +250,7 @@ body {
 	width: 100%;
 	color: var(--dark);
 }
+
 #content nav form .form-input button {
 	width: 36px;
 	height: 100%;
@@ -303,6 +314,10 @@ body {
 #content nav #switch-mode:checked + .switch-mode::before {
 	left: calc(100% - (25px - 4px) - 2px);
 }
+
+
+
+
 /* NAVBAR */
 
 

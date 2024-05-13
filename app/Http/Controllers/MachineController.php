@@ -18,7 +18,7 @@ class MachineController extends Controller
     //Add Machine. input to machine database
     public function addMachine(Request $request) {
         $userId = auth()->id();
-    
+
         try {
             // Validate the incoming request data
             $validatedData = $request->validate([
@@ -26,21 +26,21 @@ class MachineController extends Controller
                 'category' => 'required|string|max:255',
                 'line' => 'required|string|max:255',
             ]);
-    
+
             // Check if the machine already exists
             $existingMachineData = Machine::where('machine_name', $request->input('machineName'))->first();
-    
+
             if ($existingMachineData) {
                 return response()->json(['message' => 'Machine already exists'], 409);
             }
-    
+
             // Create a new machine instance
             $machine = new Machine();
             $machine->machine_name = $validatedData['machine_name'];
             $machine->category = $validatedData['category'];
             $machine->line = $validatedData['line'];
             $machine->save();
-        
+
             // Create audit entry
             Audits::create([
                 'users_id' => $userId,
@@ -48,7 +48,7 @@ class MachineController extends Controller
                 'event' => 'add',
                 'changes' => json_encode($request->all()),
             ]);
-    
+
             // Return a success response
             return response()->json(['message' => 'Machine added successfully'], 200);
         } catch (\Exception $e) {
@@ -168,20 +168,20 @@ class MachineController extends Controller
     //Add Global Description below tables, input to globalDescription database
     public function addGlobalDescription(Request $request) {
         $userId = auth()->id();
-    
+
         try {
             // Validate the incoming request data
             $validatedData = $request->validate([
                 'description' => 'required|string|max:255',
             ]);
-    
+
             // Check if the global description already exists
             $existingGlobalDescription = GlobalDescription::where('description', $request->input('description'))->first();
-    
+
             if ($existingGlobalDescription) {
                 return response()->json(['message' => 'Global description already exists'], 409);
             }
-    
+
             // Create a new global description instance
             $globalDescription = new GlobalDescription();
             $globalDescription->description = $validatedData['description'];
@@ -189,7 +189,7 @@ class MachineController extends Controller
             $globalDescription->month = Carbon::now()->month; // Save current month
             $globalDescription->week = Carbon::now()->weekOfMonth; // Save current week of month
             $globalDescription->save();
-    
+
             // Create audit entry
             Audits::create([
                 'users_id' => $userId,
@@ -197,7 +197,7 @@ class MachineController extends Controller
                 'event' => 'add',
                 'changes' => json_encode($request->all()),
             ]);
-    
+
             // Return a success response
             return response()->json(['message' => 'Global description added successfully'], 200);
         } catch (\Exception $e) {
@@ -214,26 +214,26 @@ class MachineController extends Controller
     public function editMachineOperation(Request $request, $machineOperationID) {
         // Get user ID
         $userId = auth()->id();
-    
+
         // Validation
         $validatedData = $request->validate([
             'day' => 'required',
             'code' => 'required',
             'time' => 'required',
         ]);
-    
+
         try {
             // Find the machine operation by its ID
             $machineOperation = MachineOperation::find($machineOperationID);
-    
+
             if (!$machineOperation) {
                 return response()->json(['message' => 'Machine operation not found!'], 404);
             }
-    
+
             // Fetch the user's name using their ID
             $user = User::find($userId);
             $username = $user ? $user->name : 'Unknown'; // If user not found, use 'Unknown'
-    
+
             // Capture the original state for comparison
             $originalState = [
                 'day' => $machineOperation->day,
@@ -244,7 +244,7 @@ class MachineController extends Controller
                 'isApproved' => $machineOperation->isApproved,
                 'changedBy' => $machineOperation->changedBy,
             ];
-    
+
             // Capture the old values before updating the machine operation
             $oldValues = [
                 'day' => $machineOperation->day,
@@ -252,7 +252,7 @@ class MachineController extends Controller
                 'time' => $machineOperation->time,
                 'description' => $machineOperation->description,
             ];
-    
+
             // Update the machine operation with the provided data
             $machineOperation->update([
                 'day' => $validatedData['day'],
@@ -263,7 +263,7 @@ class MachineController extends Controller
                 'isApproved' => false,
                 'changedBy' => $username,
             ]);
-    
+
             // Capture the new values after updating the machine operation
             $newValues = [
                 'day' => $machineOperation->day,
@@ -271,7 +271,7 @@ class MachineController extends Controller
                 'time' => $machineOperation->time,
                 'description' => $machineOperation->description,
             ];
-    
+
             // Log the audit entry for machine operation edit along with the original and updated states
             Audits::create([
                 'users_id' => $userId,
@@ -283,7 +283,7 @@ class MachineController extends Controller
                     'old_values' => $oldValues,
                 ]),
             ]);
-    
+
             return response()->json($machineOperation, 200);
         } catch (\Exception $error) {
             \Log::error('Error editing machine operation: ' . $error->getMessage());
@@ -299,25 +299,25 @@ class MachineController extends Controller
     public function deleteWeeklyMachine(Request $request, $machineID) {
         // Get user ID
         $userId = auth()->id();
-    
+
         try {
             // Find the machine data by its ID
             $machineData = MachineData::find($machineID);
-    
+
             if (!$machineData) {
                 return response()->json(['message' => 'Machine data not found!'], 404);
             }
-    
+
             // Capture the original state for comparison
             $originalState = [
                 'machine_id' => $machineData->machine_id,
                 'machine_name' => $machineData->machine_name,
                 'week' => $machineData->week,
             ];
-    
+
             // Delete the machine data
             $machineData->delete();
-    
+
             // Log the audit entry for machine data deletion
             Audits::create([
                 'users_id' => $userId,
@@ -327,7 +327,7 @@ class MachineController extends Controller
                     'original_state' => $originalState,
                 ]),
             ]);
-    
+
             return response()->json(['message' => 'Machine data deleted successfully'], 200);
         } catch (\Exception $error) {
             \Log::error('Error deleting machine data: ' . $error->getMessage());
@@ -339,15 +339,15 @@ class MachineController extends Controller
     public function deleteMachineOperation(Request $request, $machineOperationID) {
         // Get user ID
         $userId = auth()->id();
-    
+
         try {
             // Find the machine operation by its ID
             $machineOperation = MachineOperation::find($machineOperationID);
-    
+
             if (!$machineOperation) {
                 return response()->json(['message' => 'Machine operation not found!'], 404);
             }
-    
+
             // Capture the original state for comparison
             $originalState = [
                 'day' => $machineOperation->day,
@@ -358,10 +358,10 @@ class MachineController extends Controller
                 'isApproved' => $machineOperation->isApproved,
                 'changedBy' => $machineOperation->changedBy,
             ];
-    
+
             // Delete the machine operation
             $machineOperation->delete();
-    
+
             // Log the audit entry for machine operation deletion
             Audits::create([
                 'users_id' => $userId,
@@ -371,7 +371,7 @@ class MachineController extends Controller
                     'original_state' => $originalState,
                 ]),
             ]);
-    
+
             return response()->json(['message' => 'Machine operation deleted successfully'], 200);
         } catch (\Exception $error) {
             \Log::error('Error deleting machine operation: ' . $error->getMessage());
@@ -382,10 +382,10 @@ class MachineController extends Controller
     //Delete Global description, delete global description from the database
     public function deleteGlobalDescription(Request $request, $globalDescriptionID) {
         $userId = auth()->id();
-    
+
         try {
             $globalDescription = GlobalDescription::find($globalDescriptionID);
-    
+
             // Capture the original state for comparison
             $originalState = [
                 'description' => $globalDescription->description,
@@ -393,10 +393,10 @@ class MachineController extends Controller
                 'month' => $globalDescription->month,
                 'week' => $globalDescription->week,
             ];
-    
+
             // Delete the global description
             $globalDescription->delete();
-    
+
             // Log the audit entry for global description deletion
             Audits::create([
                 'users_id' => $userId,
@@ -406,7 +406,7 @@ class MachineController extends Controller
                     'original_state' => $originalState,
                 ]),
             ]);
-    
+
             return response()->json(['message' => 'Global description deleted successfully'], 200);
         } catch (\Exception $e) {
             \Log::error('Error deleting global description: ' . $e->getMessage());
@@ -439,33 +439,71 @@ class MachineController extends Controller
 //    }
 
 //  Coba function year and button
-    public function showAllMachineOperation(Request $request) {
-        $lines = Machine::distinct()->select('id', 'machine_name')->get();
+    public function showAllMachineOperation(Request $request)
+    {
+        $machines = Machine::select('id', 'machine_name', 'line')->get();
         $selectedLine = null;
         $selectedYear = null;
         $selectedMonth = null;
+        $selectedLineYears = [];
 
         if ($request->has('line')) {
-            $selectedLine = Machine::find($request->line);
+            $selectedLine = $request->line;
+
+            // Ambil id machine berdasarkan line yang dipilih
+            $machineId = Machine::where('id', $selectedLine)->value('id');
+
+            // Cari tahun-tahun terkait dengan machine yang dipilih
+            $selectedLineYears = MachineOperation::where('machine_id', $machineId)
+                ->distinct()
+                ->pluck('year')
+                ->toArray();
+
+            // Set default selected year ke tahun pertama yang tersedia
+            $selectedYear = count($selectedLineYears) > 0 ? $selectedLineYears[0] : null;
         }
 
-        if ($selectedLine && $request->has('year')) {
-            $selectedYear = $selectedLine->machineData()->where('year', $request->year)->distinct()->pluck('year');
+        if ($request->has('year')) {
+            $selectedYear = $request->year;
         }
 
-        if ($selectedYear && $request->has('month')) {
-            $selectedMonth = $selectedLine->machineData()->where('year', $request->year)->where('month', $request->month)->distinct()->pluck('month');
+        if ($request->is('guest/dashboard')) {
+            return view('guest.dashboardGuest', [
+                'machines' => $machines,
+                'selectedLine' => $selectedLine,
+                'selectedYear' => $selectedYear,
+                'selectedMonth' => $selectedMonth,
+                'selectedLineYears' => $selectedLineYears,
+            ]);
         }
 
-        return view('guest.dashboardGuest', [
-            'lines' => $lines,
+        return response()->json([
+            'machines' => $machines,
             'selectedLine' => $selectedLine,
             'selectedYear' => $selectedYear,
             'selectedMonth' => $selectedMonth,
         ]);
     }
 
-    //Show All global description below the table, take data from global description database
+    public function showCodeLine2()
+    {
+        $machines = Machine::select('machines.id', 'machines.machine_name', 'machines.line', 'machine_operations.year', 'machine_operations.month', 'machine_operations.week', 'machine_operations.day', 'machine_operations.code', 'machine_operations.time', 'machine_operations.description', 'machine_operations.is_changed', 'machine_operations.changed_by', 'machine_operations.change_date', 'machine_operations.is_approved', 'machine_operations.approved_by')
+            ->join('machine_data', 'machines.id', '=', 'machine_data.machine_id')
+            ->join('machine_operations', function ($join) {
+                $join->on('machine_data.id', '=', 'machine_operations.machine_id')
+                    ->on('machine_data.year', '=', 'machine_operations.year')
+                    ->on('machine_data.month', '=', 'machine_operations.month')
+                    ->on('machine_data.week', '=', 'machine_operations.week');
+            })
+            ->get();
+
+        return response()->json([
+            'machines' => $machines
+        ]);
+    }
+
+
+
     public function showAllGlobalDescription() {
         $globalDescription = GlobalDescription::all();
         return response()->json($globalDescription);
