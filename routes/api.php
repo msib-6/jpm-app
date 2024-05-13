@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Machine;
 use App\Http\Controllers\MachineController;
+use App\Http\Controllers\BackupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,25 +26,29 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // });
 
 //Add Machine Route
-Route::post('/addmachine', [MachineController::class, 'addMachine']);
-Route::post('/addweeklymachine', [MachineController::class, 'addWeeklyMachine']);
-Route::post('/addmachineoperation/{machineID}', [MachineController::class, 'addMachineOperation']);
-Route::post('/addglobaldescription', [MachineController::class, 'addGlobalDescription']);
+Route::post('/addmachine', [MachineController::class, 'addMachine'])->name('add.machine');;
+Route::post('/addweeklymachine', [MachineController::class, 'addWeeklyMachine'])->name('add.weekly.machine');
+Route::post('/addmachineoperation/{machineID}', [MachineController::class, 'addMachineOperation'])->name('add.machine.operation');
+Route::post('/addglobaldescription', [MachineController::class, 'addGlobalDescription'])->name('add.global.description');
 
 //Edit Machine Route
-Route::put('/editmachineoperation/{machineOperationID}', [MachineController::class, 'editMachineOperation']);
+Route::put('/editmachineoperation/{machineOperationID}', [MachineController::class, 'editMachineOperation'])->name('edit.machine');
 
 
 //Delete Machine Route
-Route::delete('/deleteweeklymachine/{machineID}', [MachineController::class, 'deleteWeeklyMachine']);
-Route::delete('/deletemachineoperation/{machineOperationID}', [MachineController::class, 'deleteMachineOperation']);
-Route::delete('deleteglobaldescription/{globaldDescriptionID}', [MachineController::class, 'deleteGlobalDescription']);
+Route::delete('/deleteweeklymachine/{machineID}', [MachineController::class, 'deleteWeeklyMachine'])->name('delete.machine');
+Route::delete('/deletemachineoperation/{machineOperationID}', [MachineController::class, 'deleteMachineOperation'])->name('delete.machine.operation');
+Route::delete('deleteglobaldescription/{globaldDescriptionID}', [MachineController::class, 'deleteGlobalDescription'])->name('delete.global.description');
 
 //Show Machine Route
-Route::get('/showmachine',[MachineController::class, 'showAllMachines']);
-Route::get('/showweeklymachine',[MachineController::class, 'showAllWeeklyMachine']);
-//Route::get('/showmachineoperation', [MachineController::class, 'showAllMachineOperation']);
-Route::get('/showglobaldescription', [MachineController::class, 'showAllGlobalDescription']);
-Route::get('/showcodeline', [MachineController::class, 'showCodeLine']);
-Route::get('/showcodeline2', [MachineController::class, 'showCodeLine2']);
-Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation']);
+Route::get('/showmachine',[MachineController::class, 'showAllMachines'])->name('show.all.machine');
+Route::get('/showweeklymachine',[MachineController::class, 'showAllWeeklyMachine'])->name('show.weekly.machine');
+Route::get('/showmachineoperation', [MachineController::class, 'showAllMachineOperation'])->name('show.all.machine.operation');
+Route::get('/showglobaldescription', [MachineController::class, 'showAllGlobalDescription'])->name('show.all.global.description');
+Route::get('/showcodeline', [MachineController::class, 'showCodeLine'])->name('show.code.line');
+Route::get('/showcodeline2', [MachineController::class, 'showCodeLine2'])->name('show.code.line2');
+Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation']); //Temporary dashboard
+
+//Backup MachineOperation Route
+Route::get('/machineoperation/export', [BackupController::class, 'export'])->name('export');
+Route::post('/machineoperation/import', [BackupController::class, 'import'])->name('import');

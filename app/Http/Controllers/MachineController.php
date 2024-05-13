@@ -426,10 +426,26 @@ class MachineController extends Controller
     }
 
     //Function to show all weekly machine that contains all of its date and name
-    public function showAllWeeklyMachine(){
-        $machineData = MachineData::all();
+    public function showAllWeeklyMachine(Request $request){
+        // Validate the incoming request
+        $request->validate([
+            'year' => 'required|numeric',
+            'month' => 'required|numeric',
+            'week' => 'required|numeric',
+        ]);
+
+        // Retrieve machine data based on year, month, and week
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $week = $request->input('week');
+
+        $machineData = MachineData::where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->get();
+
+        // Return the machine data as a response
         return response()->json($machineData);
-        //return view('machineData', ['machineData' => $machineData]);
     }
 
     //Function to show all machine operation
