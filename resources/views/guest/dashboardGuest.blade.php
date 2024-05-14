@@ -93,107 +93,139 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Script saat tombol pindah ke Bagian 2 diklik
+            let selectedLine = null;
+            let selectedYear = null;
+
+            // Helper function to convert month number to Indonesian month name
+            function monthName(monthNumber) {
+                const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                return monthNames[monthNumber - 1];  // monthNumber - 1 because array is zero-indexed
+            }
+
+            // Event listener for 'Pilih Line' button
             document.getElementById('pindah-ke-bagian-2').addEventListener('click', function () {
                 document.getElementById('bagian-1').classList.add('hidden');
                 document.getElementById('bagian-2').classList.remove('hidden');
+                fetchLines();
             });
 
-            // Script saat tombol kembali ke Bagian 1 diklik
+            // Event listeners for back buttons
             document.getElementById('kembali-ke-bagian-1').addEventListener('click', function () {
                 document.getElementById('bagian-2').classList.add('hidden');
                 document.getElementById('bagian-1').classList.remove('hidden');
             });
 
-            // Fungsi untuk menampilkan pilihan line
-            function showLineSelection(machines) {
-                const lineContainer = document.getElementById('line-container');
-                machines.forEach(machine => {
-                    const button = document.createElement('button');
-                    button.textContent = machine.line;
-                    button.className = 'btn w-48 h-16 text-lg ml-4 mb-4 text-left';
-                    button.addEventListener('click', function () {
-                        selectLine(machine.id);
+            document.getElementById('kembali-ke-bagian-2').addEventListener('click', function () {
+                document.getElementById('bagian-3').classList.add('hidden');
+                document.getElementById('bagian-2').classList.remove('hidden');
+                if (selectedLine) {
+                    fetchLines(); // Refetch lines to ensure context remains
+                }
+            });
+
+            document.getElementById('kembali-ke-bagian-3').addEventListener('click', function () {
+                document.getElementById('bagian-4').classList.add('hidden');
+                document.getElementById('bagian-3').classList.remove('hidden');
+                if (selectedLine && selectedYear) {
+                    fetchYears(selectedLine); // Refetch years to ensure context remains
+                }
+            });
+
+            // Fetch and display lines
+            function fetchLines() {
+                axios.get('http://127.0.0.1:8000/api/showcodeline2')
+                    .then(function (response) {
+                        const lines = new Set(response.data.machines.map(machine => machine.line));
+                        populateLines(Array.from(lines));
+                    })
+                    .catch(function (error) {
+                        console.error('Error fetching lines:', error);
                     });
+            }
+
+            // Populate line buttons
+            function populateLines(lines) {
+                const lineContainer = document.getElementById('line-container');
+                lineContainer.innerHTML = '';
+                lines.forEach(line => {
+                    const button = document.createElement('button');
+                    button.textContent = `Line ${line}`;
+                    button.className = 'btn w-48 h-16 text-lg ml-4 mb-4 text-left';
+                    button.addEventListener('click', () => selectLine(line));
                     lineContainer.appendChild(button);
                 });
             }
 
-            // Fungsi untuk memilih line
-            function selectLine(selectedLineId) {
-                // Ambil data tahun berdasarkan line yang dipilih
-                axios.get(`http://127.0.0.1:8000/api/showcodeline2?line_id=${selectedLineId}`)
+            // Select line and fetch years
+            function selectLine(line) {
+                selectedLine = line;
+                document.getElementById('bagian-2').classList.add('hidden');
+                document.getElementById('bagian-3').classList.remove('hidden');
+                fetchYears(line);
+            }
+
+            // Fetch and display years based on the selected line
+            function fetchYears(line) {
+                axios.get(`http://127.0.0.1:8000/api/showcodeline2?line=${line}`)
                     .then(function (response) {
-                        const years = response.data.machines.map(machine => machine.year);
-                        showYearSelection(years);
+                        const years = new Set(response.data.machines.filter(machine => machine.line === line).map(machine => machine.year));
+                        populateYears(Array.from(years));
                     })
                     .catch(function (error) {
-                        console.error('Error fetching data:', error);
+                        console.error('Error fetching years:', error);
                     });
             }
 
-            // Fungsi untuk menampilkan pilihan tahun
-            function showYearSelection(years) {
-                document.getElementById('bagian-2').classList.add('hidden');
-                document.getElementById('bagian-3').classList.remove('hidden');
-
+            // Populate year buttons
+            function populateYears(years) {
                 const yearContainer = document.getElementById('year-container');
-                yearContainer.innerHTML = ''; // Bersihkan konten sebelumnya
-
+                yearContainer.innerHTML = '';
                 years.forEach(year => {
                     const button = document.createElement('button');
                     button.textContent = year;
                     button.className = 'btn w-48 h-16 text-lg ml-4 mb-4 text-left';
-                    button.addEventListener('click', function () {
-                        selectYear(year);
-                    });
+                    button.addEventListener('click', () => selectYear(year));
                     yearContainer.appendChild(button);
                 });
             }
 
-            // Fungsi untuk memilih tahun
-            function selectYear(selectedYear) {
+            // Select year and fetch months
+            function selectYear(year) {
+                selectedYear = year;
                 document.getElementById('bagian-3').classList.add('hidden');
                 document.getElementById('bagian-4').classList.remove('hidden');
-                // Ambil data bulan berdasarkan tahun yang dipilih
-                axios.get(`http://127.0.0.1:8000/api/showcodeline2?year=${selectedYear}`)
+                fetchMonths(selectedLine, year);
+            }
+
+            // Fetch and display months based on the selected line and year
+            function fetchMonths(line, year) {
+                axios.get(`http://127.0.0.1:8000/api/showcodeline2?line=${line}&year=${year}`)
                     .then(function (response) {
-                        const months = response.data.machines.map(machine => machine.month);
-                        showMonthSelection(months);
+                        const months = new Set(response.data.machines.filter(machine => machine.line === line && machine.year === year).map(machine => machine.month));
+                        populateMonths(Array.from(months));
                     })
                     .catch(function (error) {
-                        console.error('Error fetching data:', error);
+                        console.error('Error fetching months:', error);
                     });
             }
 
-            // Fungsi untuk menampilkan pilihan bulan
-            function showMonthSelection(months) {
+            // Populate month buttons
+            function populateMonths(months) {
                 const monthContainer = document.getElementById('month-container');
-                monthContainer.innerHTML = ''; // Bersihkan konten sebelumnya
-
+                monthContainer.innerHTML = '';
                 months.forEach(month => {
                     const button = document.createElement('button');
-                    button.textContent = month;
+                    button.textContent = monthName(month);  // Convert month number to name
                     button.className = 'btn w-48 h-16 text-lg ml-4 mb-4 text-left';
-                    button.addEventListener('click', function () {
-                        // Tambahkan logika sesuai kebutuhan
-                        console.log('Bulan dipilih:', month);
-                    });
+                    button.addEventListener('click', () => console.log(`Month selected: ${monthName(month)}`));  // Use month name in log
                     monthContainer.appendChild(button);
                 });
             }
-
-            // Load machines data when the page loads
-            axios.get('http://127.0.0.1:8000/api/showcodeline2')
-                .then(function (response) {
-                    const machines = response.data.machines;
-                    showLineSelection(machines);
-                })
-                .catch(function (error) {
-                    console.error('Error fetching data:', error);
-                });
         });
     </script>
+
+
+
 
 
 </div>
