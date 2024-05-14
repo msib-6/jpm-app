@@ -426,10 +426,26 @@ class MachineController extends Controller
     }
 
     //Function to show all weekly machine that contains all of its date and name
-    public function showAllWeeklyMachine(){
-        $machineData = MachineData::all();
+    public function showAllWeeklyMachine(Request $request){
+        // Validate the incoming request
+        $request->validate([
+            'year' => 'required|numeric',
+            'month' => 'required|numeric',
+            'week' => 'required|numeric',
+        ]);
+
+        // Retrieve machine data based on year, month, and week
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $week = $request->input('week');
+
+        $machineData = MachineData::where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->get();
+
+        // Return the machine data as a response
         return response()->json($machineData);
-        //return view('machineData', ['machineData' => $machineData]);
     }
 
     //Function to show all machine operation
@@ -450,41 +466,58 @@ class MachineController extends Controller
         if ($request->has('line')) {
             $selectedLine = $request->line;
 
-            // Ambil tahun-tahun terkait dengan line yang dipilih
-            $selectedLineYears = MachineData::where('machine_id', $selectedLine)
+            // Ambil id machine berdasarkan line yang dipilih
+            $machineId = Machine::where('id', $selectedLine)->value('id');
+
+            // Cari tahun-tahun terkait dengan machine yang dipilih
+            $selectedLineYears = MachineOperation::where('machine_id', $machineId)
                 ->distinct()
                 ->pluck('year')
                 ->toArray();
 
-            // Set default selected year to the first available year
+            // Set default selected year ke tahun pertama yang tersedia
             $selectedYear = count($selectedLineYears) > 0 ? $selectedLineYears[0] : null;
         }
 
-        return view('guest.dashboardGuest', [
+        if ($request->has('year')) {
+            $selectedYear = $request->year;
+        }
+
+        if ($request->is('guest/dashboard')) {
+            return view('guest.dashboardGuest', [
+                'machines' => $machines,
+                'selectedLine' => $selectedLine,
+                'selectedYear' => $selectedYear,
+                'selectedMonth' => $selectedMonth,
+                'selectedLineYears' => $selectedLineYears,
+            ]);
+        }
+
+        return response()->json([
             'machines' => $machines,
             'selectedLine' => $selectedLine,
             'selectedYear' => $selectedYear,
             'selectedMonth' => $selectedMonth,
-            'selectedLineYears' => $selectedLineYears,
         ]);
-
-//        if ($request->is('guest/dashboard')) {
-//            return view('guest.dashboardGuest', [
-//                'machines' => $machines,
-//                'selectedLine' => $selectedLine,
-//                'selectedYear' => $selectedYear,
-//                'selectedMonth' => $selectedMonth,
-//                'selectedLineYears' => $selectedLineYears,
-//            ]);
-//        }
-//
-//        return response()->json([
-//            'machines' => $machines,
-//            'selectedLine' => $selectedLine,
-//            'selectedYear' => $selectedYear,
-//            'selectedMonth' => $selectedMonth,
-//        ]);
     }
+
+    public function showCodeLine2()
+    {
+        $machines = Machine::select('machines.id', 'machines.machine_name', 'machines.line', 'machine_operations.year', 'machine_operations.month', 'machine_operations.week', 'machine_operations.day', 'machine_operations.code', 'machine_operations.time', 'machine_operations.description', 'machine_operations.is_changed', 'machine_operations.changed_by', 'machine_operations.change_date', 'machine_operations.is_approved', 'machine_operations.approved_by')
+            ->join('machine_data', 'machines.id', '=', 'machine_data.machine_id')
+            ->join('machine_operations', function ($join) {
+                $join->on('machine_data.id', '=', 'machine_operations.machine_id')
+                    ->on('machine_data.year', '=', 'machine_operations.year')
+                    ->on('machine_data.month', '=', 'machine_operations.month')
+                    ->on('machine_data.week', '=', 'machine_operations.week');
+            })
+            ->get();
+
+        return response()->json([
+            'machines' => $machines
+        ]);
+    }
+
 
 
     public function showAllGlobalDescription() {
@@ -492,7 +525,8 @@ class MachineController extends Controller
         return response()->json($globalDescription);
         //return view('globalDescriptions', ['globalDescriptions' => $globalDescriptions]);
     }
-
+    
+    //Show all code AND line to the table, take data from both machine and machineoperation database using relationship.
     public function showCodeLine() {
         // Retrieve all machine operations with the related machine's line
         $machineOperations = MachineOperation::with('machine')->get();
