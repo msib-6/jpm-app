@@ -1,0 +1,49 @@
+* {
+    font-family: Arial, sans-serif;
+}
+
+.summary-container {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    display: flex;
+    justify-content: flex-start; /* Mengatur konten agar berada di ujung kanan */
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    min-height: 900px; /* Mengatur ketinggian minimum */
+    width: 100%; /* Lebar 100% dari container */
+    margin-top: 50px; /* Menggeser cardKedua ke bawah */
+    align-items: stretch;
+}
+
+.goul {
+    color: #8333D3;
+    font-size: 27px;
+}
+
+.card {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    display: flex;
+    justify-content: flex-start; /* Mengatur konten agar berada di ujung kanan */
+    padding: 1.5rem;
+    border-radius: 1.2rem;
+    width: 100%; /* Lebar 100% dari container */
+    font-style: italic;
+    margin-top: 1em;
+}
+
+.Navbar-Header {
+    display: flex;
+    justify-content: space-between;
+    background: #ffffff;
+}
+.weeks-container {
+    box-shadow: 0px 0.4em 1em rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    display: flex;
+    justify-content: flex-start;
+    padding: 1.5em;
+    border-radius: 1.5em;
+    width: 100%;
+    margin-top: 2em;
+}

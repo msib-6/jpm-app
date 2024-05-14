@@ -55,6 +55,8 @@ Route::get('/auditlog', function () {
 
 Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');
 
-
+Route::get('/approval', function () {
+    return view('pjl.approval');
+})->name('approval');
 
 require __DIR__.'/auth.php';
