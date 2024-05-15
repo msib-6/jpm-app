@@ -31,8 +31,10 @@ class UserResource extends Resource
             ->schema([
                 Card::make()
                 ->schema([
-                    TextInput::make('name'),
-                    TextInput::make('email')->email(),
+                    TextInput::make('name')
+                        ->required(),
+                    TextInput::make('email')->email()
+                        ->required(),
                     Select::make('role')
                         ->options([
                             'Line1' => 'Line 1',
@@ -49,6 +51,7 @@ class UserResource extends Resource
                             'Line13' => 'Line 13',
                             'Line14' => 'Line 14',
                         ])
+                        ->required()
                         ->native(false),
                     TextInput::make('password')
                         ->password()
