@@ -48,11 +48,28 @@ Route::get('/pjl/dashboard', function () {
     return view('pjl.dashboard');
 });
 
+Route::get('/pjl/mesin', function () {
+    return view('pjl.mesin');
+});
+
+Route::get('/guest/viewGuest', function (Illuminate\Http\Request $request) {
+    $line = $request->query('line');  // Access 'line' parameter
+    $year = $request->query('year');  // Access 'year' parameter
+    $month = $request->query('month'); // Access 'month' parameter
+
+    return view('guest.viewGuest', compact('line', 'year', 'month'));
+})->name('viewGuest');
+
 
 //Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');
 Route::get('/guest/dashboard', function () {
     return view('guest.dashboardGuest');
 });
+
+Route::get('/manager/dashboard', function () {
+    return view('manager.dashboard');
+});
+
 
 Route::get('/approval', function () {
     return view('pjl.approval');
