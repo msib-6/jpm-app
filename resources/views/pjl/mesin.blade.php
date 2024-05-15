@@ -59,7 +59,7 @@
         const container = document.getElementById('monthsContainer');
         machineryData.forEach(item => {
             const element = document.createElement('div');
-            element.className = 'machine-entry py-4 px-6 mb-4 bg-gray-100 rounded-md shadow-md';
+            element.className = 'machine-entry py-4 px-6 mb-4 bg-gray-100 rounded-xl shadow-md';
             element.innerHTML = `<h4 class="text-xl font-bold">${item.name}</h4><p>${item.lines}</p>`;
             container.appendChild(element);
         });

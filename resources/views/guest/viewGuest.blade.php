@@ -11,8 +11,8 @@
 <div class="container mx-auto px-4">
     <!-- Card Title -->
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
-        <h3 id="title" class="text-lg font-bold">
-            Line: <span id="line-display">Loading...</span>, <span id="month-display">Loading...</span>, <span id="year-display">Loading...</span>
+        <h3 id="title" class="text-2xl font-bold">
+            Line: <span id="line-display">Loading...</span>, <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>
         </h3>
     </div>
 
@@ -22,20 +22,45 @@
     </div>
 
     <!-- Header for Days -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+    <div class="header-days bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
         <div class="grid grid-cols-9 gap-4 text-center font-semibold">
-            <div>Mesin</div>
-            <!-- Assuming 8 days to be shown, replace with dynamic data as needed -->
-            <div>Senin<br>4 Maret 2024</div>
-            <div>Selasa<br>5 Maret 2024</div>
-            <div>Rabu<br>6 Maret 2024</div>
-            <div>Kamis<br>7 Maret 2024</div>
-            <div>Jumat<br>8 Maret 2024</div>
-            <div>Sabtu<br>9 Maret 2024</div>
-            <div>Minggu<br>10 Maret 2024</div>
-            <div>Senin<br>11 Maret 2024</div>
+            <!-- Use flexbox utilities to center content vertically and horizontally -->
+            <div class="flex items-center justify-center">Mesin</div>
+            <div class="flex flex-col justify-center items-center">
+                <span class="font-bold">Senin</span>
+                <span>4 Maret 2024</span>
+            </div>
+            <div class="flex flex-col justify-center items-center">
+                <span class="font-bold">Selasa</span>
+                <span>5 Maret 2024</span>
+            </div>
+            <div class="flex flex-col justify-center items-center">
+                <span class="font-bold">Rabu</span>
+                <span>6 Maret 2024</span>
+            </div>
+            <div class="flex flex-col justify-center items-center">
+                <span class="font-bold">Kamis</span>
+                <span>7 Maret 2024</span>
+            </div>
+            <div class="flex flex-col justify-center items-center">
+                <span class="font-bold">Jumat</span>
+                <span>8 Maret 2024</span>
+            </div>
+            <div class="flex flex-col justify-center items-center">
+                <span class="font-bold">Sabtu</span>
+                <span>9 Maret 2024</span>
+            </div>
+            <div class="flex flex-col justify-center items-center">
+                <span class="font-bold">Minggu</span>
+                <span>10 Maret 2024</span>
+            </div>
+            <div class="flex flex-col justify-center items-center">
+                <span class="font-bold">Senin</span>
+                <span>11 Maret 2024</span>
+            </div>
         </div>
     </div>
+
 
     <!-- Data Container -->
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
@@ -48,7 +73,7 @@
 
             <!-- Data for March 4, vertically aligned to the top -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
-                <div class="p-2 bg-red-100 text-center">
+                <div class="p-2 bg-grey-100 text-center">
                     <p>KTPRGES678</p>
                     <p>07:00</p>
                     <p>Supervisi</p>
@@ -79,7 +104,14 @@
                 </div>
             </div>
 
-            <!-- Repeat for each subsequent day -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+                <div class="p-2 bg-red-100 text-center">
+                    <p>KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
         </div>
     </div>
 
