@@ -1,7 +1,7 @@
 <!-- SIDEBAR -->
 <section id="sidebar">
 		<a href="#" class="brand">
-		<img class='bx bxs-smile' src="{{ asset('LogoK.png') }}" width="30" height="30">
+		<img class='bx bxs-smile' src="{{ asset('LogoK.png') }}" style="max-width: 100px; max-height: 50px; width: auto; height: auto;">
 			<span class="text">Kalbe Farma</span>
 		</a>
 		<ul class="side-menu top">
@@ -40,7 +40,7 @@
 					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
 				</div>
 			</form>
-			<input type="checkbox" id="switch-mode" hidden>
+			<input type="checkbox" id="switch-mode" style="display: none;">
 			<label for="switch-mode" class="switch-mode"></label>
 			<a href="#" class="notification">
 				<i class='bx bxs-bell' ></i>
@@ -51,7 +51,7 @@
 			</a>
 		</nav>
 		<!-- NAVBAR -->
-
 		
 	</section>
+	
 	

@@ -54,8 +54,12 @@ Route::get('/guest/dashboard', function () {
     return view('guest.dashboardGuest');
 });
 
-Route::get('/approval', function () {
+Route::get('/approvalpjl', function () {
     return view('pjl.approval');
+})->name('approval');
+
+Route::get('/approvalmgr', function () {
+    return view('manager.approve');
 })->name('approval');
 
 require __DIR__.'/auth.php';
