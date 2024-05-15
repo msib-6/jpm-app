@@ -66,13 +66,21 @@ Route::get('/guest/dashboard', function () {
     return view('guest.dashboardGuest');
 });
 
+<<<<<<< HEAD
+Route::get('/approvalpjl', function () {
+=======
 Route::get('/manager/dashboard', function () {
     return view('manager.dashboard');
 });
 
 
 Route::get('/approval', function () {
+>>>>>>> 3c53d0c9789c2186a0f6798da6b62b5bffc2a11a
     return view('pjl.approval');
+})->name('approval');
+
+Route::get('/approvalmgr', function () {
+    return view('manager.approve');
 })->name('approval');
 
 require __DIR__.'/auth.php';
