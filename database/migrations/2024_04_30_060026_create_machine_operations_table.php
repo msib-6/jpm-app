@@ -17,6 +17,7 @@ class CreateMachineOperationsTable extends Migration
             $table->string('day');
             $table->string('code');
             $table->string('time');
+            $table->string('status');
             $table->string('description')->nullable();
             $table->boolean('is_changed')->default(false);
             $table->string('changed_by')->default('None');

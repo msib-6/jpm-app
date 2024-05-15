@@ -121,6 +121,7 @@ class MachineController extends Controller
             'day' => 'required',
             'code' => 'required',
             'time' => 'required',
+            'status' => 'required',
         ]);
 
         try {
@@ -143,6 +144,7 @@ class MachineController extends Controller
                 'day' => $validatedData['day'],
                 'code' => $validatedData['code'],
                 'time' => $validatedData['time'],
+                'state' => $validatedData['status'],
                 'description' => $request->input('description'),
                 'isChanged' => true,
                 'changedBy' => $username,
