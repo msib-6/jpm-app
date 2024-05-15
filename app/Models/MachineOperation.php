@@ -18,6 +18,7 @@ class MachineOperation extends Model
         'day',
         'code',
         'time',
+        'status',
         'description',
         'is_changed',
         'changed_by',
