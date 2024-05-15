@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Machine;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\BackupController;
+use App\Http\Controllers\ManagerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,9 +22,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route::get('/getallmachineoperation', function () {
-//     return $request->user();
-// });
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//PJL Route
 
 //Add Machine Route
 Route::post('/addmachine', [MachineController::class, 'addMachine'])->name('add.machine');;
@@ -52,3 +53,12 @@ Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperati
 //Backup MachineOperation Route
 Route::get('/machineoperation/export', [BackupController::class, 'export'])->name('export');
 Route::post('/machineoperation/import', [BackupController::class, 'import'])->name('import');
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//Manager Route
+
+//Show Approval Route
+Route::get('/showwaitingapproval', [ManagerController::class, 'showWaitingApproval'])->name('show.waiting.approval');
+Route::get('/showwaitingapprovalcard', [ManagerController::class, 'showWaitingApprovalCard'])->name('show.waiting.approval.card');
+Route::post('/approve', [ManagerController::class, 'approve'])->name('approve');

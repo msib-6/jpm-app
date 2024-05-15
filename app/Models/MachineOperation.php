@@ -36,6 +36,9 @@ class MachineOperation extends Model
             $existingOperation = self::where('machine_id', $model->machine_id)
                 ->where('time', $model->time)
                 ->where('day', $model->day)
+                ->where('week', $model->week)
+                ->where('month', $model->month)
+                ->where('year', $model->year)
                 ->first();
 
             if ($existingOperation) {
