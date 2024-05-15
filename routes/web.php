@@ -66,16 +66,15 @@ Route::get('/guest/dashboard', function () {
     return view('guest.dashboardGuest');
 });
 
-<<<<<<< HEAD
-Route::get('/approvalpjl', function () {
-=======
+
+
+
 Route::get('/manager/dashboard', function () {
     return view('manager.dashboard');
 });
 
 
-Route::get('/approval', function () {
->>>>>>> 3c53d0c9789c2186a0f6798da6b62b5bffc2a11a
+Route::get('/approvalpjl', function () {
     return view('pjl.approval');
 })->name('approval');
 
