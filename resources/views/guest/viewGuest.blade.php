@@ -23,9 +23,9 @@
 
     <!-- Header for Days -->
     <div class="header-days bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
-        <div class="grid grid-cols-9 gap-4 text-center font-semibold">
+        <div class="grid grid-cols-10 gap-4 text-center font-semibold">
             <!-- Use flexbox utilities to center content vertically and horizontally -->
-            <div class="flex items-center justify-center">Mesin</div>
+            <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
             <div class="flex flex-col justify-center items-center">
                 <span class="font-bold">Senin</span>
                 <span>4 Maret 2024</span>
@@ -65,26 +65,26 @@
     <!-- Data Container -->
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
         <!-- Main grid container with vertical alignment adjustments -->
-        <div class="grid grid-cols-9 gap-4">
+        <div class="grid grid-cols-10 gap-4">
             <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
-            <div class="bg-green-100 p-2 row-span-3 col-span-1 flex items-center justify-center text-center" style="height: 90%;">
+            <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
                 DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 1)
             </div>
 
             <!-- Data for March 4, vertically aligned to the top -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
-                <div class="p-2 bg-grey-100 text-center">
-                    <p>KTPRGES678</p>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
                     <p>07:00</p>
                     <p>Supervisi</p>
                 </div>
-                <div class="p-2 bg-red-100 text-center">
-                    <p>KTPRGES678</p>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
                     <p>07:00</p>
                     <p>Supervisi</p>
                 </div>
-                <div class="p-2 bg-red-100 text-center">
-                    <p>KTPRGES678</p>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
                     <p>07:00</p>
                     <p>Supervisi</p>
                 </div>
@@ -92,21 +92,21 @@
 
             <!-- Example for March 5, assuming 2 entries -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
-                <div class="p-2 bg-red-100 text-center">
-                    <p>KTPRGES678</p>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
                     <p>07:00</p>
                     <p>Supervisi</p>
                 </div>
-                <div class="p-2 bg-red-100 text-center">
-                    <p>KTPRGES678</p>
-                    <p>09:00</p>
-                    <p>Check-up</p>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
                 </div>
             </div>
 
             <div class="col-span-1 grid grid-rows-3 gap-2">
-                <div class="p-2 bg-red-100 text-center">
-                    <p>KTPRGES678</p>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
                     <p>07:00</p>
                     <p>Supervisi</p>
                 </div>
@@ -136,6 +136,9 @@
     }
 
     document.addEventListener('DOMContentLoaded', getQueryParams);
+
+
+
 </script>
 </body>
 </html>

@@ -15,16 +15,16 @@
 
     <!-- Years Container -->
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;" id="yearsList">
-        <button class="year-item py-2 px-4 bg-blue-500 text-white rounded-md">year</button>
-        <button class="add-year-btn py-2 px-4 bg-green-500 text-white rounded-md" onclick="openModal()">+ year</button>
+        <!-- Lokasi Add Year -->
+        <button class="add-year-btn py-2 px-4 bg-green-500 flex items-center justify-center text-white" onclick="openModal()">+ year</button>
     </div>
 
     <!-- Modal for Adding Years (Hidden by default) -->
     <div id="yearModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3 text-center">
-                <span class="close-btn top-0 right-0 cursor-pointer text-black px-3 py-1 text-xl font-bold" onclick="closeModal()">&times;</span>
-                <p class="text-lg font-semibold">Select a Year:</p>
+            <div class="mt-3 text-center relative">  <!-- Tambahkan class 'relative' di sini -->
+                <span class="close-btn absolute top-0 right-0 cursor-pointer text-black px-3 text-2xl font-bold" onclick="closeModal()">&times;</span>
+                <p class="text-lg font-semibold pt-1 pb-3">Add New Year:</p>
                 <div id="yearOptions" class="mt-2">
                     <!-- Year buttons will be inserted here -->
                 </div>
@@ -33,7 +33,7 @@
     </div>
 
     <!-- Month Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;" id="monthsContainer">
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto hidden" style="width: 91.666667%;" id="monthsContainer">
         <!-- Months will be added here by JavaScript -->
     </div>
 </div>
@@ -46,7 +46,7 @@
         months.forEach(month => {
             const ul = document.createElement('ul');
             const button = document.createElement('button');
-            button.className = 'month-item py-2 px-4 bg-gray-300 hover:bg-gray-400 text-black rounded-md';
+            button.className = 'month-item py-2 px-4 bg-gray-300 text-black rounded-md';
             button.textContent = month;
             ul.appendChild(button);
             container.appendChild(ul);
@@ -79,11 +79,16 @@
     function addYear(year) {
         const yearsList = document.getElementById('yearsList');
         const button = document.createElement('button');
-        button.className = 'year-item py-2 px-4 bg-gray-300 hover:bg-gray-400 text-black rounded-md';
+        button.className = 'year-item py-2 px-4 bg-blue-500 text-white rounded-md';
         button.textContent = year;
-        yearsList.appendChild(button);
+
+        const addButton = document.querySelector('.add-year-btn');
+        yearsList.insertBefore(button, addButton); // Menambahkan sebelum tombol "+ year"
+
+        document.getElementById('monthsContainer').classList.remove('hidden'); // Make months visible
         closeModal();
     }
+
 </script>
 </body>
 </html>
