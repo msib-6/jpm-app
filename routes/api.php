@@ -44,10 +44,9 @@ Route::delete('deleteglobaldescription/{globaldDescriptionID}', [MachineControll
 //Show Machine Route
 Route::get('/showmachine',[MachineController::class, 'showAllMachines'])->name('show.all.machine');
 Route::get('/showweeklymachine',[MachineController::class, 'showAllWeeklyMachine'])->name('show.weekly.machine');
-Route::get('/showmachineoperation', [MachineController::class, 'showAllMachineOperation'])->name('show.all.machine.operation');
+Route::get('/showmachineoperation', [MachineController::class, 'showMachineOperation'])->name('show.machine.operation');
 Route::get('/showglobaldescription', [MachineController::class, 'showAllGlobalDescription'])->name('show.all.global.description');
 Route::get('/showcodeline', [MachineController::class, 'showCodeLine'])->name('show.code.line');
-Route::get('/showcodeline2', [MachineController::class, 'showCodeLine2'])->name('show.code.line2');
 Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation']); //Temporary dashboard
 
 //Backup MachineOperation Route
@@ -61,4 +60,4 @@ Route::post('/machineoperation/import', [BackupController::class, 'import'])->na
 //Show Approval Route
 Route::get('/showwaitingapproval', [ManagerController::class, 'showWaitingApproval'])->name('show.waiting.approval');
 Route::get('/showwaitingapprovalcard', [ManagerController::class, 'showWaitingApprovalCard'])->name('show.waiting.approval.card');
-Route::post('/approve', [ManagerController::class, 'approve'])->name('approve');
+Route::post('/approve}', [ManagerController::class, 'approve'])->name('approve');

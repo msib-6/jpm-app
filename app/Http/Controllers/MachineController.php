@@ -503,7 +503,7 @@ class MachineController extends Controller
         ]);
     }
 
-    public function showCodeLine2()
+    public function showMachineOperation()
     {
         $machines = Machine::select('machines.id', 'machines.machine_name', 'machines.line', 'machine_operations.year', 'machine_operations.month', 'machine_operations.week', 'machine_operations.day', 'machine_operations.code', 'machine_operations.time', 'machine_operations.description', 'machine_operations.is_changed', 'machine_operations.changed_by', 'machine_operations.change_date', 'machine_operations.is_approved', 'machine_operations.approved_by')
             ->join('machine_data', 'machines.id', '=', 'machine_data.machine_id')
