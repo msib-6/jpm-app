@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
-    @vite('resources/css/pjl/dashboard.css')
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body class="bg-gray-100">
 <div class="container mx-auto px-4">
@@ -14,15 +14,19 @@
     </div>
 
     <!-- Years Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;" id="yearsList">
-        <!-- Lokasi Add Year -->
-        <button class="add-year-btn py-2 px-4 bg-green-500 flex items-center justify-center text-white" onclick="openModal()">+ year</button>
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center" style="width: 91.666667%;" id="yearsList">
+        <div class="flex flex-grow items-center space-x-4">
+            <!-- Dynamic year buttons will be added here -->
+        </div>
+        <button class="bg-purple-100 text-purple-600 h-10 text-lg px-4 rounded-lg border-0 py-2" onclick="openModal()">+ year</button>
     </div>
+
+
 
     <!-- Modal for Adding Years (Hidden by default) -->
     <div id="yearModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3 text-center relative">  <!-- Tambahkan class 'relative' di sini -->
+            <div class="mt-3 text-center relative">
                 <span class="close-btn absolute top-0 right-0 cursor-pointer text-black px-3 text-2xl font-bold" onclick="closeModal()">&times;</span>
                 <p class="text-lg font-semibold pt-1 pb-3">Add New Year:</p>
                 <div id="yearOptions" class="mt-2">
@@ -33,60 +37,110 @@
     </div>
 
     <!-- Month Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto hidden" style="width: 91.666667%;" id="monthsContainer">
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container" id="monthsContainer" style="width: 91.666667%;">
         <!-- Months will be added here by JavaScript -->
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        const container = document.getElementById('monthsContainer');
-
-        months.forEach(month => {
-            const ul = document.createElement('ul');
-            const button = document.createElement('button');
-            button.className = 'month-item py-2 px-4 bg-gray-300 text-black rounded-md';
-            button.textContent = month;
-            ul.appendChild(button);
-            container.appendChild(ul);
-        });
-
-        // Functions for modal
-        prepareYearModal();
+        fetchMachineOperations();
     });
 
+    function fetchMachineOperations() {
+        axios.get('http://127.0.0.1:8000/api/showMachineOperation')
+            .then(function (response) {
+                console.log('Data fetched successfully:', response.data); // Debugging: Check the API response data
+                processMachineData(response.data.machines);
+            })
+            .catch(function (error) {
+                console.error("Error fetching machine operation data: ", error);
+            });
+    }
+
+    function processMachineData(machines) {
+        const yearsList = document.getElementById('yearsList');
+        console.log('Years List Element:', yearsList); // Debugging: Verify the yearsList element is selected correctly
+        const uniqueYears = new Set();
+
+        machines.forEach(machine => {
+            uniqueYears.add(machine.year);
+        });
+
+        console.log('Unique Years:', uniqueYears); // Debugging: Verify the unique years extracted
+
+        uniqueYears.forEach(year => {
+            const yearButton = document.createElement('button');
+            yearButton.textContent = year;
+            yearButton.className = 'text-black rounded-xl ml-1 mr-14 text-xl bg-transparent px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white';
+            yearButton.textContent = year;
+            yearButton.onclick = () => {
+                // Clear active styles from all buttons
+                const activeButtons = yearsList.querySelectorAll('.bg-purple-600');
+                activeButtons.forEach(btn => {
+                    btn.classList.remove('bg-purple-600', 'text-white');
+                });
+
+                // Add active class to the clicked button
+                yearButton.classList.add('bg-purple-600', 'text-white');
+
+                displayMonths(year, machines);
+            };
+            document.querySelector('#yearsList .flex-grow').appendChild(yearButton); // Add to the flex-grow div
+        });
+
+    }
+
+    function displayMonths(selectedYear, machines) {
+        const monthsContainer = document.getElementById('monthsContainer');
+        monthsContainer.innerHTML = ''; // Clear the container
+
+        const monthWeekData = {};
+        machines.filter(machine => machine.year === selectedYear).forEach(machine => {
+            if (!monthWeekData[machine.month]) {
+                monthWeekData[machine.month] = new Set();
+            }
+            monthWeekData[machine.month].add(machine.week);
+        });
+
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        months.forEach((monthName, index) => {
+            const monthIndex = (index + 1).toString().padStart(2, '0');
+            const weeks = monthWeekData[monthIndex] || [];
+            const button = document.createElement('button');
+            button.className = 'month-container my-4 bg-white p-2 shadow-md rounded-md py-2 px-4 text-black rounded-md flex flex-col items-start justify-center w-full';
+            button.style.height = '5em'; // consistent height for all month divs
+
+            const monthSpan = document.createElement('span');
+            monthSpan.textContent = monthName + ' ';
+            monthSpan.className = 'text-2xl font-bold';
+            button.appendChild(monthSpan);
+
+            if (weeks.size === 0) {
+                const weekSpan = document.createElement('span');
+                weekSpan.textContent = '0 Week';
+                weekSpan.className = 'block text-s text-left w-full month-item-week';
+                button.appendChild(weekSpan);
+            } else {
+                const weeksArray = Array.from(weeks).map(week => `Week ${week}`).join(', ');
+                const weekSpan = document.createElement('span');
+                weekSpan.textContent = weeksArray;
+                weekSpan.className = 'text-s';
+                button.appendChild(weekSpan);
+            }
+
+            monthsContainer.appendChild(button);
+        });
+    }
+
     function openModal() {
-        document.getElementById('yearModal').classList.remove('hidden');
+        var modal = document.getElementById('yearModal');
+        modal.classList.remove('hidden');
     }
 
     function closeModal() {
-        document.getElementById('yearModal').classList.add('hidden');
-    }
-
-    function prepareYearModal() {
-        const yearOptionsContainer = document.getElementById('yearOptions');
-        const currentYear = new Date().getFullYear();
-        for (let i = currentYear - 3; i <= currentYear + 3; i++) {
-            const button = document.createElement('button');
-            button.textContent = i;
-            button.className = 'm-2 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white rounded-md';
-            button.onclick = function() { addYear(i); };
-            yearOptionsContainer.appendChild(button);
-        }
-    }
-
-    function addYear(year) {
-        const yearsList = document.getElementById('yearsList');
-        const button = document.createElement('button');
-        button.className = 'year-item py-2 px-4 bg-blue-500 text-white rounded-md';
-        button.textContent = year;
-
-        const addButton = document.querySelector('.add-year-btn');
-        yearsList.insertBefore(button, addButton); // Menambahkan sebelum tombol "+ year"
-
-        document.getElementById('monthsContainer').classList.remove('hidden'); // Make months visible
-        closeModal();
+        var modal = document.getElementById('yearModal');
+        modal.classList.add('hidden');
     }
 
 </script>

@@ -1,19 +1,16 @@
+/* Atur font default untuk semua elemen */
 * {
     font-family: Arial, sans-serif;
 }
 
-#yearsList {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-}
-
+/* Styling untuk modal konten */
 .ant-modal-content {
-    width: 34.375em; /* Atur lebar modal */
+    width: 34.375em;
     height: 15.625em;
-    padding: 3.125em; /* Atur padding di dalam modal */
+    padding: 3.125em;
 }
 
+/* Styling umum untuk seleksi form */
 .form-select {
     border-radius: 0.625em;
     width: 32em;
@@ -22,12 +19,15 @@
     margin-bottom: 2em;
 }
 
-.isi-week-bulan{
-    font-size: 0.5em;
+/* Styling untuk item-item tahun */
+#yearsList {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
 }
 
 .year-item {
-    color: black; /* Mengubah warna teks menjadi hitam */
+    color: black;
     margin-left: 0.4em;
     margin-right: 3.375em;
     font-size: 1.25em;
@@ -35,25 +35,15 @@
     padding: 0.625em 1.25em;
     cursor: pointer;
     height: auto;
-    border: none; /* Menjadikan border menjadi tidak terlihat */
+    border: none;
 }
 
-/* Warna latar belakang saat hover */
-.year-item:hover {
+.year-item:hover, .year-item:active {
     background-color: #8333D3;
+    color: #ffffff;
 }
 
-/* Warna latar belakang saat aktif */
-.year-item:active {
-    background-color: #8333D3;
-    border: none; /* Menjadikan border menjadi tidak terlihat */
-}
-
-.add-year-btn:hover {
-    background-color: #8333D3;
-    color: #FFFFFF;
-}
-
+/* Styling untuk tombol penambahan tahun */
 .add-year-btn {
     background-color: #F5EEFB;
     color: #8333D3;
@@ -62,13 +52,18 @@
     padding: 1em;
     margin-right: 0.625em;
     border-radius: 0.7em;
-    border: none; /* Menjadikan border menjadi tidak terlihat */
-    order: 999; /* Memastikan tombol ini selalu di akhir */
+    border: none;
+    order: 999;
 }
 
+.add-year-btn:hover {
+    background-color: #8333D3;
+    color: #FFFFFF;
+}
+
+/* Styling untuk container summary */
 .summary-container {
     min-height: 35em;
-    height: auto;
     margin-top: 1em;
     padding: 1.1em;
     border-radius: 1.5em;
@@ -76,17 +71,29 @@
     box-shadow: 0.3em 0.4em 0.4em 0.5em rgba(0, 0, 0, 0.1);
 }
 
-.month-item {
-    font-weight: 600;
-    margin-left: 0.3em;
-    font-size: 1.6em;
+/* Styling umum untuk item bulan dan week */
+.month-item, .month-item-week {
     background-color: transparent;
-    padding: 0.4em 1em;
     cursor: pointer;
-    height: auto;
-    border: none; /* Menjadikan border menjadi tidak terlihat */
+    border: none;
+    margin-left: 0.3em;
 }
 
+.month-item {
+    font-weight: 600;
+    font-size: 1.6em;
+    padding: 0.4em 1em;
+    height: auto;
+}
+
+.month-item-week {
+    font-weight: 200;
+    font-size: 0.6em;
+    padding: 0em 1.4em 1em;
+    height: auto;
+}
+
+/* Styling untuk tombol penambahan bulan */
 .add-month-btn {
     background-color: #F5EEFB;
     color: #8333D3;
@@ -96,29 +103,18 @@
     width: 100%;
 }
 
-.add-year-btn {
-    background-color: #F5EEFB;
-    color: #8333D3;
-    height: 2.5em;
-}
-
-.years-container {
-    /*height: 90%;*/
-    margin-top: 1em;
-    padding: 1.1em;
-    border-radius: 1.5em;
-    display: flex;
-    align-items: center;
-    background-color: #ffffff;
-    box-shadow: 0.3em 0.4em 0.5em rgba(0, 0, 0, 0.1);
-}
-
-
-.card {
-    box-shadow: 0.3em 0.4em 0.5em rgba(0, 0, 0, 0.1);
+/* Styling umum untuk containers dan cards */
+.years-container, .card {
     background-color: #ffffff;
     display: flex;
     align-items: center;
     padding: 1.5em;
     border-radius: 1.5em;
+    box-shadow: 0.3em 0.4em 0.5em rgba(0, 0, 0, 0.1);
+    margin-top: 1em;
+}
+
+.years-container {
+    border-radius: 1.5em;
+    padding: 1.1em;
 }

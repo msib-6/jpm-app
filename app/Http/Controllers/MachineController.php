@@ -505,20 +505,22 @@ class MachineController extends Controller
 
     public function showMachineOperation()
     {
-        $machines = Machine::select('machines.id', 'machines.machine_name', 'machines.line', 'machine_operations.year', 'machine_operations.month', 'machine_operations.week', 'machine_operations.day', 'machine_operations.code', 'machine_operations.time', 'machine_operations.description', 'machine_operations.is_changed', 'machine_operations.changed_by', 'machine_operations.change_date', 'machine_operations.is_approved', 'machine_operations.approved_by')
-            ->join('machine_data', 'machines.id', '=', 'machine_data.machine_id')
-            ->join('machine_operations', function ($join) {
-                $join->on('machine_data.id', '=', 'machine_operations.machine_id')
-                    ->on('machine_data.year', '=', 'machine_operations.year')
-                    ->on('machine_data.month', '=', 'machine_operations.month')
-                    ->on('machine_data.week', '=', 'machine_operations.week');
-            })
+        // Start by selecting all from machine_operations
+        $operations = MachineOperation::select(
+            'machine_operations.*',
+            'machines.id as machine_id',
+            'machines.machine_name',
+            'machines.line'
+        )
+            ->join('machine_data', 'machine_operations.machine_id', '=', 'machine_data.id')
+            ->join('machines', 'machine_data.machine_id', '=', 'machines.id')
             ->get();
 
         return response()->json([
-            'machines' => $machines
+            'machines' => $operations
         ]);
     }
+
 
 
 
@@ -527,7 +529,7 @@ class MachineController extends Controller
         return response()->json($globalDescription);
         //return view('globalDescriptions', ['globalDescriptions' => $globalDescriptions]);
     }
-    
+
     //Show all code AND line to the table, take data from both machine and machineoperation database using relationship.
     public function showCodeLine() {
         // Retrieve all machine operations with the related machine's line
