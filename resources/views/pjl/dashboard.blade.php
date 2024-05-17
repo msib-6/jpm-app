@@ -1,47 +1,33 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-</head>
-<body class="bg-gray-100">
-<div class="container mx-auto px-4">
-    <!-- Card Title -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
-        <h3 class="text-3xl font-semibold">PJL Line 3</h3>
-    </div>
+<!-- resources/views/dashboard.blade.php -->
+@extends('pjl.layout')
 
-    <!-- Years Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center" style="width: 91.666667%;" id="yearsList">
-        <div class="flex flex-grow items-center space-x-4">
-            <!-- Dynamic year buttons will be added here -->
+@section('title', 'Dashboard')
+
+@section('content')
+<div id="dashboard-content" class="content-template">
+    <div class="container mx-auto px-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
+            <h3 class="text-3xl font-semibold">PJL Line 3</h3>
         </div>
-        <button class="bg-purple-100 text-purple-600 h-10 text-lg px-4 rounded-lg border-0 py-2" onclick="openModal()">+ year</button>
-    </div>
-
-
-
-    <!-- Modal for Adding Years (Hidden by default) -->
-    <div id="yearModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3 text-center relative">
-                <span class="close-btn absolute top-0 right-0 cursor-pointer text-black px-3 text-2xl font-bold" onclick="closeModal()">&times;</span>
-                <p class="text-lg font-semibold pt-1 pb-3">Add New Year:</p>
-                <div id="yearOptions" class="mt-2">
-                    <!-- Year buttons will be inserted here -->
+        <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center" style="width: 91.666667%;" id="yearsList">
+            <div class="flex flex-grow items-center space-x-4"></div>
+            <button class="bg-purple-100 text-purple-600 h-10 text-lg px-4 rounded-lg border-0 py-2" onclick="openModal()">+ year</button>
+        </div>
+        <div id="yearModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3 text-center relative">
+                    <span class="close-btn absolute top-0 right-0 cursor-pointer text-black px-3 text-2xl font-bold" onclick="closeModal()">&times;</span>
+                    <p class="text-lg font-semibold pt-1 pb-3">Add New Year:</p>
+                    <div id="yearOptions" class="mt-2"></div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Month Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container" id="monthsContainer" style="width: 91.666667%;">
-        <!-- Months will be added here by JavaScript -->
+        <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container" id="monthsContainer" style="width: 91.666667%;"></div>
     </div>
 </div>
+@endsection
 
+@section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         fetchMachineOperations();
@@ -144,5 +130,4 @@
     }
 
 </script>
-</body>
-</html>
+@endsection
