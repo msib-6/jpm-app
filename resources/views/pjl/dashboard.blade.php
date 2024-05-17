@@ -10,7 +10,7 @@
 <div class="container mx-auto px-4">
     <!-- Card Title -->
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
-        <h3 class="text-3xl font-semibold">PJL Line 3</h3>
+        <h3 class="text-3xl font-bold">PJL Line 3</h3>
     </div>
 
     <!-- Years Container -->
@@ -20,8 +20,6 @@
         </div>
         <button class="bg-purple-100 text-purple-600 h-10 text-lg px-4 rounded-lg border-0 py-2" onclick="openModal()">+ year</button>
     </div>
-
-
 
     <!-- Modal for Adding Years (Hidden by default) -->
     <div id="yearModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
@@ -59,21 +57,27 @@
     }
 
     function processMachineData(machines) {
-        const yearsList = document.getElementById('yearsList');
-        console.log('Years List Element:', yearsList); // Debugging: Verify the yearsList element is selected correctly
+        const yearsList = document.querySelector('#yearsList .flex-grow'); // Directly select the flex-grow container
+        if (!yearsList) {
+            console.error("Years list flex container not found");
+            return;
+        }
+
+        yearsList.innerHTML = ''; // Clear previous year buttons if any
+
         const uniqueYears = new Set();
 
         machines.forEach(machine => {
             uniqueYears.add(machine.year);
         });
 
-        console.log('Unique Years:', uniqueYears); // Debugging: Verify the unique years extracted
+        // Convert the Set to an array and sort it
+        const sortedYears = Array.from(uniqueYears).sort((a, b) => a - b);
 
-        uniqueYears.forEach(year => {
+        sortedYears.forEach(year => {
             const yearButton = document.createElement('button');
             yearButton.textContent = year;
-            yearButton.className = 'text-black rounded-xl ml-1 mr-14 text-xl bg-transparent px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white';
-            yearButton.textContent = year;
+            yearButton.className = 'text-black rounded-xl ml-1 text-xl bg-transparent px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white';
             yearButton.onclick = () => {
                 // Clear active styles from all buttons
                 const activeButtons = yearsList.querySelectorAll('.bg-purple-600');
@@ -86,9 +90,8 @@
 
                 displayMonths(year, machines);
             };
-            document.querySelector('#yearsList .flex-grow').appendChild(yearButton); // Add to the flex-grow div
+            yearsList.appendChild(yearButton); // Append button to the flex-grow container
         });
-
     }
 
     function displayMonths(selectedYear, machines) {
@@ -134,8 +137,18 @@
     }
 
     function openModal() {
-        var modal = document.getElementById('yearModal');
-        modal.classList.remove('hidden');
+        const yearModal = document.getElementById('yearModal');
+        const yearOptions = document.getElementById('yearOptions');
+        yearOptions.innerHTML = ''; // Clear previous options
+        const currentYear = new Date().getFullYear();
+        for (let i = currentYear - 3; i <= currentYear + 3; i++) {
+            const button = document.createElement('button');
+            button.textContent = i;
+            button.className = 'm-2 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white rounded-md';
+            button.onclick = function() { addYear(i); };
+            yearOptions.appendChild(button);
+        }
+        yearModal.classList.remove('hidden');
     }
 
     function closeModal() {
@@ -143,6 +156,23 @@
         modal.classList.add('hidden');
     }
 
+    function addYear(year) {
+        // Save year to local storage
+        localStorage.setItem('selectedYear', year);
+        displayYear(year);
+        closeModal();
+    }
+
+    function displayYear(year) {
+        const yearsList = document.getElementById('yearsList').querySelector('.flex-grow');
+        const yearButton = document.createElement('button');
+        yearButton.textContent = year;
+        yearButton.className = 'year-item text-black ml-1 mr-14 text-xl bg-transparent px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white';
+        yearButton.onclick = () => {
+            displayMonths(year, []);
+        };
+        yearsList.appendChild(yearButton);
+    }
 </script>
 </body>
 </html>
