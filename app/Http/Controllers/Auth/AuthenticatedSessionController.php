@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -29,7 +30,19 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        // Determine the user's role
+        $user = Auth::user();
+        $role = $user->role;
+
+        // Redirect to the appropriate dashboard based on the user's role
+        switch ($role) {
+            case 'admin':
+                return redirect('/admin');
+            case 'Manager':
+                return redirect('/manager/dashboard');
+            default:
+                return redirect(RouteServiceProvider::HOME);
+        }
     }
 
     /**

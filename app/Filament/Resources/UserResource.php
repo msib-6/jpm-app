@@ -50,6 +50,7 @@ class UserResource extends Resource
                             'Line12' => 'Line 12',
                             'Line13' => 'Line 13',
                             'Line14' => 'Line 14',
+                            'Manager' => 'Manager'
                         ])
                         ->required()
                         ->native(false),

@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MachineController;
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,6 +18,11 @@ use App\Http\Controllers\MachineController;
 
 Route::get('/', function () {
     return view('auth.login');
+
+    if('auth'){
+        return view('dashboard');
+    }
+    
 });
 
 Route::get('/dashboard', function () {
@@ -53,7 +60,7 @@ Route::get('/pjl/mesin', function () {
     return view('pjl.mesin');
 });
 
-Route::get('/guest/viewGuest', function (Illuminate\Http\Request $request) {
+Route::get('/guest/viewGuest', function (Request $request) {
     $line = $request->query('line');  // Access 'line' parameter
     $year = $request->query('year');  // Access 'year' parameter
     $month = $request->query('month'); // Access 'month' parameter
@@ -69,19 +76,17 @@ Route::get('/guest/dashboard', function () {
 
 
 
+Route::middleware('manager')->group(function () {
+    Route::get('/manager/dashboard', function () {
+        return view('manager.dashboard');
+    });
 
-Route::get('/manager/dashboard', function () {
-    return view('manager.dashboard');
+    Route::get('/approvalmgr', function () {
+        return view('manager.approve');
+    })->name('manager.approval');
 });
-
-
 
 Route::get('/approvalpjl', function () {
     return view('pjl.approval');
 })->name('pjl.approval');
-
-Route::get('/approvalmgr', function () {
-    return view('manager.approve');
-})->name('manager.approval');
-
 require __DIR__.'/auth.php';

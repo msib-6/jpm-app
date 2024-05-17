@@ -47,7 +47,7 @@ Route::get('/showweeklymachine',[MachineController::class, 'showAllWeeklyMachine
 Route::get('/showmachineoperation', [MachineController::class, 'showMachineOperation'])->name('show.machine.operation');
 Route::get('/showglobaldescription', [MachineController::class, 'showAllGlobalDescription'])->name('show.all.global.description');
 Route::get('/showcodeline', [MachineController::class, 'showCodeLine'])->name('show.code.line');
-Route::get('/showMachineOperation', [MachineController::class, 'showMachineOperation'])->name('show.machine.operation');
+//Route::get('/showMachineOperation', [MachineController::class, 'showMachineOperation'])->name('show.machine.operation');
 
 //Backup MachineOperation Route
 Route::get('/machineoperation/export', [BackupController::class, 'export'])->name('export');
