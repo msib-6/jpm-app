@@ -2,7 +2,7 @@
 <section id="sidebar">
 		<a href="#" class="brand">
 		<img class='bx bxs-smile' src="{{ asset('Logo_kalbe.png') }}" style="max-width: 100px; max-height: 50px; width: auto; height: auto;">
-			
+
 		</a>
 		<ul class="side-menu top">
 			<li id="nav-jpm" class="side-item">
@@ -26,11 +26,11 @@
 			<li id="nav-approval" class="side-item">
 				<a href="{{ route('pjl.approval') }}">
 					<i class='bx bxs-doughnut-chart' ></i>
-					<span class="text">Approval</span>
+					<span class="text">Status</span>
 				</a>
 			</li>
-			
-			
+
+
 		</ul>
 
 	</section>
@@ -64,7 +64,7 @@
         <!-- Dynamic content will be loaded here -->
     </section>
 
-		
+
 	</section>
 	<script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const currentUrl = window.location.href;
         const dashboardUrl = '{{ route('pjl.dashboard') }}';
         const approvalUrl = '{{ route('pjl.approval') }}';
-        
+
         if (currentUrl === dashboardUrl) {
             setActiveNavItem('nav-jpm');
         } else if (currentUrl === approvalUrl) {
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const currentUrl = window.location.href;
         const dashboardUrl = '{{ route('pjl.dashboard') }}';
         const approvalUrl = '{{ route('pjl.approval') }}';
-        
+
         if (currentUrl === dashboardUrl) {
             loadContent(dashboardUrl, 'nav-jpm');
         } else if (currentUrl === approvalUrl) {
@@ -140,6 +140,3 @@ document.addEventListener('DOMContentLoaded', function () {
     loadInitialContent();
 });
 </script>
-	
-	
-	
