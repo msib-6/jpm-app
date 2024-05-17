@@ -49,7 +49,9 @@
                             {{ __('Log in') }}
                         </x-primary-button>
                         <x-primary-button class="button2">
-                            {{ __('Mode Guest') }}
+                            <a href="{{ route('guest.dashboard') }}" id="mode-guest-link">
+                                {{ __('Mode Guest') }}
+                            </a>
                         </x-primary-button>
                     </div>
                 </form>
@@ -58,4 +60,3 @@
     </div>
 </body>
 </html>
-

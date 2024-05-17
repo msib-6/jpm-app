@@ -64,7 +64,7 @@ Route::get('/guest/viewGuest', function (Illuminate\Http\Request $request) {
 //Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');
 Route::get('/guest/dashboard', function () {
     return view('guest.dashboardGuest');
-});
+})->name('guest.dashboard');
 
 
 
@@ -72,6 +72,7 @@ Route::get('/guest/dashboard', function () {
 Route::get('/manager/dashboard', function () {
     return view('manager.dashboard');
 });
+
 
 
 Route::get('/approvalpjl', function () {
