@@ -11,7 +11,6 @@
 @section('title', 'Dashboard')
 
 @section('content')
-
 <div class="container mx-auto px-4">
     <!-- Card Title -->
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
@@ -48,6 +47,7 @@
 @endsection
 
 @section('scripts')
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         fetchMachineOperations();
