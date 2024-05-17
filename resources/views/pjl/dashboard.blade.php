@@ -12,11 +12,13 @@
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
         <h3 class="text-3xl font-bold">PJL Line 3</h3>
     </div>
+@section('title', 'Dashboard')
 
-    <!-- Years Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center" style="width: 91.666667%;" id="yearsList">
-        <div class="flex flex-grow items-center space-x-4">
-            <!-- Dynamic year buttons will be added here -->
+@section('content')
+<div id="dashboard-content" class="content-template">
+    <div class="container mx-auto px-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
+            <h3 class="text-3xl font-semibold">PJL Line 3</h3>
         </div>
         <button class="bg-purple-100 text-purple-600 h-10 text-lg px-4 rounded-lg border-0 py-2" onclick="openModal()">+ year</button>
     </div>
@@ -32,14 +34,12 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Month Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container" id="monthsContainer" style="width: 91.666667%;">
-        <!-- Months will be added here by JavaScript -->
+        <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container" id="monthsContainer" style="width: 91.666667%;"></div>
     </div>
 </div>
+@endsection
 
+@section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         fetchMachineOperations();
@@ -174,5 +174,4 @@
         yearsList.appendChild(yearButton);
     }
 </script>
-</body>
-</html>
+@endsection

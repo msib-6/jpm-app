@@ -46,7 +46,8 @@ Route::get('/auditlog', function () {
 //Show Guest Dashboard
 Route::get('/pjl/dashboard', function () {
     return view('pjl.dashboard');
-});
+})->name('pjl.dashboard');
+
 
 Route::get('/pjl/mesin', function () {
     return view('pjl.mesin');
@@ -64,7 +65,7 @@ Route::get('/guest/viewGuest', function (Illuminate\Http\Request $request) {
 //Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');
 Route::get('/guest/dashboard', function () {
     return view('guest.dashboardGuest');
-});
+})->name('guest.dashboard');
 
 
 
@@ -74,12 +75,13 @@ Route::get('/manager/dashboard', function () {
 });
 
 
+
 Route::get('/approvalpjl', function () {
     return view('pjl.approval');
-})->name('approval');
+})->name('pjl.approval');
 
 Route::get('/approvalmgr', function () {
     return view('manager.approve');
-})->name('approval');
+})->name('manager.approval');
 
 require __DIR__.'/auth.php';
