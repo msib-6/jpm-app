@@ -1,4 +1,12 @@
-<!-- resources/views/approval.blade.php -->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
+    @vite('public/css/history.css')
+</head>
+<body class="bg-gray-100">
 @extends('pjl.layout')
 
 @section('title', 'Approval PJL')
@@ -39,3 +47,6 @@
     </div>
 </div>
 @endsection
+
+</body>
+</html>
