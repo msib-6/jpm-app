@@ -26,7 +26,7 @@
 			<li id="nav-approval" class="side-item">
 				<a href="{{ route('pjl.approval') }}">
 					<i class='bx bxs-doughnut-chart' ></i>
-					<span class="text">Approval</span>
+					<span class="text">Status</span>
 				</a>
 			</li>
 
