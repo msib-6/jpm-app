@@ -149,7 +149,7 @@
                     lineContainer.innerHTML = '';
                     lines.forEach(line => {
                         const button = document.createElement('button');
-                        button.textContent = `Line ${line}`;
+                        button.textContent = `${line}`;
                         button.className = 'btn w-48 h-16 text-lg ml-4 mb-4 text-left';
                         button.addEventListener('click', () => selectLine(line));
                         lineContainer.appendChild(button);
