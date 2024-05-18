@@ -22,7 +22,7 @@ Route::get('/', function () {
     if('auth'){
         return view('dashboard');
     }
-    
+
 });
 
 Route::get('/dashboard', function () {
@@ -67,6 +67,14 @@ Route::get('/guest/viewGuest', function (Request $request) {
 
     return view('guest.viewGuest', compact('line', 'year', 'month'));
 })->name('viewGuest');
+
+Route::get('/pjl/view', function (Request $request) {
+    $line = $request->query('line');  // Access 'line' parameter
+    $year = $request->query('year');  // Access 'year' parameter
+    $month = $request->query('month'); // Access 'month' parameter
+
+    return view('pjl.view', compact('line', 'year', 'month'));
+})->name('pjl.view');
 
 
 //Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');

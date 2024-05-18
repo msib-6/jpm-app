@@ -133,7 +133,7 @@
 
                 // Fetch and display lines
                 function fetchLines() {
-                    axios.get('http://127.0.0.1:8000/api/showMachineOperation')
+                    axios.get('http://127.0.0.1:8000/api/showmachineoperation')
                         .then(function (response) {
                             const lines = new Set(response.data.machines.map(machine => machine.line));
                             populateLines(Array.from(lines));
@@ -166,7 +166,7 @@
 
                 // Fetch and display years based on the selected line
                 function fetchYears(line) {
-                    axios.get(`http://127.0.0.1:8000/api/showMachineOperation?line=${line}`)
+                    axios.get(`http://127.0.0.1:8000/api/showmachineoperation?line=${line}`)
                         .then(function (response) {
                             const years = new Set(response.data.machines.filter(machine => machine.line === line).map(machine => machine.year));
                             populateYears(Array.from(years));
@@ -199,7 +199,7 @@
 
                 // Fetch and display months based on the selected line and year
                 function fetchMonths(line, year) {
-                    axios.get(`http://127.0.0.1:8000/api/showMachineOperation?line=${line}&year=${year}`)
+                    axios.get(`http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}`)
                         .then(function (response) {
                             const months = new Set(response.data.machines.filter(machine => machine.line === line && machine.year === year).map(machine => machine.month));
                             populateMonths(Array.from(months));

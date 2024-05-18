@@ -25,8 +25,8 @@
         <button class="bg-purple-100 text-purple-600 h-10 text-lg px-4 rounded-lg border-0 py-2" onclick="openModal()">+ year</button>
     </div>
 
-    <!-- Modal for Adding Years (Hidden by default) -->
-    <div id="yearModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+    <!-- Modal for Adding Years (Hidden by default, with blur and transparency) -->
+    <div id="yearModal" class="fixed inset-0 backdrop-blur-md overflow-y-auto h-full w-full hidden">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="mt-3 text-center relative">
                 <span class="close-btn absolute top-0 right-0 cursor-pointer text-black px-3 text-2xl font-bold" onclick="closeModal()">&times;</span>
@@ -38,10 +38,12 @@
         </div>
     </div>
 
-    <!-- Month Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container" id="monthsContainer" style="width: 91.666667%;">
+
+    <!-- Month Container initially hidden -->
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden" id="monthsContainer" style="width: 91.666667%;">
         <!-- Months will be added here by JavaScript -->
     </div>
+
 </div>
 
 @endsection
@@ -49,12 +51,14 @@
 @section('scripts')
 
 <script>
+    const selectedLine = 'line1'; // Adjust the line value as needed
+
     document.addEventListener('DOMContentLoaded', function() {
         fetchMachineOperations();
     });
 
     function fetchMachineOperations() {
-        fetch('http://127.0.0.1:8000/api/showMachineOperation')
+        fetch('http://127.0.0.1:8000/api/showmachineoperation')
             .then(response => response.json())
             .then(data => {
                 console.log('Data fetched successfully:', data); // Debugging: Check the API response data
@@ -66,7 +70,7 @@
     }
 
     function processMachineData(machines) {
-        const yearsList = document.querySelector('#yearsList .flex-grow'); // Directly select the flex-grow container
+        const yearsList = document.querySelector('#yearsList .flex-grow');
         if (!yearsList) {
             console.error("Years list flex container not found");
             return;
@@ -75,7 +79,6 @@
         yearsList.innerHTML = ''; // Clear previous year buttons if any
 
         const uniqueYears = new Set();
-
         machines.forEach(machine => {
             uniqueYears.add(machine.year);
         });
@@ -84,28 +87,25 @@
         const sortedYears = Array.from(uniqueYears).sort((a, b) => a - b);
 
         sortedYears.forEach(year => {
-            const yearButton = document.createElement('button');
-            yearButton.textContent = year;
-            yearButton.className = 'text-black rounded-xl ml-1 text-xl bg-transparent px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white';
-            yearButton.onclick = () => {
-                // Clear active styles from all buttons
-                const activeButtons = yearsList.querySelectorAll('.bg-purple-600');
-                activeButtons.forEach(btn => {
-                    btn.classList.remove('bg-purple-600', 'text-white');
-                });
-
-                // Add active class to the clicked button
-                yearButton.classList.add('bg-purple-600', 'text-white');
-
-                displayMonths(year, machines);
-            };
-            yearsList.appendChild(yearButton); // Append button to the flex-grow container
+            addYearButton(year, machines); // Adjusted to pass machines for displayMonths function
         });
+    }
+
+    function addYearButton(year, machines) {
+        const yearsList = document.querySelector('#yearsList .flex-grow');
+        const yearButton = document.createElement('button');
+        yearButton.textContent = year;
+        yearButton.className = 'text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
+        yearButton.onclick = () => {
+            displayMonths(year, machines);
+        };
+        yearsList.appendChild(yearButton);
     }
 
     function displayMonths(selectedYear, machines) {
         const monthsContainer = document.getElementById('monthsContainer');
         monthsContainer.innerHTML = ''; // Clear the container
+        monthsContainer.classList.remove('hidden'); // Show the container when a year is selected
 
         const monthWeekData = {};
         machines.filter(machine => machine.year === selectedYear).forEach(machine => {
@@ -141,21 +141,34 @@
                 button.appendChild(weekSpan);
             }
 
+            // Add click event to navigate to the view page with parameters
+            button.onclick = () => {
+                window.location.href = `/pjl/view?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
+            };
+
             monthsContainer.appendChild(button);
         });
     }
 
     function openModal() {
+        const existingYears = new Set();
+        document.querySelectorAll('#yearsList button').forEach(button => {
+            existingYears.add(button.textContent); // Store all displayed years
+        });
+
         const yearModal = document.getElementById('yearModal');
         const yearOptions = document.getElementById('yearOptions');
         yearOptions.innerHTML = ''; // Clear previous options
+
         const currentYear = new Date().getFullYear();
         for (let i = currentYear - 3; i <= currentYear + 3; i++) {
-            const button = document.createElement('button');
-            button.textContent = i;
-            button.className = 'm-2 py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white rounded-md';
-            button.onclick = function() { addYear(i); };
-            yearOptions.appendChild(button);
+            if (!existingYears.has(i.toString())) { // Only add year buttons for years not already displayed
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.className = 'm-2 py-2 px-4 bg-purple-500 hover:bg-purple-700 text-white rounded-md';
+                button.onclick = function() { addYear(i); };
+                yearOptions.appendChild(button);
+            }
         }
         yearModal.classList.remove('hidden');
     }
@@ -176,12 +189,13 @@
         const yearsList = document.getElementById('yearsList').querySelector('.flex-grow');
         const yearButton = document.createElement('button');
         yearButton.textContent = year;
-        yearButton.className = 'year-item text-black ml-1 mr-14 text-xl bg-transparent px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:bg-purple-600 hover:text-white focus:bg-purple-600 focus:text-white';
+        yearButton.className = 'text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
         yearButton.onclick = () => {
             displayMonths(year, []);
         };
         yearsList.appendChild(yearButton);
     }
+
 </script>
 @endsection
 </body>
