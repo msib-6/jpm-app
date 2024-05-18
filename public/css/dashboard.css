@@ -2,50 +2,45 @@
     font-family: Arial, sans-serif;
 }
 
-
-.background-login{
+.background-login {
     background: url('../modern-podium-product-design-against-backdrop-tropical-forest.jpg'); /* Ganti dengan path gambar Anda */
     background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
     background-position: center; /* Mengatur posisi gambar agar terletak di tengah latar belakang */
     position: relative;
     width: 100vw;
     height: 100vh;
-  }
-  .wrapper{
+}
+
+.wrapper {
     width: 22em;
-    background: #ececec ;
+    background: #ececec;
     -webkit-backdrop-filter: blur(30px);
     opacity: 1;
     backdrop-filter: blur(5px);
     color: gray;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .2) ;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
     border-radius: 10px;
-    padding: 30px 30px;
+    padding: 10px 30px;
     align-items: center;
     justify-content: center;
 }
-.wrp{
+
+.wrp {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    min-height: 100%;
+    min-height: 50%;
     display: flex;
     align-items: center;
 }
 
-.wrapper h1{
-    font-size: 33px;
-    text-align: center;
-}
-.wrapper h1{
+.wrapper h1 {
     font-size: 33px;
     text-align: center;
 }
 
-
-.wrapper .input-box{
-
+.wrapper .input-box {
     position: relative;
     outline: #101010;
     width: 100%;
@@ -54,41 +49,48 @@
     border-radius: 10px;
 }
 
-.input-box input{
+.input-box input {
     width: 100%;
     height: 100%;
     background: transparent;
-    border:none;
+    border: none;
     outline: none;
     border: 2px solid gray;
     border-radius: 100px;
-    font-size: 24px;
+    font-size: 24px; /* Diperbesar font size */
     color: black;
-    padding: 20px 25px 20px 20px;
+    padding: 10px 15px; /* Adjusted padding */
 }
-.input-box input::placeholder{
+
+.input-box input::placeholder {
     color: rgb(211, 208, 208);
+    font-size: 24px; /* Diperbesar font size */
 }
-.wrapper .forgot{
+
+.wrapper .forgot {
     display: flex;
     justify-content: space-between;
     margin: -15px 0 15px;
     margin-left: 230px;
-    padding-top:10px  ;
+    padding-top: 10px;
 }
+
 .forgot label input {
     accent-color: #ebe9e9;
     margin-left: 40px;
 }
-.forgot a:hover{
+
+.forgot a:hover {
     text-decoration: underline;
 }
+
 a {
     text-decoration: none;
     color: black;
-    font-size: 14.5px;
-  }
-  .button1 {
+    font-size: 14px; /* Adjusted font size */
+}
+
+.button1 {
     width: 100%;
     height: 45px;
     margin: 10px 0;
@@ -96,9 +98,9 @@ a {
     border: none;
     outline: none;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px; /* Adjusted font size */
     color: #f7f7f7;
     font-weight: 700;
     transition: background 0.3s; /* Smooth transition for hover effect */
@@ -118,7 +120,6 @@ a {
     box-shadow: 0 0 0 4px rgba(22, 78, 99, 0.5); /* Dark mode cyan focus ring */
 }
 
-
 .button2 {
     width: 100%;
     height: 45px;
@@ -127,9 +128,9 @@ a {
     border: none;
     outline: none;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px; /* Adjusted font size */
     color: #f7f7f7;
     font-weight: 700;
     transition: background 0.3s; /* Smooth transition for hover effect */
@@ -148,45 +149,48 @@ a {
 .dark .button2:focus {
     box-shadow: 0 0 0 4px rgba(22, 78, 99, 0.5); /* Dark mode cyan focus ring */
 }
-  #mode-guest-link {
+
+#mode-guest-link {
     color: white;
 }
 
-
-
 .logo {
     flex-shrink: 0;
-    justify-content:center ;
+    justify-content: center;
     align-items: center;
-    width: 200px;
-    height: 100px;
-    margin-left: 50px;
-    background: url(../logo_kalbe.png)
-      no-repeat center;
+    width: 200px; /* Adjusted width */
+    height: 100px; /* Adjusted height */
+    margin-left: 60px;
+    background: url(../logo_kalbe.png) no-repeat center;
     background-size: cover;
     z-index: 4;
-  }
+}
 
-  .welcome{
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.welcome {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     flex-basis: auto;
     position: relative;
-    margin-right: 50px;
     width: 369px;
     height: 60px;
     color: #5c5e64;
-    font-size: 40px;
+    font-size: 28px; /* Adjusted font size */
     font-weight: 600;
     line-height: 60px;
     text-align: center;
     white-space: nowrap;
     z-index: 4;
-  }
+}
 
-  .silakan {
+.silakan {
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -196,9 +200,8 @@ a {
     width: 369px;
     height: 27px;
     color: #5c5e64;
-    font-size: 18px;
+    font-size: 16px; /* Adjusted font size */
     font-weight: 500;
     line-height: 27px;
     text-align: center;
-    margin-right: 30px; /* Atur sesuai kebutuhan Anda */
-  }
+}

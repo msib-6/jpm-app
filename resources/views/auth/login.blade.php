@@ -15,21 +15,22 @@
                     @csrf
                     <div class='logo'></div>
                     <span class='welcome'>Selamat Datang</span>
-                    <span class='silakan'>Silahkan Masukan Akun Anda</span>
+                    
 
-                    <!-- Email Address -->
-                    <div>
-                        <x-input-label for="email" :value="__('Email')" />
-                        <x-text-input id="email" class="block mt-1 w-full input-box" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                    </div>
+                   <!-- Email Address -->
+<div>
+    <x-input-label for="email" :value="__('Email')" />
+    <x-text-input id="email" class="block mt-1 w-full input-box" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" style="font-size: 17px;" />
+    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+</div>
 
-                    <!-- Password -->
-                    <div class="mt-4">
-                        <x-input-label for="password" :value="__('Password')" />
-                        <x-text-input id="password" class="block mt-1 w-full input-box" type="password" name="password" required autocomplete="current-password" />
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                    </div>
+<!-- Password -->
+<div class="mt-4">
+    <x-input-label for="password" :value="__('Password')" />
+    <x-text-input id="password" class="block mt-1 w-full input-box" type="password" name="password" required autocomplete="current-password" style="font-size: 17px;" />
+    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+</div>
+
 
                     <!-- Remember Me -->
                     <div class="block mt-4">
@@ -60,4 +61,3 @@
     </div>
 </body>
 </html>
-
