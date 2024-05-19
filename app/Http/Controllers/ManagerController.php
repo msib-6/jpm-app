@@ -7,6 +7,8 @@ use App\Models\MachineData;
 use App\Models\MachineOperation;
 use App\Models\User;
 use App\Models\Audits;
+use App\Mail\NotificationEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
@@ -109,5 +111,29 @@ class ManagerController extends Controller
         return response()->json(['message' => 'Operation approved successfully'], 200);
     }
     
+    public function notify(Request $request){
+        $validatedData = $request->validate([
+            'line' => 'required|string'
+        ]);
+    
+        // Retrieve users with matching email roles
+        $users = User::whereJsonContains('email_role', $validatedData['line'])->get();
+        
+            // Check if there are users with the specified email role
+        if ($users->isEmpty()) {
+            return response()->json(['error' => 'No users found with the specified email role.'], 404);
+        }
+    
+        // Send email notifications to each user
+        foreach ($users as $user) {
+            try {
+                Mail::to($user->email)->send(new NotificationEmail());
+            } catch (\Exception $e) {
+                \Log::error('Error sending email: ' . $e->getMessage());
+            }
+        }
+    
+        return response()->json(['message' => 'Notifications sent successfully.']);
+    }
     
 }

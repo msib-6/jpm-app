@@ -60,4 +60,8 @@ Route::post('/machineoperation/import', [BackupController::class, 'import'])->na
 //Show Approval Route
 Route::get('/showwaitingapproval', [ManagerController::class, 'showWaitingApproval'])->name('show.waiting.approval');
 Route::get('/showwaitingapprovalcard', [ManagerController::class, 'showWaitingApprovalCard'])->name('show.waiting.approval.card');
-Route::post('/approve}', [ManagerController::class, 'approve'])->name('approve');
+
+//Approve and notify Route
+Route::post('/approve', [ManagerController::class, 'approve'])->name('approve');
+Route::get('/notify', [ManagerController::class, 'notify'])->name('notify');
+
