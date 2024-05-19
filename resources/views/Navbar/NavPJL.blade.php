@@ -17,12 +17,6 @@
 					<span class="text">PM</span>
 				</a>
 			</li>
-			<li>
-				<a href="#">
-				<i class='bx bx-add-to-queue'></i>
-					<span class="text">Add Machine</span>
-				</a>
-			</li>
 			<li id="nav-approval" class="side-item">
 				<a href="{{ route('pjl.approval') }}">
 					<i class='bx bxs-doughnut-chart' ></i>
@@ -54,13 +48,16 @@
 				<i class='bx bxs-bell' ></i>
 				<span class="num">8</span>
 			</a>
-			<a href="#" class="profile">
-			<img src="{{ asset('avatar1.png') }}">
-			</a>
+            <div class="profile">
+            <img src="{{ asset('avatar1.png') }}" id="profileImage">
+            <div class="dropdown hidden" id="profileDropdown">
+                <a href="#" id="signOut">Sign Out</a>
+            </div>
+        </div>
 		</nav>
 		<!-- NAVBAR -->
 
-		<section id="main-content" class="py-8 px-4">
+		
         <!-- Dynamic content will be loaded here -->
     </section>
 
@@ -139,4 +136,31 @@ document.addEventListener('DOMContentLoaded', function () {
     setInitialActiveItem();
     loadInitialContent();
 });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Existing functions...
+        
+        const profileImage = document.getElementById('profileImage');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const signOutButton = document.getElementById('signOut');
+
+        profileImage.addEventListener('click', function(event) {
+            event.preventDefault();
+            profileDropdown.classList.toggle('hidden');
+        });
+
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!profileImage.contains(event.target) && !profileDropdown.contains(event.target)) {
+                profileDropdown.classList.add('hidden');
+            }
+        });
+
+        signOutButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            // Add sign-out logic here
+            console.log('Sign Out clicked');
+        });
+    });
 </script>
