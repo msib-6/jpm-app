@@ -111,29 +111,31 @@ class ManagerController extends Controller
         return response()->json(['message' => 'Operation approved successfully'], 200);
     }
     
-    public function notify(Request $request){
+    public function notify(Request $request) {
         $validatedData = $request->validate([
             'line' => 'required|string'
         ]);
-    
+
         // Retrieve users with matching email roles
         $users = User::whereJsonContains('email_role', $validatedData['line'])->get();
-        
-            // Check if there are users with the specified email role
+
+        // Check if there are users with the specified email role
         if ($users->isEmpty()) {
             return response()->json(['error' => 'No users found with the specified email role.'], 404);
         }
-    
-        // Send email notifications to each user
-        foreach ($users as $user) {
-            try {
-                Mail::to($user->email)->send(new NotificationEmail());
-            } catch (\Exception $e) {
-                \Log::error('Error sending email: ' . $e->getMessage());
-            }
+
+        // Gather email addresses of all users
+        $recipients = $users->pluck('email')->toArray();
+
+        try {
+            // Send a single email to all recipients
+            Mail::to($recipients)->send(new NotificationEmail());
+        } catch (\Exception $e) {
+            \Log::error('Error sending email: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to send email.'], 500);
         }
-    
-        return response()->json(['message' => 'Notifications sent successfully.']);
+
+        return response()->json(['message' => 'Notifications sent successfully to all recipients.']);
     }
     
 }

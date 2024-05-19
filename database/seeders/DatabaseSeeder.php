@@ -8,8 +8,6 @@ use App\Models\Machine;
 use App\Models\MachineData;
 use App\Models\MachineOperation;
 use App\Models\User;
-use App\Mail\NotificationEmail;
-use Config\mail;
 
 class DatabaseSeeder extends Seeder
 {
@@ -34,20 +32,18 @@ class DatabaseSeeder extends Seeder
             'email_role' => ['Line1'], // Assign email roles
         ]);
 
-        // Generate machines
         Machine::create([
             'machine_name' => 'Machine 1',
             'category' => 'Category 1',
-            'line' => 'line1',
+            'line' => ['Line1', 'Line 4', 'Line8a'],
         ]);
 
         Machine::create([
             'machine_name' => 'Machine 2',
             'category' => 'Category 2',
-            'line' => 'line1',
+            'line' => ['Line1', 'Line2'],
         ]);
 
-        // Generate machine data
         MachineData::create([
             'machine_id' => 1,
             'machine_name' => 'Machine 1',
@@ -66,7 +62,6 @@ class DatabaseSeeder extends Seeder
             'date' => '2024-04-01 00:00:00',
         ]);
 
-        // Generate machine operations
         MachineOperation::create([
             'machine_id' => 1,
             'year' => '2024',
@@ -83,7 +78,5 @@ class DatabaseSeeder extends Seeder
             'is_approved' => false,
             'approved_by' => 'None',
         ]);
-
-        // Add more MachineOperation::create calls as needed for other records
     }
 }

@@ -7,10 +7,6 @@
 </head>
 <body>
     <h1>There is a recent change to this week JPM</h1>
-    <p>Hello,</p>
-    <p>Please kindly check the JPM change on the website</p>
-    <p>Thank you</p>
-    <p>Best Regards</p>
-    <p>JPM Admin</p>
+    <p>Hello, Please kindly check the JPM change on the website</p>
 </body>
 </html>
