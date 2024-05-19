@@ -69,15 +69,15 @@
 
         // Loop through the days, ensuring each week runs from Monday to the following Monday
         while (true) {
-            week.push(formatDate(currentDate)); // Add the current day to the current week
-
             if (currentDate.getDay() === 1 && week.length > 1) { // If it's Monday and not the first iteration
                 weeks.push(week); // Complete the current week
                 week = [formatDate(currentDate)]; // Start a new week with this Monday
+            } else {
+                week.push(formatDate(currentDate)); // Add the current day to the current week
             }
             currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
 
-            // Break the loop if we've moved into the next month
+            // Break the loop if we've moved into the next month and completed a week
             if (currentDate.getMonth() !== month - 1 && currentDate.getDay() === 1) {
                 break;
             }
