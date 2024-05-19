@@ -17,6 +17,10 @@ class Machine extends Model
         'line',
     ];
 
+    protected $casts = [
+        'line' => 'array',
+    ];
+
     public function machineOperations()
     {
         return $this->hasMany(MachineOperation::class);

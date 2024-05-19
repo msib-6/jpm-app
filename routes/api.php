@@ -47,7 +47,6 @@ Route::get('/showweeklymachine',[MachineController::class, 'showAllWeeklyMachine
 Route::get('/showmachineoperation', [MachineController::class, 'showMachineOperation'])->name('show.machine.operation');
 Route::get('/showglobaldescription', [MachineController::class, 'showAllGlobalDescription'])->name('show.all.global.description');
 Route::get('/showcodeline', [MachineController::class, 'showCodeLine'])->name('show.code.line');
-//Route::get('/showMachineOperation', [MachineController::class, 'showMachineOperation'])->name('show.machine.operation');
 
 //Backup MachineOperation Route
 Route::get('/machineoperation/export', [BackupController::class, 'export'])->name('export');
@@ -60,4 +59,8 @@ Route::post('/machineoperation/import', [BackupController::class, 'import'])->na
 //Show Approval Route
 Route::get('/showwaitingapproval', [ManagerController::class, 'showWaitingApproval'])->name('show.waiting.approval');
 Route::get('/showwaitingapprovalcard', [ManagerController::class, 'showWaitingApprovalCard'])->name('show.waiting.approval.card');
-Route::post('/approve}', [ManagerController::class, 'approve'])->name('approve');
+
+//Approve and notify Route
+Route::post('/approve', [ManagerController::class, 'approve'])->name('approve');
+Route::get('/notify', [ManagerController::class, 'notify'])->name('notify');
+

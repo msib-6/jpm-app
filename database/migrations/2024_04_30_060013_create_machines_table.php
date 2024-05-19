@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('machine_name');
             $table->string('category');
-            $table->string('line');
+            $table->json('line');
             $table->timestamps();
         });
     }
