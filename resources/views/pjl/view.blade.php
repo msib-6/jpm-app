@@ -18,8 +18,10 @@
     </div>
 
     <!-- Weeks Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;" id="weeksList">
-        <!-- Buttons for each week will be appended here -->
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
+        <div class="flex flex-grow items-center space-x-4" id="weeksList">
+            <!-- Buttons for each week will be appended here -->
+        </div>
     </div>
 
     <!-- Header for Days -->
@@ -69,31 +71,78 @@
 
     function fetchDataFromAPI(line, year, month) {
         const baseUrl = "http://127.0.0.1:8000/api/showmachineoperation";
-
         fetch(baseUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log("Data fetched successfully:", data);
-                // Assuming the data.machines holds the array of machine operations
-                const filteredData = data.machines.filter(machine =>
-                    String(machine.year) === String(year) &&
-                    String(machine.month) === String(month) &&
-                    String(machine.line) === String(line)
-                );
-                console.log("Filtered data:", filteredData);
-                // Now call setupWeekButtons with any necessary parameters
-                setupWeekButtons(parseInt(year), parseInt(month));
-                // renderMachineOperations(filteredData);
-                // setupWeekButtons(parseInt(year), parseInt(month), filteredData);
+                const filteredData = filterData(data.machines, line, year, month);
+                setupWeekButtons(year, month, filteredData);
             })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-            });
+            .catch(error => console.error("Error fetching data:", error));
+    }
+
+    function filterData(data, line, year, month) {
+        return data.filter(machine =>
+            machine.line === line &&
+            machine.year === year &&
+            machine.month === month
+        );
+    }
+
+    function setupWeekButtons(year, month, data) {
+        const weeksList = document.getElementById('weeksList');
+        weeksList.innerHTML = ''; // Clear previous buttons
+        const numWeeks = 5; // Placeholder for dynamic week count based on data
+        for (let i = 1; i <= numWeeks; i++) {
+            const weekButton = document.createElement('button');
+            weekButton.textContent = `Week ${i}`;
+            weekButton.className = 'week-button';
+            weekButton.onclick = () => displayWeek(i, data);
+            weeksList.appendChild(weekButton);
+        }
+    }
+
+    function displayWeek(weekNumber, data) {
+        const weekData = data.filter(item => item.week === weekNumber.toString());
+        renderMachineOperations(weekData);
+    }
+
+    function renderMachineOperations(data) {
+        const machineOperations = document.getElementById('machineOperations');
+        machineOperations.innerHTML = '';
+        const machines = {};
+
+        data.forEach(operation => {
+            const machineName = operation.machine_name;
+            if (!machines[machineName]) {
+                machines[machineName] = {};
+            }
+            if (!machines[machineName][operation.day]) {
+                machines[machineName][operation.day] = [];
+            }
+            machines[machineName][operation.day].push(operation);
+        });
+
+        for (let machineName in machines) {
+            const machineRow = document.createElement('div');
+            machineRow.className = 'machine-row';
+            const machineNameDiv = document.createElement('div');
+            machineNameDiv.textContent = machineName;
+            machineRow.appendChild(machineNameDiv);
+
+            for (let i = 1; i <= 7; i++) { // Assuming 7 days + 1 extra for the following Monday
+                const dayCol = document.createElement('div');
+                dayCol.className = 'day-col';
+                const operations = machines[machineName][i] || [];
+                operations.forEach(operation => {
+                    const operationDiv = document.createElement('div');
+                    operationDiv.textContent = `${operation.code} - ${operation.time}`;
+                    dayCol.appendChild(operationDiv);
+                });
+                machineRow.appendChild(dayCol);
+            }
+            machineOperations.appendChild(machineRow);
+        }
+        machineOperations.style.display = 'block';
     }
 
 
@@ -179,48 +228,6 @@
         renderMachineOperations(data, dates);
     }
 
-    function renderMachineOperations(data, weekDates) {
-        const machineOperations = document.getElementById('machineOperations');
-        machineOperations.innerHTML = '';
-        const machines = {};
-
-        data.forEach(operation => {
-            if (!machines[operation.machine_name]) {
-                machines[operation.machine_name] = {};
-            }
-            weekDates.forEach((date, index) => {
-                if (operation.day === date) {
-                    if (!machines[operation.machine_name][index + 1]) {
-                        machines[operation.machine_name][index + 1] = [];
-                    }
-                    machines[operation.machine_name][index + 1].push(operation);
-                }
-            });
-        });
-
-        Object.keys(machines).forEach(machineName => {
-            const machineRow = document.createElement('div');
-            machineRow.className = 'grid grid-cols-10 gap-4';
-            const machineNameDiv = document.createElement('div');
-            machineNameDiv.className = 'font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center';
-            machineNameDiv.textContent = machineName;
-            machineRow.appendChild(machineNameDiv);
-
-            for (let i = 1; i <= 8; i++) {
-                const dayCol = document.createElement('div');
-                dayCol.className = 'col-span-1 grid grid-rows-3 gap-2';
-                (machines[machineName][i] || []).forEach(operation => {
-                    const operationDiv = document.createElement('div');
-                    operationDiv.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center';
-                    operationDiv.innerHTML = `<p class="font-bold kode-bn">${operation.code}</p><p class="time">${operation.time}</p><p class="description">${operation.description}</p>`;
-                    dayCol.appendChild(operationDiv);
-                });
-                machineRow.appendChild(dayCol);
-            }
-            machineOperations.appendChild(machineRow);
-        });
-        machineOperations.style.display = 'block';
-    }
 
 
     document.addEventListener('DOMContentLoaded', getQueryParams);

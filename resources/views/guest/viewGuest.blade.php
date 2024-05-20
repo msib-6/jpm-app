@@ -74,42 +74,23 @@
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
         <!-- Main grid container with vertical alignment adjustments -->
         <div class="grid grid-cols-10 gap-4">
+            <!-- 1 Baris Mesin Baru - spans across all data rows for March 4 -->
+
+        </div>
+
+        <div class="grid grid-cols-10 gap-4">
             <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
             <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 1)
+                DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
             </div>
 
             <!-- Data for March 4, vertically aligned to the top -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
-                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
-                    <p class="font-bold kode-bn">KTPRGES678</p>
-                    <p>07:00</p>
-                    <p>Supervisi</p>
-                </div>
-                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
-                    <p class="font-bold kode-bn">KTPRGES678</p>
-                    <p>07:00</p>
-                    <p>Supervisi</p>
-                </div>
-                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
-                    <p class="font-bold kode-bn">KTPRGES678</p>
-                    <p>07:00</p>
-                    <p>Supervisi</p>
-                </div>
+
             </div>
 
             <!-- Example for March 5, assuming 2 entries -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
-                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
-                    <p class="font-bold kode-bn">KTPRGES678</p>
-                    <p>07:00</p>
-                    <p>Supervisi</p>
-                </div>
-                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
-                    <p class="font-bold kode-bn">KTPRGES678</p>
-                    <p>07:00</p>
-                    <p>Supervisi</p>
-                </div>
             </div>
 
             <div class="col-span-1 grid grid-rows-3 gap-2">
@@ -119,8 +100,10 @@
                     <p>Supervisi</p>
                 </div>
             </div>
-
         </div>
+
+
+
     </div>
 
 
