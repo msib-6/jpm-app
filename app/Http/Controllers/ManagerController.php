@@ -132,7 +132,7 @@ class ManagerController extends Controller
             Mail::to($recipients)->send(new NotificationEmail());
         } catch (\Exception $e) {
             \Log::error('Error sending email: ' . $e->getMessage());
-            return response()->json(['error' => 'Failed to send email.'], 500);
+            return response()->json(['error' => 'Failed to send email: ' . $e->getMessage()], 500);
         }
 
         return response()->json(['message' => 'Notifications sent successfully to all recipients.']);

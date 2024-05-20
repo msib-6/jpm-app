@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 use App\Models\Machine;
 use App\Models\MachineData;
 use App\Models\MachineOperation;
@@ -17,6 +19,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Generate users
+
+        User::factory(50)->create();
+        Machine::factory(100)->create();
+
         User::create([
             'name' => 'Admin',
             'email' => 'admin@admin.com',
@@ -29,7 +35,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'darkzov16@gmail.com',
             'password' => Hash::make('Test'),
             'role' => 'Line1',
-            'email_role' => ['Line1'], // Assign email roles
+            'email_role' => ['Line1'],
         ]);
 
         Machine::create([
@@ -71,6 +77,8 @@ class DatabaseSeeder extends Seeder
             'code' => 'ABC123',
             'time' => '12:00:00',
             'status' => 'PJL',
+            'notes' => 'Notes 1',
+            'current_line' => 'Line1',
             'description' => 'Description 1',
             'is_changed' => true,
             'changed_by' => 'None',

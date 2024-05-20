@@ -19,6 +19,8 @@ class MachineOperation extends Model
         'code',
         'time',
         'status',
+        'notes',
+        'current_line',
         'description',
         'is_changed',
         'changed_by',

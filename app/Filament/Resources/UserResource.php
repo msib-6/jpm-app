@@ -146,7 +146,7 @@ class UserResource extends Resource
                             ->placeholder(fn ($state): string => 'Dec 18, ' . now()->subYear()->format('Y')),
                         DatePicker::make('created_until')
                             ->placeholder(fn ($state): string => now()->format('M d, Y')),
-                    ])
+                        ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
