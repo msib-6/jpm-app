@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
     @vite('resources/css/guest/view.css')
-    <title>Machine Schedule Display</title>
+    <title>Machine Schedule Display Guest</title>
 </head>
 <body class="bg-gray-100">
 <div class="container mx-auto px-4">
@@ -26,34 +26,42 @@
         <div class="grid grid-cols-10 gap-4 text-center font-semibold">
             <!-- Use flexbox utilities to center content vertically and horizontally -->
             <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
+            <!-- Hari Kesatu -->
             <div class="flex flex-col justify-center items-center">
                 <span class="font-bold">Senin</span>
                 <span>4 Maret 2024</span>
             </div>
+            <!-- Hari Kedua -->
             <div class="flex flex-col justify-center items-center">
                 <span class="font-bold">Selasa</span>
                 <span>5 Maret 2024</span>
             </div>
+            <!-- Hari Ketiga -->
             <div class="flex flex-col justify-center items-center">
                 <span class="font-bold">Rabu</span>
                 <span>6 Maret 2024</span>
             </div>
+            <!-- Hari Keempat -->
             <div class="flex flex-col justify-center items-center">
                 <span class="font-bold">Kamis</span>
                 <span>7 Maret 2024</span>
             </div>
+            <!-- Hari Kelima -->
             <div class="flex flex-col justify-center items-center">
                 <span class="font-bold">Jumat</span>
                 <span>8 Maret 2024</span>
             </div>
+            <!-- Hari Keenam -->
             <div class="flex flex-col justify-center items-center">
                 <span class="font-bold">Sabtu</span>
                 <span>9 Maret 2024</span>
             </div>
+            <!-- Hari Ketujuh -->
             <div class="flex flex-col justify-center items-center">
                 <span class="font-bold">Minggu</span>
                 <span>10 Maret 2024</span>
             </div>
+            <!-- Hari Kedelapan -->
             <div class="flex flex-col justify-center items-center">
                 <span class="font-bold">Senin</span>
                 <span>11 Maret 2024</span>

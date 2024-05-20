@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
             'year' => '2024',
             'month' => '04',
             'week' => '1',
-            'day' => 'Sunday',
+            'day' => '7',
             'code' => 'ABC123',
             'time' => '12:00:00',
             'status' => 'PJL',
