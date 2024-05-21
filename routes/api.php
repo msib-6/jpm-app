@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Add Machine Route
 Route::post('/addmachine', [MachineController::class, 'addMachine'])->name('add.machine');;
 Route::post('/addweeklymachine', [MachineController::class, 'addWeeklyMachine'])->name('add.weekly.machine');
-Route::post('/addmachineoperation/{machineID}', [MachineController::class, 'addMachineOperation'])->name('add.machine.operation');
+Route::post('/addmachineoperation/{line}/{machineID}', [MachineController::class, 'addMachineOperation'])->name('xadd.machine.operation');
 Route::post('/addglobaldescription', [MachineController::class, 'addGlobalDescription'])->name('add.global.description');
 
 //Edit Machine Route
@@ -39,7 +39,7 @@ Route::put('/editmachineoperation/{machineOperationID}', [MachineController::cla
 //Delete Machine Route
 Route::delete('/deleteweeklymachine/{machineID}', [MachineController::class, 'deleteWeeklyMachine'])->name('delete.machine');
 Route::delete('/deletemachineoperation/{machineOperationID}', [MachineController::class, 'deleteMachineOperation'])->name('delete.machine.operation');
-Route::delete('deleteglobaldescription/{globaldDescriptionID}', [MachineController::class, 'deleteGlobalDescription'])->name('delete.global.description');
+Route::delete('/deleteglobaldescription/{globaldDescriptionID}', [MachineController::class, 'deleteGlobalDescription'])->name('delete.global.description');
 
 //Show Machine Route
 Route::get('/showmachine',[MachineController::class, 'showAllMachines'])->name('show.all.machine');

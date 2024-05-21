@@ -112,46 +112,46 @@ class MachineController extends Controller
     }
 
     //Add Machine Operation, input to machineOperation database
-    public function addMachineOperation(Request $request, $machineID) {
+    public function addMachineOperation(Request $request, $line, $machineID) {
         // Get user ID
         $userId = auth()->id();
-
-        // Validation
-        $validatedData = $request->validate([
-            'day' => 'required',
-            'code' => 'required',
-            'time' => 'required',
-            'status' => 'required',
-        ]);
-
+    
         try {
+            // Validation
+            $day = $request->input('day');
+            $code = $request->input('code');
+            $time = $request->input('time');
+            $status = $request->input('status');
+            $description = $request->input('description');
+    
             // Retrieve machine data
             $machineData = MachineData::find($machineID);
             if (!$machineData) {
-                throw new \Exception("Machine not found");
+                throw new \Exception("Machine not found for ID: $machineID");
             }
-
+    
             // Fetch the user's name using their ID
             $user = User::find($userId);
             $username = $user ? $user->name : 'Unknown'; // If user not found, use 'Unknown'
-
+    
             // Create a new machine operation inheriting machine data values
             $machineOperation = new MachineOperation([
                 'machine_id' => $machineID, // Set the machine_id attribute
                 'year' => $machineData->year,
                 'month' => $machineData->month,
                 'week' => $machineData->week,
-                'day' => $validatedData['day'],
-                'code' => $validatedData['code'],
-                'time' => $validatedData['time'],
-                'state' => $validatedData['status'],
-                'description' => $request->input('description'),
+                'day' => $day,
+                'code' => $code,
+                'time' => $time,
+                'state' => $status,
+                'current_line' => $line,
+                'description' => $description,
                 'isChanged' => true,
                 'changedBy' => $username,
             ]);
-
+    
             $machineOperation->save();
-
+    
             // Create audit log
             Audits::create([
                 'users_id' => $userId,
@@ -159,13 +159,14 @@ class MachineController extends Controller
                 'event' => 'add',
                 'changes' => json_encode($request->all()), // Serialize input data to JSON
             ]);
-
+    
             return response()->json($machineOperation, 201);
         } catch (\Exception $error) {
             \Log::error('Error adding machine operation: ' . $error->getMessage());
             return response()->json(['message' => $error->getMessage()], 400);
         }
     }
+    
 
     //Add Global Description below tables, input to globalDescription database
     public function addGlobalDescription(Request $request) {
@@ -457,8 +458,7 @@ class MachineController extends Controller
 //    }
 
 //  Coba function year and button
-    public function showAllMachineOperation(Request $request)
-    {
+    public function showAllMachineOperation(Request $request){
         $machines = Machine::select('id', 'machine_name', 'line')->get();
         $selectedLine = null;
         $selectedYear = null;
@@ -503,8 +503,7 @@ class MachineController extends Controller
         ]);
     }
 
-    public function showMachineOperation()
-    {
+    public function showMachineOperation(){
         // Start by selecting all from machine_operations
         $operations = MachineOperation::select(
             'machine_operations.*',

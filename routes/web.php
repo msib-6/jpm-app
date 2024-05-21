@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MachineController;
+//use App\Http\Controllers\MachineController;
 use Illuminate\Http\Request;
 
 /*
@@ -77,7 +77,6 @@ Route::get('/pjl/view', function (Request $request) {
 })->name('pjl.view');
 
 
-//Route::get('/guest/dashboard', [MachineController::class, 'showAllMachineOperation'])->name('guest.dashboardGuest');
 Route::get('/guest/dashboard', function () {
     return view('guest.dashboardGuest');
 })->name('guest.dashboard');

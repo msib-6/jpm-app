@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('manager', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('machine_id')->constrained('machine_operations')->onDelete('cascade');
-            $table->integer('revision_number');
+            $table->integer('machine_id');
+            $table->integer('revision_number')->default(0);
             $table->timestamps();
         });
     }

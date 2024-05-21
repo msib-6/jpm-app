@@ -90,48 +90,58 @@ class ManagerController extends Controller
     }
     
     public function approve(Request $request)
-    {
-        // Validate the incoming request
-        $request->validate([
-            'id' => 'required|integer',
-        ]);
-    
-        // Retrieve the id from the request
-        $id = $request->input('id');
-        $approvedBy = 'test'; // Replace with the authenticated user's name
-    
-        // Retrieve the MachineOperation record by id
-        $machineOperation = MachineOperation::find($id);
-    
-        // Check if the MachineOperation record exists
-        if (!$machineOperation) {
-            return response()->json(['message' => 'Machine operation not found'], 404);
-        }
-    
-        // Update the record with the approved_by field and set is_approved to true
-        $machineOperation->update([
-            'is_approved' => true,
-            'approved_by' => $approvedBy,
-        ]);
-    
-        // Retrieve the first Manager record
-        $manager = Manager::first();
-    
-        // Check if the Manager record exists
-        if (!$manager) {
-            // If no Manager record exists, create one with the machine_id from machineOperation
-            $manager = Manager::create([
-                'machine_id' => $machineOperation->machine_id, // Use machine_id from machineOperation
-                'revision_number' => 1,
-            ]); // Assuming default revision number is 1
-        } else {
-            // Increment the revision number
-            $manager->increment('revision_number');
-        }
-    
-        // Return a success message
-        return response()->json(['message' => 'Operation approved successfully'], 200);
+{
+    // Validate the incoming request
+    $request->validate([
+        'id' => 'required|integer',
+    ]);
+
+    // Retrieve the id from the request
+    $id = $request->input('id');
+    $approvedBy = 'test'; // Replace with the authenticated user's name
+
+    // Retrieve the MachineOperation record by id
+    $machineOperation = MachineOperation::find($id);
+
+    // Check if the MachineOperation record exists
+    if (!$machineOperation) {
+        return response()->json(['message' => 'Machine operation not found'], 404);
     }
+
+    // Update the record with the approved_by field and set is_approved to true
+    $machineOperation->update([
+        'is_changed' => false,
+        'changed_by' => '',
+        'is_approved' => true,
+        'approved_by' => $approvedBy,
+    ]);
+
+    // Ensure machine_id is not null
+    $machineId = $machineOperation->machine_id;
+    if (is_null($machineId)) {
+        return response()->json(['message' => 'Machine operation has no machine_id'], 400);
+    }
+
+    // Retrieve the Manager record by machine_id
+    $manager = Manager::where('machine_id', $machineId)->first();
+
+    // Check if the Manager record exists
+    if (!$manager) {
+        // If no Manager record exists, create one with the machine_id from machineOperation
+        $manager = Manager::create([
+            'machine_id' => $machineId,
+            'revision_number' => 0, // Assuming default revision number is 1
+        ]);
+    } else {
+        // Increment the revision number
+        $manager->increment('revision_number');
+    }
+
+    // Return a success message
+    return response()->json(['message' => 'Operation approved successfully'], 200);
+}
+
+
     
     
 

@@ -11,6 +11,7 @@ class Manager extends Model
     protected $table = 'manager';
 
     protected $fillable = [
+        'machine_id',
         'revision_number',
     ];
 }
