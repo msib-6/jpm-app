@@ -7,6 +7,7 @@ use App\Models\MachineData;
 use App\Models\MachineOperation;
 use App\Models\User;
 use App\Models\Audits;
+use App\Models\Manager;
 use App\Mail\NotificationEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
@@ -88,28 +89,53 @@ class ManagerController extends Controller
         return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
     }
     
-    public function approve(Request $request){
+    public function approve(Request $request)
+    {
         // Validate the incoming request
         $request->validate([
             'id' => 'required|integer',
         ]);
     
-        // Retrieve the id and approved_by fields from the request
+        // Retrieve the id from the request
         $id = $request->input('id');
         $approvedBy = 'test'; // Replace with the authenticated user's name
     
         // Retrieve the MachineOperation record by id
         $machineOperation = MachineOperation::find($id);
     
+        // Check if the MachineOperation record exists
+        if (!$machineOperation) {
+            return response()->json(['message' => 'Machine operation not found'], 404);
+        }
+    
         // Update the record with the approved_by field and set is_approved to true
         $machineOperation->update([
             'is_approved' => true,
-            'approved_by' => $approvedBy
+            'approved_by' => $approvedBy,
         ]);
+    
+        // Retrieve the first Manager record
+        $manager = Manager::first();
+    
+        // Check if the Manager record exists
+        if (!$manager) {
+            // If no Manager record exists, create one with the machine_id from machineOperation
+            $manager = Manager::create([
+                'machine_id' => $machineOperation->machine_id, // Use machine_id from machineOperation
+                'revision_number' => 1,
+            ]); // Assuming default revision number is 1
+        } else {
+            // Increment the revision number
+            $manager->increment('revision_number');
+        }
     
         // Return a success message
         return response()->json(['message' => 'Operation approved successfully'], 200);
     }
+    
+    
+
+    
     
     public function notify(Request $request) {
         $validatedData = $request->validate([
