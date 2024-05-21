@@ -18,10 +18,8 @@
     </div>
 
     <!-- Weeks Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
-        <div class="flex flex-grow items-center space-x-4" id="weeksList">
-            <!-- Buttons for each week will be appended here -->
-        </div>
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;" id="weeksList">
+        <!-- Buttons for each week will be appended here -->
     </div>
 
     <!-- Header for Days -->
@@ -41,8 +39,12 @@
     </div>
 
     <!-- Data Container -->
-    <div id="machineOperations" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none;">
-        <!-- Dynamic machine operations will be appended here -->
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+        <!-- Main grid container with vertical alignment adjustments -->
+        <div class="grid grid-cols-10 gap-4">
+            <div id="machineName" class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center machine_name" style="height: 90%;"></div>
+            <!-- Day columns dynamically filled in JavaScript -->
+        </div>
     </div>
 
 
@@ -54,99 +56,82 @@
     // Function to trigger on document load or specific event
     function getQueryParams() {
         const params = new URLSearchParams(window.location.search);
-        const line = params.get('line');
+        const current_line = params.get('line');
         const month = params.get('month');
         const year = params.get('year');
 
-        document.getElementById('line-display').textContent = line ? line : 'N/A';
+        document.getElementById('line-display').textContent = current_line ? current_line : 'N/A';
         document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
         document.getElementById('year-display').textContent = year ? year : 'N/A';
 
-        if (line && month && year) {
-            fetchDataFromAPI(line, year, month);
+        if (current_line && month && year) {
+            fetchDataFromAPI(current_line, year, month);
         } else {
             console.error("Missing URL parameters: line, year, or month");
         }
     }
 
-    function fetchDataFromAPI(line, year, month) {
+    function fetchDataFromAPI(current_line, year, month) {
         const baseUrl = "http://127.0.0.1:8000/api/showmachineoperation";
+
         fetch(baseUrl)
-            .then(response => response.json())
-            .then(data => {
-                const filteredData = filterData(data.machines, line, year, month);
-                setupWeekButtons(year, month, filteredData);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
             })
-            .catch(error => console.error("Error fetching data:", error));
+            .then(data => {
+                console.log("Data fetched successfully:", data);
+                // Assuming the data.machines holds the array of machine operations
+                const filteredData = data.machines.filter(machine =>
+                    String(machine.year) === String(year) &&
+                    String(machine.month) === String(month) &&
+                    String(machine.current_line) === String(current_line)
+                );
+                console.log("Filtered data:", filteredData);
+                displayMachineData(filteredData);
+                // Now call setupWeekButtons with any necessary parameters
+                setupWeekButtons(parseInt(year), parseInt(month));
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
     }
 
-    function filterData(data, line, year, month) {
-        return data.filter(machine =>
-            machine.line === line &&
-            machine.year === year &&
-            machine.month === month
-        );
-    }
-
-    function setupWeekButtons(year, month, data) {
-        const weeksList = document.getElementById('weeksList');
-        weeksList.innerHTML = ''; // Clear previous buttons
-        const numWeeks = 5; // Placeholder for dynamic week count based on data
-        for (let i = 1; i <= numWeeks; i++) {
-            const weekButton = document.createElement('button');
-            weekButton.textContent = `Week ${i}`;
-            weekButton.className = 'week-button';
-            weekButton.onclick = () => displayWeek(i, data);
-            weeksList.appendChild(weekButton);
+    function displayMachineData(data) {
+        const machineNameElement = document.getElementById('machineName');
+        console.log("Attempting to display data for", data.length, "days");
+        if (data.length === 0) {
+            console.log("No data available for this selection.");
+            machineNameElement.textContent = 'No data available';
         }
-    }
-
-    function displayWeek(weekNumber, data) {
-        const weekData = data.filter(item => item.week === weekNumber.toString());
-        renderMachineOperations(weekData);
-    }
-
-    function renderMachineOperations(data) {
-        const machineOperations = document.getElementById('machineOperations');
-        machineOperations.innerHTML = '';
-        const machines = {};
-
-        data.forEach(operation => {
-            const machineName = operation.machine_name;
-            if (!machines[machineName]) {
-                machines[machineName] = {};
+        data.forEach((machine, index) => {
+            const dayIndex = `day${machine.day}`;
+            const dayElement = document.getElementById(dayIndex) || createDayElement(dayIndex);
+            const entry = document.createElement('div');
+            entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center';
+            entry.innerHTML = `
+            <p class="font-bold kode-bn">${machine.code}</p>
+            <p class="time">${machine.time}</p>
+            <p class="description">${machine.description}</p>
+        `;
+            dayElement.appendChild(entry);
+            if (index === 0) {
+                machineNameElement.textContent = machine.machine_name;
             }
-            if (!machines[machineName][operation.day]) {
-                machines[machineName][operation.day] = [];
-            }
-            machines[machineName][operation.day].push(operation);
         });
-
-        for (let machineName in machines) {
-            const machineRow = document.createElement('div');
-            machineRow.className = 'machine-row';
-            const machineNameDiv = document.createElement('div');
-            machineNameDiv.textContent = machineName;
-            machineRow.appendChild(machineNameDiv);
-
-            for (let i = 1; i <= 7; i++) { // Assuming 7 days + 1 extra for the following Monday
-                const dayCol = document.createElement('div');
-                dayCol.className = 'day-col';
-                const operations = machines[machineName][i] || [];
-                operations.forEach(operation => {
-                    const operationDiv = document.createElement('div');
-                    operationDiv.textContent = `${operation.code} - ${operation.time}`;
-                    dayCol.appendChild(operationDiv);
-                });
-                machineRow.appendChild(dayCol);
-            }
-            machineOperations.appendChild(machineRow);
-        }
-        machineOperations.style.display = 'block';
     }
 
 
-
+    function createDayElement(id) {
+        const container = document.querySelector('.grid');
+        const newDayElement = document.createElement('div');
+        newDayElement.id = id;
+        newDayElement.className = 'col-span-1 grid grid-rows-3 gap-2';
+        container.appendChild(newDayElement);
+        return newDayElement;
+    }
 
     function getMonthName(month) {
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -190,7 +175,7 @@
         // Ensure the last week runs until the next Monday
         while (currentDate.getDay() !== 1) { // Move to the last Monday of the month
             week.push(formatDate(currentDate));
-            currentDate.setDate(currentDate.getDate() + 1);
+            currentDate.setDate(currentDate.getDate + 1);
         }
         week.push(formatDate(currentDate)); // Add the final Monday
 
@@ -202,7 +187,7 @@
         weeks.forEach((week, index) => {
             const weekButton = document.createElement('button');
             weekButton.textContent = `Week ${index + 1}`;
-            weekButton.className = 'text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
+            weekButton.className = 'year-item py-2 px-4 bg-blue-500 text-white rounded-md';
             weekButton.onclick = () => displayWeek(week);
             weeksList.appendChild(weekButton);
         });
@@ -214,20 +199,18 @@
     }
 
 
-    function displayWeek(dates, data) {
+    function displayWeek(dates) {
+        // Show the header days when a week is displayed
         document.getElementById('headerDays').style.display = 'block';
 
         dates.forEach((date, index) => {
-            if (index < 8) {
+            if (index < 8) { // Ensure we only update the 8 days
                 const dayElement = document.getElementById(`day${index + 1}`);
-                dayElement.children[0].textContent = date.split(",")[0];
-                dayElement.children[1].textContent = date.split(",")[1];
+                dayElement.children[0].textContent = date.split(",")[0]; // Day name
+                dayElement.children[1].textContent = date.split(",")[1]; // Date
             }
         });
-
-        renderMachineOperations(data, dates);
     }
-
 
 
     document.addEventListener('DOMContentLoaded', getQueryParams);

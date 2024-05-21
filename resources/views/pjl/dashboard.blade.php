@@ -51,7 +51,7 @@
 @section('scripts')
 
 <script>
-    const selectedLine = 'line1'; // Adjust the line value as needed
+    const selectedLine = 'Line1'; // Adjust the line value as needed
 
     document.addEventListener('DOMContentLoaded', function() {
         fetchMachineOperations();
