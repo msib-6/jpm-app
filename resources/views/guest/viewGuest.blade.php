@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="/node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet">
     @vite('resources/css/guest/view.css')
     <title>Machine Schedule Display Guest</title>
 </head>
@@ -72,29 +73,973 @@
 
     <!-- Data Container -->
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
-        <!-- Main grid container with vertical alignment adjustments -->
+        <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
         <div class="grid grid-cols-10 gap-4">
-            <!-- 1 Baris Mesin Baru - spans across all data rows for March 4 -->
+            <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
+            <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+            <span class="inline-flex items-center custom-badge1 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                    Granulasi
+                </span>
+            DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
+            </div>
+            
+            
+
+            <!-- Data for March 4, vertically aligned to the top -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 5, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 6, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 7, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+                        <!-- Data for March 8, vertically aligned to the top -->
+                        <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 9, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 10, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 11, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
 
         </div>
 
         <div class="grid grid-cols-10 gap-4">
             <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
             <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
+            <span class="inline-flex items-center custom-badge2 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                    Drying
+                </span>
+            DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
             </div>
+            
+            
 
             <!-- Data for March 4, vertically aligned to the top -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
-
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
             </div>
 
             <!-- Example for March 5, assuming 2 entries -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
             </div>
 
+            <!-- Example for March 6, assuming 2 entries -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 7, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+                        <!-- Data for March 8, vertically aligned to the top -->
+                        <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 9, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 10, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 11, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-10 gap-4">
+            <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
+            <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+            <span class="inline-flex items-center custom-badge3 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                    Final Mix/Camas
+                </span>
+            DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
+            </div>
+            
+            
+
+            <!-- Data for March 4, vertically aligned to the top -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 5, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 6, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 7, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+                        <!-- Data for March 8, vertically aligned to the top -->
+                        <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 9, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 10, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 11, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-10 gap-4">
+            <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
+            <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+            <span class="inline-flex items-center custom-badge4 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                    Cetak
+                </span>
+            DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
+            </div>
+            
+            
+
+            <!-- Data for March 4, vertically aligned to the top -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 5, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 6, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 7, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+                        <!-- Data for March 8, vertically aligned to the top -->
+                        <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 9, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 10, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 11, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-10 gap-4">
+            <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
+            <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+            <span class="inline-flex items-center custom-badge5 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                    Coating
+                </span>
+            DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
+            </div>
+            
+            
+
+            <!-- Data for March 4, vertically aligned to the top -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 5, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 6, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 7, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+                        <!-- Data for March 8, vertically aligned to the top -->
+                        <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 9, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 10, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 11, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-10 gap-4">
+            <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
+            <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+            <span class="inline-flex items-center custom-badge6 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                    Kemas
+                </span>
+            DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
+            </div>
+            
+            
+
+            <!-- Data for March 4, vertically aligned to the top -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 5, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 6, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 7, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+                        <!-- Data for March 8, vertically aligned to the top -->
+                        <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 9, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+
+            <!-- Example for March 10, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+            </div>
+            <!-- Example for March 11, assuming 2 entries -->
+            <div class="col-span-1 grid grid-rows-3 gap-2">
+            <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
+                    <p class="font-bold kode-bn">KTPRGES678</p>
+                    <p>07:00</p>
+                    <p>Supervisi</p>
+                </div>
+                 <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
                     <p class="font-bold kode-bn">KTPRGES678</p>
                     <p>07:00</p>
                     <p>Supervisi</p>
@@ -131,5 +1076,6 @@
 
 
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 </body>
 </html>
