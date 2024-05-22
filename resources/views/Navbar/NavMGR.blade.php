@@ -36,10 +36,12 @@
             <i class='bx bxs-bell'></i>
             <span class="num">8</span>
         </a>
-        <div class="profile">
-            <img src="{{ asset('avatar1.png') }}" id="profileImage">
-            <div class="dropdown hidden" id="profileDropdown">
-                <a href="#" id="signOut">Sign Out</a>
+        <div class="profile" style="position: relative;">
+            <img src="{{ asset('avatar1.png') }}" id="profileImage" style="cursor: pointer;">
+            <div class="dropdown" id="profileDropdown" style="display: none; position: absolute; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; z-index: 1000;">
+                <div class="py-0">
+                    <a href="#" id="signOut" class="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -48,6 +50,7 @@
     <!-- Dynamic content will be loaded here -->
     <div id="main-content"></div>
 </section>
+
 <!-- CONTENT -->
 
 <script>
@@ -124,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadInitialContent();
 });
 </script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const profileImage = document.getElementById('profileImage');
@@ -132,20 +136,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
     profileImage.addEventListener('click', function(event) {
         event.preventDefault();
-        profileDropdown.classList.toggle('hidden');
+        // Toggle visibility
+        if (profileDropdown.style.display === 'none' || profileDropdown.style.display === '') {
+            profileDropdown.style.display = 'block';
+        } else {
+            profileDropdown.style.display = 'none';
+        }
     });
 
     // Hide dropdown when clicking outside
     document.addEventListener('click', function(event) {
         if (!profileImage.contains(event.target) && !profileDropdown.contains(event.target)) {
-            profileDropdown.classList.add('hidden');
+            profileDropdown.style.display = 'none';
         }
     });
 
     signOutButton.addEventListener('click', function(event) {
         event.preventDefault();
-        // Add sign-out logic here
-        console.log('Sign Out clicked');
+        // Create a form dynamically and submit it
+        const logoutForm = document.createElement('form');
+        logoutForm.method = 'POST';
+        logoutForm.action = '{{ route('logout') }}';
+        logoutForm.style.display = 'none';
+
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}';
+
+        logoutForm.appendChild(csrfToken);
+        document.body.appendChild(logoutForm);
+        logoutForm.submit();
     });
 });
 </script>
+

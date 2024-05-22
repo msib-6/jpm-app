@@ -94,7 +94,7 @@ Route::middleware('manager')->group(function () {
 });
 
 
-Route::get('/approvalpjl', function () {
+Route::get('/pjl/approval', function () {
     return view('pjl.approval');
 })->name('pjl.approval');
 require __DIR__.'/auth.php';

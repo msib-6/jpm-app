@@ -1,65 +1,61 @@
 <!-- SIDEBAR -->
 <section id="sidebar">
-		<a href="#" class="brand">
-		<img class='bx bxs-smile' src="{{ asset('Logo_kalbe.png') }}" style="max-width: 100px; max-height: 50px; width: auto; height: auto;">
+    <a href="#" class="brand">
+        <img class='bx bxs-smile' src="{{ asset('Logo_kalbe.png') }}" style="max-width: 100px; max-height: 50px; width: auto; height: auto;">
+    </a>
+    <ul class="side-menu top">
+        <li id="nav-jpm" class="side-item">
+            <a href="{{ route('pjl.dashboard') }}">
+                <i class='bx bxs-dashboard'></i>
+                <span class="text">JPM</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class='bx bx-grid'></i>
+                <span class="text">PM</span>
+            </a>
+        </li>
+        <li id="nav-approval" class="side-item">
+            <a href="{{ route('pjl.approval') }}">
+                <i class='bx bxs-doughnut-chart'></i>
+                <span class="text">Status</span>
+            </a>
+        </li>
+    </ul>
+</section>
+<!-- SIDEBAR -->
 
-		</a>
-		<ul class="side-menu top">
-			<li id="nav-jpm" class="side-item">
-				<a href="{{ route('pjl.dashboard') }}">
-					<i class='bx bxs-dashboard' ></i>
-					<span class="text">JPM</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<i class='bx bx-grid' ></i>
-					<span class="text">PM</span>
-				</a>
-			</li>
-			<li id="nav-approval" class="side-item">
-				<a href="{{ route('pjl.approval') }}">
-					<i class='bx bxs-doughnut-chart' ></i>
-					<span class="text">Status</span>
-				</a>
-			</li>
-
-
-		</ul>
-
-	</section>
-	<!-- SIDEBAR -->
-
-
-
-	<!-- NAVBAR -->
-	<section id="content">
-		<nav>
-			<i class='bx bx-menu' ></i>
-			<form action="#">
-				<div class="form-input">
-					<input type="search" placeholder="Search...">
-					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
-				</div>
-			</form>
-			<input type="checkbox" id="switch-mode" style="display: none;">
-			<label for="switch-mode" class="switch-mode"></label>
-			<a href="#" class="notification">
-				<i class='bx bxs-bell' ></i>
-				<span class="num">8</span>
-			</a>
-            <div class="profile">
-            <img src="{{ asset('avatar1.png') }}" id="profileImage">
-            <div class="dropdown hidden" id="profileDropdown">
-                <a href="#" id="signOut">Sign Out</a>
+<!-- NAVBAR -->
+<section id="content">
+    <nav>
+        <i class='bx bx-menu'></i>
+        <form action="#">
+            <div class="form-input">
+                <input type="search" placeholder="Search...">
+                <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+            </div>
+        </form>
+        <input type="checkbox" id="switch-mode" style="display: none;">
+        <label for="switch-mode" class="switch-mode"></label>
+        <a href="#" class="notification">
+            <i class='bx bxs-bell'></i>
+            <span class="num">8</span>
+        </a>
+        <div class="profile" style="position: relative;">
+            <img src="{{ asset('avatar1.png') }}" id="profileImage" style="cursor: pointer;">
+            <div class="dropdown" id="profileDropdown" style="display: none; position: absolute; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; z-index: 1000;">
+            <div class="py-0">
+                    <a href="#" id="signOut" class="block px-4 py-2 text-sm  hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                </div>
             </div>
         </div>
-		</nav>
-		<!-- NAVBAR -->
+    </nav>
+    <!-- NAVBAR -->
 
-		
-        <!-- Dynamic content will be loaded here -->
-    </section>
+    <!-- Dynamic content will be loaded here -->
+    <div id="main-content"></div>
+</section>
 
 
 	</section>
@@ -138,29 +134,45 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Existing functions...
-        
-        const profileImage = document.getElementById('profileImage');
-        const profileDropdown = document.getElementById('profileDropdown');
-        const signOutButton = document.getElementById('signOut');
+document.addEventListener('DOMContentLoaded', function() {
+    const profileImage = document.getElementById('profileImage');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const signOutButton = document.getElementById('signOut');
 
-        profileImage.addEventListener('click', function(event) {
-            event.preventDefault();
-            profileDropdown.classList.toggle('hidden');
-        });
-
-        // Hide dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!profileImage.contains(event.target) && !profileDropdown.contains(event.target)) {
-                profileDropdown.classList.add('hidden');
-            }
-        });
-
-        signOutButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            // Add sign-out logic here
-            console.log('Sign Out clicked');
-        });
+    profileImage.addEventListener('click', function(event) {
+        event.preventDefault();
+        // Toggle visibility
+        if (profileDropdown.style.display === 'none' || profileDropdown.style.display === '') {
+            profileDropdown.style.display = 'block';
+        } else {
+            profileDropdown.style.display = 'none';
+        }
     });
+
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!profileImage.contains(event.target) && !profileDropdown.contains(event.target)) {
+            profileDropdown.style.display = 'none';
+        }
+    });
+
+    // Sign out logic
+    signOutButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        // Create a form dynamically and submit it
+        const logoutForm = document.createElement('form');
+        logoutForm.method = 'POST';
+        logoutForm.action = '{{ route('logout') }}';
+        logoutForm.style.display = 'none';
+
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}';
+
+        logoutForm.appendChild(csrfToken);
+        document.body.appendChild(logoutForm);
+        logoutForm.submit();
+    });
+});
 </script>
