@@ -45,6 +45,7 @@ Route::delete('/deleteglobaldescription/{globaldDescriptionID}', [MachineControl
 Route::get('/showmachine',[MachineController::class, 'showAllMachines'])->name('show.all.machine');
 Route::get('/showweeklymachine',[MachineController::class, 'showAllWeeklyMachine'])->name('show.weekly.machine');
 Route::get('/showmachineoperation', [MachineController::class, 'showMachineOperation'])->name('show.machine.operation');
+Route::get('/showguestmachineoperation',[MachineController::class, 'showApprovedMachineOperation'])->name('show.guest.machine.operation');
 Route::get('/showglobaldescription', [MachineController::class, 'showAllGlobalDescription'])->name('show.all.global.description');
 Route::get('/showcodeline', [MachineController::class, 'showCodeLine'])->name('show.code.line');
 
@@ -60,7 +61,9 @@ Route::post('/machineoperation/import', [BackupController::class, 'import'])->na
 Route::get('/showwaitingapproval', [ManagerController::class, 'showWaitingApproval'])->name('show.waiting.approval');
 Route::get('/showwaitingapprovalcard', [ManagerController::class, 'showWaitingApprovalCard'])->name('show.waiting.approval.card');
 
-//Approve and notify Route
+//Manager Route
 Route::post('/approve', [ManagerController::class, 'approve'])->name('approve');
+Route::post('/return', [ManagerController::class, 'return'])->name('return');
 Route::get('/notify', [ManagerController::class, 'notify'])->name('notify');
+Route::get('/notify-reject', [ManagerController::class, 'notifyRejection'])->name('notify.rejection');
 

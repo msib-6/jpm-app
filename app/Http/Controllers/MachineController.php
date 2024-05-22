@@ -470,11 +470,6 @@ class MachineController extends Controller
         return response()->json($machineData);
     }
 
-    //Function to show all machine operation
-//    public function showAllMachineOperation() {
-//        $machineOperations = MachineOperation::all();
-//        return view('machineOperations', ['machineOperations' => $machineOperations]);
-//    }
 
 //  Coba function year and button
     public function showAllMachineOperation(Request $request){
@@ -532,6 +527,24 @@ class MachineController extends Controller
         )
             ->join('machine_data', 'machine_operations.machine_id', '=', 'machine_data.id')
             ->join('machines', 'machine_data.machine_id', '=', 'machines.id')
+            ->get();
+
+        return response()->json([
+            'machines' => $operations
+        ]);
+    }
+
+    public function showApprovedMachineOperation(){
+        // Start by selecting all from machine_operations
+        $operations = MachineOperation::select(
+            'machine_operations.*',
+            'machines.id as machine_id',
+            'machines.machine_name',
+            'machines.line'
+        )
+            ->join('machine_data', 'machine_operations.machine_id', '=', 'machine_data.id')
+            ->join('machines', 'machine_data.machine_id', '=', 'machines.id')
+            ->where('is_approved', true)
             ->get();
 
         return response()->json([

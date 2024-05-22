@@ -26,6 +26,8 @@ class CreateMachineOperationsTable extends Migration
             $table->timestamp('change_date')->default(now());
             $table->boolean('is_approved')->default(false);
             $table->string('approved_by')->default('None');
+            $table->boolean('is_rejected')->default(false);
+            $table->string('rejected_by')->default('None');
             $table->timestamps();
         });
     }

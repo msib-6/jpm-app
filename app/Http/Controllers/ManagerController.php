@@ -46,7 +46,11 @@ class ManagerController extends Controller
                 'is_approved', 
                 'approved_by', 
                 'created_at', 
-                'updated_at'
+                'is_rejected',
+                'rejected_by',
+                'updated_at',
+                'notes',
+                'current_line',
             ]);
         })->values(); // Convert back to a collection with sequential integer keys
         
@@ -87,7 +91,9 @@ class ManagerController extends Controller
                 'is_approved', 
                 'approved_by', 
                 'created_at', 
-                'updated_at'
+                'updated_at',
+                'is_rejected',
+                'rejected_by',
             ]);
         });
         
@@ -162,48 +168,51 @@ class ManagerController extends Controller
     }
     
 
-    public function return(Request $request, $machineOperationID) {
-        // Validate the incoming request
-        $request->validate([
-            'machineOperationID' => 'required|integer',
-        ]);
+    public function return(Request $request) {
+                // Validate the incoming request
+        // $request->validate([
+        //     'year' => 'required|integer',
+        //     'month' => 'required|integer',
+        //     'week' => 'required|integer',
+        // ]);
     
-        // Retrieve the machine operation record by ID
-        $machineOperation = MachineOperation::find($machineOperationID);
+        // Retrieve the inputs from the request
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $week = $request->input('week');
+        $rejectedBy = 'test'; // Replace with the authenticated user's name
     
-        // Check if the machine operation record exists
-        if (!$machineOperation) {
-            return response()->json(['message' => 'Machine operation not found'], 404);
+        // Search for all MachineOperation records that match the given year, month, and week
+        $machineOperations = MachineOperation::where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->get();
+    
+        if ($machineOperations->isEmpty()) {
+            // Handle the case where no MachineOperation records are found (optional)
+            return response()->json(['message' => 'No MachineOperations found'], 404);
         }
-    
-        // Retrieve the last audit log entry for this machine operation
-        $lastAudit = Audits::where('machineoperation_id', $machineOperationID)
-            ->orderBy('created_at', 'desc')
-            ->first();
-    
-        if (!$lastAudit) {
-            return response()->json(['message' => 'No previous changes found to revert'], 404);
+        if ($machineOperations->contains('is_changed', true)) {
+            // Update each MachineOperation record
+            foreach ($machineOperations as $machineOperation) {
+                $machineOperation->update([
+                    'is_changed' => false,
+                    'changed_by' => '',
+                    'is_approved' => false,
+                    'is_rejected' => true,
+                    'rejected_by' => $rejectedBy,
+                ]);
+            }
+        
         }
+        else {
+            // Handle the case where no MachineOperation records are changed (optional)
+            return response()->json(['message' => 'No changes to return'], 404);
+        }
+        
     
-        // Decode the changes from the audit log
-        $changes = json_decode($lastAudit->changes, true);
-    
-        // Restore the machine operation to its previous state
-        $machineOperation->update($changes['old_values']);
-    
-        // Create a new audit entry for the rejection
-        Audits::create([
-            'users_id' => auth()->id(),
-            'machineoperation_id' => $machineOperationID,
-            'event' => 'reject',
-            'changes' => json_encode([
-                'new_values' => $changes['old_values'],
-                'reverted_from' => $changes['new_values']
-            ]),
-        ]);
-    
-        // Return a success message
-        return response()->json(['message' => 'Changes rejected and reverted successfully'], 200);
+        // Return a successful response (optional)
+        return response()->json(['message' => 'Return successful'], 200);
     }
     
     public function notify(Request $request) {
@@ -232,5 +241,33 @@ class ManagerController extends Controller
 
         return response()->json(['message' => 'Notifications sent successfully to all recipients.']);
     }
+
+    public function notifyRejection(Request $request) {
+        $validatedData = $request->validate([
+            'line' => 'required|string'
+        ]);
+
+        // Retrieve users with matching email roles
+        $users = User::whereJsonContains('email_role', $validatedData['line'])->get();
+
+        // Check if there are users with the specified email role
+        if ($users->isEmpty()) {
+            return response()->json(['error' => 'No users found with the specified email role.'], 404);
+        }
+
+        // Gather email addresses of all users
+        $recipients = $users->pluck('email')->toArray();
+
+        try {
+            // Send a single email to all recipients
+            Mail::to($recipients)->send(new NotificationEmail());
+        } catch (\Exception $e) {
+            \Log::error('Error sending email: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to send email: ' . $e->getMessage()], 500);
+        }
+
+        return response()->json(['message' => 'Notifications sent successfully to all recipients.']);
+    }
+
     
 }
