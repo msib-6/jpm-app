@@ -20,7 +20,6 @@ class CreateMachineOperationsTable extends Migration
             $table->string('status')->nullable();
             $table->string('notes')->nullable();
             $table->string('current_line');
-            $table->string('description')->nullable();
             $table->boolean('is_changed')->default(false);
             $table->string('changed_by')->default('None');
             $table->timestamp('change_date')->default(now());

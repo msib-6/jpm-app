@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
     {
         // Generate users
 
-        User::factory(50)->create();
-        Machine::factory(100)->create();
+        User::factory(5)->create();
+        Machine::factory(10)->create();
 
         User::create([
             'name' => 'Admin',
@@ -86,7 +86,6 @@ class DatabaseSeeder extends Seeder
             'status' => 'PJL',
             'notes' => 'Notes 1',
             'current_line' => 'Line1',
-            'description' => 'Description 1',
             'is_changed' => true,
             'changed_by' => 'None',
             'change_date' => now(),
@@ -105,7 +104,6 @@ class DatabaseSeeder extends Seeder
             'status' => 'PJL',
             'notes' => 'Notes 1',
             'current_line' => 'Line1',
-            'description' => 'Description 1',
             'is_changed' => true,
             'changed_by' => 'None',
             'change_date' => now(),
@@ -124,7 +122,6 @@ class DatabaseSeeder extends Seeder
             'status' => 'PJL',
             'notes' => 'Notes 1',
             'current_line' => 'Line1',
-            'description' => 'Description 1',
             'is_changed' => true,
             'changed_by' => 'None',
             'change_date' => now(),
