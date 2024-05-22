@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('manager', function (Blueprint $table) {
             $table->id();
-            $table->integer('machine_id');
+            $table->integer('year');
+            $table->integer('month');
+            $table->integer('week');
             $table->integer('revision_number')->default(0);
             $table->timestamps();
         });

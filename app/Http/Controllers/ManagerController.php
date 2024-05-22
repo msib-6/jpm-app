@@ -56,19 +56,25 @@ class ManagerController extends Controller
 
     //Show waiting approval in detail (clicked card)
     public function showWaitingApproval(Request $request){
-        // Validate the week parameter
-        $request->validate([
-            'week' => 'required|string'
-        ]);
+        // Validate the year, month, week parameter
+        // $request->validate([
+        //     'year' => 'required|string',
+        //     'month' => 'required|string',
+        //     'week' => 'required|string'
+        // ]);
     
         // Retrieve the week from the request
+        $year = $request->input('year');
+        $month = $request->input('month');
         $week = $request->input('week');
     
         // Retrieve all MachineOperation records where is_approved is false, is_changed is true, and week matches the parameter
         $waitingApproval = MachineOperation::where('is_approved', false)
-                                           ->where('is_changed', true)
-                                           ->where('week', $week)
-                                           ->get();
+                                            ->where('is_changed', true)
+                                            ->where('year', $year)
+                                            ->where('month', $month)
+                                            ->where('week', $week)
+                                            ->get();
     
         // Transform the collection to hide certain fields
         $waitingApprovalFiltered = $waitingApproval->map(function($machine) {
@@ -89,63 +95,116 @@ class ManagerController extends Controller
         return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
     }
     
-    public function approve(Request $request)
-{
-    // Validate the incoming request
-    $request->validate([
-        'id' => 'required|integer',
-    ]);
-
-    // Retrieve the id from the request
-    $id = $request->input('id');
-    $approvedBy = 'test'; // Replace with the authenticated user's name
-
-    // Retrieve the MachineOperation record by id
-    $machineOperation = MachineOperation::find($id);
-
-    // Check if the MachineOperation record exists
-    if (!$machineOperation) {
-        return response()->json(['message' => 'Machine operation not found'], 404);
+    public function approve(Request $request) {
+        // Validate the incoming request
+        // $request->validate([
+        //     'year' => 'required|integer',
+        //     'month' => 'required|integer',
+        //     'week' => 'required|integer',
+        // ]);
+    
+        // Retrieve the inputs from the request
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $week = $request->input('week');
+        $approvedBy = 'test'; // Replace with the authenticated user's name
+    
+        // Search for all MachineOperation records that match the given year, month, and week
+        $machineOperations = MachineOperation::where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->get();
+    
+        if ($machineOperations->isEmpty()) {
+            // Handle the case where no MachineOperation records are found (optional)
+            return response()->json(['message' => 'No MachineOperations found'], 404);
+        }
+        if ($machineOperations->contains('is_changed', true)) {
+            // Update each MachineOperation record
+            foreach ($machineOperations as $machineOperation) {
+                $machineOperation->update([
+                    'is_changed' => false,
+                    'changed_by' => '',
+                    'is_approved' => true,
+                    'approved_by' => $approvedBy,
+                ]);
+            }
+        
+            // Retrieve the Manager record by year, month, and week
+            $manager = Manager::where('year', $year)
+                ->where('month', $month)
+                ->where('week', $week)
+                ->first();
+        
+            if ($manager) {
+                // Update the Manager record with the new data
+                $manager->update([
+                    'revision_number' => $manager->revision_number + 1,
+                ]);
+            } else {
+                // If no manager exists for the given year, month, and week, create a new record
+                Manager::create([
+                    'year' => $year,
+                    'month' => $month,
+                    'week' => $week,
+                    'revision_number' => 1, // Starting revision number if creating new
+                ]);
+            }
+        }
+        else {
+            // Handle the case where no MachineOperation records are changed (optional)
+            return response()->json(['message' => 'No changes to approve'], 404);
+        }
+        
+    
+        // Return a successful response (optional)
+        return response()->json(['message' => 'Approval successful'], 200);
     }
+    
 
-    // Update the record with the approved_by field and set is_approved to true
-    $machineOperation->update([
-        'is_changed' => false,
-        'changed_by' => '',
-        'is_approved' => true,
-        'approved_by' => $approvedBy,
-    ]);
-
-    // Ensure machine_id is not null
-    $machineId = $machineOperation->machine_id;
-    if (is_null($machineId)) {
-        return response()->json(['message' => 'Machine operation has no machine_id'], 400);
-    }
-
-    // Retrieve the Manager record by machine_id
-    $manager = Manager::where('machine_id', $machineId)->first();
-
-    // Check if the Manager record exists
-    if (!$manager) {
-        // If no Manager record exists, create one with the machine_id from machineOperation
-        $manager = Manager::create([
-            'machine_id' => $machineId,
-            'revision_number' => 0, // Assuming default revision number is 1
+    public function return(Request $request, $machineOperationID) {
+        // Validate the incoming request
+        $request->validate([
+            'machineOperationID' => 'required|integer',
         ]);
-    } else {
-        // Increment the revision number
-        $manager->increment('revision_number');
+    
+        // Retrieve the machine operation record by ID
+        $machineOperation = MachineOperation::find($machineOperationID);
+    
+        // Check if the machine operation record exists
+        if (!$machineOperation) {
+            return response()->json(['message' => 'Machine operation not found'], 404);
+        }
+    
+        // Retrieve the last audit log entry for this machine operation
+        $lastAudit = Audits::where('machineoperation_id', $machineOperationID)
+            ->orderBy('created_at', 'desc')
+            ->first();
+    
+        if (!$lastAudit) {
+            return response()->json(['message' => 'No previous changes found to revert'], 404);
+        }
+    
+        // Decode the changes from the audit log
+        $changes = json_decode($lastAudit->changes, true);
+    
+        // Restore the machine operation to its previous state
+        $machineOperation->update($changes['old_values']);
+    
+        // Create a new audit entry for the rejection
+        Audits::create([
+            'users_id' => auth()->id(),
+            'machineoperation_id' => $machineOperationID,
+            'event' => 'reject',
+            'changes' => json_encode([
+                'new_values' => $changes['old_values'],
+                'reverted_from' => $changes['new_values']
+            ]),
+        ]);
+    
+        // Return a success message
+        return response()->json(['message' => 'Changes rejected and reverted successfully'], 200);
     }
-
-    // Return a success message
-    return response()->json(['message' => 'Operation approved successfully'], 200);
-}
-
-
-    
-    
-
-    
     
     public function notify(Request $request) {
         $validatedData = $request->validate([

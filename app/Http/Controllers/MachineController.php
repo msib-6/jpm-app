@@ -122,6 +122,7 @@ class MachineController extends Controller
             $code = $request->input('code');
             $time = $request->input('time');
             $status = $request->input('status');
+            $notes = $request->input('notes');
             $description = $request->input('description');
     
             // Retrieve machine data
@@ -146,7 +147,8 @@ class MachineController extends Controller
                 'state' => $status,
                 'current_line' => $line,
                 'description' => $description,
-                'isChanged' => true,
+                'is_changed' => true,
+                'is_approved' => false,
                 'changedBy' => $username,
             ]);
     
@@ -229,6 +231,16 @@ class MachineController extends Controller
             // Find the machine operation by its ID
             $machineOperation = MachineOperation::find($machineOperationID);
 
+             // Check for overlapping operations
+            $operationExist = MachineOperation::where('day', $validatedData['day'])
+            ->where('time', $validatedData['time'])
+            ->where('id', '!=', $machineOperationID)
+            ->first();
+
+            if ($operationExist) {
+                return response()->json(['message' => 'Another machine operation is already scheduled at this time!'], 409);
+            }
+
             if (!$machineOperation) {
                 return response()->json(['message' => 'Machine operation not found!'], 404);
             }
@@ -243,8 +255,8 @@ class MachineController extends Controller
                 'code' => $machineOperation->code,
                 'time' => $machineOperation->time,
                 'description' => $machineOperation->description,
-                'isChanged' => $machineOperation->isChanged,
-                'isApproved' => $machineOperation->isApproved,
+                'is_changed' => $machineOperation->is_changed,
+                'is_approved' => $machineOperation->is_approved,
                 'changedBy' => $machineOperation->changedBy,
             ];
 
@@ -256,14 +268,21 @@ class MachineController extends Controller
                 'description' => $machineOperation->description,
             ];
 
+            $status = $request->input('status');
+            if(!$status){
+                $status = $machineOperation->status;
+            }
+
             // Update the machine operation with the provided data
             $machineOperation->update([
                 'day' => $validatedData['day'],
                 'code' => $validatedData['code'],
                 'time' => $validatedData['time'],
+                'status' => $request->input('status'),
+                'notes' => $request->input('notes'),
                 'description' => $request->input('description'),
-                'isChanged' => true,
-                'isApproved' => false,
+                'is_changed' => true,
+                'is_approved' => false,
                 'changedBy' => $username,
             ]);
 
@@ -357,8 +376,8 @@ class MachineController extends Controller
                 'code' => $machineOperation->code,
                 'time' => $machineOperation->time,
                 'description' => $machineOperation->description,
-                'isChanged' => $machineOperation->isChanged,
-                'isApproved' => $machineOperation->isApproved,
+                'is_changed' => $machineOperation->is_changed,
+                'is_approved' => $machineOperation->is_approved,
                 'changedBy' => $machineOperation->changedBy,
             ];
 
