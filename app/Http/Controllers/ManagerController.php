@@ -102,46 +102,53 @@ class ManagerController extends Controller
     }
     
     public function approve(Request $request) {
-        // Validate the incoming request
-        // $request->validate([
-        //     'year' => 'required|integer',
-        //     'month' => 'required|integer',
-        //     'week' => 'required|integer',
-        // ]);
-    
         // Retrieve the inputs from the request
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
         $approvedBy = 'test'; // Replace with the authenticated user's name
-    
+
+        // Get user ID
+        $userId = auth()->id();
+
         // Search for all MachineOperation records that match the given year, month, and week
         $machineOperations = MachineOperation::where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
             ->get();
-    
+
         if ($machineOperations->isEmpty()) {
             // Handle the case where no MachineOperation records are found (optional)
             return response()->json(['message' => 'No MachineOperations found'], 404);
         }
+
         if ($machineOperations->contains('is_changed', true)) {
-            // Update each MachineOperation record
             foreach ($machineOperations as $machineOperation) {
+
+
+                // Update the machine operation
                 $machineOperation->update([
                     'is_changed' => false,
                     'changed_by' => '',
                     'is_approved' => true,
                     'approved_by' => $approvedBy,
                 ]);
+
+                // Log the audit entry for each updated machine operation
+                Audits::create([
+                    'users_id' => $userId,
+                    'machineoperation_id' => $machineOperation->id,
+                    'event' => 'approve',
+                    'changes' => 'Approve changes'
+                ]);
             }
-        
+
             // Retrieve the Manager record by year, month, and week
             $manager = Manager::where('year', $year)
                 ->where('month', $month)
                 ->where('week', $week)
                 ->first();
-        
+
             if ($manager) {
                 // Update the Manager record with the new data
                 $manager->update([
@@ -156,17 +163,15 @@ class ManagerController extends Controller
                     'revision_number' => 1, // Starting revision number if creating new
                 ]);
             }
-        }
-        else {
+        } else {
             // Handle the case where no MachineOperation records are changed (optional)
             return response()->json(['message' => 'No changes to approve'], 404);
         }
-        
-    
+
         // Return a successful response (optional)
         return response()->json(['message' => 'Approval successful'], 200);
     }
-    
+
 
     public function return(Request $request) {
                 // Validate the incoming request
@@ -195,6 +200,8 @@ class ManagerController extends Controller
         if ($machineOperations->contains('is_changed', true)) {
             // Update each MachineOperation record
             foreach ($machineOperations as $machineOperation) {
+
+                // Update the machine operation
                 $machineOperation->update([
                     'is_changed' => false,
                     'changed_by' => '',
@@ -202,6 +209,15 @@ class ManagerController extends Controller
                     'is_rejected' => true,
                     'rejected_by' => $rejectedBy,
                 ]);
+
+                // Log the audit entry for each updated machine operation
+                Audits::create([
+                    'users_id' => $userId,
+                    'machineoperation_id' => $machineOperation->id,
+                    'event' => 'returned',
+                    'changes' => 'Return changes'
+                ]);
+                
             }
         
         }

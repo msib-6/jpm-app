@@ -6,6 +6,7 @@ use App\Models\Machine;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\AuditController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,9 @@ Route::get('/showcodeline', [MachineController::class, 'showCodeLine'])->name('s
 //Backup MachineOperation Route
 Route::get('/machineoperation/export', [BackupController::class, 'export'])->name('export');
 Route::post('/machineoperation/import', [BackupController::class, 'import'])->name('import');
+
+//Audit
+Route::get('/showaudit', [AuditController::class, 'showAudit'])->name('show.audit');
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
