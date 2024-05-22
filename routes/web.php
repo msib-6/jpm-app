@@ -86,12 +86,13 @@ Route::get('/guest/dashboard', function () {
 Route::middleware('manager')->group(function () {
     Route::get('/manager/dashboard', function () {
         return view('manager.dashboard');
-    });
+    })->name('manager.dashboard');
 
-    Route::get('/approvalmgr', function () {
+    Route::get('/manager/approve', function () {
         return view('manager.approve');
-    })->name('manager.approval');
+    })->name('manager.approve');
 });
+
 
 Route::get('/approvalpjl', function () {
     return view('pjl.approval');
