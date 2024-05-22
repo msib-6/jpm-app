@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<x-auth-session-status class="mb-4" :status="session('status')" />
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,28 +8,24 @@
 </head>
 <body>
     <div class="background-login">
-      <div class="wrp">
+        <div class="wrp">
             <div class="wrapper">
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class='logo'></div>
                     <span class='welcome'>Selamat Datang</span>
-                    
 
-                   <!-- Email Address -->
-<div>
-    <x-input-label for="email" :value="__('Email')" />
-    <x-text-input id="email" class="block mt-1 w-full input-box" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" style="font-size: 17px;" />
-    <x-input-error :messages="$errors->get('email')" class="mt-2" />
-</div>
+                    <!-- Email Address -->
+                    <div>
+                        <x-input-label for="email" :value="__('Email')" />
+                        <x-text-input id="email" class="block mt-1 w-full input-box" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" style="font-size: 17px;" />
+                    </div>
 
-<!-- Password -->
-<div class="mt-4">
-    <x-input-label for="password" :value="__('Password')" />
-    <x-text-input id="password" class="block mt-1 w-full input-box" type="password" name="password" required autocomplete="current-password" style="font-size: 17px;" />
-    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-</div>
-
+                    <!-- Password -->
+                    <div class="mt-4">
+                        <x-input-label for="password" :value="__('Password')" />
+                        <x-text-input id="password" class="block mt-1 w-full input-box" type="password" name="password" required autocomplete="current-password" style="font-size: 17px;" />
+                    </div>
 
                     <!-- Remember Me -->
                     <div class="block mt-4">
@@ -39,6 +34,13 @@
                             <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
                         </label>
                     </div>
+
+                    <!-- Error Message -->
+                    @if ($errors->any())
+                        <div class=" eror mt-2 mb-4 font-medium text-sm">
+                            {{ __('These credentials do not match our records.') }}
+                        </div>
+                    @endif
 
                     <div class="flex items-center justify-end mt-4">
                         @if (Route::has('password.email'))
