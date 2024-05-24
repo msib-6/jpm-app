@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Audits;
 use App\Models\Manager;
 use App\Mail\NotificationEmail;
+use App\Mail\RejectionEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -37,9 +38,9 @@ class ManagerController extends Controller
                 'machine_id',
                 'day',
                 'code',
-                'description',
                 'time',
                 'status',
+                'notes',
                 'is_changed', 
                 'changed_by', 
                 'change_date', 
@@ -49,7 +50,6 @@ class ManagerController extends Controller
                 'is_rejected',
                 'rejected_by',
                 'updated_at',
-                'notes',
                 'current_line',
             ]);
         })->values(); // Convert back to a collection with sequential integer keys
@@ -172,7 +172,6 @@ class ManagerController extends Controller
         return response()->json(['message' => 'Approval successful'], 200);
     }
 
-
     public function return(Request $request) {
                 // Validate the incoming request
         // $request->validate([
@@ -276,7 +275,7 @@ class ManagerController extends Controller
 
         try {
             // Send a single email to all recipients
-            Mail::to($recipients)->send(new NotificationEmail());
+            Mail::to($recipients)->send(new RejectionEmail());
         } catch (\Exception $e) {
             \Log::error('Error sending email: ' . $e->getMessage());
             return response()->json(['error' => 'Failed to send email: ' . $e->getMessage()], 500);

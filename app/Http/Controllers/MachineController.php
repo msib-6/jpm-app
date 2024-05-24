@@ -123,7 +123,6 @@ class MachineController extends Controller
             $time = $request->input('time');
             $status = $request->input('status');
             $notes = $request->input('notes');
-            $description = $request->input('description');
     
             // Retrieve machine data
             $machineData = MachineData::find($machineID);
@@ -217,10 +216,7 @@ class MachineController extends Controller
     // -------------------------------- EDIT MACHINE FUNCTIONS --------------------------------
     //Edit Machine, edit machine data
     public function editMachineOperation(Request $request, $machineOperationID) {
-        // Get user ID
         $userId = auth()->id();
-
-        // Validation
         $validatedData = $request->validate([
             'day' => 'required',
             'code' => 'required',
@@ -228,7 +224,6 @@ class MachineController extends Controller
         ]);
 
         try {
-            // Find the machine operation by its ID
             $machineOperation = MachineOperation::find($machineOperationID);
 
              // Check for overlapping operations
@@ -245,56 +240,50 @@ class MachineController extends Controller
                 return response()->json(['message' => 'Machine operation not found!'], 404);
             }
 
-            // Fetch the user's name using their ID
             $user = User::find($userId);
-            $username = $user ? $user->name : 'Unknown'; // If user not found, use 'Unknown'
+            $username = $user ? $user->name : '';
 
-            // Capture the original state for comparison
             $originalState = [
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
                 'time' => $machineOperation->time,
-                'description' => $machineOperation->description,
-                'is_changed' => $machineOperation->is_changed,
-                'is_approved' => $machineOperation->is_approved,
-                'changedBy' => $machineOperation->changedBy,
+                'status' => $machineOperation->status,
+                'notes' => $machineOperation->notes,
             ];
 
-            // Capture the old values before updating the machine operation
             $oldValues = [
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
                 'time' => $machineOperation->time,
-                'description' => $machineOperation->description,
+                'status' => $machineOperation->status,
+                'notes' => $machineOperation->notes,
             ];
-
+            
             $status = $request->input('status');
             if(!$status){
                 $status = $machineOperation->status;
             }
 
-            // Update the machine operation with the provided data
+            
+
+
             $machineOperation->update([
                 'day' => $validatedData['day'],
                 'code' => $validatedData['code'],
                 'time' => $validatedData['time'],
                 'status' => $request->input('status'),
                 'notes' => $request->input('notes'),
-                'description' => $request->input('description'),
                 'is_changed' => true,
                 'is_approved' => false,
                 'changedBy' => $username,
             ]);
 
-            // Capture the new values after updating the machine operation
             $newValues = [
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
                 'time' => $machineOperation->time,
-                'description' => $machineOperation->description,
             ];
 
-            // Log the audit entry for machine operation edit along with the original and updated states
             Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => $machineOperationID,
@@ -450,11 +439,11 @@ class MachineController extends Controller
     //Function to show all weekly machine that contains all of its date and name
     public function showAllWeeklyMachine(Request $request){
         // Validate the incoming request
-        $request->validate([
-            'year' => 'required|numeric',
-            'month' => 'required|numeric',
-            'week' => 'required|numeric',
-        ]);
+        // $request->validate([
+        //     'year' => 'required|numeric',
+        //     'month' => 'required|numeric',
+        //     'week' => 'required|numeric',
+        // ]);
 
         // Retrieve machine data based on year, month, and week
         $year = $request->input('year');
