@@ -73,19 +73,16 @@
 
     <!-- Data Container -->
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+    <!--Granulasi-->
         <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
         <div class="grid grid-cols-10 gap-4">
-            <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
-            <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-            <span class="inline-flex items-center custom-badge1 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                    Granulasi
-                </span>
-            DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
-            </div>
-            
-            
-
+            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+    <span class="inline-flex items-center custom-badge1 text-white text-xs font-medium px-2.5 py-0.5 rounded-full" style="background-image: linear-gradient(to right bottom, #c32130, #da605f, #ec9290, #f9c2c2, #fff3f3);">
+        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+        Granulasi
+    </span>
+    DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
+</div>
             <!-- Data for March 4, vertically aligned to the top -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
             <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
@@ -234,9 +231,11 @@
                     <p>Supervisi</p>
                 </div>
             </div>
-
         </div>
+        <!--Granulasi-->
 
+        
+        <!--Drying-->
         <div class="grid grid-cols-10 gap-4">
             <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
             <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
@@ -245,10 +244,7 @@
                     Drying
                 </span>
             DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
-            </div>
-            
-            
-
+            </div>  
             <!-- Data for March 4, vertically aligned to the top -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
             <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
@@ -398,7 +394,10 @@
                 </div>
             </div>
         </div>
+        <!--Drying-->
 
+
+        <!--Final Mix/Camas-->
         <div class="grid grid-cols-10 gap-4">
             <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
             <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
@@ -408,9 +407,6 @@
                 </span>
             DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
             </div>
-            
-            
-
             <!-- Data for March 4, vertically aligned to the top -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
             <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
@@ -560,7 +556,10 @@
                 </div>
             </div>
         </div>
+        <!--Final Mix/Camas-->
 
+
+        <!--Cetak-->
         <div class="grid grid-cols-10 gap-4">
             <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
             <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
@@ -570,9 +569,6 @@
                 </span>
             DIOSNA P 400 NIRO T6 QUADROCOMIL ZANCHETTA (Line 2)
             </div>
-            
-            
-
             <!-- Data for March 4, vertically aligned to the top -->
             <div class="col-span-1 grid grid-rows-3 gap-2">
             <div class="p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center">
@@ -722,7 +718,10 @@
                 </div>
             </div>
         </div>
+         <!--Cetak-->
 
+
+         <!--Coating-->
         <div class="grid grid-cols-10 gap-4">
             <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
             <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
@@ -884,7 +883,9 @@
                 </div>
             </div>
         </div>
+        <!--Coating-->
 
+        <!--Kemas-->
         <div class="grid grid-cols-10 gap-4">
             <!-- Mesin DIOSNA - spans across all data rows for March 4 -->
             <div  class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
@@ -1046,7 +1047,7 @@
                 </div>
             </div>
         </div>
-
+        <!--Kemas-->
 
 
     </div>

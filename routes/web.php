@@ -59,6 +59,9 @@ Route::get('/pjl/dashboard', function () {
 Route::get('/pjl/mesin', function () {
     return view('pjl.mesin');
 });
+Route::get('/guest/index', function () {
+    return view('guest.index');
+});
 
 Route::get('/guest/viewGuest', function (Request $request) {
     $line = $request->query('line');  // Access 'line' parameter
