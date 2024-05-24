@@ -43,8 +43,20 @@
         <!-- Main grid container with vertical alignment adjustments -->
         <div class="grid grid-cols-10 gap-4">
             <div id="machineName" class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center machine_name" style="height: 90%;"></div>
-            <!-- Day columns dynamically filled in JavaScript -->
+            <div id="daydata1" class="col-span-1 grid grid-rows-3 gap-2"></div>
+            <div id="daydata2" class="col-span-1 grid grid-rows-3 gap-2"></div>
+            <div id="daydata3" class="col-span-1 grid grid-rows-3 gap-2"></div>
+            <div id="daydata4" class="col-span-1 grid grid-rows-3 gap-2"></div>
+            <div id="daydata5" class="col-span-1 grid grid-rows-3 gap-2"></div>
+            <div id="daydata6" class="col-span-1 grid grid-rows-3 gap-2"></div>
+            <div id="daydata7" class="col-span-1 grid grid-rows-3 gap-2"></div>
+            <div id="daydata8" class="col-span-1 grid grid-rows-3 gap-2"></div>
         </div>
+
+        <div class="grid grid-col-10 gap-4">
+            <div id="machineName" class="font-bold border-2 mesin-jpm p-2 row-span "
+        </div>
+
     </div>
 
 
@@ -99,25 +111,25 @@
             });
     }
 
-    function displayMachineData(data) {
-        const machineNameElement = document.getElementById('machineName');
-        console.log("Attempting to display data for", data.length, "days");
-        if (data.length === 0) {
-            console.log("No data available for this selection.");
-            machineNameElement.textContent = 'No data available';
-        }
-        data.forEach((machine, index) => {
-            const dayIndex = `day${machine.day}`;
-            const dayElement = document.getElementById(dayIndex) || createDayElement(dayIndex);
-            const entry = document.createElement('div');
-            entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center';
-            entry.innerHTML = `
-            <p class="font-bold kode-bn">${machine.code}</p>
-            <p class="time">${machine.time}</p>
-            <p class="description">${machine.description}</p>
-        `;
-            dayElement.appendChild(entry);
-            if (index === 0) {
+    function displayMachineData(machines) {
+        machines.forEach(machine => {
+            const dayIndex = parseInt(machine.day, 10);  // assuming 'day' field is the day number
+            const dayColumn = document.getElementById(`daydata${dayIndex}`);
+
+            if (dayColumn) {
+                const entry = document.createElement('div');
+                entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center';
+                entry.innerHTML = `
+                    <p class="font-bold kode-bn">${machine.code}</p>
+                    <p class="time">${machine.time}</p>
+                    <p class="description">${machine.description}</p>
+                `;
+                dayColumn.appendChild(entry);
+            }
+
+            // Set the machine name if it hasn't been set yet
+            const machineNameElement = document.getElementById('machineName');
+            if (machineNameElement && !machineNameElement.textContent) {
                 machineNameElement.textContent = machine.machine_name;
             }
         });

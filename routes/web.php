@@ -98,3 +98,9 @@ Route::get('/pjl/approval', function () {
     return view('pjl.approval');
 })->name('pjl.approval');
 require __DIR__.'/auth.php';
+
+Route::middleware('admin')->group(function () {
+    Route::get('/admin/convert', function () {
+        return view('admin.convert');
+    })->name('admin.convert');
+});
