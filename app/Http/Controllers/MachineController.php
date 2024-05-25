@@ -127,7 +127,18 @@ class MachineController extends Controller
             // Retrieve machine data
             $machineData = MachineData::find($machineID);
             if (!$machineData) {
-                throw new \Exception("Machine not found for ID: $machineID");
+                throw new \Exception("Machine data not found for ID: $machineID");
+            }
+    
+            // Retrieve the machine and check if the line is part of its line array
+            $machine = $machineData->machine;
+            if (!$machine) {
+                throw new \Exception("Machine not found for machine data ID: $machineID");
+            }
+    
+            $lines = json_decode($machine->line, true);
+            if (!is_array($lines) || !in_array($line, $lines)) {
+                throw new \Exception("Line: $line is not associated with Machine ID: $machineID");
             }
     
             // Fetch the user's name using their ID
@@ -148,13 +159,13 @@ class MachineController extends Controller
                 'current_line' => $line,
                 'is_changed' => true,
                 'is_approved' => false,
-                'changedBy' => $username,
+                'changed_by' => $username,
             ]);
     
             $machineOperation->save();
     
             // Create audit log
-            Audits::create([
+            Audit::create([
                 'users_id' => $userId,
                 'machineoperation_id' => $machineOperation->id,
                 'event' => 'add',
@@ -167,6 +178,8 @@ class MachineController extends Controller
             return response()->json(['message' => $error->getMessage()], 400);
         }
     }
+    
+    
     
 
     //Add Global Description below tables, input to globalDescription database
@@ -466,54 +479,6 @@ class MachineController extends Controller
         // Return the machine data as a response
         return response()->json($machineData);
     }    
-    
-
-
-        //  Coba function year and button
-    public function showAllMachineOperation(Request $request){
-        $machines = Machine::select('id', 'machine_name', 'line')->get();
-        $selectedLine = null;
-        $selectedYear = null;
-        $selectedMonth = null;
-        $selectedLineYears = [];
-
-        if ($request->has('line')) {
-            $selectedLine = $request->line;
-
-            // Ambil id machine berdasarkan line yang dipilih
-            $machineId = Machine::where('id', $selectedLine)->value('id');
-
-            // Cari tahun-tahun terkait dengan machine yang dipilih
-            $selectedLineYears = MachineOperation::where('machine_id', $machineId)
-                ->distinct()
-                ->pluck('year')
-                ->toArray();
-
-            // Set default selected year ke tahun pertama yang tersedia
-            $selectedYear = count($selectedLineYears) > 0 ? $selectedLineYears[0] : null;
-        }
-
-        if ($request->has('year')) {
-            $selectedYear = $request->year;
-        }
-
-        if ($request->is('guest/dashboard')) {
-            return view('guest.dashboardGuest', [
-                'machines' => $machines,
-                'selectedLine' => $selectedLine,
-                'selectedYear' => $selectedYear,
-                'selectedMonth' => $selectedMonth,
-                'selectedLineYears' => $selectedLineYears,
-            ]);
-        }
-
-        return response()->json([
-            'machines' => $machines,
-            'selectedLine' => $selectedLine,
-            'selectedYear' => $selectedYear,
-            'selectedMonth' => $selectedMonth,
-        ]);
-    }
 
     public function showMachineOperation(Request $request){
         // Validate the incoming request
@@ -547,9 +512,6 @@ class MachineController extends Controller
             'operations' => $operations
         ]);
     }
-    
-    
-    
 
     public function showApprovedMachineOperation(){
         // Validate the incoming request
