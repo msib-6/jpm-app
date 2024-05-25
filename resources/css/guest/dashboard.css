@@ -6,31 +6,97 @@
 
 /* resources/css/app.css */
 
-body{
-    background-color: #F8F9FB;
+body {
+    background-color: #844AFF;
 }
 
-.dashboard-container {
+
+.text-container {
+    max-width: 70%;
+}
+
+.text-container h3 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.text-container p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.buttons {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
+    gap: 1rem;
 }
 
-.big-card-container {
-    width: 30%;
-    min-width: 30%;
-    /*max-width: 30%;*/
-    flex-direction: column;
-    align-items: center;
+
+.buttons a {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
-.big-card {
-    background-color: #202444;
-    width: 100%;
-    border-radius: 20px;
-    padding: 4rem;
+        /* Keyframes for fade-in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Apply initial state and transition properties */
+        .section h3, .section p {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s forwards;
+        }
+
+        .section h3 {
+            animation-delay: 0.5s; /* Delay for h3 */
+        }
+
+        .section p {
+            animation-delay: 1s; /* Delay for p */
+        }
+
+        /* Example of hover effect if needed */
+        .section h3:hover, .section p:hover {
+            transform: translateY(-10px);
+            color: #FFD700;
+            transition: all 0.3s ease;
+        }
+
+.image-container {
+    max-width: 50%;
+    display: flex;
+    justify-content: flex-end;
 }
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .section {
+        flex-direction: column;
+        text-align: center;
+    }
+    .text-container, .image-container {
+        max-width: 100%;
+    }
+}
+
+
+
+
 
 .button-kembali-1{
 }
@@ -50,12 +116,5 @@ body{
 
 .text-container {
     flex-grow: 1;
-}
-
-
-.custom-card {
-    flex: 1;
-    max-width: calc(33.333% - 70px);
-    height: 500px;
 }
 
