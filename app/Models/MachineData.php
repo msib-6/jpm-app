@@ -30,4 +30,14 @@ class MachineData extends Model
             $model->date = $model->date ?? now();
         });
     }
+
+    public function machineOperations()
+    {
+        return $this->hasMany(MachineOperation::class, 'machine_id');
+    }
+
+    public function machine()
+    {
+        return $this->belongsTo(Machine::class);
+    }
 }

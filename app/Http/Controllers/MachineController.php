@@ -143,9 +143,9 @@ class MachineController extends Controller
                 'day' => $day,
                 'code' => $code,
                 'time' => $time,
-                'state' => $status,
+                'status' => $status,
+                'notes' => $notes,
                 'current_line' => $line,
-                'description' => $description,
                 'is_changed' => true,
                 'is_approved' => false,
                 'changedBy' => $username,
@@ -282,6 +282,8 @@ class MachineController extends Controller
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
                 'time' => $machineOperation->time,
+                'status' => $machineOperation->status,
+                'notes' => $machineOperation->notes,
             ];
 
             Audits::create([
@@ -440,27 +442,34 @@ class MachineController extends Controller
     public function showAllWeeklyMachine(Request $request){
         // Validate the incoming request
         // $request->validate([
-        //     'year' => 'required|numeric',
-        //     'month' => 'required|numeric',
-        //     'week' => 'required|numeric',
+        //     'year' => 'required|string',
+        //     'month' => 'required|string',
+        //     'week' => 'required|string',
+        //     'line' => 'required|string',
         // ]);
-
-        // Retrieve machine data based on year, month, and week
+    
+        // Retrieve the input parameters
+        $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
-
+    
+        // Retrieve machine data based on the year, month, week, and line
         $machineData = MachineData::where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
+            ->whereHas('machine', function($query) use ($line) {
+                $query->whereJsonContains('line', $line);
+            })
             ->get();
-
+    
         // Return the machine data as a response
         return response()->json($machineData);
-    }
+    }    
+    
 
 
-//  Coba function year and button
+        //  Coba function year and button
     public function showAllMachineOperation(Request $request){
         $machines = Machine::select('id', 'machine_name', 'line')->get();
         $selectedLine = null;
@@ -506,43 +515,75 @@ class MachineController extends Controller
         ]);
     }
 
-    public function showMachineOperation(){
-        // Start by selecting all from machine_operations
-        $operations = MachineOperation::select(
-            'machine_operations.*',
-            'machines.id as machine_id',
-            'machines.machine_name',
-            'machines.line'
-        )
-            ->join('machine_data', 'machine_operations.machine_id', '=', 'machine_data.id')
-            ->join('machines', 'machine_data.machine_id', '=', 'machines.id')
+    public function showMachineOperation(Request $request){
+        // Validate the incoming request
+        $request->validate([
+            'year' => 'required|string',
+            'month' => 'required|string',
+            'week' => 'required|string',
+            'line' => 'required|string',
+        ]);
+    
+        // Retrieve the input parameters
+        $line = $request->input('line');
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $week = $request->input('week');
+    
+        // Retrieve machine operations based on the year, month, week, and line
+        $operations = MachineOperation::select('id', 'machine_id', 'year', 'month', 'week', 'day', 'code', 'time', 'status', 'notes', 'current_line', 'is_changed', 'changed_by', 'change_date', 'is_approved', 'approved_by', 'is_rejected', 'rejected_by', 'created_at', 'updated_at')
+            ->where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->whereHas('machineData', function($query) use ($line) {
+                $query->whereHas('machine', function($query) use ($line) {
+                    $query->whereJsonContains('line', $line);
+                });
+            })
             ->get();
-
+    
+        // Return the machine operations as a response
         return response()->json([
-            'machines' => $operations
+            'operations' => $operations
         ]);
     }
+    
+    
+    
 
     public function showApprovedMachineOperation(){
-        // Start by selecting all from machine_operations
-        $operations = MachineOperation::select(
-            'machine_operations.*',
-            'machines.id as machine_id',
-            'machines.machine_name',
-            'machines.line'
-        )
-            ->join('machine_data', 'machine_operations.machine_id', '=', 'machine_data.id')
-            ->join('machines', 'machine_data.machine_id', '=', 'machines.id')
+        // Validate the incoming request
+        $request->validate([
+            'year' => 'required|string',
+            'month' => 'required|string',
+            'week' => 'required|string',
+            'line' => 'required|string',
+        ]);
+
+        // Retrieve the input parameters
+        $line = $request->input('line');
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $week = $request->input('week');
+
+        // Retrieve machine operations based on the year, month, week, and line
+        $operations = MachineOperation::select('id', 'machine_id', 'year', 'month', 'week', 'day', 'code', 'time', 'status', 'notes', 'current_line', 'is_changed', 'changed_by', 'change_date', 'is_approved', 'approved_by', 'is_rejected', 'rejected_by', 'created_at', 'updated_at')
+            ->where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->whereHas('machineData', function($query) use ($line) {
+                $query->whereHas('machine', function($query) use ($line) {
+                    $query->whereJsonContains('line', $line);
+                });
+            })
             ->where('is_approved', true)
             ->get();
 
+        // Return the machine operations as a response
         return response()->json([
-            'machines' => $operations
+            'operations' => $operations
         ]);
     }
-
-
-
 
     public function showAllGlobalDescription() {
         $globalDescription = GlobalDescription::all();

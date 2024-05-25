@@ -49,6 +49,11 @@ class MachineOperation extends Model
         });
     }
 
+    public function machineData()
+    {
+        return $this->belongsTo(MachineData::class, 'machine_id');
+    }
+
     public function machine()
     {
         return $this->belongsTo(Machine::class);
