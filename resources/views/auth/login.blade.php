@@ -51,11 +51,9 @@
                         <x-primary-button class="button1">
                             {{ __('Log in') }}
                         </x-primary-button>
-                        <x-primary-button class="button2">
-                            <a href="{{ route('guest.dashboard') }}" id="mode-guest-link">
-                                {{ __('Mode Guest') }}
-                            </a>
-                        </x-primary-button>
+                        <button type="button" onclick="window.location.href='{{ route('guest.dashboard') }}'" class="button2" id="mode-guest-link">
+                        {{ __('Mode Guest') }}
+                        </button>
                     </div>
                 </form>
             </div>
