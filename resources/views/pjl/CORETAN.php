@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
     <title>Machine Schedule Display</title>
+    @vite('resources/css/pjl/view.css')
 </head>
 <body class="bg-gray-100">
 <div class="container mx-auto px-4">
@@ -21,27 +22,125 @@
         <!-- Buttons for each week will be appended here -->
     </div>
 
-    <!-- Container for the date and day display -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;" id="date-container">
-        <!-- Dates will be appended here -->
+    <!-- Header for Days -->
+    <div class="header-days bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none;" id="headerDays">
+        <div class="grid grid-cols-10 gap-4 text-center font-semibold">
+            <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
+            <!-- Dynamic date headers -->
+            <div id="day1" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span>Date 1</span></div>
+            <div id="day2" class="flex flex-col justify-center items-center"><span class="font-bold">Selasa</span><span>Date 2</span></div>
+            <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span>Date 3</span></div>
+            <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span>Date 4</span></div>
+            <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span>Date 5</span></div>
+            <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span>Date 6</span></div>
+            <div id="day7" class="flex flex-col justify-center items-center"><span class="font-bold">Minggu</span><span>Date 7</span></div>
+            <div id="day8" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span>Date 8</span></div>
+        </div>
     </div>
+
+    <!-- Data Container -->
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+        <!-- Main grid container with vertical alignment adjustments -->
+        <div class="grid grid-cols-10 gap-4">
+            <div id="machineName" class="font-bold border-2 mesin-jpm p-2 row-span-12 col-span-2 flex items-center justify-center text-center machine_name" style="height: 90%;"></div>
+            <div id="daydata1" class="col-span-1 grid grid-rows-1 gap-2"></div>
+            <div id="daydata2" class="col-span-1 grid grid-rows-1 gap-2"></div>
+            <div id="daydata3" class="col-span-1 grid grid-rows-1 gap-2"></div>
+            <div id="daydata4" class="col-span-1 grid grid-rows-1 gap-2"></div>
+            <div id="daydata5" class="col-span-1 grid grid-rows-1 gap-2"></div>
+            <div id="daydata6" class="col-span-1 grid grid-rows-1 gap-2"></div>
+            <div id="daydata7" class="col-span-1 grid grid-rows-1 gap-2"></div>
+            <div id="daydata8" class="col-span-1 grid grid-rows-1 gap-2"></div>
+        </div>
+    </div>
+
+
+
+    <button type="button" class="add-mesin-button text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+        + Mesin
+    </button>
 
 </div>
 
 <script>
+    // Function to trigger on document load or specific event
     function getQueryParams() {
         const params = new URLSearchParams(window.location.search);
-        const line = params.get('line');
+        const current_line = params.get('line');
         const month = params.get('month');
         const year = params.get('year');
 
-        document.getElementById('line-display').textContent = line ? line : 'N/A';
+        document.getElementById('line-display').textContent = current_line ? current_line : 'N/A';
         document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
         document.getElementById('year-display').textContent = year ? year : 'N/A';
 
-        if (month && year) {
-            setupWeekButtons(parseInt(year), parseInt(month));
+        if (current_line && month && year) {
+            fetchDataFromAPI(current_line, year, month);
+        } else {
+            console.error("Missing URL parameters: line, year, or month");
         }
+    }
+
+    function fetchDataFromAPI(current_line, year, month) {
+        const baseUrl = "http://127.0.0.1:8000/api/showmachineoperation";
+
+        fetch(baseUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Data fetched successfully:", data);
+                // Assuming the data.machines holds the array of machine operations
+                const filteredData = data.operations.filter(machine =>
+                    String(machine.year) === String(year) &&
+                    String(machine.month) === String(month) &&
+                    String(machine.current_line) === String(current_line)
+                );
+                console.log("Filtered data:", filteredData);
+                displayMachineData(filteredData);
+                // Now call setupWeekButtons with any necessary parameters
+                setupWeekButtons(parseInt(year), parseInt(month));
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+    }
+
+    function displayMachineData(operations) {
+        operations.forEach(machine => {
+            const dayIndex = parseInt(machine.day, 10);  // assuming 'day' field is the day number
+            const dayColumn = document.getElementById(`daydata${dayIndex}`);
+
+            if (dayColumn) {
+                const entry = document.createElement('div');
+                entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center';
+                entry.innerHTML = `
+                        <p class="font-bold kode-bn">${machine.code}</p>
+                        <p class="time">${machine.time}</p>
+                        <p class="description">${machine.status}</p>
+                    `;
+                dayColumn.appendChild(entry);
+            }
+
+            // Set the machine name if it hasn't been set yet
+            const machineNameElement = document.getElementById('machineName');
+            if (machineNameElement && !machineNameElement.textContent) {
+                machineNameElement.textContent = machine.machine_name;
+            }
+        });
+    }
+
+
+    function createDayElement(id) {
+        const container = document.querySelector('.grid');
+        const newDayElement = document.createElement('div');
+        newDayElement.id = id;
+        newDayElement.className = 'col-span-1 grid grid-rows-3 gap-2';
+        container.appendChild(newDayElement);
+        return newDayElement;
     }
 
     function getMonthName(month) {
@@ -69,15 +168,15 @@
 
         // Loop through the days, ensuring each week runs from Monday to the following Monday
         while (true) {
+            week.push(formatDate(currentDate)); // Add the current day to the current week
+
             if (currentDate.getDay() === 1 && week.length > 1) { // If it's Monday and not the first iteration
                 weeks.push(week); // Complete the current week
                 week = [formatDate(currentDate)]; // Start a new week with this Monday
-            } else {
-                week.push(formatDate(currentDate)); // Add the current day to the current week
             }
             currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
 
-            // Break the loop if we've moved into the next month and completed a week
+            // Break the loop if we've moved into the next month
             if (currentDate.getMonth() !== month - 1 && currentDate.getDay() === 1) {
                 break;
             }
@@ -86,7 +185,7 @@
         // Ensure the last week runs until the next Monday
         while (currentDate.getDay() !== 1) { // Move to the last Monday of the month
             week.push(formatDate(currentDate));
-            currentDate.setDate(currentDate.getDate() + 1);
+            currentDate.setDate(currentDate.getDate + 1);
         }
         week.push(formatDate(currentDate)); // Add the final Monday
 
@@ -109,16 +208,20 @@
         return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
     }
 
-    function displayWeek(week) {
-        const dateContainer = document.getElementById('date-container');
-        dateContainer.innerHTML = ''; // Clear previous content
-        week.forEach(date => {
-            const dateDiv = document.createElement('div');
-            dateDiv.className = "date-item p-2 border-2 my-1";
-            dateDiv.textContent = date;
-            dateContainer.appendChild(dateDiv);
+
+    function displayWeek(dates) {
+        // Show the header days when a week is displayed
+        document.getElementById('headerDays').style.display = 'block';
+
+        dates.forEach((date, index) => {
+            if (index < 8) { // Ensure we only update the 8 days
+                const dayElement = document.getElementById(`day${index + 1}`);
+                dayElement.children[0].textContent = date.split(",")[0]; // Day name
+                dayElement.children[1].textContent = date.split(",")[1]; // Date
+            }
         });
     }
+
 
     document.addEventListener('DOMContentLoaded', getQueryParams);
 </script>
