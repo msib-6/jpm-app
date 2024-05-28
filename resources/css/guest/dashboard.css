@@ -98,6 +98,7 @@ body {
 
 
 
+
 .button-kembali-1{
 }
 
@@ -118,3 +119,11 @@ body {
     flex-grow: 1;
 }
 
+.image {
+    background-size: contain; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
+    background-position: right; /* Mengatur posisi gambar agar terletak di tengah latar belakang */
+    background-repeat: no-repeat; /* Menghindari pengulangan gambar */
+    width: 100%; /* Atur sesuai kebutuhan */
+    height: 100%; /* Atur sesuai kebutuhan */
+    position: relative; /* Atur sesuai kebutuhan */
+}
