@@ -75,17 +75,17 @@
         const mesinCheckboxContainer = document.getElementById('mesinCheckboxContainer');
 
         openModalButton.addEventListener('click', async function() {
-            addMesinModal.classList.remove('hidden');
             await populateMesinCheckboxes();
+            addMesinModal.classList.remove('hidden');
         });
 
         closeModalButton.addEventListener('click', function() {
             addMesinModal.classList.add('hidden');
         });
 
-        addMesinForm.addEventListener('submit', function(event) {
+        addMesinForm.addEventListener('submit', async function(event) {
             event.preventDefault();
-            // Handle form submission logic here
+            await addSelectedMesin();
             addMesinModal.classList.add('hidden');
         });
 
@@ -112,7 +112,7 @@
                     const checkbox = document.createElement('div');
                     checkbox.className = 'flex flex-col items-start mb-2';
                     checkbox.innerHTML = `
-                        <input type="checkbox" id="machine-${machine.id}" name="machines" value="${machine.id}" class="mr-2">
+                        <input type="checkbox" id="machine-${machine.id}" name="machines" value="${machine.machine_name}" class="mr-2">
                         <label for="machine-${machine.id}" class="text-gray-700">
                             <span class="block">${machine.machine_name}</span>
                             <span class="block text-sm text-gray-500">${machine.category}</span>
@@ -122,6 +122,40 @@
                 });
             } catch (error) {
                 console.error('Error fetching machines:', error);
+            }
+        }
+
+        async function addSelectedMesin() {
+            const selectedMachines = document.querySelectorAll('input[name="machines"]:checked');
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            for (const machine of selectedMachines) {
+                const machineName = machine.value;
+
+                const response = await fetch('http://127.0.0.1:8000/api/addweeklymachine', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        machineName,
+                        line,
+                        month,
+                        week,
+                        year
+                    }),
+                });
+
+                if (response.ok) {
+                    alert(`Machine ${machineName} added successfully`);
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error adding machine ${machineName}: ${errorData.message}`);
+                }
             }
         }
     });
