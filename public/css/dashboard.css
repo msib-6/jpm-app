@@ -2,6 +2,13 @@
     font-family: Arial, sans-serif;
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
 .background-login {
     background: url('../modern-podium-product-design-against-backdrop-tropical-forest.jpg'); /* Ganti dengan path gambar Anda */
     background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
