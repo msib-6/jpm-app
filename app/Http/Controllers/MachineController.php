@@ -522,7 +522,6 @@ class MachineController extends Controller
         ]);
     }
 
-    }    
 
     public function showMachineOperation(Request $request){
         // Validate the incoming request
