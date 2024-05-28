@@ -559,7 +559,7 @@ class MachineController extends Controller
 
 
 
-    public function showApprovedMachineOperation(){
+    public function showApprovedMachineOperation(Request $request){
         // Validate the incoming request
         $request->validate([
             'year' => 'required|string',
