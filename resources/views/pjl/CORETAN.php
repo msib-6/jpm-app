@@ -6,6 +6,23 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
     <title>Machine Schedule Display</title>
     @vite('resources/css/pjl/view.css')
+    <style>
+        .day-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align items at the top */
+            gap: 0.5rem;
+        }
+
+        .entry-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
 <div class="container mx-auto px-4">
@@ -39,22 +56,9 @@
     </div>
 
     <!-- Data Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
-        <!-- Main grid container with vertical alignment adjustments -->
-        <div class="grid grid-cols-10 gap-4">
-            <div id="machineName" class="font-bold border-2 mesin-jpm p-2 row-span-12 col-span-2 flex items-center justify-center text-center machine_name" style="height: 90%;"></div>
-            <div id="daydata1" class="col-span-1 grid grid-rows-1 gap-2"></div>
-            <div id="daydata2" class="col-span-1 grid grid-rows-1 gap-2"></div>
-            <div id="daydata3" class="col-span-1 grid grid-rows-1 gap-2"></div>
-            <div id="daydata4" class="col-span-1 grid grid-rows-1 gap-2"></div>
-            <div id="daydata5" class="col-span-1 grid grid-rows-1 gap-2"></div>
-            <div id="daydata6" class="col-span-1 grid grid-rows-1 gap-2"></div>
-            <div id="daydata7" class="col-span-1 grid grid-rows-1 gap-2"></div>
-            <div id="daydata8" class="col-span-1 grid grid-rows-1 gap-2"></div>
-        </div>
+    <div id="dataContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+        <!-- Dynamic rows for machines will be appended here -->
     </div>
-
-
 
     <button type="button" class="add-mesin-button text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
         + Mesin
@@ -66,73 +70,107 @@
     // Function to trigger on document load or specific event
     function getQueryParams() {
         const params = new URLSearchParams(window.location.search);
-        const current_line = params.get('line');
+        const line = params.get('line');
         const month = params.get('month');
         const year = params.get('year');
 
-        document.getElementById('line-display').textContent = current_line ? current_line : 'N/A';
+        document.getElementById('line-display').textContent = line ? line : 'N/A';
         document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
         document.getElementById('year-display').textContent = year ? year : 'N/A';
 
-        if (current_line && month && year) {
-            fetchDataFromAPI(current_line, year, month);
-        } else {
-            console.error("Missing URL parameters: line, year, or month");
+        setupWeekButtons(line, year, month);
+    }
+
+    async function fetchDataForWeek(line, year, month, week) {
+        const operationsUrl = `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`;
+        const machinesUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`;
+        const machineInfoUrl = `http://127.0.0.1:8000/api/showmachine`;
+
+        try {
+            const [operationsResponse, machinesResponse, machineInfoResponse] = await Promise.all([
+                fetch(operationsUrl),
+                fetch(machinesUrl),
+                fetch(machineInfoUrl)
+            ]);
+
+            const operationsData = await operationsResponse.json();
+            const machinesData = await machinesResponse.json();
+            const machineInfoData = await machineInfoResponse.json();
+
+            const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
+
+            updateURL(line, year, month, week);
+            displayMachineData(operationsData.operations, machinesData, machineInfoMap);
+        } catch (error) {
+            console.error("Error fetching data:", error);
         }
     }
 
-    function fetchDataFromAPI(current_line, year, month) {
-        const baseUrl = "http://127.0.0.1:8000/api/showmachineoperation";
-
-        fetch(baseUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log("Data fetched successfully:", data);
-                // Assuming the data.machines holds the array of machine operations
-                const filteredData = data.operations.filter(machine =>
-                    String(machine.year) === String(year) &&
-                    String(machine.month) === String(month) &&
-                    String(machine.current_line) === String(current_line)
-                );
-                console.log("Filtered data:", filteredData);
-                displayMachineData(filteredData);
-                // Now call setupWeekButtons with any necessary parameters
-                setupWeekButtons(parseInt(year), parseInt(month));
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-            });
+    function updateURL(line, year, month, week) {
+        history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
     }
 
-    function displayMachineData(operations) {
-        operations.forEach(machine => {
-            const dayIndex = parseInt(machine.day, 10);  // assuming 'day' field is the day number
-            const dayColumn = document.getElementById(`daydata${dayIndex}`);
+    function displayMachineData(operations, machines, machineInfoMap) {
+        const dataContainer = document.getElementById('dataContainer');
+        dataContainer.innerHTML = '';  // Clear existing rows
 
-            if (dayColumn) {
-                const entry = document.createElement('div');
-                entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center';
-                entry.innerHTML = `
-                        <p class="font-bold kode-bn">${machine.code}</p>
-                        <p class="time">${machine.time}</p>
-                        <p class="description">${machine.status}</p>
+        // Create a map for machine operations
+        const machineOperationsMap = new Map();
+        operations.forEach(operation => {
+            if (!machineOperationsMap.has(operation.machine_id)) {
+                machineOperationsMap.set(operation.machine_id, []);
+            }
+            machineOperationsMap.get(operation.machine_id).push(operation);
+        });
+
+
+        machines.forEach(machine => {
+            const category = machineInfoMap.get(machine.machine_id);  // Fetch category using machine_id
+
+            const machineRow = document.createElement('div');
+            machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
+            machineRow.innerHTML = `
+                <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                    <div class="flex flex-col justify-center items-center w-full h-full">
+                        <span class="inline-flex items-center custom-badge3 text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                            <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                            ${category}
+                        </span>
+                        <span>${machine.machine_name}</span>
+                    </div>
+                </div>
+                <div id="daydata1-${machine.id}" class="col-span-1 day-column">
+                <!-- Button -->
+                </div>
+                <div id="daydata2-${machine.id}" class="col-span-1 day-column"></div>
+                <div id="daydata3-${machine.id}" class="col-span-1 day-column"></div>
+                <div id="daydata4-${machine.id}" class="col-span-1 day-column"></div>
+                <div id="daydata5-${machine.id}" class="col-span-1 day-column"></div>
+                <div id="daydata6-${machine.id}" class="col-span-1 day-column"></div>
+                <div id="daydata7-${machine.id}" class="col-span-1 day-column"></div>
+                <div id="daydata8-${machine.id}" class="col-span-1 day-column"></div>
+            `;
+            dataContainer.appendChild(machineRow);
+
+            // Populate machine row with operations
+            const operations = machineOperationsMap.get(machine.id) || [];
+            operations.forEach(operation => {
+                const dayIndex = parseInt(operation.day) % 8;  // Adjust based on your date system
+                const dayColumn = document.getElementById(`daydata${dayIndex + 1}-${machine.id}`);
+
+                if (dayColumn) {
+                    const entry = document.createElement('button');
+                    entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button';
+                    entry.innerHTML = `
+                        <p><strong>${operation.code}</strong></p>
+                        <p>${operation.time}</p>
+                        ${operation.status ? `<p>${operation.status}</p>` : ''}
                     `;
-                dayColumn.appendChild(entry);
-            }
-
-            // Set the machine name if it hasn't been set yet
-            const machineNameElement = document.getElementById('machineName');
-            if (machineNameElement && !machineNameElement.textContent) {
-                machineNameElement.textContent = machine.machine_name;
-            }
+                    dayColumn.appendChild(entry);
+                }
+            });
         });
     }
-
 
     function createDayElement(id) {
         const container = document.querySelector('.grid');
@@ -148,8 +186,11 @@
         return monthNames[month - 1];
     }
 
-    function setupWeekButtons(year, month) {
+    function setupWeekButtons(line, year, month) {
         const weeksList = document.getElementById('weeksList');
+        weeksList.innerHTML = '';  // Clear existing buttons
+
+        // Get the start and end dates of the month
         const startDate = new Date(year, month - 1, 1);
 
         // Adjust the startDate to the previous Monday if it does not start on a Monday
@@ -185,7 +226,7 @@
         // Ensure the last week runs until the next Monday
         while (currentDate.getDay() !== 1) { // Move to the last Monday of the month
             week.push(formatDate(currentDate));
-            currentDate.setDate(currentDate.getDate + 1);
+            currentDate.setDate(currentDate.getDate() + 1);
         }
         week.push(formatDate(currentDate)); // Add the final Monday
 
@@ -198,16 +239,26 @@
             const weekButton = document.createElement('button');
             weekButton.textContent = `Week ${index + 1}`;
             weekButton.className = 'year-item py-2 px-4 bg-blue-500 text-white rounded-md';
-            weekButton.onclick = () => displayWeek(week);
+            weekButton.onclick = () => {
+                fetchDataForWeek(line, year, month, index + 1);
+                updateURL(line, year, month, index + 1);
+                document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove('bg-blue-700'));
+                weekButton.classList.add('bg-blue-700');
+                displayWeek(week);
+            };
             weeksList.appendChild(weekButton);
         });
+
+        // Automatically click the first week button
+        if (weeksList.children.length > 0) {
+            weeksList.children[0].click(); // Using children[0] to ensure it's an element
+        }
     }
 
     function formatDate(date) {
         const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
         return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
     }
-
 
     function displayWeek(dates) {
         // Show the header days when a week is displayed
@@ -221,7 +272,6 @@
             }
         });
     }
-
 
     document.addEventListener('DOMContentLoaded', getQueryParams);
 </script>
