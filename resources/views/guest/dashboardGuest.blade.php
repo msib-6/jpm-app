@@ -9,7 +9,7 @@
     <div class="card h-full">
         <!--begin::Body-->
         <div class="card-body py-0">
-            <!--begin::Row-->   
+            <!--begin::Row-->
             <div class="flex items-center h-100">
                  <!--begin::Col-->
                 <div class="w-7/12 xl:pl-10 pr-2">
@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                             </div>
-                            
+
 
                                 <!-- Bagian 4 (Choose Month) -->
                                 <div id="bagian-4" class="section hidden">
@@ -87,7 +87,7 @@
                                 </div>
                             </div>
                             </div>
-                </div>     
+                </div>
                         <!--end::Col-->
                     <!--begin::Col-->
                 <div class=" w-7/12 pt-5 lg:pt-15">
@@ -96,11 +96,11 @@
    </div>
                 <!--begin::Illustration-->
               </div>
-              <!--end::Col--> 
+              <!--end::Col-->
             </div>
         </div>
         </div>
-            <!--end::Row--> 
+            <!--end::Row-->
         </div>
 
 
@@ -147,9 +147,9 @@
 
                 // Fetch and display lines
                 function fetchLines() {
-                    axios.get('http://127.0.0.1:8000/api/showmachineoperation')
+                    axios.get('http://127.0.0.1:8000/api/showallmachineoperationguest')
                         .then(function (response) {
-                            const lines = new Set(response.data.machines.map(machine => machine.line));
+                            const lines = new Set(response.data.operations.map(machine => machine.current_line));
                             populateLines(Array.from(lines));
                         })
                         .catch(function (error) {
@@ -180,9 +180,9 @@
 
                 // Fetch and display years based on the selected line
                 function fetchYears(line) {
-                    axios.get(`http://127.0.0.1:8000/api/showmachineoperation?line=${line}`)
+                    axios.get(`http://127.0.0.1:8000/api/showallmachineoperationguest?line=${line}`)
                         .then(function (response) {
-                            const years = new Set(response.data.machines.filter(machine => machine.line === line).map(machine => machine.year));
+                            const years = new Set(response.data.operations.filter(machine => machine.current_line === line).map(machine => machine.year));
                             populateYears(Array.from(years));
                         })
                         .catch(function (error) {
@@ -213,9 +213,9 @@
 
                 // Fetch and display months based on the selected line and year
                 function fetchMonths(line, year) {
-                    axios.get(`http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}`)
+                    axios.get(`http://127.0.0.1:8000/api/showallmachineoperationguest?line=${line}&year=${year}`)
                         .then(function (response) {
-                            const months = new Set(response.data.machines.filter(machine => machine.line === line && machine.year === year).map(machine => machine.month));
+                            const months = new Set(response.data.operations.filter(machine => machine.current_line === line && machine.year === year).map(machine => machine.month));
                             populateMonths(Array.from(months));
                         })
                         .catch(function (error) {

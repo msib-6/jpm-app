@@ -58,11 +58,11 @@
     });
 
     function fetchMachineOperations() {
-        fetch('http://127.0.0.1:8000/api/showmachineoperation')
+        fetch('http://127.0.0.1:8000/api/showallmachineoperationpjl')
             .then(response => response.json())
             .then(data => {
                 console.log('Data fetched successfully:', data); // Debugging: Check the API response data
-                processMachineData(data.machines);
+                processMachineData(data.operations);
             })
             .catch(error => {
                 console.error("Error fetching machine operation data: ", error);
@@ -117,7 +117,7 @@
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         months.forEach((monthName, index) => {
-            const monthIndex = (index + 1).toString().padStart(2, '0');
+            const monthIndex = (index + 1).toString();
             const weeks = monthWeekData[monthIndex] || [];
             const button = document.createElement('button');
             button.className = 'month-container my-4 bg-white p-2 shadow-md rounded-md py-2 px-4 text-black rounded-md flex flex-col items-start justify-center w-full';
