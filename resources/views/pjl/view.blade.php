@@ -6,23 +6,6 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
     <title>Machine Schedule Display</title>
     @vite('resources/css/pjl/view.css')
-    <style>
-        .day-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start; /* Align items at the top */
-            gap: 0.5rem;
-        }
-
-        .entry-button {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-    </style>
 </head>
 <body class="bg-gray-100">
 <div class="container mx-auto px-4">
@@ -47,11 +30,11 @@
             <div id="day1" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span>Date 1</span></div>
             <div id="day2" class="flex flex-col justify-center items-center"><span class="font-bold">Selasa</span><span>Date 2</span></div>
             <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span>Date 3</span></div>
-            <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span>Date 4</span></div>
-            <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span>Date 5</span></div>
-            <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span>Date 6</span></div>
-            <div id="day7" class="flex flex-col justify-center items-center"><span class="font-bold">Minggu</span><span>Date 7</span></div>
-            <div id="day8" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span>Date 8</span></div>
+            <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span>Date 4"></span></div>
+            <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span>Date 5"></span></div>
+            <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span>Date 6"></span></div>
+            <div id="day7" class="flex flex-col justify-center items-center"><span class="font-bold">Minggu</span><span>Date 7"></span></div>
+            <div id="day8" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span>Date 8"></span></div>
         </div>
     </div>
 
@@ -60,14 +43,89 @@
         <!-- Dynamic rows for machines will be appended here -->
     </div>
 
-    <button type="button" class="add-mesin-button text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+    <!-- Add Mesin Button -->
+    <button type="button" id="openModalButton" class="add-mesin-button text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
         + Mesin
     </button>
+
+    <!-- Modal Add Mesin-->
+    <div id="addMesinModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4">Add Mesin</h2>
+            <form id="addMesinForm">
+                <div id="mesinCheckboxContainer" class="mb-4">
+                    <!-- Checkboxes will be appended here -->
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" id="closeModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                    <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Add Mesin</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 </div>
 
 <script>
-    // Function to trigger on document load or specific event
+    document.addEventListener('DOMContentLoaded', function() {
+        const openModalButton = document.getElementById('openModalButton');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const addMesinModal = document.getElementById('addMesinModal');
+        const addMesinForm = document.getElementById('addMesinForm');
+        const mesinCheckboxContainer = document.getElementById('mesinCheckboxContainer');
+
+        openModalButton.addEventListener('click', async function() {
+            addMesinModal.classList.remove('hidden');
+            await populateMesinCheckboxes();
+        });
+
+        closeModalButton.addEventListener('click', function() {
+            addMesinModal.classList.add('hidden');
+        });
+
+        addMesinForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Handle form submission logic here
+            addMesinModal.classList.add('hidden');
+        });
+
+        getQueryParams();
+
+        async function populateMesinCheckboxes() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/showmachine');
+                const machines = await response.json();
+
+                const filteredMachines = machines.filter(machine => {
+                    if (Array.isArray(machine.line)) {
+                        return machine.line.includes(line);
+                    } else {
+                        return machine.line === line;
+                    }
+                });
+
+                mesinCheckboxContainer.innerHTML = ''; // Clear existing checkboxes
+
+                filteredMachines.forEach(machine => {
+                    const checkbox = document.createElement('div');
+                    checkbox.className = 'flex flex-col items-start mb-2';
+                    checkbox.innerHTML = `
+                        <input type="checkbox" id="machine-${machine.id}" name="machines" value="${machine.id}" class="mr-2">
+                        <label for="machine-${machine.id}" class="text-gray-700">
+                            <span class="block">${machine.machine_name}</span>
+                            <span class="block text-sm text-gray-500">${machine.category}</span>
+                        </label>
+                    `;
+                    mesinCheckboxContainer.appendChild(checkbox);
+                });
+            } catch (error) {
+                console.error('Error fetching machines:', error);
+            }
+        }
+    });
+
     function getQueryParams() {
         const params = new URLSearchParams(window.location.search);
         const line = params.get('line');
@@ -123,7 +181,6 @@
             machineOperationsMap.get(operation.machine_id).push(operation);
         });
 
-
         machines.forEach(machine => {
             const category = machineInfoMap.get(machine.machine_id);  // Fetch category using machine_id
 
@@ -139,9 +196,7 @@
                         <span>${machine.machine_name}</span>
                     </div>
                 </div>
-                <div id="daydata1-${machine.id}" class="col-span-1 day-column">
-                <!-- Button -->
-                </div>
+                <div id="daydata1-${machine.id}" class="col-span-1 day-column"></div>
                 <div id="daydata2-${machine.id}" class="col-span-1 day-column"></div>
                 <div id="daydata3-${machine.id}" class="col-span-1 day-column"></div>
                 <div id="daydata4-${machine.id}" class="col-span-1 day-column"></div>
@@ -153,8 +208,8 @@
             dataContainer.appendChild(machineRow);
 
             // Populate machine row with operations
-            const operations = machineOperationsMap.get(machine.id) || [];
-            operations.forEach(operation => {
+            const machineOperations = machineOperationsMap.get(machine.id) || [];
+            machineOperations.forEach(operation => {
                 const dayIndex = parseInt(operation.day) % 8;  // Adjust based on your date system
                 const dayColumn = document.getElementById(`daydata${dayIndex + 1}-${machine.id}`);
 
@@ -169,6 +224,17 @@
                     dayColumn.appendChild(entry);
                 }
             });
+
+            // Add "+ JPM" button at the end of each day column
+            for (let i = 1; i <= 8; i++) {
+                const dayColumn = document.getElementById(`daydata${i}-${machine.id}`);
+                if (dayColumn) {
+                    const addButton = document.createElement('button');
+                    addButton.className = 'add-jpm-button bg-purple-500 text-white';
+                    addButton.textContent = '+ JPM';
+                    dayColumn.appendChild(addButton);
+                }
+            }
         });
     }
 
@@ -272,8 +338,6 @@
             }
         });
     }
-
-    document.addEventListener('DOMContentLoaded', getQueryParams);
 </script>
 
 </body>

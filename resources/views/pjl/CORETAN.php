@@ -50,7 +50,7 @@
             <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span>Date 4</span></div>
             <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span>Date 5</span></div>
             <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span>Date 6</span></div>
-            <div id="day7" class="flex flex-col justify-center items-center"><span class="font-bold">Minggu</span><span>Date 7</span></div>
+            <div id="day7" class="flex flex-col justify.center items-center"><span class="font-bold">Minggu</span><span>Date 7</span></div>
             <div id="day8" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span>Date 8</span></div>
         </div>
     </div>
@@ -123,40 +123,44 @@
             machineOperationsMap.get(operation.machine_id).push(operation);
         });
 
-
+        // Create a map for unique machines
+        const uniqueMachinesMap = new Map();
         machines.forEach(machine => {
-            const category = machineInfoMap.get(machine.machine_id);  // Fetch category using machine_id
+            if (!uniqueMachinesMap.has(machine.machine_id)) {
+                uniqueMachinesMap.set(machine.machine_id, machine.machine_name);
+            }
+        });
 
+        uniqueMachinesMap.forEach((machine_name, machine_id) => {
+            // Create a row for each unique machine
             const machineRow = document.createElement('div');
             machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
             machineRow.innerHTML = `
                 <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
                     <div class="flex flex-col justify-center items-center w-full h-full">
-                        <span class="inline-flex items-center custom-badge3 text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                        <span class="inline-flex items-center ${machineInfoMap.get(machine_id) === 'Granulasi' ? 'custom-badge1' : machineInfoMap.get(machine_id) === 'Drying' ? 'custom-badge2' : machineInfoMap.get(machine_id).includes('Final') ? 'custom-badge3' : machineInfoMap.get(machine_id) === 'Cetak' ? 'custom-badge4' : machineInfoMap.get(machine_id) === 'Coating' ? 'custom-badge5' : machineInfoMap.get(machine_id) === 'Kemas' ? 'custom-badge6' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
                             <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                            ${category}
+                            ${machineInfoMap.get(machine_id)}
                         </span>
-                        <span>${machine.machine_name}</span>
+                        <span>${machine_name}</span>
                     </div>
                 </div>
-                <div id="daydata1-${machine.id}" class="col-span-1 day-column">
-                <!-- Button -->
-                </div>
-                <div id="daydata2-${machine.id}" class="col-span-1 day-column"></div>
-                <div id="daydata3-${machine.id}" class="col-span-1 day-column"></div>
-                <div id="daydata4-${machine.id}" class="col-span-1 day-column"></div>
-                <div id="daydata5-${machine.id}" class="col-span-1 day-column"></div>
-                <div id="daydata6-${machine.id}" class="col-span-1 day-column"></div>
-                <div id="daydata7-${machine.id}" class="col-span-1 day-column"></div>
-                <div id="daydata8-${machine.id}" class="col-span-1 day-column"></div>
+                <div id="daydata1-${machine_id}" class="col-span-1 day-column"></div>
+                <div id="daydata2-${machine_id}" class="col-span-1 day-column"></div>
+                <div id="daydata3-${machine_id}" class="col-span-1 day-column"></div>
+                <div id="daydata4-${machine_id}" class="col-span-1 day-column"></div>
+                <div id="daydata5-${machine_id}" class="col-span-1 day-column"></div>
+                <div id="daydata6-${machine_id}" class="col-span-1 day-column"></div>
+                <div id="daydata7-${machine_id}" class="col-span-1 day-column"></div>
+                <div id="daydata8-${machine_id}" class="col-span-1 day-column"></div>
             `;
             dataContainer.appendChild(machineRow);
 
             // Populate machine row with operations
-            const operations = machineOperationsMap.get(machine.id) || [];
+            const operations = machineOperationsMap.get(machine_id) || [];
             operations.forEach(operation => {
                 const dayIndex = parseInt(operation.day) % 8;  // Adjust based on your date system
-                const dayColumn = document.getElementById(`daydata${dayIndex + 1}-${machine.id}`);
+                const dayColumn = document.getElementById(`daydata${dayIndex + 1}-${machine_id}`);
 
                 if (dayColumn) {
                     const entry = document.createElement('button');
@@ -169,6 +173,17 @@
                     dayColumn.appendChild(entry);
                 }
             });
+
+            // Add "+ JPM" button at the end of each day column
+            for (let i = 1; i <= 8; i++) {
+                const dayColumn = document.getElementById(`daydata${i}-${machine_id}`);
+                if (dayColumn) {
+                    const addButton = document.createElement('button');
+                    addButton.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button add-jpm-button';
+                    addButton.textContent = '+ JPM';
+                    dayColumn.appendChild(addButton);
+                }
+            }
         });
     }
 
@@ -238,12 +253,12 @@
         weeks.forEach((week, index) => {
             const weekButton = document.createElement('button');
             weekButton.textContent = `Week ${index + 1}`;
-            weekButton.className = 'year-item py-2 px-4 bg-blue-500 text-white rounded-md';
+            weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
             weekButton.onclick = () => {
                 fetchDataForWeek(line, year, month, index + 1);
                 updateURL(line, year, month, index + 1);
-                document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove('bg-blue-700'));
-                weekButton.classList.add('bg-blue-700');
+                document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove('text-purple-600'));
+                weekButton.classList.add('text-purple-600');
                 displayWeek(week);
             };
             weeksList.appendChild(weekButton);
