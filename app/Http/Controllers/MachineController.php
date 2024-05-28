@@ -72,6 +72,13 @@ class MachineController extends Controller
             // Get today's week
             $today = now();
 
+            if($request->input('month')){
+                $monthNumber = $request->input('month');
+            }
+            else{
+                $monthNumber = $today->month;
+            }
+
             //Check if user input week value, otherwise use current week.
             if($request->input('week')){
                 $weekNumber = $request->input('week');
@@ -82,6 +89,7 @@ class MachineController extends Controller
 
             // Check if the machine data already exists for the current week
             $existingMachineData = MachineData::where('machine_name', $request->input('machineName'))
+                ->where('month', $monthNumber)
                 ->where('week', $weekNumber)
                 ->first();
 
@@ -93,6 +101,7 @@ class MachineController extends Controller
             $newMachineData = new MachineData();
             $newMachineData->machine_id = $machineOrigin->id; // Assign the id of the machine from main database
             $newMachineData->machine_name = $request->input('machineName');
+            $newMachineData->month = $monthNumber; // Add month number to the new machine data entry
             $newMachineData->week = $weekNumber; // Add week number to the new machine data entry
             $newMachineData->save();
 
