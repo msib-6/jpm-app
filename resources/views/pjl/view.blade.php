@@ -385,7 +385,7 @@
                     const dayColumn = document.getElementById(`daydata${i}-${machine.id}`);
                     if (dayColumn) {
                         const addButton = document.createElement('button');
-                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-purple-500 text-white';
+                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-purple-500 text-white w-10 h-10'; // Set width and height to 10 each for circular shape
                         addButton.textContent = '+';
                         addButton.onclick = function() {
                             currentMachineId = machine.id;

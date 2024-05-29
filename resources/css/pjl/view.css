@@ -73,19 +73,16 @@
 
 .add-jpm-button {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 45%;
-    background-color: #F1EFFF; /* Ungu */
-    color: #8333D3;
-    padding: 0.5rem;
-    text-align: center;
+    background-color: #F1EFFF; /* Light purple background */
+    color: #8333D3; /* Dark purple text */
     font-size: 1.5rem;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 0.5rem; /* Spacing from previous entries */
+    margin-top: 0.5rem;
 }
+
 
 .day-column {
     display: flex;
