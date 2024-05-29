@@ -11,16 +11,27 @@
 <div class="container mx-auto px-4">
 
     <!-- Card Title -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
+<!--    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">-->
+<!--        <h3 id="title" class="text-2xl font-bold">-->
+<!--            Line: <span id="line-display">Loading...</span>, <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>-->
+<!--        </h3>-->
+<!--    </div>-->
+
+    <!-- Title and Weeks Container -->
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
         <h3 id="title" class="text-2xl font-bold">
-            Line: <span id="line-display">Loading...</span>, <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>
+            <span id="line-display">Loading...</span>
+        </h3>
+        <!-- Container for buttons, each week's button will be appended here -->
+        <div id="weeksList" class="mx-2">
+            <!-- Buttons for each week will be dynamically inserted here -->
+        </div>
+        <h3 class="text-2xl font-bold">
+            <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>
         </h3>
     </div>
 
-    <!-- Weeks Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;" id="weeksList">
-        <!-- Buttons for each week will be appended here -->
-    </div>
+
 
     <!-- Header for Days -->
     <div class="header-days bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none;" id="headerDays">
@@ -44,16 +55,18 @@
     </div>
 
     <!-- Global Container -->
-    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-center items-start" style="width: 91.666667%;">
         <!-- Dynamic rows for Global Desc will be appended here -->
 
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            <a>
+
+        <button class="add-desc-button relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+            <span class="relative add-desc-button2 px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                 Button Add Desc Testing
-            </a>
+            </span>
         </button>
 
     </div>
+
 
     <!-- Add Mesin Button -->
     <button type="button" id="openModalButton" class="add-mesin-button text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">

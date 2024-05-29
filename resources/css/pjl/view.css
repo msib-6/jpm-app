@@ -143,3 +143,15 @@
 .time-input button:hover {
     color: #4c51bf;
 }
+
+.add-desc-button{
+    width: 90%;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-desc-button2{
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
