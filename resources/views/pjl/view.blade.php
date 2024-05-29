@@ -385,8 +385,8 @@
                     const dayColumn = document.getElementById(`daydata${i}-${machine.id}`);
                     if (dayColumn) {
                         const addButton = document.createElement('button');
-                        addButton.className = 'add-jpm-button add-data-button bg-purple-500 text-white';
-                        addButton.textContent = 'Add Data';
+                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-purple-500 text-white';
+                        addButton.textContent = '+';
                         addButton.onclick = function() {
                             currentMachineId = machine.id;
                             const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
