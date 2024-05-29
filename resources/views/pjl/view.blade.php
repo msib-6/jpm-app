@@ -247,49 +247,37 @@
             }
         }
 
-        async function addDataToMachine(machineId, day) {
-            const dataCode = document.getElementById('dataCode').value;
-            const hours = document.getElementById('hours').value;
-            const minutes = document.getElementById('minutes').value;
-            const dataTime = `${hours}:${minutes}`;
-            const dataStatus = document.getElementById('dataStatus').value;
-            const dataNotes = document.getElementById('dataNotes').value;
-            const dataDescription = document.getElementById('dataDescription').value;
+        async function addSelectedMesin() {
+            const selectedMachines = document.querySelectorAll('input[name="machines"]:checked');
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
 
-            const response = await fetch(`http://127.0.0.1:8000/api/addmachineoperation/${line}/${machineId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    day,
-                    code: dataCode,
-                    time: dataTime,
-                    status: dataStatus,
-                    notes: dataNotes,
-                    description: dataDescription
-                }),
-            });
+            for (const machine of selectedMachines) {
+                const machineName = machine.value;
 
-<<<<<<< HEAD
-            // Add "+ JPM" button at the end of each day column
-            for (let i = 1; i <= 8; i++) {
-                const dayColumn = document.getElementById(`daydata${i}-${machine.id}`);
-                if (dayColumn) {
-                    const addButton = document.createElement('button');
-                    addButton.className = 'add-jpm-button bg-purple-500 text-white';
-                    addButton.textContent = 'Add JPM';
-                    dayColumn.appendChild(addButton);
+                const response = await fetch('http://127.0.0.1:8000/api/addweeklymachine', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        machineName,
+                        line,
+                        month,
+                        week,
+                        year
+                    }),
+                });
+
+                if (response.ok) {
+                    alert(`Machine ${machineName} added successfully`);
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error adding machine ${machineName}: ${errorData.message}`);
                 }
-=======
-            if (response.ok) {
-                alert(`Data added successfully`);
-            } else {
-                const errorData = await response.json();
-                alert(`Error adding data: ${errorData.message}`);
->>>>>>> 83f8d6a23cb72f6ab5271a8a66e0d93c0d9a0a1a
             }
         }
 
