@@ -47,17 +47,12 @@
     <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
         <!-- Dynamic rows for Global Desc will be appended here -->
 
-        <button className="desc-container my-4 bg-white p-2 shadow-md rounded-md py-2 px-4 text-black rounded-md flex flex-col items-start justify-center w-full">
-a
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <a>
+                Button Add Desc Testing
+            </a>
         </button>
-<!--        const button = document.createElement('button');-->
-<!--        button.className = '';-->
-<!--        button.style.height = '5em'; // consistent height for all month divs-->
-<!---->
-<!--        const monthSpan = document.createElement('span');-->
-<!--        monthSpan.textContent = monthName + ' ';-->
-<!--        monthSpan.className = 'text-2xl font-bold';-->
-<!--        button.appendChild(monthSpan);-->
+
     </div>
 
     <!-- Add Mesin Button -->
@@ -252,37 +247,37 @@ a
             }
         }
 
-        async function addDataToMachine(machineId, day) {
-            const dataCode = document.getElementById('dataCode').value;
-            const hours = document.getElementById('hours').value;
-            const minutes = document.getElementById('minutes').value;
-            const dataTime = `${hours}:${minutes}`;
-            const dataStatus = document.getElementById('dataStatus').value;
-            const dataNotes = document.getElementById('dataNotes').value;
-            const dataDescription = document.getElementById('dataDescription').value;
+        async function addSelectedMesin() {
+            const selectedMachines = document.querySelectorAll('input[name="machines"]:checked');
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
 
-            const response = await fetch(`http://127.0.0.1:8000/api/addmachineoperation/${line}/${machineId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    day,
-                    code: dataCode,
-                    time: dataTime,
-                    status: dataStatus,
-                    notes: dataNotes,
-                    description: dataDescription
-                }),
-            });
+            for (const machine of selectedMachines) {
+                const machineName = machine.value;
 
-            if (response.ok) {
-                alert(`Data added successfully`);
-            } else {
-                const errorData = await response.json();
-                alert(`Error adding data: ${errorData.message}`);
+                const response = await fetch('http://127.0.0.1:8000/api/addweeklymachine', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        machineName,
+                        line,
+                        month,
+                        week,
+                        year
+                    }),
+                });
+
+                if (response.ok) {
+                    alert(`Machine ${machineName} added successfully`);
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error adding machine ${machineName}: ${errorData.message}`);
+                }
             }
         }
 
