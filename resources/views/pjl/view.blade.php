@@ -47,17 +47,12 @@
     <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
         <!-- Dynamic rows for Global Desc will be appended here -->
 
-        <button className="desc-container my-4 bg-white p-2 shadow-md rounded-md py-2 px-4 text-black rounded-md flex flex-col items-start justify-center w-full">
-a
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <a>
+                Button Add Desc Testing
+            </a>
         </button>
-<!--        const button = document.createElement('button');-->
-<!--        button.className = '';-->
-<!--        button.style.height = '5em'; // consistent height for all month divs-->
-<!---->
-<!--        const monthSpan = document.createElement('span');-->
-<!--        monthSpan.textContent = monthName + ' ';-->
-<!--        monthSpan.className = 'text-2xl font-bold';-->
-<!--        button.appendChild(monthSpan);-->
+
     </div>
 
     <!-- Add Mesin Button -->
