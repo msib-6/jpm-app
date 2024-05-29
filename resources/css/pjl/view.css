@@ -14,6 +14,14 @@
     box-shadow: 0.2em 0.1em 0.2em rgba(0, 0, 0, 0.1);
 }
 
+.desc-container{
+    height: 5em;
+}
+
+#globalDescContainer{
+    min-height: 20em;
+}
+
 .headers-days{
     background-color: #F8F9FB;
 }
@@ -68,7 +76,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: 70%;
     background-color: #F1EFFF; /* Ungu */
     color: #8333D3;
     padding: 0.5rem;
@@ -94,4 +102,48 @@
     align-items: center;
     justify-content: center;
     width: 100%;
+}
+
+
+/* Custom CSS for time input */
+.time-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+.time-picker label {
+    margin-bottom: 0.5rem;
+}
+.time-inputs {
+    display: flex;
+    align-items: center;
+}
+.time-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0.5rem;
+}
+.time-input input {
+    text-align: center;
+    width: 50px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 1.25rem;
+    -moz-appearance: textfield;
+}
+.time-input input::-webkit-inner-spin-button,
+.time-input input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.time-input button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+}
+.time-input button:hover {
+    color: #4c51bf;
 }
