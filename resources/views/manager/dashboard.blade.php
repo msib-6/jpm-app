@@ -11,6 +11,7 @@
 @section('title', 'Manager Dashboard')
 
 @section('content')
+<div class="container mx-auto px-4">
     <div class='card flex justify-between'>
         <h1 class="text-left text-4xl font-bold text-gray-800">Manager</h1>
     </div>
@@ -27,7 +28,7 @@
         </div>
     </div>
 
-    <div class='summary-container bg-white shadow-lg rounded-lg p-6 mb-8'>
+    <div class='summary-container bg-white shadow-lg rounded-3xl my-4 mx-auto flex items-center style="width: 91.666667%;'>
         <div id="default-styled-tab-content">
             <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
                 <button class="flex items-center justify-between bg-gray-100 bg-white border border-gray-200 rounded-lg w-11/12 mx-auto button-manager-dashboard">
@@ -98,6 +99,7 @@
             </div>
         </div>
     </div>
+</div>   
 @endsection
 </body>
 </html>

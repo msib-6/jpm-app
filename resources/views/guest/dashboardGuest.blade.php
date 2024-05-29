@@ -16,7 +16,7 @@
 
                                 <!-- Bagian 1 -->
                                 <div id="bagian-1" class="section">
-                                <div class="text-container text-white">
+                                <div class="text-container">
                                 <h3 class="text-4xl mb-8 font-bold">Welcome To JPM View (Guest Mode)</h3>
                                 <p class="text-lg mb-8">Selamat datang di halaman dashboard eksklusif JPM! Di sini, Anda akan menemukan rangkuman yang komprehensif dan terperinci mengenai aktivitas operasional yang vital bagi kesuksesan bisnis Anda. Melalui visualisasi data yang intuitif dan informatif, Anda dapat dengan mudah melacak kinerja operasional, menganalisis tren, dan mengidentifikasi potensi area perbaikan.</p>
                                 <div class="buttons">
@@ -35,7 +35,7 @@
 
                         <!-- Bagian 2 -->
                         <div id="bagian-2" class="section hidden">
-                            <div class="text-white p-6">
+                            <div class=" p-6">
                                 <h3 class="text-3xl mb-8 font-bold">PILIH LINE</h3>
                                 <div id="line-container">
                                     <!-- Line buttons will be populated here -->
@@ -53,7 +53,7 @@
 
                                 <!-- Bagian 3 (Choose Year) -->
                                 <div id="bagian-3" class="section hidden">
-                            <div class="text-white p-6">
+                            <div class=" p-6">
                                 <h3 class="text-3xl mb-8 font-bold">PILIH YEAR</h3>
                                 <div id="year-container">
                                     <!-- Line buttons will be populated here -->
@@ -72,7 +72,7 @@
 
                                 <!-- Bagian 4 (Choose Month) -->
                                 <div id="bagian-4" class="section hidden">
-                            <div class="text-white p-6">
+                            <div class=" p-6">
                                 <h3 class="text-3xl mb-8 font-bold">PILIH MONTH</h3>
                                 <div id="month-container">
                                     <!-- Line buttons will be populated here -->

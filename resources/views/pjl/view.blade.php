@@ -57,7 +57,7 @@
 
     <!-- Add Mesin Button -->
     <button type="button" id="openModalButton" class="add-mesin-button text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-        + Mesin
+        Add Mesin
     </button>
 
     <!-- Modal Add Mesin-->
@@ -273,11 +273,23 @@
                 }),
             });
 
+<<<<<<< HEAD
+            // Add "+ JPM" button at the end of each day column
+            for (let i = 1; i <= 8; i++) {
+                const dayColumn = document.getElementById(`daydata${i}-${machine.id}`);
+                if (dayColumn) {
+                    const addButton = document.createElement('button');
+                    addButton.className = 'add-jpm-button bg-purple-500 text-white';
+                    addButton.textContent = 'Add JPM';
+                    dayColumn.appendChild(addButton);
+                }
+=======
             if (response.ok) {
                 alert(`Data added successfully`);
             } else {
                 const errorData = await response.json();
                 alert(`Error adding data: ${errorData.message}`);
+>>>>>>> 83f8d6a23cb72f6ab5271a8a66e0d93c0d9a0a1a
             }
         }
 
