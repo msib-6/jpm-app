@@ -75,8 +75,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #F1EFFF; /* Light purple background */
-    color: #8333D3; /* Dark purple text */
+    background-color: #E9E9E9; /* Light purple background */
+    color: #000000; /* Dark purple text */
     font-size: 1.5rem;
     font-weight: bold;
     cursor: pointer;
