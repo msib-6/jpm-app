@@ -24,8 +24,7 @@
 
 /*Granulasi*/
 .custom-badge1 {
-    background-color: #378b29;
-    background-image: linear-gradient(315deg, #b5ebca 10%, #29d00c 80%); /* Warna kustom */
+    background: linear-gradient(to bottom, #1a7d1a, #4caf50);
 }
 
 /*Drying*/

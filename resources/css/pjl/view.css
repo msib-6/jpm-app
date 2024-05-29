@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Poppins:wght@400;600;700&display=swap');
+
 .isi-jpm{
     background-color: #F8F9FB;
     border-radius: 1em;
@@ -27,8 +29,7 @@
 
 /* Custom colors */
 .custom-badge1 {
-    background-color: #378b29;
-    background-image: linear-gradient(315deg, #b5ebca 10%, #29d00c 80%); /* Warna kustom */
+    background: linear-gradient(to bottom, #37a61b 0%,#33a914 1%,#35ac14 17%,#37aa16 20%,#34af0d 22%,#34b113 24%,#32ae14 26%,#3bab17 30%,#3aaa15 31%,#36a90e 32%,#38ad11 33%,#37af16 36%,#36ae11 36%,#36ac0e 39%,#39b115 41%,#38b215 42%,#39ad11 44%,#3ead10 46%,#3cad0e 48%,#37b114 50%,#38b113 52%,#3ead15 54%,#39b112 58%,#3cb016 61%,#3db210 66%,#3caf17 70%,#3bb310 74%,#3db30f 76%,#40b117 79%,#3fb214 80%,#41b313 97%,#3eb714 100%);
 
 }
 .custom-badge2 {
@@ -46,8 +47,7 @@
     background-image: linear-gradient(315deg, #f4f5f6 10%, #9b4dca 80%); /* Warna kustom */
 }
 .custom-badge5 {
-    background-color: #ffd72f;
-    background-image: linear-gradient(315deg, #ffdb2f 10%, #f4fd00 80%);
+    background: linear-gradient(to bottom, #f8d75a 0%,#f8d75a 100%);
 }
 .custom-badge6 {
     background-color: #f5d3c8;

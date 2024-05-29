@@ -7,8 +7,17 @@
 /* resources/css/app.css */
 
 body {
-    background-color: #844AFF;
+    
 }
+.background-guest {
+    background: url('../../../public/rm380-12.jpg'); /* Ganti dengan path gambar Anda */
+    background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
+    background-position: center; /* Mengatur posisi gambar agar terletak di tengah latar belakang */
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+}
+
 
 
 .text-container {

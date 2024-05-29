@@ -22,7 +22,7 @@
         <div class="flex flex-grow items-center space-x-4">
             <!-- Dynamic year buttons will be added here -->
         </div>
-        <button class="bg-purple-100 text-purple-600 h-10 text-lg px-4 rounded-lg border-0 py-2" onclick="openModal()">+ year</button>
+        <button class="bg-purple-100 text-purple-600 h-10 text-lg px-4 rounded-lg border-0 py-2" onclick="openModal()">Add year</button>
     </div>
 
     <!-- Modal for Adding Years (Hidden by default, with blur and transparency) -->
