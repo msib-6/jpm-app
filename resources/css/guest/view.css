@@ -23,49 +23,53 @@
 /* Custom colors */
 
 /* Custom colors */
+/* Granulasi */
 .custom-badge1 {
     background-color: #63D110;
     background-image: linear-gradient(to right bottom, #32ae10, #43b911, #52c411, #61cf11, #70da10); /* Warna kustom */
 
 }
+/* Drying */
 .custom-badge2 {
     background-color: #ff7878;
     background-image: linear-gradient(to right bottom, #b0220e, #bb1f16, #c51c1d, #d01725, #db102d);
-    /* Warna kustom */
+
 }
+/* Final Mix/Camas */
 .custom-badge3 {
     background-color: #5078f2;
     background-image: linear-gradient(to right bottom, #1a397d, #1b4489, #1b4f96, #1c5aa2, #1c66ae);
-    /* Warna kustom */
+
 }
+/* Cetak */
 .custom-badge4 {
     background-color: #f4f5f6;
-    background-image: linear-gradient(to right bottom, #5a2a8e, #5a2c96, #592f9e, #5732a6, #5435af); /* Warna kustom */
+    background-image: linear-gradient(to right bottom, #5a2a8e, #5a2c96, #592f9e, #5732a6, #5435af); 
 }
+/* Coating */
 .custom-badge5 {
+    background-color: #f5d3c8;
+    background-image: linear-gradient(to right bottom, #aa8759, #b8905d, #c59962, #d4a366, #e2ac6b);
+}
+/* Kemas */
+.custom-badge6 {
     background-color: #ffd72f;
-    /* background-image: linear-gradient(to right bottom, #fed336, #fede2d, #fde823, #fbf417, #f7ff07); */
     background-image: linear-gradient(to right bottom, #aa0d5e, #b8056f, #c40181, #d00296, #d90dac);
 }
-.custom-badge6 {
-    background-color: #f5d3c8;
-    background-image: linear-gradient(to right bottom, #aa8759, #b8905d, #c59962, #d4a366, #e2ac6b);
-    /* Warna kustom */
-}
+/* Mixing */
 .custom-badge7 {
     background-color: #f5d3c8;
-    background-image: linear-gradient(to right bottom, #aa8759, #b8905d, #c59962, #d4a366, #e2ac6b);
-    /* Warna kustom */
+    background-image: linear-gradient(to right bottom, #e5a70d, #ce2424); 
 }
+/* Filling */
 .custom-badge8 {
     background-color: #f5d3c8;
-    background-image: linear-gradient(to right bottom, #aa8759, #b8905d, #c59962, #d4a366, #e2ac6b);
-    /* Warna kustom */
+    background-image: linear-gradient(to right bottom, #11accb, #c522e1); 
 }
+/* Kompaksi */
 .custom-badge9 {
     background-color: #f5d3c8;
-    background-image: linear-gradient(to right bottom, #aa8759, #b8905d, #c59962, #d4a366, #e2ac6b);
-    /* Warna kustom */
+    background-image: linear-gradient(to right bottom, #6a11cb, #2575fc);
 }
 
 
