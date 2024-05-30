@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Add Machine Route
 Route::post('/addmachine', [MachineController::class, 'addMachine'])->name('add.machine');;
 Route::post('/addweeklymachine', [MachineController::class, 'addWeeklyMachine'])->name('add.weekly.machine');
-Route::post('/addmachineoperation/{line}/{machineID}', [MachineController::class, 'addMachineOperation'])->name('xadd.machine.operation');
+Route::post('/addmachineoperation/{line}/{machineID}', [MachineController::class, 'addMachineOperation'])->name('add.machine.operation');
 Route::post('/addglobaldescription', [MachineController::class, 'addGlobalDescription'])->name('add.global.description');
 
 //Edit Machine Route

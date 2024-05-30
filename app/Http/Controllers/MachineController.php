@@ -138,14 +138,15 @@ class MachineController extends Controller
             if (!$machineData) {
                 throw new \Exception("Machine data not found for ID: $machineID");
             }
-
+    
             // Retrieve the machine and check if the line is part of its line array
             $machine = $machineData->machine;
             if (!$machine) {
                 throw new \Exception("Machine not found for machine data ID: $machineID");
             }
+    
+            $lines = $machine->line;    
 
-            $lines = json_decode($machine->line, true);
             if (!is_array($lines) || !in_array($line, $lines)) {
                 throw new \Exception("Line: $line is not associated with Machine ID: $machineID");
             }
@@ -174,7 +175,7 @@ class MachineController extends Controller
             $machineOperation->save();
 
             // Create audit log
-            Audit::create([
+            Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => $machineOperation->id,
                 'event' => 'add',
@@ -188,10 +189,6 @@ class MachineController extends Controller
         }
     }
 
-
-
-
-
     //Add Global Description below tables, input to globalDescription database
     public function addGlobalDescription(Request $request) {
         $userId = auth()->id();
@@ -200,9 +197,6 @@ class MachineController extends Controller
             // Validate the incoming request data
             $validatedData = $request->validate([
                 'description' => 'required|string|max:255',
-                'year' => 'required',
-                'month' => 'required',
-                'week' => 'required',
             ]);
 
             // Check if the global description already exists
@@ -215,9 +209,9 @@ class MachineController extends Controller
             // Create a new global description instance
             $globalDescription = new GlobalDescription();
             $globalDescription->description = $validatedData['description'];
-            $globalDescription->year = $validatedData['year']; // Save current year
-            $globalDescription->month = $validatedData['month']; // Save current month
-            $globalDescription->week = $validatedData['week']; // Save current week of month
+            $globalDescription->year = Carbon::now()->year; // Save current year
+            $globalDescription->month = Carbon::now()->month; // Save current month
+            $globalDescription->week = Carbon::now()->weekOfMonth; // Save current week of month
             $globalDescription->save();
 
             // Create audit entry
