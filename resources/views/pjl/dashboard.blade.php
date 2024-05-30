@@ -125,7 +125,7 @@
 
             const monthSpan = document.createElement('span');
             monthSpan.textContent = monthName + ' ';
-            monthSpan.className = 'text-l font-bold';
+            monthSpan.className = 'text-lg font-bold';
             button.appendChild(monthSpan);
 
             if (weeks.size === 0) {
