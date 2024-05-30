@@ -197,12 +197,19 @@ class MachineController extends Controller
             // Validate the incoming request data
             $validatedData = $request->validate([
                 'description' => 'required|string|max:255',
+                'year' => 'required|integer',
+                'month' => 'required|integer',
+                'week' => 'required|integer',
             ]);
 
             $line = $request->input('line');
 
             // Check if the global description already exists
-            $existingGlobalDescription = GlobalDescription::where('description', $request->input('description'))->first();
+            $existingGlobalDescription = GlobalDescription::where('description', $request->input('description'))
+                ->where('year', $request->input('year'))
+                ->where('month', $request->input('month'))
+                ->where('week', $request->input('week'))
+                ->first();
 
             if ($existingGlobalDescription) {
                 return response()->json(['message' => 'Global description already exists'], 409);
@@ -211,9 +218,9 @@ class MachineController extends Controller
             // Create a new global description instance
             $globalDescription = new GlobalDescription();
             $globalDescription->description = $validatedData['description'];
-            $globalDescription->year = Carbon::now()->year; // Save current year
-            $globalDescription->month = Carbon::now()->month; // Save current month
-            $globalDescription->week = Carbon::now()->weekOfMonth; // Save current week of month
+            $globalDescription->year = $validatedData['year'];
+            $globalDescription->month = $validatedData['month'];
+            $globalDescription->week = $validatedData['week'];
             $globalDescription->line = $line;
             $globalDescription->save();
 
