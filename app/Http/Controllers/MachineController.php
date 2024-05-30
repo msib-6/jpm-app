@@ -145,7 +145,8 @@ class MachineController extends Controller
                 throw new \Exception("Machine not found for machine data ID: $machineID");
             }
     
-            $lines = json_decode($machine->line, true);
+            $lines = $machine->line;    
+
             if (!is_array($lines) || !in_array($line, $lines)) {
                 throw new \Exception("Line: $line is not associated with Machine ID: $machineID");
             }
@@ -174,7 +175,7 @@ class MachineController extends Controller
             $machineOperation->save();
 
             // Create audit log
-            Audit::create([
+            Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => $machineOperation->id,
                 'event' => 'add',
@@ -188,10 +189,6 @@ class MachineController extends Controller
         }
     }
 
-    
-    
-    
-
     //Add Global Description below tables, input to globalDescription database
     public function addGlobalDescription(Request $request) {
         $userId = auth()->id();
@@ -201,6 +198,8 @@ class MachineController extends Controller
             $validatedData = $request->validate([
                 'description' => 'required|string|max:255',
             ]);
+
+            $line = $request->input('line');
 
             // Check if the global description already exists
             $existingGlobalDescription = GlobalDescription::where('description', $request->input('description'))->first();
@@ -215,6 +214,7 @@ class MachineController extends Controller
             $globalDescription->year = Carbon::now()->year; // Save current year
             $globalDescription->month = Carbon::now()->month; // Save current month
             $globalDescription->week = Carbon::now()->weekOfMonth; // Save current week of month
+            $globalDescription->line = $line;
             $globalDescription->save();
 
             // Create audit entry

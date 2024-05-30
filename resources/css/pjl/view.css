@@ -90,19 +90,16 @@
 
 .add-jpm-button {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 45%;
-    background-color: #F1EFFF; /* Ungu */
-    color: #8333D3;
-    padding: 0.5rem;
-    text-align: center;
+    background-color: #E9E9E9; /* Light purple background */
+    color: #000000; /* Dark purple text */
     font-size: 1.5rem;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 0.5rem; /* Spacing from previous entries */
+    margin-top: 0.5rem;
 }
+
 
 .day-column {
     display: flex;
@@ -162,4 +159,20 @@
 }
 .time-input button:hover {
     color: #4c51bf;
+<<<<<<< HEAD
 }
+=======
+}
+
+.add-desc-button{
+    width: 90%;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-desc-button2{
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+>>>>>>> b7d77418e084c3b78cb3af4198e63eddb0467ff1

@@ -120,7 +120,7 @@
             const monthIndex = (index + 1).toString();
             const weeks = monthWeekData[monthIndex] || [];
             const button = document.createElement('button');
-            button.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black rounded-md flex flex-col items-start justify-center w-1/4';
+            button.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black rounded-md flex flex-col items-start justify-center w-full';
             button.style.height = '2.5em'; // consistent height for all month divs
 
             const monthSpan = document.createElement('span');

@@ -11,15 +11,17 @@
 <div class="container mx-auto px-4">
 
     <!-- Card Title -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
         <h3 id="title" class="text-2xl font-bold">
-            Line: <span id="line-display">Loading...</span>, <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>
+            <span id="line-display">Loading...</span>
         </h3>
-    </div>
-
-    <!-- Weeks Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;" id="weeksList">
-        <!-- Buttons for each week will be appended here -->
+        <!-- Container for buttons, each week's button will be appended here -->
+        <div id="weeksList" class="mx-2">
+            <!-- Buttons for each week will be dynamically inserted here -->
+        </div>
+        <h3 class="text-2xl font-bold">
+            <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>
+        </h3>
     </div>
 
     <!-- Header for Days -->
@@ -43,16 +45,14 @@
         <!-- Dynamic rows for machines will be appended here -->
     </div>
 
-    <!-- Global Container -->
-    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+    <!-- Global Description Container -->
+    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-center items-start" style="width: 91.666667%;">
         <!-- Dynamic rows for Global Desc will be appended here -->
-
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            <a>
-                Button Add Desc Testing
-            </a>
+        <button id="openGlobalDescModalButton" class="add-desc-button relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+            <span class="relative add-desc-button2 px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                Add Description
+            </span>
         </button>
-
     </div>
 
     <!-- Add Mesin Button -->
@@ -81,13 +81,11 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Add Data</h2>
             <form id="addDataForm">
-
                 <!-- Code -->
                 <div class="mb-4">
                     <label for="dataCode" class="block text-gray-700">Kode</label>
                     <input type="text" id="dataCode" class="w-full px-3 py-2 border rounded-lg" required>
                 </div>
-
                 <!-- Time -->
                 <div class="mb-4 time-picker">
                     <label for="dataTime" class="block text-gray-700">Jam :</label>
@@ -105,19 +103,16 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Notes -->
                 <div class="mb-4">
                     <label for="dataNotes" class="block text-gray-700">Notes</label>
                     <input type="text" id="dataNotes" class="w-full px-3 py-2 border rounded-lg">
                 </div>
-
                 <!-- Description -->
                 <div class="mb-4">
                     <label for="dataDescription" class="block text-gray-700">Description</label>
                     <input type="text" id="dataDescription" class="w-full px-3 py-2 border rounded-lg">
                 </div>
-
                 <!-- Status -->
                 <div class="mb-4">
                     <label for="dataStatus" class="block text-gray-700">Status</label>
@@ -126,11 +121,27 @@
                         <option value="PM">PM</option>
                     </select>
                 </div>
-
                 <!-- Button -->
                 <div class="flex justify-end">
                     <button type="button" id="closeDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
                     <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Add Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Add Global Description -->
+    <div id="addGlobalDescModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4">Add Global Description</h2>
+            <form id="addGlobalDescForm">
+                <div class="mb-4">
+                    <label for="globalDesc" class="block text-gray-700">Description</label>
+                    <textarea id="globalDesc" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" id="closeGlobalDescModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Add Description</button>
                 </div>
             </form>
         </div>
@@ -148,6 +159,10 @@
         const addDataModal = document.getElementById('addDataModal');
         const closeDataModalButton = document.getElementById('closeDataModalButton');
         const addDataForm = document.getElementById('addDataForm');
+        const openGlobalDescModalButton = document.getElementById('openGlobalDescModalButton');
+        const closeGlobalDescModalButton = document.getElementById('closeGlobalDescModalButton');
+        const addGlobalDescModal = document.getElementById('addGlobalDescModal');
+        const addGlobalDescForm = document.getElementById('addGlobalDescForm');
         let currentMachineId;
         let currentDay;
 
@@ -174,6 +189,22 @@
             event.preventDefault();
             await addDataToMachine(currentMachineId, currentDay);
             addDataModal.classList.add('hidden');
+            addDataForm.reset();
+        });
+
+        openGlobalDescModalButton.addEventListener('click', function() {
+            addGlobalDescModal.classList.remove('hidden');
+        });
+
+        closeGlobalDescModalButton.addEventListener('click', function() {
+            addGlobalDescModal.classList.add('hidden');
+        });
+
+        addGlobalDescForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            await addGlobalDescription();
+            addGlobalDescModal.classList.add('hidden');
+            addGlobalDescForm.reset();
         });
 
         getQueryParams();
@@ -247,37 +278,74 @@
             }
         }
 
-        async function addSelectedMesin() {
-            const selectedMachines = document.querySelectorAll('input[name="machines"]:checked');
+        async function addDataToMachine(machineId, day) {
+            const dataCode = document.getElementById('dataCode').value;
+            const hours = document.getElementById('hours').value;
+            const minutes = document.getElementById('minutes').value;
+            const dataTime = `${hours}:${minutes}`;
+            const dataNotes = document.getElementById('dataNotes').value;
+            const dataDescription = document.getElementById('dataDescription').value;
+            const dataStatus = document.getElementById('dataStatus').value;
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
             const month = params.get('month');
             const week = params.get('week');
             const year = params.get('year');
 
-            for (const machine of selectedMachines) {
-                const machineName = machine.value;
+            const response = await fetch(`http://127.0.0.1:8000/api/addmachineoperation/${line}/${machineId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    day,
+                    code: dataCode,
+                    time: dataTime,
+                    status: dataStatus,
+                    notes: dataNotes,
+                    description: dataDescription,
+                    line,
+                    month,
+                    week,
+                    year
+                }),
+            });
 
-                const response = await fetch('http://127.0.0.1:8000/api/addweeklymachine', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        machineName,
-                        line,
-                        month,
-                        week,
-                        year
-                    }),
-                });
+            if (response.ok) {
+                alert(`Data added successfully`);
+            } else {
+                const errorData = await response.json();
+                alert(`Error adding data: ${errorData.message}`);
+            }
+        }
 
-                if (response.ok) {
-                    alert(`Machine ${machineName} added successfully`);
-                } else {
-                    const errorData = await response.json();
-                    alert(`Error adding machine ${machineName}: ${errorData.message}`);
-                }
+        async function addGlobalDescription() {
+            const globalDesc = document.getElementById('globalDesc').value;
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            const response = await fetch('http://127.0.0.1:8000/api/addglobaldescription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    description: globalDesc,
+                    line,
+                    month,
+                    week,
+                    year
+                }),
+            });
+
+            if (response.ok) {
+                alert(`Global description added successfully`);
+            } else {
+                const errorData = await response.json();
+                alert(`Error adding global description: ${errorData.message}`);
             }
         }
 
@@ -385,7 +453,7 @@
                     const dayColumn = document.getElementById(`daydata${i}-${machine.id}`);
                     if (dayColumn) {
                         const addButton = document.createElement('button');
-                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-purple-500 text-white';
+                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white w-10 h-10'; // Set width and height to 10 each for circular shape
                         addButton.textContent = '+';
                         addButton.onclick = function() {
                             currentMachineId = machine.id;
