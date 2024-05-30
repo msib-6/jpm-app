@@ -199,6 +199,8 @@ class MachineController extends Controller
                 'description' => 'required|string|max:255',
             ]);
 
+            $line = $request->input('line');
+
             // Check if the global description already exists
             $existingGlobalDescription = GlobalDescription::where('description', $request->input('description'))->first();
 
@@ -212,6 +214,7 @@ class MachineController extends Controller
             $globalDescription->year = Carbon::now()->year; // Save current year
             $globalDescription->month = Carbon::now()->month; // Save current month
             $globalDescription->week = Carbon::now()->weekOfMonth; // Save current week of month
+            $globalDescription->line = $line;
             $globalDescription->save();
 
             // Create audit entry

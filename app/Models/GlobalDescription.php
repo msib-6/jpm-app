@@ -14,6 +14,7 @@ class GlobalDescription extends Model
         'month',
         'week',
         'description',
+        'line',
     ];
 
     protected static function boot()
