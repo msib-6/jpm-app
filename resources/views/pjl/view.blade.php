@@ -28,7 +28,7 @@
     <!-- Header for Days -->
     <div class="header-days bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none;" id="headerDays">
         <div class="grid grid-cols-10 gap-4 text-center font-semibold">
-            <div class="flex font-bold items-center justify-center col-span-2 text-2xl">Mesin</div>
+            <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
             <!-- Dynamic date headers -->
             <div id="day1" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 1</span></div>
             <div id="day2" class="flex flex-col justify-center items-center"><span class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2</span></div>
@@ -411,7 +411,7 @@
                 const machineRow = document.createElement('div');
                 machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                 machineRow.innerHTML = `
-                    <div class="font-bold border-2 mesin-jpm p-6 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                    <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
                         <div class="flex flex-col justify-center items-center w-full h-full">
                             <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
                                 <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
@@ -434,8 +434,8 @@
                 // Populate machine row with operations
                 const machineOperations = machineOperationsMap.get(machine.id) || [];
                 machineOperations.forEach(operation => {
-                    const dayIndex = parseInt(operation.day) % 8;  // Adjust based on your date system
-                    const dayColumn = document.getElementById(`daydata${dayIndex + 1}-${machine.id}`);
+                    const dayIndex = parseInt(operation.day);  // Adjust based on your date system
+                    const dayColumn = document.getElementById(`daydata${dayIndex}-${machine.id}`);
 
                     if (dayColumn) {
                         const entry = document.createElement('button');
@@ -563,8 +563,9 @@
             dates.forEach((date, index) => {
                 if (index < 8) { // Ensure we only update the 8 days
                     const dayElement = document.getElementById(`day${index + 1}`);
-                    dayElement.children[0].textContent = date.split(",")[0]; // Day name
-                    dayElement.children[1].textContent = date.split(",")[1]; // Date
+                    const dateParts = date.split(" ");
+                    dayElement.children[0].textContent = dateParts[0]; // Day name
+                    dayElement.children[1].textContent = `${dateParts[1]} ${dateParts[2]} ${dateParts[3]}`; // Full date
                 }
             });
         }
