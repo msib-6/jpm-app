@@ -37,29 +37,46 @@
 
 /* Custom colors */
 .custom-badge1 {
-    background: linear-gradient(to bottom, #37a61b 0%,#33a914 1%,#35ac14 17%,#37aa16 20%,#34af0d 22%,#34b113 24%,#32ae14 26%,#3bab17 30%,#3aaa15 31%,#36a90e 32%,#38ad11 33%,#37af16 36%,#36ae11 36%,#36ac0e 39%,#39b115 41%,#38b215 42%,#39ad11 44%,#3ead10 46%,#3cad0e 48%,#37b114 50%,#38b113 52%,#3ead15 54%,#39b112 58%,#3cb016 61%,#3db210 66%,#3caf17 70%,#3bb310 74%,#3db30f 76%,#40b117 79%,#3fb214 80%,#41b313 97%,#3eb714 100%);
+    background-color: #63D110;
+    background-image: linear-gradient(to right bottom, #32ae10, #43b911, #52c411, #61cf11, #70da10); /* Warna kustom */
 
 }
 .custom-badge2 {
     background-color: #ff7878;
-    background-image: linear-gradient(315deg, #fb9d9d 10%, #ff0000 80%);
+    background-image: linear-gradient(to right bottom, #b0220e, #bb1f16, #c51c1d, #d01725, #db102d);
     /* Warna kustom */
 }
 .custom-badge3 {
     background-color: #5078f2;
-    background-image: linear-gradient(315deg, #efe9f4 10%, #0946fe 80%);
+    background-image: linear-gradient(to right bottom, #1a397d, #1b4489, #1b4f96, #1c5aa2, #1c66ae);
     /* Warna kustom */
 }
 .custom-badge4 {
     background-color: #f4f5f6;
-    background-image: linear-gradient(315deg, #f4f5f6 10%, #9b4dca 80%); /* Warna kustom */
+    background-image: linear-gradient(to right bottom, #5a2a8e, #5a2c96, #592f9e, #5732a6, #5435af); /* Warna kustom */
 }
 .custom-badge5 {
-    background: linear-gradient(to bottom, #f8d75a 0%,#f8d75a 100%);
+    background-color: #f5d3c8;
+    background-image: linear-gradient(to right bottom, #aa8759, #b8905d, #c59962, #d4a366, #e2ac6b);
+    /* Warna kustom */
 }
 .custom-badge6 {
+    background-color: #ffd72f;
+    /* background-image: linear-gradient(to right bottom, #fed336, #fede2d, #fde823, #fbf417, #f7ff07); */
+    background-image: linear-gradient(to right bottom, #aa0d5e, #b8056f, #c40181, #d00296, #d90dac);
+}
+
+.custom-badge8 {
     background-color: #f5d3c8;
-    background-image: linear-gradient(315deg, #f5d3c8 10%, #c08552 80%);
+    background-image: linear-gradient(to right bottom, #f7e600, #f9e814, #faea28, #fcec3c, #fdee50); /* Warna kustom baru */
+    /* Warna kustom */
+}
+.custom-badge7 {
+    background: linear-gradient(109.6deg, rgb(255, 219, 47) 11.2%, rgb(244, 253, 0) 100.2%);
+}
+.custom-badge9 {
+    background-color: #f5d3c8;
+    background-image: linear-gradient(to right bottom, #6a11cb, #2575fc); /* Warna kustom baru */
     /* Warna kustom */
 }
 .custom-badge {
