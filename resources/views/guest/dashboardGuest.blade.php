@@ -8,7 +8,7 @@
     <body>
     <div class="card h-full">
         <!--begin::Body-->
-        <div class="card-body py-0">
+        <div class="background-guest py-0">
             <!--begin::Row-->
             <div class="flex items-center h-100">
                  <!--begin::Col-->
@@ -87,13 +87,13 @@
                                 </div>
                             </div>
                             </div>
-                </div>
+                          </div>
                         <!--end::Col-->
                     <!--begin::Col-->
                 <div class=" w-7/12 pt-5 lg:pt-15">
                 <!--begin::Illustration-->
                 <div class="image bg-no-repeat bg-contain bg-right-bottom" style="background-image:url('{{ asset('svg/8.svg') }}'); height: 48em; width: 48em;">
-   </div>
+                </div>
                 <!--begin::Illustration-->
               </div>
               <!--end::Col-->
