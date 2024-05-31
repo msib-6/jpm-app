@@ -14,7 +14,7 @@ body {
 
 
 .background-guest {
-    background: url('../../../public/rm380-12.jpg'); /* Ganti dengan path gambar Anda */
+    background: url('../../../public/parmasi.jpg'); /* Ganti dengan path gambar Anda */
     background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
     background-position: center; /* Mengatur posisi gambar agar terletak di tengah latar belakang */
     position: fixed;
@@ -42,6 +42,36 @@ body {
     display: flex;
     gap: 1rem;
 }
+.button1 {
+    width: 100%;
+    height: 45px;
+    margin: 10px 0;
+    background: linear-gradient(to right, #06b6d4, #3b82f6); /* Gradient background */
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 18px; /* Adjusted font size */
+    color: #f7f7f7;
+    font-weight: 700;
+    transition: background 0.3s; /* Smooth transition for hover effect */
+}
+
+.button1:hover {
+    background: linear-gradient(to left, #06b6d4, #3b82f6); /* Reverse gradient on hover */
+    color: white;
+}
+
+.button1:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.5); /* Cyan focus ring */
+}
+
+.dark .button1:focus {
+    box-shadow: 0 0 0 4px rgba(22, 78, 99, 0.5); /* Dark mode cyan focus ring */
+}
+
 
 
 .buttons a {
@@ -50,6 +80,7 @@ body {
     text-align: center;
     font-size: 1rem;
     font-weight: bold;
+    
 }
 
         /* Keyframes for fade-in animation */

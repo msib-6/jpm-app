@@ -1,7 +1,7 @@
 <!-- SIDEBAR -->
 <section id="sidebar">
-    <a href="#" class="brand">
-        <img class='bx bxs-smile' src="{{ asset('Logo_kalbe.png') }}" style="max-width: 100px; max-height: 50px; width: auto; height: auto;">
+<a href="#" class="brand">
+        <img class='bx bxs-smile mt-4' src="{{ asset('Logo-Kalbe.0cf6623a.svg') }}" style="max-width: 180px; max-height: 160px; width: auto; height: auto;">
     </a>
     <ul class="side-menu top">
         <li id="nav-dashboard" class="side-item">

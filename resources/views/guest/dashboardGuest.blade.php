@@ -16,20 +16,20 @@
 
                                 <!-- Bagian 1 -->
                                 <div id="bagian-1" class="section">
-                                <div class="text-container text-white">
+                                <div class="text-container">
                                 <h3 class="text-4xl mb-8 font-bold">Welcome To JPM View (Guest Mode)</h3>
                                 <p class="text-lg mb-8">Selamat datang di halaman dashboard eksklusif JPM! Di sini, Anda akan menemukan rangkuman yang komprehensif dan terperinci mengenai aktivitas operasional yang vital bagi kesuksesan bisnis Anda. Melalui visualisasi data yang intuitif dan informatif, Anda dapat dengan mudah melacak kinerja operasional, menganalisis tren, dan mengidentifikasi potensi area perbaikan.</p>
-                                <div class="buttons">
-                                    <a href="#" id="pindah-ke-bagian-2" class="text-white bg-[#9D6EFF] hover-custom focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-12 py-2.5 text-center inline-flex items-center dark:bg-purple-600 hover:bg-purple-600 dark:focus:ring-purple-800">
-                                    Pilih Line
-                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                </svg>
-                                </a>
-                                <a href="/summary" class="text-white bg-[#9D6EFF] hover-custom focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-12 py-2.5 text-center inline-flex items-center dark:bg-purple-600 hover:bg-purple-600 dark:focus:ring-purple-800">
+                                
+                                <button type="button" id="pindah-ke-bagian-2" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 inline-flex items-center">
+        Pilih Line
+        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+        </svg>
+    </button>
+                                <button type="button" onclick="window.location.href='/summary'" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                                     History
-                                </a>
-                                    </div>
+                                </button>
+                            
                                 </div>
                             </div>
 
