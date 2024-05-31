@@ -51,6 +51,8 @@ Route::get('/showglobaldescription', [MachineController::class, 'showAllGlobalDe
 Route::get('/showcodeline', [MachineController::class, 'showCodeLine'])->name('show.code.line');
 Route::get('/showallmachineoperationpjl', [MachineController::class, 'showAllMachineOperationPjl'])->name('show.all.machine.operation.guest');
 Route::get('/showallmachineoperationguest', [MachineController::class, 'showAllMachineOperationGuest'])->name('show.all.machine.operation.pjl');
+Route::get('/showpm', [MachineController::class, 'showPM'])->name('show.pm');
+Route::get('/showpmguest', [MachineController::class, 'showPMGuest'])->name('show.pm.guest');
 
 
 //Backup MachineOperation Route

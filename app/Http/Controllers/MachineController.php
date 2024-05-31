@@ -167,10 +167,23 @@ class MachineController extends Controller
                 'status' => $status,
                 'notes' => $notes,
                 'current_line' => $line,
-                'is_changed' => true,
-                'is_approved' => false,
                 'changed_by' => $username,
             ]);
+
+            $machineOperation->save();
+
+            $weekOperations = MachineOperation::where('week', $machineOperation->week)
+            ->where('month', $machineOperation->month)
+            ->where('year', $machineOperation->year)
+            ->where('current_line', $machineOperation->current_line)
+            ->get();
+
+            foreach ($weekOperations as $operation) {
+                $operation->update([
+                    'is_changed' => true,
+                    'is_approved' => false,
+                ]);
+            }
 
             $machineOperation->save();
 
@@ -294,19 +307,27 @@ class MachineController extends Controller
                 $status = $machineOperation->status;
             }
 
-
-
-
             $machineOperation->update([
                 'day' => $validatedData['day'],
                 'code' => $validatedData['code'],
                 'time' => $validatedData['time'],
                 'status' => $request->input('status'),
                 'notes' => $request->input('notes'),
-                'is_changed' => true,
-                'is_approved' => false,
                 'changedBy' => $username,
             ]);
+
+            $weekOperations = MachineOperation::where('week', $machineOperation->week)
+            ->where('month', $machineOperation->month)
+            ->where('year', $machineOperation->year)
+            ->where('currentline', $machineOperation->current_line)
+            ->get();
+
+            foreach ($weekOperations as $operation) {
+                $operation->update([
+                    'is_changed' => true,
+                    'is_approved' => false,
+                ]);
+            }
 
             $newValues = [
                 'day' => $machineOperation->day,
@@ -497,7 +518,6 @@ class MachineController extends Controller
         return response()->json($machineData);
     }
 
-
     // Function Show All Code Machine Operations For Guest
     public function showAllMachineOperationGuest(){
         // Start by selecting all from machine_operations
@@ -520,8 +540,7 @@ class MachineController extends Controller
 
 
     // Function Show All Code Machine Operations For PJL
-    public function showAllMachineOperationPjl()
-    {
+    public function showAllMachineOperationPjl() {
         // Start by selecting all from machine_operations
         $operations = MachineOperation::select(
             'machine_operations.*',
@@ -571,9 +590,6 @@ class MachineController extends Controller
             'operations' => $operations
         ]);
     }
-
-
-
 
     public function showApprovedMachineOperation(Request $request){
         // Validate the incoming request
@@ -630,6 +646,74 @@ class MachineController extends Controller
 
         return response()->json($data);
     }
+
+    public function showPM(Request $request){
+        $request->validate([
+            'year' => 'required|string',
+            'month' => 'required|string',
+            'week' => 'required|string',
+            'line' => 'required|string',
+        ]);
+
+        // Retrieve the input parameters
+        $line = $request->input('line');
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $week = $request->input('week');
+
+        // Retrieve machine operations based on the year, month, week, and line
+        $operations = MachineOperation::select('id', 'machine_id', 'year', 'month', 'week', 'day', 'code', 'time', 'status', 'notes', 'current_line', 'is_changed', 'changed_by', 'change_date', 'is_approved', 'approved_by', 'is_rejected', 'rejected_by', 'created_at', 'updated_at')
+            ->where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->whereHas('machineData', function($query) use ($line) {
+                $query->whereHas('machine', function($query) use ($line) {
+                    $query->whereJsonContains('line', $line);
+                });
+            })
+            ->where('status', 'PM')
+            ->get();
+
+        // Return the machine operations as a response
+        return response()->json([
+            'operations' => $operations
+        ]);
+    }
+
+    public function showPMGuest(Request $request){
+        $request->validate([
+            'year' => 'required|string',
+            'month' => 'required|string',
+            'week' => 'required|string',
+            'line' => 'required|string',
+        ]);
+
+        // Retrieve the input parameters
+        $line = $request->input('line');
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $week = $request->input('week');
+
+        // Retrieve machine operations based on the year, month, week, and line
+        $operations = MachineOperation::select('id', 'machine_id', 'year', 'month', 'week', 'day', 'code', 'time', 'status', 'notes', 'current_line', 'is_changed', 'changed_by', 'change_date', 'is_approved', 'approved_by', 'is_rejected', 'rejected_by', 'created_at', 'updated_at')
+            ->where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->whereHas('machineData', function($query) use ($line) {
+                $query->whereHas('machine', function($query) use ($line) {
+                    $query->whereJsonContains('line', $line);
+                });
+            })
+            ->where('status', 'PM')
+            ->where('is_approved', true)
+            ->get();
+
+        // Return the machine operations as a response
+        return response()->json([
+            'operations' => $operations
+        ]);
+    }
+
     //----------------------------------------------------------------------------------------
 
 }
