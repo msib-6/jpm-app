@@ -28,13 +28,13 @@
         </div>
     </div>
 
-    <div class='summary-container bg-white shadow-lg rounded-3xl my-4 mx-auto flex items-center style="width: 91.666667%;'>
-        <div id="default-styled-tab-content">
-            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+
+        <div id="default-styled-tab-content bg-white shadow-lg rounded-3xl my-4 mx-auto flex items-center style="width: 91.666667%;">
+            <div class="my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black rounded-md flex flex-col items-start justify-center w-full" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
                 <button class="flex items-center justify-between bg-gray-100 bg-white border border-gray-200 rounded-lg w-11/12 mx-auto button-manager-dashboard">
                     <div class="flex flex-col justify-center w-11/12">
                         <div class="w-full">
-                            <h5 class="text-2xl font-bold text-black dark:bg-gray-700 py-2 px-4 rounded">Line 3</h5>
+                            <h5 class="text-2xl font-bold text-black dark:bg-gray-700 py-2 px-100 rounded">Line 3</h5>
                         </div>
                         <div class="w-full">
                             <h5 class="text-lg font-normal text-black dark:bg-gray-700 py-2 px-4 rounded">Week 4, Januari 2024</h5>

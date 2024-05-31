@@ -14,7 +14,7 @@ body {
 
 
 .background-guest {
-    background: url('../../../public/parmasi.jpg'); /* Ganti dengan path gambar Anda */
+    background: url('../../../public/backgrounds1.jpg'); /* Ganti dengan path gambar Anda */
     background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
     background-position: center; /* Mengatur posisi gambar agar terletak di tengah latar belakang */
     position: fixed;
@@ -93,29 +93,29 @@ body {
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
+        }             
 
         /* Apply initial state and transition properties */
-        .section h3, .section p {
+.section h3, .section p {
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 1s forwards;
-        }
+}
 
-        .section h3 {
+.section h3 {
             animation-delay: 0.5s; /* Delay for h3 */
-        }
+}
 
-        .section p {
+.section p {
             animation-delay: 1s; /* Delay for p */
-        }
+}
 
         /* Example of hover effect if needed */
-        .section h3:hover, .section p:hover {
+.section h3:hover, .section p:hover {
             transform: translateY(-10px);
-            color: #FFD700;
+            color: #3d9cd7;
             transition: all 0.3s ease;
-        }
+}
 
 .image-container {
     max-width: 50%;

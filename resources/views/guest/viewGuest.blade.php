@@ -24,8 +24,9 @@
         }
     </style>
 </head>
-<body class="bg-gray-100">
-<div class="container mx-auto px-4">
+<body>
+<div class='background-pjl'>
+    <div class="container mx-auto px-4">
 
     <!-- Card Title -->
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
@@ -60,6 +61,7 @@
         <!-- Dynamic rows for machines will be appended here -->
     </div>
 
+    </div>
 </div>
 
 <script>
