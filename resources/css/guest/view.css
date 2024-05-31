@@ -1,11 +1,10 @@
-.background-view {
+body{
     background: url('../../../public/backgrounds1.jpg'); /* Ganti dengan path gambar Anda */
-    background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
-    background-position: center; /* Mengatur posisi gambar agar terletak di tengah latar belakang */
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
+    background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */  
 }
+
+
+
 
 
 

@@ -8,8 +8,7 @@
     <title>Machine Schedule Display</title>
     @vite('resources/css/pjl/view.css')
 </head>
-<body">
-<div class="background-pjl">
+<body>
 <div class="container mx-auto px-4">
     <!-- Breadcrumb -->
     <nav class="flex" aria-label="Breadcrumb">
@@ -170,7 +169,6 @@
         </div>
     </div>
 
-</div>
 </div>
 
 <script>
