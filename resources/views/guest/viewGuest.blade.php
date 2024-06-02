@@ -25,7 +25,7 @@
     </style>
 </head>
 <body>
-<div class='background-pjl'>
+
     <div class="container mx-auto px-4">
 
     <!-- Card Title -->
@@ -62,7 +62,6 @@
     </div>
 
     </div>
-</div>
 
 <script>
     // Function to trigger on document load or specific event

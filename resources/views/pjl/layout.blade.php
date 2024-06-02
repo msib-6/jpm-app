@@ -9,7 +9,7 @@
     <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet">
     <link href="{{ asset('css/navbar.css') }}" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
+<body>
     @include('Navbar.NavPJL')
     <section id="content" class="py-8 px-4">
         <div id="main-content">

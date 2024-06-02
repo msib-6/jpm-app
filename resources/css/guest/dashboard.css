@@ -8,24 +8,15 @@
 
 
 body {
-
-}
-
-
-
-.background-guest {
-    background: url('../../../public/backgrounds1.jpg'); /* Ganti dengan path gambar Anda */
+    font-family: 'Inter', sans-serif;
+    background: url('../../../public/elegant.jpg'); /* Ganti dengan path gambar Anda */
+    background-attachment: fixed; /* Membuat background tetap di tempat saat di-scroll */
     background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
-    background-position: center; /* Mengatur posisi gambar agar terletak di tengah latar belakang */
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
+  
 }
-
-
 
 .text-container {
-    max-width: 100%;
+    max-width: 70%;
 }
 
 .text-container h3 {
@@ -34,7 +25,7 @@ body {
 }
 
 .text-container p {
-    font-size: 1.25rem;
+    font-size: 1rem;
     margin-bottom: 2rem;
 }
 
@@ -93,29 +84,44 @@ body {
                 opacity: 1;
                 transform: translateY(0);
             }
-        }             
+        }   
+        .container {
+            display: flex;
+            height: 100vh;
+            flex-wrap: wrap; /* Tambahkan ini untuk memastikan responsif */
+        }
+        .left-section {
+            width: 70%;
+            padding-top: 250px;
+            padding-left: 50px;
+        }
+        .right-section {
+            width: 30%;
+            padding-top: 250px;
+            padding-left: 50px;
+        }       
 
-        /* Apply initial state and transition properties */
-.section h3, .section p {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 1s forwards;
-}
-
-.section h3 {
-            animation-delay: 0.5s; /* Delay for h3 */
-}
-
-.section p {
-            animation-delay: 1s; /* Delay for p */
-}
-
-        /* Example of hover effect if needed */
-.section h3:hover, .section p:hover {
+        .left-section h3, .right-section h3 {
+            animation: fadeInUp 1s ease-out forwards;
+        }
+        
+        .left-section p, .right-section p {
+            animation: fadeInUp 1s ease-out forwards;
+        }
+        
+        .left-section h3:hover, .right-section h3:hover, 
+        .left-section p:hover, .right-section p:hover {
             transform: translateY(-10px);
             color: #3d9cd7;
             transition: all 0.3s ease;
-}
+        }
+        
+        @media (max-width: 768px) {
+            .left-section, .right-section {
+                width: 100%; /* Buat kedua section full-width pada layar kecil */
+                padding: 20px; /* Sesuaikan padding untuk layar kecil */
+            }
+        }
 
 .image-container {
     max-width: 50%;
@@ -126,6 +132,10 @@ body {
 .image-container img {
     max-width: 100%;
     height: auto;
+}
+.scrollable-container {
+    max-height: 300px; /* Atur tinggi maksimal sesuai kebutuhan */
+    overflow-y: auto;
 }
 
 @media (max-width: 768px) {

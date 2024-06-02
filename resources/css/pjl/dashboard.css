@@ -1,4 +1,12 @@
 /* Atur font default untuk semua elemen */
+body {
+    font-family: 'Inter', sans-serif;
+    background: url('../../../public/elegant.jpg'); /* Ganti dengan path gambar Anda */
+    background-attachment: fixed; /* Membuat background tetap di tempat saat di-scroll */
+    background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
+}
+
+
 * {
     font-family: Arial, sans-serif;
 }
