@@ -1,5 +1,13 @@
-* {
-    font-family: Arial, sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: url('../elegant.jpg'); /* Ganti dengan path gambar Anda */
+    background-attachment: fixed; /* Membuat background tetap di tempat saat di-scroll */
+    background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
+  
 }
 
 .summary-container {
@@ -13,6 +21,7 @@
     width: 100%; /* Lebar 100% dari container */
     margin-top: 50px; /* Menggeser cardKedua ke bawah */
     align-items: stretch;
+    opacity: 0.85;
 }
 
 .goul {
@@ -30,6 +39,7 @@
     width: 100%; /* Lebar 100% dari container */
     font-style: italic;
     margin-top: 1em;
+    opacity: 0.85;
 }
 
 .Navbar-Header {
@@ -46,4 +56,5 @@
     border-radius: 1.5em;
     width: 100%;
     margin-top: 2em;
+    opacity: 0.85;
 }

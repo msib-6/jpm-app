@@ -7,12 +7,12 @@
     <link href="{{ asset('css/history.css') }}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-100"> <!-- Tambahkan kelas bg-gray-100 untuk latar belakang -->
+<body> <!-- Tambahkan kelas bg-gray-100 untuk latar belakang -->
 
 <section id="content" class="py-8 px-4"> <!-- Tambahkan kelas px-4 untuk memberikan ruang padding di sisi -->
 
     <div class='container mx-auto'>
-        <div class='card flex justify-between'> <!-- Tambahkan kelas flex dan justify-between -->
+        <div class='card flex justify-between opacity-75'> <!-- Tambahkan kelas flex dan justify-between -->
             <h1 class="text-left text-4xl font-bold text-gray-800">History</h1> <!-- Sesuaikan ukuran dan gaya teks -->
             <button class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-3 py-2.5 flex items-center float-right">
                 <svg class="w-6 h-6 mr-1 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -21,7 +21,7 @@
                 Download PDF
             </button>
         </div>
-        <div class='weeks-container'>
+        <div class='weeks-container opacity-75'>
             <!-- Button trigger dropdown -->
             <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" type="button" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                 Select Line

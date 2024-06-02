@@ -7,12 +7,12 @@
     <link href="{{ asset('css/history.css') }}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-100"> <!-- Tambahkan kelas bg-gray-100 untuk latar belakang -->
+<body> <!-- Tambahkan kelas bg-gray-100 untuk latar belakang -->
 
-<section id="content" class="py-8 px-4"> <!-- Tambahkan kelas px-4 untuk memberikan ruang padding di sisi -->
+ <!-- Tambahkan kelas px-4 untuk memberikan ruang padding di sisi -->
 
     <div class='container mx-auto'>
-    <div class='card flex justify-between'> <!-- Tambahkan kelas flex dan justify-between -->
+    <div class='card flex justify-between opacity-75'> <!-- Tambahkan kelas flex dan justify-between -->
             <h1 class="text-left text-4xl font-bold text-gray-800">History</h1> <!-- Sesuaikan ukuran dan gaya teks -->
             <button class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-3 py-2.5 flex items-center float-right">
                 <svg class="w-6 h-6 mr-1 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -24,12 +24,12 @@
         
            
 
-        <div class='summary-container bg-white shadow-lg rounded-lg p-6 mb-8'> <!-- Gunakan kelas Tailwind CSS untuk mengatur tampilan kontainer ringkasan -->
+        <div class='summary-container opacity-75 bg-white shadow-lg rounded-lg p-6 mb-8'> <!-- Gunakan kelas Tailwind CSS untuk mengatur tampilan kontainer ringkasan -->
             
         </div>
     </div>
 
-</section>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 </body>
