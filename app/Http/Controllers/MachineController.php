@@ -138,14 +138,14 @@ class MachineController extends Controller
             if (!$machineData) {
                 throw new \Exception("Machine data not found for ID: $machineID");
             }
-    
+
             // Retrieve the machine and check if the line is part of its line array
             $machine = $machineData->machine;
             if (!$machine) {
                 throw new \Exception("Machine not found for machine data ID: $machineID");
             }
-    
-            $lines = $machine->line;    
+
+            $lines = $machine->line;
 
             if (!is_array($lines) || !in_array($line, $lines)) {
                 throw new \Exception("Line: $line is not associated with Machine ID: $machineID");
@@ -651,7 +651,6 @@ class MachineController extends Controller
         $request->validate([
             'year' => 'required|string',
             'month' => 'required|string',
-            'week' => 'required|string',
             'line' => 'required|string',
         ]);
 
@@ -659,13 +658,11 @@ class MachineController extends Controller
         $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');
-        $week = $request->input('week');
 
         // Retrieve machine operations based on the year, month, week, and line
         $operations = MachineOperation::select('id', 'machine_id', 'year', 'month', 'week', 'day', 'code', 'time', 'status', 'notes', 'current_line', 'is_changed', 'changed_by', 'change_date', 'is_approved', 'approved_by', 'is_rejected', 'rejected_by', 'created_at', 'updated_at')
             ->where('year', $year)
             ->where('month', $month)
-            ->where('week', $week)
             ->whereHas('machineData', function($query) use ($line) {
                 $query->whereHas('machine', function($query) use ($line) {
                     $query->whereJsonContains('line', $line);
