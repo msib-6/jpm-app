@@ -544,8 +544,9 @@ class MachineController extends Controller
         // Start by selecting all from machine_operations
         $operations = MachineOperation::select(
             'machine_operations.*',
-            'machines.id as machine_id',
+            'machines.id as machineAll_id',
             'machines.machine_name',
+            'machines.category',
             'machines.line'
         )
             ->join('machine_data', 'machine_operations.machine_id', '=', 'machine_data.id')
