@@ -10,8 +10,8 @@
                 <span class="text">JPM</span>
             </a>
         </li>
-        <li>
-            <a href="#">
+        <li id="nav-pm" class="side-item">
+        <a href="{{ route('pjl.pmDashboard') }}">
                 <i class='bx bx-grid'></i>
                 <span class="text">PM</span>
             </a>
@@ -103,11 +103,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const currentUrl = window.location.href;
         const dashboardUrl = '{{ route('pjl.dashboard') }}';
         const approvalUrl = '{{ route('pjl.approval') }}';
+        const pmUrl = '{{ route('pjl.pmDashboard') }}';
 
         if (currentUrl === dashboardUrl) {
             setActiveNavItem('nav-jpm');
         } else if (currentUrl === approvalUrl) {
             setActiveNavItem('nav-approval');
+        } else if (currentUrl === pmUrl) {
+            setActiveNavItem('nav-pm');
         } else {
             setActiveNavItem('nav-jpm'); // Default to JPM
         }
@@ -118,11 +121,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const currentUrl = window.location.href;
         const dashboardUrl = '{{ route('pjl.dashboard') }}';
         const approvalUrl = '{{ route('pjl.approval') }}';
+        const pmUrl = '{{ route('pjl.pmDashboard') }}';
 
         if (currentUrl === dashboardUrl) {
             loadContent(dashboardUrl, 'nav-jpm');
         } else if (currentUrl === approvalUrl) {
             loadContent(approvalUrl, 'nav-approval');
+        } else if (currentUrl === pmUrl) {
+            loadContent(pmUrl, 'nav-pm');
         } else {
             loadContent(dashboardUrl, 'nav-jpm'); // Default to JPM
         }
