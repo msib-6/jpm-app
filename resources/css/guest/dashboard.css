@@ -97,7 +97,7 @@ body {
         }
         .right-section {
             width: 30%;
-            padding-top: 250px;
+            padding-top: 270px;
             padding-left: 50px;
         }       
 
@@ -133,10 +133,7 @@ body {
     max-width: 100%;
     height: auto;
 }
-.scrollable-container {
-    max-height: 300px; /* Atur tinggi maksimal sesuai kebutuhan */
-    overflow-y: auto;
-}
+
 
 @media (max-width: 768px) {
     .section {
@@ -147,8 +144,20 @@ body {
         max-width: 100%;
     }
 }
+#month-container {
+    display: grid;
+    flex-wrap: wrap;
+    grid-template-columns: repeat(2, 1fr); /* Membuat dua kolom */
+}
 
+#month-container .btn {
+    flex: 1 1 45%; /* Adjust the width of the buttons */
+    margin: 5px; /* Add some margin for spacing */
+}
 
+.scrollable-container {
+    align-content: center;
+}
 
 
 
