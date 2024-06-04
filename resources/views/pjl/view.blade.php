@@ -130,11 +130,6 @@
                     <label for="dataNotes" class="block text-gray-700">Notes</label>
                     <input type="text" id="dataNotes" class="w-full px-3 py-2 border rounded-lg">
                 </div>
-                <!-- Description -->
-                <div class="mb-4">
-                    <label for="dataDescription" class="block text-gray-700">Description</label>
-                    <input type="text" id="dataDescription" class="w-full px-3 py-2 border rounded-lg">
-                </div>
                 <!-- Status -->
                 <div class="mb-4">
                     <label for="dataStatus" class="block text-gray-700">Status</label>
@@ -169,6 +164,69 @@
         </div>
     </div>
 
+    <!-- Modal Edit Data -->
+    <div id="editDataModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4">Edit Data</h2>
+            <form id="editDataForm">
+                <!-- Code -->
+                <div class="mb-4">
+                    <label for="editDataCode" class="block text-gray-700">Kode</label>
+                    <input type="text" id="editDataCode" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <!-- Day Selector -->
+                <div class="mb-4">
+                    <label for="editDay" class="block text-gray-700">Hari:</label>
+                    <select id="editDay" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="1">Senin</option>
+                        <option value="2">Selasa</option>
+                        <option value="3">Rabu</option>
+                        <option value="4">Kamis</option>
+                        <option value="5">Jumat</option>
+                        <option value="6">Sabtu</option>
+                        <option value="7">Minggu</option>
+                        <option value="8">Senin</option>
+                    </select>
+                </div>
+                <!-- Time -->
+                <div class="mb-4 time-picker">
+                    <label for="editDataTime" class="block text-gray-700">Jam :</label>
+                    <div class="time-inputs">
+                        <div class="time-input">
+                            <button type="button" onclick="increaseHourEdit()">&#9650;</button>
+                            <input type="number" id="editHours" value="08" min="0" max="23" step="1" required>
+                            <button type="button" onclick="decreaseHourEdit()">&#9660;</button>
+                        </div>
+                        <span>:</span>
+                        <div class="time-input">
+                            <button type="button" onclick="increaseMinuteEdit()">&#9650;</button>
+                            <input type="number" id="editMinutes" value="00" min="0" max="59" step="1" required>
+                            <button type="button" onclick="decreaseMinuteEdit()">&#9660;</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Notes -->
+                <div class="mb-4">
+                    <label for="editDataNotes" class="block text-gray-700">Notes</label>
+                    <input type="text" id="editDataNotes" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <!-- Status -->
+                <div class="mb-4">
+                    <label for="editDataStatus" class="block text-gray-700">Status</label>
+                    <select id="editDataStatus" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="PJL">PJL</option>
+                        <option value="PM">PM</option>
+                    </select>
+                </div>
+                <!-- Button -->
+                <div class="flex justify-end">
+                    <button type="button" id="closeEditDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                    <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -185,8 +243,12 @@
         const closeGlobalDescModalButton = document.getElementById('closeGlobalDescModalButton');
         const addGlobalDescModal = document.getElementById('addGlobalDescModal');
         const addGlobalDescForm = document.getElementById('addGlobalDescForm');
+        const editDataModal = document.getElementById('editDataModal');
+        const closeEditDataModalButton = document.getElementById('closeEditDataModalButton');
+        const editDataForm = document.getElementById('editDataForm');
         let currentMachineId;
         let currentDay;
+        let currentOperationId; // New variable for editing
 
         openModalButton.addEventListener('click', async function() {
             await populateMesinCheckboxes();
@@ -212,6 +274,17 @@
             await addDataToMachine(currentMachineId, currentDay);
             addDataModal.classList.add('hidden');
             addDataForm.reset();
+        });
+
+        closeEditDataModalButton.addEventListener('click', function() {
+            editDataModal.classList.add('hidden');
+        });
+
+        editDataForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            await editData(currentOperationId);
+            editDataModal.classList.add('hidden');
+            editDataForm.reset();
         });
 
         openGlobalDescModalButton.addEventListener('click', function() {
@@ -329,7 +402,7 @@
                     status: dataStatus,
                     notes: dataNotes,
                     line,
-                    month,
+                    month: operationMonth,
                     week: operationWeek,
                     year
                 }),
@@ -340,6 +413,46 @@
             } else {
                 const errorData = await response.json();
                 alert(`Error adding data: ${errorData.message}`);
+            }
+        }
+
+        async function editData(operationId) {
+            const dataCode = document.getElementById('editDataCode').value;
+            const day = document.getElementById('editDay').value;
+            const hours = document.getElementById('editHours').value;
+            const minutes = document.getElementById('editMinutes').value;
+            const dataTime = `${hours}:${minutes}`;
+            const dataNotes = document.getElementById('editDataNotes').value;
+            const dataStatus = document.getElementById('editDataStatus').value;
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            const response = await fetch(`http://127.0.0.1:8000/api/editmachineoperation/${operationId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    day,
+                    code: dataCode,
+                    time: dataTime,
+                    status: dataStatus,
+                    notes: dataNotes,
+                    line: line,
+                    month: month,
+                    week: week,
+                    year: year
+                }),
+            });
+
+            if (response.ok) {
+                alert(`Data updated successfully`);
+            } else {
+                const errorData = await response.json();
+                alert(`Error updating data: ${errorData.message}`);
             }
         }
 
@@ -405,7 +518,7 @@
                 const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
                 updateURL(line, year, month, week);
-                displayMachineData(operationsData.operations, machinesData, machineInfoMap);
+                displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -415,7 +528,7 @@
             history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
         }
 
-        function displayMachineData(operations, machines, machineInfoMap) {
+        function displayMachineData(operations, machines, machineInfoMap, week) {
             const dataContainer = document.getElementById('dataContainer');
             dataContainer.innerHTML = '';  // Clear existing rows
 
@@ -468,6 +581,9 @@
                             <p>${operation.time}</p>
                             ${operation.status ? `<p>${operation.status}</p>` : ''}
                         `;
+                        entry.onclick = function() {
+                            openEditModal(operation);
+                        };
                         dayColumn.appendChild(entry);
                     }
                 });
@@ -610,7 +726,19 @@
                 if (line && month && week && year) {
                     fetchDataForWeek(line, year, month, week);
                 }
-            }, 30000); // Refresh every 60 seconds
+            }, 30000); // Refresh every 30 seconds
+        }
+
+        function openEditModal(operation) {
+            document.getElementById('editDataCode').value = operation.code;
+            document.getElementById('editDay').value = operation.day; // Assuming 'day' is stored as an integer
+            const timeParts = operation.time.split(':');
+            document.getElementById('editHours').value = timeParts[0];
+            document.getElementById('editMinutes').value = timeParts[1];
+            document.getElementById('editDataNotes').value = operation.notes;
+            document.getElementById('editDataStatus').value = operation.status;
+            currentOperationId = operation.id;
+            editDataModal.classList.remove('hidden');
         }
 
     });
@@ -650,6 +778,50 @@
 
     function decreaseMinute() {
         const minutesInput = document.getElementById('minutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes > 0) {
+            minutes -= 1;
+        } else {
+            minutes = 59;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
+
+    function increaseHourEdit() {
+        const hoursInput = document.getElementById('editHours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours < 23) {
+            hours += 1;
+        } else {
+            hours = 0;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function decreaseHourEdit() {
+        const hoursInput = document.getElementById('editHours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours > 0) {
+            hours -= 1;
+        } else {
+            hours = 23;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function increaseMinuteEdit() {
+        const minutesInput = document.getElementById('editMinutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes < 59) {
+            minutes += 1;
+        } else {
+            minutes = 0;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
+
+    function decreaseMinuteEdit() {
+        const minutesInput = document.getElementById('editMinutes');
         let minutes = parseInt(minutesInput.value, 10);
         if (minutes > 0) {
             minutes -= 1;

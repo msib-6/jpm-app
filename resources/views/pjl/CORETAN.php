@@ -4,60 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <title>Machine Schedule Display</title>
     @vite('resources/css/pjl/view.css')
 </head>
-<body class="bg-gray-100">
+<body>
 <div class="container mx-auto px-4">
+    <!-- Breadcrumb -->
+    <nav class="flex" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+            <li class="inline-flex items-center">
+                <a href="/pjl/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                    <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                    </svg>
+                    Home
+                </a>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                    </svg>
+                    <a href="/pjl/view" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">PJL</a>
+                </div>
+            </li>
+        </ol>
+    </nav>
 
     <!-- Card Title -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
+    <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
         <h3 id="title" class="text-2xl font-bold">
-            Line: <span id="line-display">Loading...</span>, <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>
+            <span id="line-display">Loading...</span>
+        </h3>
+        <!-- Container for buttons, each week's button will be appended here -->
+        <div id="weeksList" class="mx-2">
+            <!-- Buttons for each week will be dynamically inserted here -->
+        </div>
+        <h3 class="text-2xl font-bold">
+            <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>
         </h3>
     </div>
 
-    <!-- Weeks Container -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;" id="weeksList">
-        <!-- Buttons for each week will be appended here -->
-    </div>
-
     <!-- Header for Days -->
-    <div class="header-days bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none;" id="headerDays">
+    <div class="header-days bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none;" id="headerDays">
         <div class="grid grid-cols-10 gap-4 text-center font-semibold">
             <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
             <!-- Dynamic date headers -->
-            <div id="day1" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span>Date 1</span></div>
-            <div id="day2" class="flex flex-col justify-center items-center"><span class="font-bold">Selasa</span><span>Date 2</span></div>
-            <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span>Date 3</span></div>
-            <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span>Date 4"></span></div>
-            <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span>Date 5"></span></div>
-            <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span>Date 6"></span></div>
-            <div id="day7" class="flex flex-col justify-center items-center"><span class="font-bold">Minggu</span><span>Date 7"></span></div>
-            <div id="day8" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span>Date 8"></span></div>
+            <div id="day1" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 1</span></div>
+            <div id="day2" class="flex flex-col justify-center items-center"><span class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2</span></div>
+            <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span style="font-size: 12px;">Date 3</span></div>
+            <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span style="font-size: 12px;">Date 4"></span></div>
+            <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span style="font-size: 12px;">Date 5"></span></div>
+            <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span style="font-size: 12px;">Date 6"></span></div>
+            <div id="day7" class="flex flex-col justify-center items-center"><span class="font-bold">Minggu</span><span style="font-size: 12px;">Date 7"></span></div>
+            <div id="day8" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 8"></span></div>
         </div>
     </div>
 
     <!-- Data Container -->
-    <div id="dataContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+    <div id="dataContainer" class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
         <!-- Dynamic rows for machines will be appended here -->
     </div>
 
-    <!-- Global Container -->
-    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+    <!-- Global Description Container -->
+    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-center items-start" style="width: 91.666667%;">
         <!-- Dynamic rows for Global Desc will be appended here -->
-
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            <a>
-                Button Add Desc Testing
-            </a>
+        <button id="openGlobalDescModalButton" class="add-desc-button relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+            <span class="relative add-desc-button2 px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                Add Description
+            </span>
         </button>
-
     </div>
 
     <!-- Add Mesin Button -->
     <button type="button" id="openModalButton" class="add-mesin-button text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-        + Mesin
+        Add Mesin
     </button>
 
     <!-- Modal Add Mesin-->
@@ -81,13 +103,11 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Add Data</h2>
             <form id="addDataForm">
-
                 <!-- Code -->
                 <div class="mb-4">
                     <label for="dataCode" class="block text-gray-700">Kode</label>
                     <input type="text" id="dataCode" class="w-full px-3 py-2 border rounded-lg" required>
                 </div>
-
                 <!-- Time -->
                 <div class="mb-4 time-picker">
                     <label for="dataTime" class="block text-gray-700">Jam :</label>
@@ -105,19 +125,11 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Notes -->
                 <div class="mb-4">
                     <label for="dataNotes" class="block text-gray-700">Notes</label>
                     <input type="text" id="dataNotes" class="w-full px-3 py-2 border rounded-lg">
                 </div>
-
-                <!-- Description -->
-                <div class="mb-4">
-                    <label for="dataDescription" class="block text-gray-700">Description</label>
-                    <input type="text" id="dataDescription" class="w-full px-3 py-2 border rounded-lg">
-                </div>
-
                 <!-- Status -->
                 <div class="mb-4">
                     <label for="dataStatus" class="block text-gray-700">Status</label>
@@ -126,11 +138,59 @@
                         <option value="PM">PM</option>
                     </select>
                 </div>
-
                 <!-- Button -->
                 <div class="flex justify-end">
                     <button type="button" id="closeDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
                     <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Add Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Edit Data -->
+    <div id="editDataModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4">Edit Data</h2>
+            <form id="editDataForm">
+                <!-- Code -->
+                <div class="mb-4">
+                    <label for="editDataCode" class="block text-gray-700">Kode</label>
+                    <input type="text" id="editDataCode" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <!-- Time -->
+                <div class="mb-4 time-picker">
+                    <label for="editDataTime" class="block text-gray-700">Jam :</label>
+                    <div class="time-inputs">
+                        <div class="time-input">
+                            <button type="button" onclick="increaseHourEdit()">&#9650;</button>
+                            <input type="number" id="editHours" value="08" min="0" max="23" step="1" required>
+                            <button type="button" onclick="decreaseHourEdit()">&#9660;</button>
+                        </div>
+                        <span>:</span>
+                        <div class="time-input">
+                            <button type="button" onclick="increaseMinuteEdit()">&#9650;</button>
+                            <input type="number" id="editMinutes" value="00" min="0" max="59" step="1" required>
+                            <button type="button" onclick="decreaseMinuteEdit()">&#9660;</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Notes -->
+                <div class="mb-4">
+                    <label for="editDataNotes" class="block text-gray-700">Notes</label>
+                    <input type="text" id="editDataNotes" class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <!-- Status -->
+                <div class="mb-4">
+                    <label for="editDataStatus" class="block text-gray-700">Status</label>
+                    <select id="editDataStatus" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="PJL">PJL</option>
+                        <option value="PM">PM</option>
+                    </select>
+                </div>
+                <!-- Button -->
+                <div class="flex justify-end">
+                    <button type="button" id="closeEditDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                    <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -148,8 +208,16 @@
         const addDataModal = document.getElementById('addDataModal');
         const closeDataModalButton = document.getElementById('closeDataModalButton');
         const addDataForm = document.getElementById('addDataForm');
+        const openGlobalDescModalButton = document.getElementById('openGlobalDescModalButton');
+        const closeGlobalDescModalButton = document.getElementById('closeGlobalDescModalButton');
+        const addGlobalDescModal = document.getElementById('addGlobalDescModal');
+        const addGlobalDescForm = document.getElementById('addGlobalDescForm');
+        const editDataModal = document.getElementById('editDataModal');
+        const closeEditDataModalButton = document.getElementById('closeEditDataModalButton');
+        const editDataForm = document.getElementById('editDataForm');
         let currentMachineId;
         let currentDay;
+        let currentOperationId; // New variable for editing
 
         openModalButton.addEventListener('click', async function() {
             await populateMesinCheckboxes();
@@ -174,6 +242,33 @@
             event.preventDefault();
             await addDataToMachine(currentMachineId, currentDay);
             addDataModal.classList.add('hidden');
+            addDataForm.reset();
+        });
+
+        openGlobalDescModalButton.addEventListener('click', function() {
+            addGlobalDescModal.classList.remove('hidden');
+        });
+
+        closeGlobalDescModalButton.addEventListener('click', function() {
+            addGlobalDescModal.classList.add('hidden');
+        });
+
+        addGlobalDescForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            await addGlobalDescription();
+            addGlobalDescModal.classList.add('hidden');
+            addGlobalDescForm.reset();
+        });
+
+        closeEditDataModalButton.addEventListener('click', function() {
+            editDataModal.classList.add('hidden');
+        });
+
+        editDataForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            await editData(currentOperationId);
+            editDataModal.classList.add('hidden');
+            editDataForm.reset();
         });
 
         getQueryParams();
@@ -252,11 +347,17 @@
             const hours = document.getElementById('hours').value;
             const minutes = document.getElementById('minutes').value;
             const dataTime = `${hours}:${minutes}`;
-            const dataStatus = document.getElementById('dataStatus').value;
             const dataNotes = document.getElementById('dataNotes').value;
-            const dataDescription = document.getElementById('dataDescription').value;
+            const dataStatus = document.getElementById('dataStatus').value;
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            const operationDate = new Date(`${year}-${month}-${day}`);
+            const operationWeek = getWeekNumber(operationDate);
+            const operationMonth = operationDate.getMonth() + 1;
 
             const response = await fetch(`http://127.0.0.1:8000/api/addmachineoperation/${line}/${machineId}`, {
                 method: 'POST',
@@ -269,7 +370,10 @@
                     time: dataTime,
                     status: dataStatus,
                     notes: dataNotes,
-                    description: dataDescription
+                    line,
+                    month: operationMonth,
+                    week: operationWeek,
+                    year
                 }),
             });
 
@@ -278,6 +382,65 @@
             } else {
                 const errorData = await response.json();
                 alert(`Error adding data: ${errorData.message}`);
+            }
+        }
+
+        async function editData(operationId) {
+            const dataCode = document.getElementById('editDataCode').value;
+            const hours = document.getElementById('editHours').value;
+            const minutes = document.getElementById('editMinutes').value;
+            const dataTime = `${hours}:${minutes}`;
+            const dataNotes = document.getElementById('editDataNotes').value;
+            const dataStatus = document.getElementById('editDataStatus').value;
+
+            const response = await fetch(`http://127.0.0.1:8000/api/editmachineoperation/${operationId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    code: dataCode,
+                    time: dataTime,
+                    status: dataStatus,
+                    notes: dataNotes
+                }),
+            });
+
+            if (response.ok) {
+                alert(`Data updated successfully`);
+            } else {
+                const errorData = await response.json();
+                alert(`Error updating data: ${errorData.message}`);
+            }
+        }
+
+        async function addGlobalDescription() {
+            const globalDesc = document.getElementById('globalDesc').value;
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            const response = await fetch('http://127.0.0.1:8000/api/addglobaldescription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    description: globalDesc,
+                    line,
+                    month,
+                    week,
+                    year
+                }),
+            });
+
+            if (response.ok) {
+                alert(`Global description added successfully`);
+            } else {
+                const errorData = await response.json();
+                alert(`Error adding global description: ${errorData.message}`);
             }
         }
 
@@ -344,7 +507,7 @@
                 machineRow.innerHTML = `
                     <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
                         <div class="flex flex-col justify-center items-center w-full h-full">
-                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
                                 <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
                                 ${category}
                             </span>
@@ -365,8 +528,8 @@
                 // Populate machine row with operations
                 const machineOperations = machineOperationsMap.get(machine.id) || [];
                 machineOperations.forEach(operation => {
-                    const dayIndex = parseInt(operation.day) % 8;  // Adjust based on your date system
-                    const dayColumn = document.getElementById(`daydata${dayIndex + 1}-${machine.id}`);
+                    const dayIndex = parseInt(operation.day);  // Adjust based on your date system
+                    const dayColumn = document.getElementById(`daydata${dayIndex}-${machine.id}`);
 
                     if (dayColumn) {
                         const entry = document.createElement('button');
@@ -376,6 +539,9 @@
                             <p>${operation.time}</p>
                             ${operation.status ? `<p>${operation.status}</p>` : ''}
                         `;
+                        entry.onclick = function() {
+                            openEditModal(operation);
+                        };
                         dayColumn.appendChild(entry);
                     }
                 });
@@ -385,8 +551,8 @@
                     const dayColumn = document.getElementById(`daydata${i}-${machine.id}`);
                     if (dayColumn) {
                         const addButton = document.createElement('button');
-                        addButton.className = 'add-jpm-button add-data-button bg-purple-500 text-white';
-                        addButton.textContent = 'Add Data';
+                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white w-10 h-10'; // Set width and height to 10 each for circular shape
+                        addButton.textContent = '+';
                         addButton.onclick = function() {
                             currentMachineId = machine.id;
                             const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
@@ -487,6 +653,12 @@
             return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
         }
 
+        function getWeekNumber(date) {
+            const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+            const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+            return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        }
+
         function displayWeek(dates) {
             // Show the header days when a week is displayed
             document.getElementById('headerDays').style.display = 'block';
@@ -494,8 +666,9 @@
             dates.forEach((date, index) => {
                 if (index < 8) { // Ensure we only update the 8 days
                     const dayElement = document.getElementById(`day${index + 1}`);
-                    dayElement.children[0].textContent = date.split(",")[0]; // Day name
-                    dayElement.children[1].textContent = date.split(",")[1]; // Date
+                    const dateParts = date.split(" ");
+                    dayElement.children[0].textContent = dateParts[0]; // Day name
+                    dayElement.children[1].textContent = `${dateParts[1]} ${dateParts[2]} ${dateParts[3]}`; // Full date
                 }
             });
         }
@@ -512,6 +685,17 @@
                     fetchDataForWeek(line, year, month, week);
                 }
             }, 30000); // Refresh every 60 seconds
+        }
+
+        function openEditModal(operation) {
+            document.getElementById('editDataCode').value = operation.code;
+            const timeParts = operation.time.split(':');
+            document.getElementById('editHours').value = timeParts[0];
+            document.getElementById('editMinutes').value = timeParts[1];
+            document.getElementById('editDataNotes').value = operation.notes;
+            document.getElementById('editDataStatus').value = operation.status;
+            currentOperationId = operation.id;
+            editDataModal.classList.remove('hidden');
         }
 
     });
@@ -551,6 +735,50 @@
 
     function decreaseMinute() {
         const minutesInput = document.getElementById('minutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes > 0) {
+            minutes -= 1;
+        } else {
+            minutes = 59;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
+
+    function increaseHourEdit() {
+        const hoursInput = document.getElementById('editHours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours < 23) {
+            hours += 1;
+        } else {
+            hours = 0;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function decreaseHourEdit() {
+        const hoursInput = document.getElementById('editHours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours > 0) {
+            hours -= 1;
+        } else {
+            hours = 23;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function increaseMinuteEdit() {
+        const minutesInput = document.getElementById('editMinutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes < 59) {
+            minutes += 1;
+        } else {
+            minutes = 0;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
+
+    function decreaseMinuteEdit() {
+        const minutesInput = document.getElementById('editMinutes');
         let minutes = parseInt(minutesInput.value, 10);
         if (minutes > 0) {
             minutes -= 1;
