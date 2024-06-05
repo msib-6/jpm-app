@@ -319,7 +319,7 @@ class MachineController extends Controller
             $weekOperations = MachineOperation::where('week', $machineOperation->week)
             ->where('month', $machineOperation->month)
             ->where('year', $machineOperation->year)
-            ->where('currentline', $machineOperation->current_line)
+            ->where('current_line', $machineOperation->current_line)
             ->get();
 
             foreach ($weekOperations as $operation) {
