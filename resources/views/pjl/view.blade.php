@@ -248,6 +248,8 @@
         const editDataForm = document.getElementById('editDataForm');
         let currentMachineId;
         let currentDay;
+        let currentMonth;
+        let currentYear;
         let currentOperationId; // New variable for editing
 
         openModalButton.addEventListener('click', async function() {
@@ -271,7 +273,7 @@
 
         addDataForm.addEventListener('submit', async function(event) {
             event.preventDefault();
-            await addDataToMachine(currentMachineId, currentDay);
+            await addDataToMachine(currentMachineId, currentDay, currentMonth, currentYear);
             addDataModal.classList.add('hidden');
             addDataForm.reset();
         });
@@ -373,7 +375,7 @@
             }
         }
 
-        async function addDataToMachine(machineId, day) {
+        async function addDataToMachine(machineId, day, month, year) {
             const dataCode = document.getElementById('dataCode').value;
             const hours = document.getElementById('hours').value;
             const minutes = document.getElementById('minutes').value;
@@ -382,13 +384,7 @@
             const dataStatus = document.getElementById('dataStatus').value;
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
-            const month = params.get('month');
             const week = params.get('week');
-            const year = params.get('year');
-
-            const operationDate = new Date(`${year}-${month}-${day}`);
-            const operationWeek = getWeekNumber(operationDate);
-            const operationMonth = operationDate.getMonth() + 1;
 
             const response = await fetch(`http://127.0.0.1:8000/api/addmachineoperation/${line}/${machineId}`, {
                 method: 'POST',
@@ -402,8 +398,8 @@
                     status: dataStatus,
                     notes: dataNotes,
                     line,
-                    month: operationMonth,
-                    week: operationWeek,
+                    month,
+                    week,
                     year
                 }),
             });
@@ -426,9 +422,8 @@
             const dataStatus = document.getElementById('editDataStatus').value;
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
-            const month = params.get('month');
-            const week = params.get('week');
-            const year = params.get('year');
+            const month = currentMonth; // Get the month from the header date
+            const year = currentYear; // Get the year from the header date
 
             const response = await fetch(`http://127.0.0.1:8000/api/editmachineoperation/${operationId}`, {
                 method: 'PUT',
@@ -443,7 +438,7 @@
                     notes: dataNotes,
                     line: line,
                     month: month,
-                    week: week,
+                    week: params.get('week'),
                     year: year
                 }),
             });
@@ -547,40 +542,42 @@
                 const machineRow = document.createElement('div');
                 machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                 machineRow.innerHTML = `
-                    <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                        <div class="flex flex-col justify-center items-center w-full h-full">
-                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                                <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                                ${category}
-                            </span>
-                            <span>${machine.machine_name}</span>
-                        </div>
-                    </div>
-                    <div id="daydata1-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata2-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata3-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata4-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata5-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata6-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata7-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata8-${machine.id}" class="col-span-1 day-column"></div>
-                `;
+            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                <div class="flex flex-col justify-center items-center w-full h-full">
+                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                        ${category}
+                    </span>
+                    <span>${machine.machine_name}</span>
+                </div>
+            </div>
+        `;
+
+                // Add day columns based on header days
+                for (let i = 1; i <= 8; i++) {
+                    const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
+                    const dateParts = headerDate.split(' ');
+                    const day = parseInt(dateParts[0]);
+                    const dayColumn = document.createElement('div');
+                    dayColumn.id = `daydata${machine.id}-${day}`;
+                    dayColumn.className = 'col-span-1 day-column';
+                    machineRow.appendChild(dayColumn);
+                }
+
                 dataContainer.appendChild(machineRow);
 
                 // Populate machine row with operations
                 const machineOperations = machineOperationsMap.get(machine.id) || [];
                 machineOperations.forEach(operation => {
-                    const dayIndex = parseInt(operation.day);  // Adjust based on your date system
-                    const dayColumn = document.getElementById(`daydata${dayIndex}-${machine.id}`);
-
+                    const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
                     if (dayColumn) {
                         const entry = document.createElement('button');
                         entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button';
                         entry.innerHTML = `
-                            <p><strong>${operation.code}</strong></p>
-                            <p>${operation.time}</p>
-                            ${operation.status ? `<p>${operation.status}</p>` : ''}
-                        `;
+                    <p><strong>${operation.code}</strong></p>
+                    <p>${operation.time}</p>
+                    ${operation.status ? `<p>${operation.status}</p>` : ''}
+                `;
                         entry.onclick = function() {
                             openEditModal(operation);
                         };
@@ -590,15 +587,19 @@
 
                 // Add "+ Add Data" button at the end of each day column
                 for (let i = 1; i <= 8; i++) {
-                    const dayColumn = document.getElementById(`daydata${i}-${machine.id}`);
+                    const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
+                    const dateParts = headerDate.split(' ');
+                    const day = parseInt(dateParts[0]);
+                    const dayColumn = document.getElementById(`daydata${machine.id}-${day}`);
                     if (dayColumn) {
                         const addButton = document.createElement('button');
                         addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white w-10 h-10'; // Set width and height to 10 each for circular shape
                         addButton.textContent = '+';
                         addButton.onclick = function() {
                             currentMachineId = machine.id;
-                            const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
-                            currentDay = parseInt(headerDate);
+                            currentDay = day;
+                            currentMonth = getMonthNumber(dateParts[1]);
+                            currentYear = parseInt(dateParts[2]);
                             addDataModal.classList.remove('hidden');
                         };
                         dayColumn.appendChild(addButton);
@@ -606,6 +607,7 @@
                 }
             });
         }
+
 
         function createDayElement(id) {
             const container = document.querySelector('.grid');
@@ -619,6 +621,11 @@
         function getMonthName(month) {
             const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             return monthNames[month - 1];
+        }
+
+        function getMonthNumber(monthName) {
+            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            return monthNames.indexOf(monthName) + 1;
         }
 
         function setupWeekButtons(line, year, month) {
