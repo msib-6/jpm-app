@@ -178,14 +178,7 @@
                 <div class="mb-4">
                     <label for="editDay" class="block text-gray-700">Hari:</label>
                     <select id="editDay" class="w-full px-3 py-2 border rounded-lg">
-                        <option value="1">Senin</option>
-                        <option value="2">Selasa</option>
-                        <option value="3">Rabu</option>
-                        <option value="4">Kamis</option>
-                        <option value="5">Jumat</option>
-                        <option value="6">Sabtu</option>
-                        <option value="7">Minggu</option>
-                        <option value="8">Senin</option>
+                        <!-- Options will be dynamically populated -->
                     </select>
                 </div>
                 <!-- Time -->
@@ -738,7 +731,26 @@
 
         function openEditModal(operation) {
             document.getElementById('editDataCode').value = operation.code;
-            document.getElementById('editDay').value = operation.day; // Assuming 'day' is stored as an integer
+
+            const editDaySelector = document.getElementById('editDay');
+            editDaySelector.innerHTML = ''; // Clear previous options
+
+            for (let i = 1; i <= 8; i++) {
+                const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
+                const dateParts = headerDate.split(' ');
+                const day = parseInt(dateParts[0]);
+                const month = getMonthNumber(dateParts[1]);
+                const year = parseInt(dateParts[2]);
+
+                const option = document.createElement('option');
+                option.value = day;
+                option.textContent = `${dateParts[0]} - ${dateParts[1]} ${dateParts[2]}`;
+                if (day === parseInt(operation.day) && month === parseInt(operation.month) && year === parseInt(operation.year)) {
+                    option.selected = true;
+                }
+                editDaySelector.appendChild(option);
+            }
+
             const timeParts = operation.time.split(':');
             document.getElementById('editHours').value = timeParts[0];
             document.getElementById('editMinutes').value = timeParts[1];
