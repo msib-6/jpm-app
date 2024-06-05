@@ -42,14 +42,14 @@
         <button class="bg-purple-100 text-purple-600 h-10 text-lg px-4 rounded-lg border-0 py-2" onclick="openModal()">Add year</button>
     </div>
 
-    <!-- Modal for Adding Years (Hidden by default, with blur and transparency) -->
-    <div id="yearModal" class="fixed inset-0 backdrop-blur-md overflow-y-auto h-full w-full hidden">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <!-- Year Modal -->
+    <div id="yearModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <div class="mt-3 text-center relative">
                 <span class="close-btn absolute top-0 right-0 cursor-pointer text-black px-3 text-2xl font-bold" onclick="closeModal()">&times;</span>
                 <p class="text-lg font-semibold pt-1 pb-3">Add New Year:</p>
                 <div id="yearOptions" class="mt-2">
-                    <!-- Year buttons will be inserted here -->
+                    <!-- Year In Here -->
                 </div>
             </div>
         </div>

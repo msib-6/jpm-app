@@ -52,8 +52,8 @@
             <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
             <!-- Dynamic date headers -->
             <div id="day1" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 1</span></div>
-            <div id="day2" class="flex flex-col justify-center items-center"><span class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2</span></div>
-            <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span style="font-size: 12px;">Date 3</span></div>
+            <div id="day2" class="flex flex-col justifycenter items-center"><span class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2"></span></div>
+            <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span style="font-size: 12px;">Date 3"></span></div>
             <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span style="font-size: 12px;">Date 4"></span></div>
             <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span style="font-size: 12px;">Date 5"></span></div>
             <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span style="font-size: 12px;">Date 6"></span></div>
@@ -81,17 +81,19 @@
         </div>
     </div>
 
-    <!-- Button Week Bawah -->
     <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
+
         <div class="flex justify-between items-center">
             <div class="flex justify-start">
-                <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Week</button>
+                <button id="deleteWeekButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Week</button>
             </div>
+
             <div class="flex justify-end">
                 <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
                 <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Send Week</button>
             </div>
         </div>
+
     </div>
 
 
@@ -171,7 +173,7 @@
             <h2 class="text-2xl mb-4">Add Global Description</h2>
             <form id="addGlobalDescForm">
                 <div class="mb-4">
-                    <label for="globalDesc" class="text-gray-700">Description</label>
+                    <label for="globalDesc" class="block text-gray-700">Description</label>
                     <textarea id="globalDesc" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
                 </div>
                 <div class="flex justify-end">
@@ -287,21 +289,20 @@
         const closeEditDataModalButton = document.getElementById('closeEditDataModalButton');
         const editDataForm = document.getElementById('editDataForm');
         const deleteOperationButton = document.getElementById('deleteOperationButton');
-        const globalDescs = document.getElementById('globalDescs');
         const viewGlobalDescModal = document.getElementById('viewGlobalDescModal');
-        const globalDescContent = document.getElementById('globalDescContent');
-        const deleteGlobalDescButton = document.getElementById('deleteGlobalDescButton');
         const closeViewGlobalDescModalButton = document.getElementById('closeViewGlobalDescModalButton');
+        const globalDescs = document.getElementById('globalDescs');
+        const deleteGlobalDescButton = document.getElementById('deleteGlobalDescButton');
         const confirmDeleteModal = document.getElementById('confirmDeleteModal');
         const deleteConfirmMessage = document.getElementById('deleteConfirmMessage');
-        const closeConfirmDeleteModalButton = document.getElementById('closeConfirmDeleteModalButton');
         const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+        const closeConfirmDeleteModalButton = document.getElementById('closeConfirmDeleteModalButton');
         let currentMachineId;
         let currentDay;
         let currentMonth;
         let currentYear;
-        let currentOperationId; // New variable for editing
-        let currentGlobalDescId; // New variable for global description
+        let currentOperationId;
+        let currentGlobalDescId; // New variable for editing
 
         openModalButton.addEventListener('click', async function() {
             await populateMesinCheckboxes();
@@ -340,14 +341,8 @@
             editDataForm.reset();
         });
 
-        deleteOperationButton.addEventListener('click', async function() {
-            confirmDeleteOperation();
-        });
-
-        confirmDeleteButton.addEventListener('click', async function() {
-            await deleteData(currentOperationId);
-            confirmDeleteModal.classList.add('hidden');
-            editDataModal.classList.add('hidden');
+        deleteOperationButton.addEventListener('click', function() {
+            confirmDeleteOperation(currentOperationId);
         });
 
         openGlobalDescModalButton.addEventListener('click', function() {
@@ -370,18 +365,24 @@
             viewGlobalDescModal.classList.add('hidden');
         });
 
-        deleteGlobalDescButton.addEventListener('click', async function() {
+        closeConfirmDeleteModalButton.addEventListener('click', function() {
+            confirmDeleteModal.classList.add('hidden');
+        });
+
+        deleteGlobalDescButton.addEventListener('click', function() {
             confirmDeleteGlobalDesc(currentGlobalDescId);
         });
 
         confirmDeleteButton.addEventListener('click', async function() {
-            await deleteGlobalDescription(currentGlobalDescId);
-            confirmDeleteModal.classList.add('hidden');
-            viewGlobalDescModal.classList.add('hidden');
-            await fetchAndDisplayGlobalDescriptions();
-        });
-
-        closeConfirmDeleteModalButton.addEventListener('click', function() {
+            const deleteMode = confirmDeleteButton.getAttribute('data-delete-mode');
+            if (deleteMode === 'operation') {
+                await deleteData(currentOperationId);
+                editDataModal.classList.add('hidden');
+            } else if (deleteMode === 'description') {
+                await deleteGlobalDescription(currentGlobalDescId);
+                viewGlobalDescModal.classList.add('hidden');
+                await fetchAndDisplayGlobalDescriptions();
+            }
             confirmDeleteModal.classList.add('hidden');
         });
 
@@ -548,8 +549,10 @@
             }
         }
 
-        function confirmDeleteOperation() {
+        function confirmDeleteOperation(id) {
+            currentOperationId = id;
             deleteConfirmMessage.textContent = "Are you sure you want to delete this machine operation?";
+            confirmDeleteButton.setAttribute('data-delete-mode', 'operation');
             confirmDeleteModal.classList.remove('hidden');
         }
 
@@ -636,6 +639,7 @@
         function confirmDeleteGlobalDesc(id) {
             currentGlobalDescId = id;
             deleteConfirmMessage.textContent = "Are you sure you want to delete this global description?";
+            confirmDeleteButton.setAttribute('data-delete-mode', 'description');
             confirmDeleteModal.classList.remove('hidden');
         }
 
