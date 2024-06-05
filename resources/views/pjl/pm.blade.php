@@ -39,7 +39,7 @@
     </div>
 
     <div id="globalDescContainer" class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-start" style="width: 91.666667%;">
-        <div class="justify-start">
+        <div class="justify-start" style="max-height: 450px; overflow-y: auto;">
             <p class="text-2xl font-bold">View Data</p>
             <div id="dataContainer">
                 <!-- Dynamic machine data will be loaded here -->
