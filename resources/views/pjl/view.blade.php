@@ -16,7 +16,7 @@
             <li class="inline-flex items-center">
                 <a href="/pjl/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 1 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
                     </svg>
                     Home
                 </a>
@@ -68,14 +68,32 @@
     </div>
 
     <!-- Global Description Container -->
-    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-center items-start" style="width: 91.666667%;">
-        <!-- Dynamic rows for Global Desc will be appended here -->
-        <button id="openGlobalDescModalButton" class="add-desc-button relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex flex-col items-center" style="width: 91.666667%;">
+        <!-- Add Description Button -->
+        <button id="openGlobalDescModalButton" class="add-desc-button relative inline-flex items-center justify-center p-0.5 mb-4 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
             <span class="relative add-desc-button2 px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                 Add Description
             </span>
         </button>
+        <!-- Dynamic rows for Global Desc will be appended here -->
+        <div id="globalDescs" class="flex flex-col items-center w-full">
+            <!-- Descriptions will be dynamically inserted here -->
+        </div>
     </div>
+
+    <!-- Button Week Bawah -->
+    <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
+        <div class="flex justify-between items-center">
+            <div class="flex justify-start">
+                <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Week</button>
+            </div>
+            <div class="flex justify-end">
+                <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
+                <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Send Week</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Add Mesin Button -->
     <button type="button" id="openModalButton" class="add-mesin-button text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
@@ -153,7 +171,7 @@
             <h2 class="text-2xl mb-4">Add Global Description</h2>
             <form id="addGlobalDescForm">
                 <div class="mb-4">
-                    <label for="globalDesc" class="block text-gray-700">Description</label>
+                    <label for="globalDesc" class="text-gray-700">Description</label>
                     <textarea id="globalDesc" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
                 </div>
                 <div class="flex justify-end">
@@ -211,12 +229,41 @@
                         <option value="PM">PM</option>
                     </select>
                 </div>
-                <!-- Button -->
-                <div class="flex justify-end">
-                    <button type="button" id="closeEditDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
-                    <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Save Changes</button>
+                <!-- Buttons -->
+                <div class="flex justify-between items-center">
+                    <button type="button" id="deleteOperationButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Operation</button>
+                    <div class="flex justify-end">
+                        <button type="button" id="closeEditDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                        <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Save Changes</button>
+                    </div>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal View Global Description -->
+    <div id="viewGlobalDescModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4">View Global Description</h2>
+            <div id="globalDescContent" class="mb-4">
+                <!-- Description content will be populated here -->
+            </div>
+            <div class="flex justify-between items-center">
+                <button type="button" id="deleteGlobalDescButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
+                <button type="button" id="closeViewGlobalDescModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirm Delete -->
+    <div id="confirmDeleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4">Confirm Delete</h2>
+            <p id="deleteConfirmMessage" class="mb-4">Are you sure you want to delete this item?</p>
+            <div class="flex justify-between items-center">
+                <button type="button" id="closeConfirmDeleteModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                <button type="button" id="confirmDeleteButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
+            </div>
         </div>
     </div>
 
@@ -239,11 +286,22 @@
         const editDataModal = document.getElementById('editDataModal');
         const closeEditDataModalButton = document.getElementById('closeEditDataModalButton');
         const editDataForm = document.getElementById('editDataForm');
+        const deleteOperationButton = document.getElementById('deleteOperationButton');
+        const globalDescs = document.getElementById('globalDescs');
+        const viewGlobalDescModal = document.getElementById('viewGlobalDescModal');
+        const globalDescContent = document.getElementById('globalDescContent');
+        const deleteGlobalDescButton = document.getElementById('deleteGlobalDescButton');
+        const closeViewGlobalDescModalButton = document.getElementById('closeViewGlobalDescModalButton');
+        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        const deleteConfirmMessage = document.getElementById('deleteConfirmMessage');
+        const closeConfirmDeleteModalButton = document.getElementById('closeConfirmDeleteModalButton');
+        const confirmDeleteButton = document.getElementById('confirmDeleteButton');
         let currentMachineId;
         let currentDay;
         let currentMonth;
         let currentYear;
         let currentOperationId; // New variable for editing
+        let currentGlobalDescId; // New variable for global description
 
         openModalButton.addEventListener('click', async function() {
             await populateMesinCheckboxes();
@@ -282,6 +340,16 @@
             editDataForm.reset();
         });
 
+        deleteOperationButton.addEventListener('click', async function() {
+            confirmDeleteOperation();
+        });
+
+        confirmDeleteButton.addEventListener('click', async function() {
+            await deleteData(currentOperationId);
+            confirmDeleteModal.classList.add('hidden');
+            editDataModal.classList.add('hidden');
+        });
+
         openGlobalDescModalButton.addEventListener('click', function() {
             addGlobalDescModal.classList.remove('hidden');
         });
@@ -293,8 +361,28 @@
         addGlobalDescForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             await addGlobalDescription();
+            await fetchAndDisplayGlobalDescriptions(); // Fetch and display after adding a new description
             addGlobalDescModal.classList.add('hidden');
             addGlobalDescForm.reset();
+        });
+
+        closeViewGlobalDescModalButton.addEventListener('click', function() {
+            viewGlobalDescModal.classList.add('hidden');
+        });
+
+        deleteGlobalDescButton.addEventListener('click', async function() {
+            confirmDeleteGlobalDesc(currentGlobalDescId);
+        });
+
+        confirmDeleteButton.addEventListener('click', async function() {
+            await deleteGlobalDescription(currentGlobalDescId);
+            confirmDeleteModal.classList.add('hidden');
+            viewGlobalDescModal.classList.add('hidden');
+            await fetchAndDisplayGlobalDescriptions();
+        });
+
+        closeConfirmDeleteModalButton.addEventListener('click', function() {
+            confirmDeleteModal.classList.add('hidden');
         });
 
         getQueryParams();
@@ -444,6 +532,27 @@
             }
         }
 
+        async function deleteData(operationId) {
+            const response = await fetch(`http://127.0.0.1:8000/api/deletemachineoperation/${operationId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                alert(`Data deleted successfully`);
+            } else {
+                const errorData = await response.json();
+                alert(`Error deleting data: ${errorData.message}`);
+            }
+        }
+
+        function confirmDeleteOperation() {
+            deleteConfirmMessage.textContent = "Are you sure you want to delete this machine operation?";
+            confirmDeleteModal.classList.remove('hidden');
+        }
+
         async function addGlobalDescription() {
             const globalDesc = document.getElementById('globalDesc').value;
             const params = new URLSearchParams(window.location.search);
@@ -472,6 +581,62 @@
                 const errorData = await response.json();
                 alert(`Error adding global description: ${errorData.message}`);
             }
+        }
+
+        function viewGlobalDescription(desc) {
+            globalDescContent.textContent = desc.description;
+            currentGlobalDescId = desc.id;
+            viewGlobalDescModal.classList.remove('hidden');
+        }
+
+        async function fetchAndDisplayGlobalDescriptions() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            const response = await fetch(`http://127.0.0.1:8000/api/showglobaldescription`);
+            const descriptions = await response.json();
+
+            const filteredDescriptions = descriptions.filter(desc => {
+                return desc.line === line && desc.month === month && desc.week === week && desc.year === year;
+            });
+
+            globalDescs.innerHTML = ''; // Clear existing descriptions
+
+            filteredDescriptions.forEach(desc => {
+                const descButton = document.createElement('button');
+                descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
+                descButton.style.width = '90%';
+                descButton.textContent = desc.description;
+                descButton.onclick = function() {
+                    viewGlobalDescription(desc);
+                };
+                globalDescs.appendChild(descButton);
+            });
+        }
+
+        async function deleteGlobalDescription(id) {
+            const response = await fetch(`http://127.0.0.1:8000/api/deleteglobaldescription/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                alert(`Global description deleted successfully`);
+            } else {
+                const errorData = await response.json();
+                alert(`Error deleting global description: ${errorData.message}`);
+            }
+        }
+
+        function confirmDeleteGlobalDesc(id) {
+            currentGlobalDescId = id;
+            deleteConfirmMessage.textContent = "Are you sure you want to delete this global description?";
+            confirmDeleteModal.classList.remove('hidden');
         }
 
         function getQueryParams() {
@@ -507,6 +672,7 @@
 
                 updateURL(line, year, month, week);
                 displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
+                await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -565,15 +731,26 @@
                     const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
                     if (dayColumn) {
                         const entry = document.createElement('button');
-                        entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button';
+                        entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
                         entry.innerHTML = `
                     <p><strong>${operation.code}</strong></p>
                     <p>${operation.time}</p>
                     ${operation.status ? `<p>${operation.status}</p>` : ''}
+                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
                 `;
                         entry.onclick = function() {
                             openEditModal(operation);
                         };
+
+                        if (operation.notes) {
+                            entry.onmouseenter = function(event) {
+                                showNotesPopup(event, operation.notes);
+                            };
+                            entry.onmouseleave = function() {
+                                hideNotesPopup();
+                            };
+                        }
+
                         dayColumn.appendChild(entry);
                     }
                 });
@@ -601,6 +778,22 @@
             });
         }
 
+        function showNotesPopup(event, notes) {
+            const popup = document.createElement('div');
+            popup.className = 'notes-popup';
+            popup.textContent = notes;
+            document.body.appendChild(popup);
+            const rect = event.target.getBoundingClientRect();
+            popup.style.top = `${rect.top + window.scrollY}px`;
+            popup.style.left = `${rect.right + 5 + window.scrollX}px`;
+        }
+
+        function hideNotesPopup() {
+            const popup = document.querySelector('.notes-popup');
+            if (popup) {
+                popup.remove();
+            }
+        }
 
         function createDayElement(id) {
             const container = document.querySelector('.grid');

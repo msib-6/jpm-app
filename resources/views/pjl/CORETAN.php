@@ -11,12 +11,12 @@
 <body>
 <div class="container mx-auto px-4">
     <!-- Breadcrumb -->
-    <nav class="flex" aria-label="Breadcrumb">
+    <nav class="flex ml-16" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
             <li class="inline-flex items-center">
                 <a href="/pjl/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 1 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
                     </svg>
                     Home
                 </a>
@@ -68,14 +68,32 @@
     </div>
 
     <!-- Global Description Container -->
-    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-center items-start" style="width: 91.666667%;">
-        <!-- Dynamic rows for Global Desc will be appended here -->
-        <button id="openGlobalDescModalButton" class="add-desc-button relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex flex-col items-center" style="width: 91.666667%;">
+        <!-- Add Description Button -->
+        <button id="openGlobalDescModalButton" class="add-desc-button relative inline-flex items-center justify-center p-0.5 mb-4 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
             <span class="relative add-desc-button2 px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                 Add Description
             </span>
         </button>
+        <!-- Dynamic rows for Global Desc will be appended here -->
+        <div id="globalDescs" class="flex flex-col items-center w-full">
+            <!-- Descriptions will be dynamically inserted here -->
+        </div>
     </div>
+
+    <!-- Button Week Bawah -->
+    <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
+        <div class="flex justify-between items-center">
+            <div class="flex justify-start">
+                <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Week</button>
+            </div>
+            <div class="flex justify-end">
+                <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
+                <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Send Week</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Add Mesin Button -->
     <button type="button" id="openModalButton" class="add-mesin-button text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
@@ -147,6 +165,23 @@
         </div>
     </div>
 
+    <!-- Modal Add Global Description -->
+    <div id="addGlobalDescModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4">Add Global Description</h2>
+            <form id="addGlobalDescForm">
+                <div class="mb-4">
+                    <label for="globalDesc" class="text-gray-700">Description</label>
+                    <textarea id="globalDesc" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" id="closeGlobalDescModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Add Description</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Edit Data -->
     <div id="editDataModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
@@ -156,6 +191,13 @@
                 <div class="mb-4">
                     <label for="editDataCode" class="block text-gray-700">Kode</label>
                     <input type="text" id="editDataCode" class="w-full px-3 py-2 border rounded-lg" required>
+                </div>
+                <!-- Day Selector -->
+                <div class="mb-4">
+                    <label for="editDay" class="block text-gray-700">Hari:</label>
+                    <select id="editDay" class="w-full px-3 py-2 border rounded-lg">
+                        <!-- Options will be dynamically populated -->
+                    </select>
                 </div>
                 <!-- Time -->
                 <div class="mb-4 time-picker">
@@ -187,12 +229,41 @@
                         <option value="PM">PM</option>
                     </select>
                 </div>
-                <!-- Button -->
-                <div class="flex justify-end">
-                    <button type="button" id="closeEditDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
-                    <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Save Changes</button>
+                <!-- Buttons -->
+                <div class="flex justify-between items-center">
+                    <button type="button" id="deleteOperationButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Operation</button>
+                    <div class="flex justify-end">
+                        <button type="button" id="closeEditDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                        <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Save Changes</button>
+                    </div>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal View Global Description -->
+    <div id="viewGlobalDescModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4">View Global Description</h2>
+            <div id="globalDescContent" class="mb-4">
+                <!-- Description content will be populated here -->
+            </div>
+            <div class="flex justify-between items-center">
+                <button type="button" id="deleteGlobalDescButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
+                <button type="button" id="closeViewGlobalDescModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirm Delete -->
+    <div id="confirmDeleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4">Confirm Delete</h2>
+            <p id="deleteConfirmMessage" class="mb-4">Are you sure you want to delete this item?</p>
+            <div class="flex justify-between items-center">
+                <button type="button" id="closeConfirmDeleteModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                <button type="button" id="confirmDeleteButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
+            </div>
         </div>
     </div>
 
@@ -215,9 +286,22 @@
         const editDataModal = document.getElementById('editDataModal');
         const closeEditDataModalButton = document.getElementById('closeEditDataModalButton');
         const editDataForm = document.getElementById('editDataForm');
+        const deleteOperationButton = document.getElementById('deleteOperationButton');
+        const globalDescs = document.getElementById('globalDescs');
+        const viewGlobalDescModal = document.getElementById('viewGlobalDescModal');
+        const globalDescContent = document.getElementById('globalDescContent');
+        const deleteGlobalDescButton = document.getElementById('deleteGlobalDescButton');
+        const closeViewGlobalDescModalButton = document.getElementById('closeViewGlobalDescModalButton');
+        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        const deleteConfirmMessage = document.getElementById('deleteConfirmMessage');
+        const closeConfirmDeleteModalButton = document.getElementById('closeConfirmDeleteModalButton');
+        const confirmDeleteButton = document.getElementById('confirmDeleteButton');
         let currentMachineId;
         let currentDay;
+        let currentMonth;
+        let currentYear;
         let currentOperationId; // New variable for editing
+        let currentGlobalDescId; // New variable for global description
 
         openModalButton.addEventListener('click', async function() {
             await populateMesinCheckboxes();
@@ -240,9 +324,30 @@
 
         addDataForm.addEventListener('submit', async function(event) {
             event.preventDefault();
-            await addDataToMachine(currentMachineId, currentDay);
+            await addDataToMachine(currentMachineId, currentDay, currentMonth, currentYear);
             addDataModal.classList.add('hidden');
             addDataForm.reset();
+        });
+
+        closeEditDataModalButton.addEventListener('click', function() {
+            editDataModal.classList.add('hidden');
+        });
+
+        editDataForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            await editData(currentOperationId);
+            editDataModal.classList.add('hidden');
+            editDataForm.reset();
+        });
+
+        deleteOperationButton.addEventListener('click', async function() {
+            confirmDeleteOperation();
+        });
+
+        confirmDeleteButton.addEventListener('click', async function() {
+            await deleteData(currentOperationId);
+            confirmDeleteModal.classList.add('hidden');
+            editDataModal.classList.add('hidden');
         });
 
         openGlobalDescModalButton.addEventListener('click', function() {
@@ -256,19 +361,28 @@
         addGlobalDescForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             await addGlobalDescription();
+            await fetchAndDisplayGlobalDescriptions(); // Fetch and display after adding a new description
             addGlobalDescModal.classList.add('hidden');
             addGlobalDescForm.reset();
         });
 
-        closeEditDataModalButton.addEventListener('click', function() {
-            editDataModal.classList.add('hidden');
+        closeViewGlobalDescModalButton.addEventListener('click', function() {
+            viewGlobalDescModal.classList.add('hidden');
         });
 
-        editDataForm.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            await editData(currentOperationId);
-            editDataModal.classList.add('hidden');
-            editDataForm.reset();
+        deleteGlobalDescButton.addEventListener('click', async function() {
+            confirmDeleteGlobalDesc(currentGlobalDescId);
+        });
+
+        confirmDeleteButton.addEventListener('click', async function() {
+            await deleteGlobalDescription(currentGlobalDescId);
+            confirmDeleteModal.classList.add('hidden');
+            viewGlobalDescModal.classList.add('hidden');
+            await fetchAndDisplayGlobalDescriptions();
+        });
+
+        closeConfirmDeleteModalButton.addEventListener('click', function() {
+            confirmDeleteModal.classList.add('hidden');
         });
 
         getQueryParams();
@@ -342,7 +456,7 @@
             }
         }
 
-        async function addDataToMachine(machineId, day) {
+        async function addDataToMachine(machineId, day, month, year) {
             const dataCode = document.getElementById('dataCode').value;
             const hours = document.getElementById('hours').value;
             const minutes = document.getElementById('minutes').value;
@@ -351,13 +465,7 @@
             const dataStatus = document.getElementById('dataStatus').value;
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
-            const month = params.get('month');
             const week = params.get('week');
-            const year = params.get('year');
-
-            const operationDate = new Date(`${year}-${month}-${day}`);
-            const operationWeek = getWeekNumber(operationDate);
-            const operationMonth = operationDate.getMonth() + 1;
 
             const response = await fetch(`http://127.0.0.1:8000/api/addmachineoperation/${line}/${machineId}`, {
                 method: 'POST',
@@ -371,8 +479,8 @@
                     status: dataStatus,
                     notes: dataNotes,
                     line,
-                    month: operationMonth,
-                    week: operationWeek,
+                    month,
+                    week,
                     year
                 }),
             });
@@ -387,22 +495,32 @@
 
         async function editData(operationId) {
             const dataCode = document.getElementById('editDataCode').value;
+            const day = document.getElementById('editDay').value;
             const hours = document.getElementById('editHours').value;
             const minutes = document.getElementById('editMinutes').value;
             const dataTime = `${hours}:${minutes}`;
             const dataNotes = document.getElementById('editDataNotes').value;
             const dataStatus = document.getElementById('editDataStatus').value;
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = currentMonth; // Get the month from the header date
+            const year = currentYear; // Get the year from the header date
 
             const response = await fetch(`http://127.0.0.1:8000/api/editmachineoperation/${operationId}`, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    day,
                     code: dataCode,
                     time: dataTime,
                     status: dataStatus,
-                    notes: dataNotes
+                    notes: dataNotes,
+                    line: line,
+                    month: month,
+                    week: params.get('week'),
+                    year: year
                 }),
             });
 
@@ -412,6 +530,27 @@
                 const errorData = await response.json();
                 alert(`Error updating data: ${errorData.message}`);
             }
+        }
+
+        async function deleteData(operationId) {
+            const response = await fetch(`http://127.0.0.1:8000/api/deletemachineoperation/${operationId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                alert(`Data deleted successfully`);
+            } else {
+                const errorData = await response.json();
+                alert(`Error deleting data: ${errorData.message}`);
+            }
+        }
+
+        function confirmDeleteOperation() {
+            deleteConfirmMessage.textContent = "Are you sure you want to delete this machine operation?";
+            confirmDeleteModal.classList.remove('hidden');
         }
 
         async function addGlobalDescription() {
@@ -442,6 +581,62 @@
                 const errorData = await response.json();
                 alert(`Error adding global description: ${errorData.message}`);
             }
+        }
+
+        function viewGlobalDescription(desc) {
+            globalDescContent.textContent = desc.description;
+            currentGlobalDescId = desc.id;
+            viewGlobalDescModal.classList.remove('hidden');
+        }
+
+        async function fetchAndDisplayGlobalDescriptions() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            const response = await fetch(`http://127.0.0.1:8000/api/showglobaldescription`);
+            const descriptions = await response.json();
+
+            const filteredDescriptions = descriptions.filter(desc => {
+                return desc.line === line && desc.month === month && desc.week === week && desc.year === year;
+            });
+
+            globalDescs.innerHTML = ''; // Clear existing descriptions
+
+            filteredDescriptions.forEach(desc => {
+                const descButton = document.createElement('button');
+                descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
+                descButton.style.width = '90%';
+                descButton.textContent = desc.description;
+                descButton.onclick = function() {
+                    viewGlobalDescription(desc);
+                };
+                globalDescs.appendChild(descButton);
+            });
+        }
+
+        async function deleteGlobalDescription(id) {
+            const response = await fetch(`http://127.0.0.1:8000/api/deleteglobaldescription/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                alert(`Global description deleted successfully`);
+            } else {
+                const errorData = await response.json();
+                alert(`Error deleting global description: ${errorData.message}`);
+            }
+        }
+
+        function confirmDeleteGlobalDesc(id) {
+            currentGlobalDescId = id;
+            deleteConfirmMessage.textContent = "Are you sure you want to delete this global description?";
+            confirmDeleteModal.classList.remove('hidden');
         }
 
         function getQueryParams() {
@@ -476,7 +671,8 @@
                 const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
                 updateURL(line, year, month, week);
-                displayMachineData(operationsData.operations, machinesData, machineInfoMap);
+                displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
+                await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -486,7 +682,7 @@
             history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
         }
 
-        function displayMachineData(operations, machines, machineInfoMap) {
+        function displayMachineData(operations, machines, machineInfoMap, week) {
             const dataContainer = document.getElementById('dataContainer');
             dataContainer.innerHTML = '';  // Clear existing rows
 
@@ -505,64 +701,98 @@
                 const machineRow = document.createElement('div');
                 machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                 machineRow.innerHTML = `
-                    <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                        <div class="flex flex-col justify-center items-center w-full h-full">
-                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                                <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                                ${category}
-                            </span>
-                            <span>${machine.machine_name}</span>
-                        </div>
-                    </div>
-                    <div id="daydata1-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata2-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata3-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata4-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata5-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata6-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata7-${machine.id}" class="col-span-1 day-column"></div>
-                    <div id="daydata8-${machine.id}" class="col-span-1 day-column"></div>
-                `;
+            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                <div class="flex flex-col justify-center items-center w-full h-full">
+                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                        ${category}
+                    </span>
+                    <span>${machine.machine_name}</span>
+                </div>
+            </div>
+        `;
+
+                // Add day columns based on header days
+                for (let i = 1; i <= 8; i++) {
+                    const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
+                    const dateParts = headerDate.split(' ');
+                    const day = parseInt(dateParts[0]);
+                    const dayColumn = document.createElement('div');
+                    dayColumn.id = `daydata${machine.id}-${day}`;
+                    dayColumn.className = 'col-span-1 day-column';
+                    machineRow.appendChild(dayColumn);
+                }
+
                 dataContainer.appendChild(machineRow);
 
                 // Populate machine row with operations
                 const machineOperations = machineOperationsMap.get(machine.id) || [];
                 machineOperations.forEach(operation => {
-                    const dayIndex = parseInt(operation.day);  // Adjust based on your date system
-                    const dayColumn = document.getElementById(`daydata${dayIndex}-${machine.id}`);
-
+                    const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
                     if (dayColumn) {
                         const entry = document.createElement('button');
-                        entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button';
+                        entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
                         entry.innerHTML = `
-                            <p><strong>${operation.code}</strong></p>
-                            <p>${operation.time}</p>
-                            ${operation.status ? `<p>${operation.status}</p>` : ''}
-                        `;
+                    <p><strong>${operation.code}</strong></p>
+                    <p>${operation.time}</p>
+                    ${operation.status ? `<p>${operation.status}</p>` : ''}
+                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                `;
                         entry.onclick = function() {
                             openEditModal(operation);
                         };
+
+                        if (operation.notes) {
+                            entry.onmouseenter = function(event) {
+                                showNotesPopup(event, operation.notes);
+                            };
+                            entry.onmouseleave = function() {
+                                hideNotesPopup();
+                            };
+                        }
+
                         dayColumn.appendChild(entry);
                     }
                 });
 
                 // Add "+ Add Data" button at the end of each day column
                 for (let i = 1; i <= 8; i++) {
-                    const dayColumn = document.getElementById(`daydata${i}-${machine.id}`);
+                    const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
+                    const dateParts = headerDate.split(' ');
+                    const day = parseInt(dateParts[0]);
+                    const dayColumn = document.getElementById(`daydata${machine.id}-${day}`);
                     if (dayColumn) {
                         const addButton = document.createElement('button');
                         addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white w-10 h-10'; // Set width and height to 10 each for circular shape
                         addButton.textContent = '+';
                         addButton.onclick = function() {
                             currentMachineId = machine.id;
-                            const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
-                            currentDay = parseInt(headerDate);
+                            currentDay = day;
+                            currentMonth = getMonthNumber(dateParts[1]);
+                            currentYear = parseInt(dateParts[2]);
                             addDataModal.classList.remove('hidden');
                         };
                         dayColumn.appendChild(addButton);
                     }
                 }
             });
+        }
+
+        function showNotesPopup(event, notes) {
+            const popup = document.createElement('div');
+            popup.className = 'notes-popup';
+            popup.textContent = notes;
+            document.body.appendChild(popup);
+            const rect = event.target.getBoundingClientRect();
+            popup.style.top = `${rect.top + window.scrollY}px`;
+            popup.style.left = `${rect.right + 5 + window.scrollX}px`;
+        }
+
+        function hideNotesPopup() {
+            const popup = document.querySelector('.notes-popup');
+            if (popup) {
+                popup.remove();
+            }
         }
 
         function createDayElement(id) {
@@ -577,6 +807,11 @@
         function getMonthName(month) {
             const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             return monthNames[month - 1];
+        }
+
+        function getMonthNumber(monthName) {
+            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            return monthNames.indexOf(monthName) + 1;
         }
 
         function setupWeekButtons(line, year, month) {
@@ -684,11 +919,31 @@
                 if (line && month && week && year) {
                     fetchDataForWeek(line, year, month, week);
                 }
-            }, 30000); // Refresh every 60 seconds
+            }, 30000); // Refresh every 30 seconds
         }
 
         function openEditModal(operation) {
             document.getElementById('editDataCode').value = operation.code;
+
+            const editDaySelector = document.getElementById('editDay');
+            editDaySelector.innerHTML = ''; // Clear previous options
+
+            for (let i = 1; i <= 8; i++) {
+                const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
+                const dateParts = headerDate.split(' ');
+                const day = parseInt(dateParts[0]);
+                const month = getMonthNumber(dateParts[1]);
+                const year = parseInt(dateParts[2]);
+
+                const option = document.createElement('option');
+                option.value = day;
+                option.textContent = `${dateParts[0]} - ${dateParts[1]} ${dateParts[2]}`;
+                if (day === parseInt(operation.day) && month === parseInt(operation.month) && year === parseInt(operation.year)) {
+                    option.selected = true;
+                }
+                editDaySelector.appendChild(option);
+            }
+
             const timeParts = operation.time.split(':');
             document.getElementById('editHours').value = timeParts[0];
             document.getElementById('editMinutes').value = timeParts[1];

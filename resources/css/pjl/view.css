@@ -5,6 +5,18 @@ body {
     background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
     position: relative;
 }
+
+.notes-popup {
+    position: absolute;
+    background: #FFFFFF;
+    border: 1px solid #ccc;
+    padding: 10px;
+    max-width: 15em;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
 .isi-jpm{
     background-color: #F8F9FB;
     border-radius: 1em;
@@ -62,7 +74,7 @@ body {
 /* Cetak */
 .custom-badge4 {
     background-color: #f4f5f6;
-    background-image: linear-gradient(to right bottom, #5a2a8e, #5a2c96, #592f9e, #5732a6, #5435af); 
+    background-image: linear-gradient(to right bottom, #5a2a8e, #5a2c96, #592f9e, #5732a6, #5435af);
 }
 /* Coating */
 .custom-badge5 {
@@ -77,12 +89,12 @@ body {
 /* Mixing */
 .custom-badge7 {
     background-color: #f5d3c8;
-    background-image: linear-gradient(to right bottom, #e5a70d, #ce2424); 
+    background-image: linear-gradient(to right bottom, #e5a70d, #ce2424);
 }
 /* Filling */
 .custom-badge8 {
     background-color: #f5d3c8;
-    background-image: linear-gradient(to right bottom, #11accb, #c522e1); 
+    background-image: linear-gradient(to right bottom, #11accb, #c522e1);
 }
 /* Kompaksi */
 .custom-badge9 {
