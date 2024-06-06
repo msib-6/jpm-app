@@ -35,6 +35,7 @@ Route::post('/addglobaldescription', [MachineController::class, 'addGlobalDescri
 
 //Edit Machine Route
 Route::put('/editmachineoperation/{machineOperationID}', [MachineController::class, 'editMachineOperation'])->name('edit.machine');
+Route::post('/sendrevision', [MachineController::class, 'sendRevision'])->name('send.revision');
 
 
 //Delete Machine Route

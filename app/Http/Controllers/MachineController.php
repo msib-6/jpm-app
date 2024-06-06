@@ -339,6 +339,68 @@ class MachineController extends Controller
         }
     }
     
+    public function sendRevision(Request $request) {
+        $userId = auth()->id();
+    
+        $validatedData = $request->validate([
+            'year' => 'required|string',
+            'month' => 'required|string',
+            'week' => 'required|string',
+            'line' => 'required|string',
+        ]);
+    
+        $line = $request->input('line');
+        $year = $validatedData['year'];
+        $month = $validatedData['month'];
+        $week = $validatedData['week'];
+    
+        try {
+            $operations = MachineOperation::where('year', $year)
+                ->where('month', $month)
+                ->where('week', $week)
+                ->whereHas('machineData', function($query) use ($line) {
+                    $query->whereHas('machine', function($query) use ($line) {
+                        $query->whereJsonContains('line', $line);
+                    });
+                })
+                ->get();
+    
+            if ($operations->isEmpty()) {
+                return response()->json(['message' => 'No machine operations found for the specified criteria'], 404);
+            }
+    
+            $originalStates = $operations->map(function ($operation) {
+                return [
+                    'id' => $operation->id,
+                    'is_sent' => $operation->is_sent,
+                ];
+            });
+    
+            foreach ($operations as $operation) {
+                $operation->update(['is_sent' => true]);
+            }
+    
+            Audits::create([
+                'users_id' => $userId,
+                'machineoperation_id' => null,
+                'event' => 'send_revision',
+                'changes' => json_encode([
+                    'original_state' => $originalStates,
+                    'new_state' => $operations->map(function ($operation) {
+                        return [
+                            'id' => $operation->id,
+                            'is_sent' => true,
+                        ];
+                    }),
+                ]),
+            ]);
+    
+            return response()->json(['message' => 'Machine operations marked as sent successfully'], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error sending revision: ' . $e->getMessage());
+            return response()->json(['message' => 'Error sending revision. Please try again later.'], 500);
+        }
+    }
     // ----------------------------------------------------------------------------------------
 
 
@@ -449,6 +511,7 @@ class MachineController extends Controller
             return response()->json(['message' => $e->getMessage()], 400);
         }
     }
+
     // ----------------------------------------------------------------------------------------
 
 
@@ -666,69 +729,5 @@ class MachineController extends Controller
     }
 
     //----------------------------------------------------------------------------------------
-
-    public function sendRevision(Request $request) {
-        $userId = auth()->id();
-    
-        $validatedData = $request->validate([
-            'year' => 'required|string',
-            'month' => 'required|string',
-            'week' => 'required|string',
-            'line' => 'required|string',
-        ]);
-    
-        $line = $request->input('line');
-        $year = $validatedData['year'];
-        $month = $validatedData['month'];
-        $week = $validatedData['week'];
-    
-        try {
-            $operations = MachineOperation::where('year', $year)
-                ->where('month', $month)
-                ->where('week', $week)
-                ->whereHas('machineData', function($query) use ($line) {
-                    $query->whereHas('machine', function($query) use ($line) {
-                        $query->whereJsonContains('line', $line);
-                    });
-                })
-                ->get();
-    
-            if ($operations->isEmpty()) {
-                return response()->json(['message' => 'No machine operations found for the specified criteria'], 404);
-            }
-    
-            $originalStates = $operations->map(function ($operation) {
-                return [
-                    'id' => $operation->id,
-                    'is_sent' => $operation->is_sent,
-                ];
-            });
-    
-            foreach ($operations as $operation) {
-                $operation->update(['is_sent' => true]);
-            }
-    
-            Audits::create([
-                'users_id' => $userId,
-                'machineoperation_id' => null,
-                'event' => 'send_revision',
-                'changes' => json_encode([
-                    'original_state' => $originalStates,
-                    'new_state' => $operations->map(function ($operation) {
-                        return [
-                            'id' => $operation->id,
-                            'is_sent' => true,
-                        ];
-                    }),
-                ]),
-            ]);
-    
-            return response()->json(['message' => 'Machine operations marked as sent successfully'], 200);
-        } catch (\Exception $e) {
-            \Log::error('Error sending revision: ' . $e->getMessage());
-            return response()->json(['message' => 'Error sending revision. Please try again later.'], 500);
-        }
-    }
-    
 
 }
