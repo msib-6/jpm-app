@@ -23,6 +23,7 @@ class ManagerController extends Controller
     public function showWaitingApprovalCard(){
         $waitingApproval = MachineOperation::where('is_approved', false)
                                            ->where('is_changed', true)
+                                           ->where('is_sent', true)
                                            ->get();
     
         $waitingApprovalPerWeek = $waitingApproval->groupBy('week')->map(function ($weekGroup) {
@@ -58,12 +59,11 @@ class ManagerController extends Controller
 
     //Show waiting approval in detail (clicked card)
     public function showWaitingApproval(Request $request){
-        // Validate the year, month, week parameter
-        // $request->validate([
-        //     'year' => 'required|string',
-        //     'month' => 'required|string',
-        //     'week' => 'required|string'
-        // ]);
+        $request->validate([
+            'year' => 'required|string',
+            'month' => 'required|string',
+            'week' => 'required|string'
+        ]);
     
         $year = $request->input('year');
         $month = $request->input('month');
@@ -71,6 +71,7 @@ class ManagerController extends Controller
     
         $waitingApproval = MachineOperation::where('is_approved', false)
                                             ->where('is_changed', true)
+                                            ->where('is_sent',true)
                                             ->where('year', $year)
                                             ->where('month', $month)
                                             ->where('week', $week)
@@ -96,12 +97,12 @@ class ManagerController extends Controller
     }
     
     public function approve(Request $request) {
+        $userId = auth()->id();
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
-        $approvedBy = 'test'; // Replace with the authenticated user's name
+        $approvedBy = $userId;
 
-        $userId = auth()->id();
 
         $machineOperations = MachineOperation::where('year', $year)
             ->where('month', $month)
@@ -109,7 +110,6 @@ class ManagerController extends Controller
             ->get();
 
         if ($machineOperations->isEmpty()) {
-            // Handle the case where no MachineOperation records are found (optional)
             return response()->json(['message' => 'No MachineOperations found'], 404);
         }
 
@@ -157,18 +157,18 @@ class ManagerController extends Controller
     }
 
     public function return(Request $request) {
-                // Validate the incoming request
-        // $request->validate([
-        //     'year' => 'required|integer',
-        //     'month' => 'required|integer',
-        //     'week' => 'required|integer',
-        // ]);
+        $userId = auth()->id();
+        $request->validate([
+            'year' => 'required|integer',
+            'month' => 'required|integer',
+            'week' => 'required|integer',
+        ]);
     
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
-        $rejectedBy = 'test'; // Replace with the authenticated user's name
-    
+        $rejectedBy = $userId;
+
         $machineOperations = MachineOperation::where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
@@ -177,6 +177,7 @@ class ManagerController extends Controller
         if ($machineOperations->isEmpty()) {
             return response()->json(['message' => 'No MachineOperations found'], 404);
         }
+
         if ($machineOperations->contains('is_changed', true)) {
             foreach ($machineOperations as $machineOperation) {
 

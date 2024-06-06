@@ -27,6 +27,7 @@ class MachineOperation extends Model
         'change_date',
         'is_approved',
         'approved_by',
+        'is_sent',
     ];
 
     protected static function boot()
