@@ -154,8 +154,22 @@
                 <div class="mb-4">
                     <label for="dataStatus" class="block text-gray-700">Status</label>
                     <select id="dataStatus" class="w-full px-3 py-2 border rounded-lg">
-                        <option value="PJL">PJL</option>
-                        <option value="PM">PM</option>
+                        <option value="SUPERVISI">SUPERVISI</option>
+                        <option value="VALIDASI">VALIDASI</option>
+                        <option value="MICRO">MICRO</option>
+                        <option value="PQ">PQ</option>
+                        <option value="TRIAL">TRIAL</option>
+                        <option value="STUDY PAT">STUDY PAT</option>
+                        <option value="STUDY BATCH CAMPAIGN">STUDY BATCH CAMPAIGN</option>
+                        <option value="BCP">BCP</option>
+                        <option value="OFF">OFF</option>
+                        <option value="CUSU">CUSU</option>
+                        <option value="DHT">DHT</option>
+                        <option value="CHT">CHT</option>
+                        <option value="KALIBRASI">KALIBRASI</option>
+                        <option value="OVERHAUL">OVERHAUL</option>
+                        <option value="CV">CV</option>
+                        <option value="CPV">CPV</option>
                     </select>
                 </div>
                 <!-- Button -->
@@ -227,8 +241,22 @@
                 <div class="mb-4">
                     <label for="editDataStatus" class="block text-gray-700">Status</label>
                     <select id="editDataStatus" class="w-full px-3 py-2 border rounded-lg">
-                        <option value="PJL">PJL</option>
-                        <option value="PM">PM</option>
+                        <option value="SUPERVISI">SUPERVISI</option>
+                        <option value="VALIDASI">VALIDASI</option>
+                        <option value="MICRO">MICRO</option>
+                        <option value="PQ">PQ</option>
+                        <option value="TRIAL">TRIAL</option>
+                        <option value="STUDY PAT">STUDY PAT</option>
+                        <option value="STUDY BATCH CAMPAIGN">STUDY BATCH CAMPAIGN</option>
+                        <option value="BCP">BCP</option>
+                        <option value="OFF">OFF</option>
+                        <option value="CUSU">CUSU</option>
+                        <option value="DHT">DHT</option>
+                        <option value="CHT">CHT</option>
+                        <option value="KALIBRASI">KALIBRASI</option>
+                        <option value="OVERHAUL">OVERHAUL</option>
+                        <option value="CV">CV</option>
+                        <option value="CPV">CPV</option>
                     </select>
                 </div>
                 <!-- Buttons -->
@@ -269,9 +297,29 @@
         </div>
     </div>
 
+    <!-- Custom Alert Modal -->
+    <div id="custom-alert" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
+            <h2 class="text-xl font-bold mb-4">PJM Says</h2>
+            <p id="custom-alert-message" class="mb-4">This is a custom alert message.</p>
+            <div class="flex justify-between items-end">
+                <button onclick="closeAlert()" class="justify-end bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Close</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
+    function showAlert(message) {
+        document.getElementById('custom-alert-message').textContent = message;
+        document.getElementById('custom-alert').classList.remove('hidden');
+    }
+
+    function closeAlert() {
+        document.getElementById('custom-alert').classList.add('hidden');
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const openModalButton = document.getElementById('openModalButton');
         const closeModalButton = document.getElementById('closeModalButton');
@@ -449,10 +497,10 @@
                 });
 
                 if (response.ok) {
-                    alert(`Machine ${machineName} added successfully`);
+                    showAlert(`Machine ${machineName} added successfully`);
                 } else {
                     const errorData = await response.json();
-                    alert(`Error adding machine ${machineName}: ${errorData.message}`);
+                    showAlert(`Error adding machine ${machineName}: ${errorData.message}`);
                 }
             }
         }
@@ -487,10 +535,10 @@
             });
 
             if (response.ok) {
-                alert(`Data added successfully`);
+                showAlert(`Data added successfully`);
             } else {
                 const errorData = await response.json();
-                alert(`Error adding data: ${errorData.message}`);
+                showAlert(`Error adding data: ${errorData.message}`);
             }
         }
 
@@ -526,10 +574,10 @@
             });
 
             if (response.ok) {
-                alert(`Data updated successfully`);
+                showAlert(`Data updated successfully`);
             } else {
                 const errorData = await response.json();
-                alert(`Error updating data: ${errorData.message}`);
+                showAlert(`Error updating data: ${errorData.message}`);
             }
         }
 
@@ -542,10 +590,10 @@
             });
 
             if (response.ok) {
-                alert(`Data deleted successfully`);
+                showAlert(`Data deleted successfully`);
             } else {
                 const errorData = await response.json();
-                alert(`Error deleting data: ${errorData.message}`);
+                showAlert(`Error deleting data: ${errorData.message}`);
             }
         }
 
@@ -579,10 +627,10 @@
             });
 
             if (response.ok) {
-                alert(`Global description added successfully`);
+                showAlert(`Global description added successfully`);
             } else {
                 const errorData = await response.json();
-                alert(`Error adding global description: ${errorData.message}`);
+                showAlert(`Error adding global description: ${errorData.message}`);
             }
         }
 
@@ -629,10 +677,10 @@
             });
 
             if (response.ok) {
-                alert(`Global description deleted successfully`);
+                showAlert(`Global description deleted successfully`);
             } else {
                 const errorData = await response.json();
-                alert(`Error deleting global description: ${errorData.message}`);
+                showAlert(`Error deleting global description: ${errorData.message}`);
             }
         }
 
