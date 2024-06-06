@@ -21,12 +21,10 @@ class ManagerController extends Controller
 
     //Show waiting approval in card
     public function showWaitingApprovalCard(){
-        // Retrieve all MachineOperation records where is_approved is false and is_changed is true
         $waitingApproval = MachineOperation::where('is_approved', false)
                                            ->where('is_changed', true)
                                            ->get();
     
-        // Group by week and select the first entry of each group
         $waitingApprovalPerWeek = $waitingApproval->groupBy('week')->map(function ($weekGroup) {
             return $weekGroup->first();
         });
@@ -52,7 +50,7 @@ class ManagerController extends Controller
                 'updated_at',
                 'current_line',
             ]);
-        })->values(); // Convert back to a collection with sequential integer keys
+        })->values();
         
         // Return the transformed collection as a JSON response
         return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
@@ -67,12 +65,10 @@ class ManagerController extends Controller
         //     'week' => 'required|string'
         // ]);
     
-        // Retrieve the week from the request
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
     
-        // Retrieve all MachineOperation records where is_approved is false, is_changed is true, and week matches the parameter
         $waitingApproval = MachineOperation::where('is_approved', false)
                                             ->where('is_changed', true)
                                             ->where('year', $year)
@@ -80,7 +76,6 @@ class ManagerController extends Controller
                                             ->where('week', $week)
                                             ->get();
     
-        // Transform the collection to hide certain fields
         $waitingApprovalFiltered = $waitingApproval->map(function($machine) {
             return collect($machine)->except([
                 'id',
@@ -97,21 +92,17 @@ class ManagerController extends Controller
             ]);
         });
         
-        // Return the transformed collection as a JSON response
         return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
     }
     
     public function approve(Request $request) {
-        // Retrieve the inputs from the request
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
         $approvedBy = 'test'; // Replace with the authenticated user's name
 
-        // Get user ID
         $userId = auth()->id();
 
-        // Search for all MachineOperation records that match the given year, month, and week
         $machineOperations = MachineOperation::where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
@@ -125,8 +116,6 @@ class ManagerController extends Controller
         if ($machineOperations->contains('is_changed', true)) {
             foreach ($machineOperations as $machineOperation) {
 
-
-                // Update the machine operation
                 $machineOperation->update([
                     'is_changed' => false,
                     'changed_by' => '',
@@ -134,28 +123,18 @@ class ManagerController extends Controller
                     'approved_by' => $approvedBy,
                 ]);
 
-                // Log the audit entry for each updated machine operation
-                Audits::create([
-                    'users_id' => $userId,
-                    'machineoperation_id' => $machineOperation->id,
-                    'event' => 'approve',
-                    'changes' => 'Approve changes'
-                ]);
             }
 
-            // Retrieve the Manager record by year, month, and week
             $manager = Manager::where('year', $year)
                 ->where('month', $month)
                 ->where('week', $week)
                 ->first();
 
             if ($manager) {
-                // Update the Manager record with the new data
                 $manager->update([
                     'revision_number' => $manager->revision_number + 1,
                 ]);
             } else {
-                // If no manager exists for the given year, month, and week, create a new record
                 Manager::create([
                     'year' => $year,
                     'month' => $month,
@@ -163,12 +142,17 @@ class ManagerController extends Controller
                     'revision_number' => 1, // Starting revision number if creating new
                 ]);
             }
+
+            Audits::create([
+                'users_id' => $userId,
+                'machineoperation_id' => $machineOperation->id,
+                'event' => 'approve',
+                'changes' => 'Approve changes',
+            ]);
         } else {
-            // Handle the case where no MachineOperation records are changed (optional)
             return response()->json(['message' => 'No changes to approve'], 404);
         }
 
-        // Return a successful response (optional)
         return response()->json(['message' => 'Approval successful'], 200);
     }
 
@@ -180,27 +164,22 @@ class ManagerController extends Controller
         //     'week' => 'required|integer',
         // ]);
     
-        // Retrieve the inputs from the request
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
         $rejectedBy = 'test'; // Replace with the authenticated user's name
     
-        // Search for all MachineOperation records that match the given year, month, and week
         $machineOperations = MachineOperation::where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
             ->get();
     
         if ($machineOperations->isEmpty()) {
-            // Handle the case where no MachineOperation records are found (optional)
             return response()->json(['message' => 'No MachineOperations found'], 404);
         }
         if ($machineOperations->contains('is_changed', true)) {
-            // Update each MachineOperation record
             foreach ($machineOperations as $machineOperation) {
 
-                // Update the machine operation
                 $machineOperation->update([
                     'is_changed' => false,
                     'changed_by' => '',
@@ -208,25 +187,18 @@ class ManagerController extends Controller
                     'is_rejected' => true,
                     'rejected_by' => $rejectedBy,
                 ]);
-
-                // Log the audit entry for each updated machine operation
-                Audits::create([
-                    'users_id' => $userId,
-                    'machineoperation_id' => $machineOperation->id,
-                    'event' => 'returned',
-                    'changes' => 'Return changes'
-                ]);
-                
             }
-        
+        Audits::create([
+            'users_id' => $userId,
+            'machineoperation_id' => $machineOperation->id,
+            'event' => 'returned',
+            'changes' => 'Return changes'
+        ]);
+
         }
         else {
-            // Handle the case where no MachineOperation records are changed (optional)
             return response()->json(['message' => 'No changes to return'], 404);
         }
-        
-    
-        // Return a successful response (optional)
         return response()->json(['message' => 'Return successful'], 200);
     }
     
@@ -235,19 +207,15 @@ class ManagerController extends Controller
             'line' => 'required|string'
         ]);
 
-        // Retrieve users with matching email roles
         $users = User::whereJsonContains('email_role', $validatedData['line'])->get();
 
-        // Check if there are users with the specified email role
         if ($users->isEmpty()) {
             return response()->json(['error' => 'No users found with the specified email role.'], 404);
         }
 
-        // Gather email addresses of all users
         $recipients = $users->pluck('email')->toArray();
 
         try {
-            // Send a single email to all recipients
             Mail::to($recipients)->send(new NotificationEmail());
         } catch (\Exception $e) {
             \Log::error('Error sending email: ' . $e->getMessage());
@@ -262,19 +230,15 @@ class ManagerController extends Controller
             'line' => 'required|string'
         ]);
 
-        // Retrieve users with matching email roles
         $users = User::whereJsonContains('email_role', $validatedData['line'])->get();
 
-        // Check if there are users with the specified email role
         if ($users->isEmpty()) {
             return response()->json(['error' => 'No users found with the specified email role.'], 404);
         }
 
-        // Gather email addresses of all users
         $recipients = $users->pluck('email')->toArray();
 
         try {
-            // Send a single email to all recipients
             Mail::to($recipients)->send(new RejectionEmail());
         } catch (\Exception $e) {
             \Log::error('Error sending email: ' . $e->getMessage());

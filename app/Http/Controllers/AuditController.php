@@ -9,28 +9,28 @@ use App\Models\Audits;
 class AuditController extends Controller
 {
     public function showAudit() {
-        // Retrieve all audit entries
         $audits = Audits::all();
     
-        // Process each audit entry
         $auditDetails = $audits->map(function ($audit) {
             $changes = json_decode($audit->changes, true);
+
+            $machineoperationId = $audit->machineoperation_id ?? 'Unknown'; // Set default value if null
     
-            if (json_last_error() === JSON_ERROR_NONE) {
+            if (json_last_error() === JSON_ERROR_NONE && is_array($changes)) {
                 return [
                     'audit_id' => $audit->id,
-                    'machineoperation_id' => $audit->machineoperation_id,
+                    'machineoperation_id' => $machineoperationId,
                     'event' => $audit->event,
                     'changes' => [
-                        'original_state' => $changes['original_state'],
-                        'new_state' => $changes['new_state'],
+                        'original_state' => $changes['original_state'] ?? '',
+                        'new_state' => $changes['new_state'] ?? '',
                     ],
                 ];
             }
     
             return [
                 'audit_id' => $audit->id,
-                'machineoperation_id' => $audit->machineoperation_id,
+                'machineoperation_id' => $machineoperationId,
                 'event' => $audit->event,
                 'error' => 'Failed to decode changes field',
             ];
@@ -38,5 +38,5 @@ class AuditController extends Controller
     
         return response()->json($auditDetails);
     }
-    
 }
+

@@ -41,15 +41,16 @@ class MachineController extends Controller
             $machine->line = $validatedData['line'];
             $machine->save();
 
-            // Create audit entry
             Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => null,
                 'event' => 'add',
-                'changes' => json_encode($request->all()),
+                'changes' => json_encode([
+                    'original_state' => '',
+                    'new_state' => $request->all(),
+                ])
             ]);
 
-            // Return a success response
             return response()->json(['message' => 'Machine added successfully'], 200);
         } catch (\Exception $e) {
             \Log::error('Error adding machine: ' . $e->getMessage());
@@ -62,14 +63,12 @@ class MachineController extends Controller
         $userId = auth()->id();
 
         try {
-            // Check if the machine exists in the main database
             $machineOrigin = Machine::where('machine_name', $request->input('machineName'))->first();
 
             if (!$machineOrigin) {
                 return response()->json(['message' => 'Machine does not exist!'], 404);
             }
 
-            // Get today's week
             $today = now();
 
             if($request->input('month')){
@@ -79,7 +78,6 @@ class MachineController extends Controller
                 $monthNumber = $today->month;
             }
 
-            //Check if user input week value, otherwise use current week.
             if($request->input('week')){
                 $weekNumber = $request->input('week');
             }
@@ -87,7 +85,6 @@ class MachineController extends Controller
                 $weekNumber = ceil(($today->day + $today->dayOfWeek) / 7);
             }
 
-            // Check if the machine data already exists for the current week
             $existingMachineData = MachineData::where('machine_name', $request->input('machineName'))
                 ->where('month', $monthNumber)
                 ->where('week', $weekNumber)
@@ -97,7 +94,6 @@ class MachineController extends Controller
                 return response()->json(['message' => 'Machine already added for the current week'], 400);
             }
 
-            // Create new machine data entry
             $newMachineData = new MachineData();
             $newMachineData->machine_id = $machineOrigin->id; // Assign the id of the machine from main database
             $newMachineData->machine_name = $request->input('machineName');
@@ -105,12 +101,14 @@ class MachineController extends Controller
             $newMachineData->week = $weekNumber; // Add week number to the new machine data entry
             $newMachineData->save();
 
-            // Create audit entry
             Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => null,
                 'event' => 'add',
-                'changes' => json_encode($request->all()),
+                'changes' => json_encode([
+                    'original_state' => '',
+                    'new_state' => $request->all(),
+                ])
             ]);
 
             return response()->json(['message' => 'Machine added successfully'], 201);
@@ -122,24 +120,20 @@ class MachineController extends Controller
 
     //Add Machine Operation, input to machineOperation database
     public function addMachineOperation(Request $request, $line, $machineID) {
-        // Get user ID
         $userId = auth()->id();
 
         try {
-            // Validation
             $day = $request->input('day');
             $code = $request->input('code');
             $time = $request->input('time');
             $status = $request->input('status');
             $notes = $request->input('notes');
 
-            // Retrieve machine data
             $machineData = MachineData::find($machineID);
             if (!$machineData) {
                 throw new \Exception("Machine data not found for ID: $machineID");
             }
 
-            // Retrieve the machine and check if the line is part of its line array
             $machine = $machineData->machine;
             if (!$machine) {
                 throw new \Exception("Machine not found for machine data ID: $machineID");
@@ -151,11 +145,9 @@ class MachineController extends Controller
                 throw new \Exception("Line: $line is not associated with Machine ID: $machineID");
             }
 
-            // Fetch the user's name using their ID
             $user = User::find($userId);
             $username = $user ? $user->name : 'Unknown'; // If user not found, use 'Unknown'
 
-            // Create a new machine operation inheriting machine data values
             $machineOperation = new MachineOperation([
                 'machine_id' => $machineID, // Set the machine_id attribute
                 'year' => $machineData->year,
@@ -187,12 +179,14 @@ class MachineController extends Controller
 
             $machineOperation->save();
 
-            // Create audit log
             Audits::create([
                 'users_id' => $userId,
-                'machineoperation_id' => $machineOperation->id,
+                'machineoperation_id' => null,
                 'event' => 'add',
-                'changes' => json_encode($request->all()), // Serialize input data to JSON
+                'changes' => json_encode([
+                    'original_state' => '',
+                    'new_state' => $request->all(),
+                ])
             ]);
 
             return response()->json($machineOperation, 201);
@@ -242,7 +236,10 @@ class MachineController extends Controller
                 'users_id' => $userId,
                 'machineoperation_id' => null,
                 'event' => 'add',
-                'changes' => json_encode($request->all()),
+                'changes' => json_encode([
+                    'original_state' => '',
+                    'new_state' => $request->all(),
+                ])
             ]);
 
             // Return a success response
@@ -265,27 +262,26 @@ class MachineController extends Controller
             'code' => 'required',
             'time' => 'required',
         ]);
-
+    
         try {
             $machineOperation = MachineOperation::find($machineOperationID);
-
-             // Check for overlapping operations
+    
             $operationExist = MachineOperation::where('day', $validatedData['day'])
-            ->where('time', $validatedData['time'])
-            ->where('id', '!=', $machineOperationID)
-            ->first();
-
+                ->where('time', $validatedData['time'])
+                ->where('id', '!=', $machineOperationID)
+                ->first();
+    
             if ($operationExist) {
                 return response()->json(['message' => 'Another machine operation is already scheduled at this time!'], 409);
             }
-
+    
             if (!$machineOperation) {
                 return response()->json(['message' => 'Machine operation not found!'], 404);
             }
-
+    
             $user = User::find($userId);
             $username = $user ? $user->name : '';
-
+    
             $originalState = [
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
@@ -293,67 +289,56 @@ class MachineController extends Controller
                 'status' => $machineOperation->status,
                 'notes' => $machineOperation->notes,
             ];
-
-            $oldValues = [
-                'day' => $machineOperation->day,
-                'code' => $machineOperation->code,
-                'time' => $machineOperation->time,
-                'status' => $machineOperation->status,
-                'notes' => $machineOperation->notes,
-            ];
-
-            $status = $request->input('status');
-            if(!$status){
-                $status = $machineOperation->status;
-            }
-
+    
+            $status = $request->input('status') ?? $machineOperation->status;
+    
             $machineOperation->update([
                 'day' => $validatedData['day'],
                 'code' => $validatedData['code'],
                 'time' => $validatedData['time'],
-                'status' => $request->input('status'),
+                'status' => $status,
                 'notes' => $request->input('notes'),
                 'changedBy' => $username,
             ]);
-
+    
             $weekOperations = MachineOperation::where('week', $machineOperation->week)
-            ->where('month', $machineOperation->month)
-            ->where('year', $machineOperation->year)
-            ->where('current_line', $machineOperation->current_line)
-            ->get();
-
+                ->where('month', $machineOperation->month)
+                ->where('year', $machineOperation->year)
+                ->where('current_line', $machineOperation->current_line)
+                ->get();
+    
             foreach ($weekOperations as $operation) {
                 $operation->update([
                     'is_changed' => true,
                     'is_approved' => false,
                 ]);
             }
-
-            $newValues = [
+    
+            $newState = [
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
                 'time' => $machineOperation->time,
                 'status' => $machineOperation->status,
                 'notes' => $machineOperation->notes,
             ];
-
+    
             Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => $machineOperationID,
                 'event' => 'edit',
                 'changes' => json_encode([
                     'original_state' => $originalState,
-                    'new_values' => $newValues,
-                    'old_values' => $oldValues,
+                    'new_state' => $newState,
                 ]),
             ]);
-
+    
             return response()->json($machineOperation, 200);
         } catch (\Exception $error) {
             \Log::error('Error editing machine operation: ' . $error->getMessage());
             return response()->json(['message' => $error->getMessage()], 400);
         }
     }
+    
     // ----------------------------------------------------------------------------------------
 
 
@@ -361,28 +346,23 @@ class MachineController extends Controller
     // ------------------------------- DELETE MACHINE FUNCTIONS -------------------------------
     //Delete Weekly Machine, delete machine data from database and all related Machine operation
     public function deleteWeeklyMachine(Request $request, $machineID) {
-        // Get user ID
         $userId = auth()->id();
 
         try {
-            // Find the machine data by its ID
             $machineData = MachineData::find($machineID);
 
             if (!$machineData) {
                 return response()->json(['message' => 'Machine data not found!'], 404);
             }
 
-            // Capture the original state for comparison
             $originalState = [
                 'machine_id' => $machineData->machine_id,
                 'machine_name' => $machineData->machine_name,
                 'week' => $machineData->week,
             ];
 
-            // Delete the machine data
             $machineData->delete();
 
-            // Log the audit entry for machine data deletion
             Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => null,
@@ -401,18 +381,15 @@ class MachineController extends Controller
 
     //Delete Machine operation, delete machine operation from the database
     public function deleteMachineOperation(Request $request, $machineOperationID) {
-        // Get user ID
         $userId = auth()->id();
 
         try {
-            // Find the machine operation by its ID
             $machineOperation = MachineOperation::find($machineOperationID);
 
             if (!$machineOperation) {
                 return response()->json(['message' => 'Machine operation not found!'], 404);
             }
 
-            // Capture the original state for comparison
             $originalState = [
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
@@ -423,10 +400,8 @@ class MachineController extends Controller
                 'changedBy' => $machineOperation->changedBy,
             ];
 
-            // Delete the machine operation
             $machineOperation->delete();
 
-            // Log the audit entry for machine operation deletion
             Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => $machineOperationID,
@@ -450,7 +425,6 @@ class MachineController extends Controller
         try {
             $globalDescription = GlobalDescription::find($globalDescriptionID);
 
-            // Capture the original state for comparison
             $originalState = [
                 'description' => $globalDescription->description,
                 'year' => $globalDescription->year,
@@ -458,10 +432,8 @@ class MachineController extends Controller
                 'week' => $globalDescription->week,
             ];
 
-            // Delete the global description
             $globalDescription->delete();
 
-            // Log the audit entry for global description deletion
             Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => null,
@@ -491,7 +463,6 @@ class MachineController extends Controller
 
     //Function to show all weekly machine that contains all of its date and name
     public function showAllWeeklyMachine(Request $request){
-        // Validate the incoming request
         // $request->validate([
         //     'year' => 'required|string',
         //     'month' => 'required|string',
@@ -499,13 +470,11 @@ class MachineController extends Controller
         //     'line' => 'required|string',
         // ]);
 
-        // Retrieve the input parameters
         $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
 
-        // Retrieve machine data based on the year, month, week, and line
         $machineData = MachineData::where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
@@ -514,13 +483,11 @@ class MachineController extends Controller
             })
             ->get();
 
-        // Return the machine data as a response
         return response()->json($machineData);
     }
 
     // Function Show All Code Machine Operations For Guest
     public function showAllMachineOperationGuest(){
-        // Start by selecting all from machine_operations
         $operations = MachineOperation::select(
             'machine_operations.*',
             'machines.id as machine_id',
@@ -529,19 +496,19 @@ class MachineController extends Controller
         )
             ->join('machine_data', 'machine_operations.machine_id', '=', 'machine_data.id')
             ->join('machines', 'machine_data.machine_id', '=', 'machines.id')
-            ->where('is_approved', true)
+            ->where('is_approved', 'true')
             ->get();
 
         return response()->json([
-            'operations' => $operations
+            'operations' -> $operations
         ]);
+
     }
 
 
 
     // Function Show All Code Machine Operations For PJL
     public function showAllMachineOperationPjl() {
-        // Start by selecting all from machine_operations
         $operations = MachineOperation::select(
             'machine_operations.*',
             'machines.id as machineAll_id',
@@ -560,7 +527,6 @@ class MachineController extends Controller
 
 
     public function showMachineOperation(Request $request){
-        // Validate the incoming request
         $request->validate([
             'year' => 'required|string',
             'month' => 'required|string',
@@ -568,13 +534,11 @@ class MachineController extends Controller
             'line' => 'required|string',
         ]);
 
-        // Retrieve the input parameters
         $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
 
-        // Retrieve machine operations based on the year, month, week, and line
         $operations = MachineOperation::select('id', 'machine_id', 'year', 'month', 'week', 'day', 'code', 'time', 'status', 'notes', 'current_line', 'is_changed', 'changed_by', 'change_date', 'is_approved', 'approved_by', 'is_rejected', 'rejected_by', 'created_at', 'updated_at')
             ->where('year', $year)
             ->where('month', $month)
@@ -586,14 +550,12 @@ class MachineController extends Controller
             })
             ->get();
 
-        // Return the machine operations as a response
         return response()->json([
             'operations' => $operations
         ]);
     }
 
     public function showApprovedMachineOperation(Request $request){
-        // Validate the incoming request
         $request->validate([
             'year' => 'required|string',
             'month' => 'required|string',
@@ -601,13 +563,11 @@ class MachineController extends Controller
             'line' => 'required|string',
         ]);
 
-        // Retrieve the input parameters
         $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
 
-        // Retrieve machine operations based on the year, month, week, and line
         $operations = MachineOperation::select('id', 'machine_id', 'year', 'month', 'week', 'day', 'code', 'time', 'status', 'notes', 'current_line', 'is_changed', 'changed_by', 'change_date', 'is_approved', 'approved_by', 'is_rejected', 'rejected_by', 'created_at', 'updated_at')
             ->where('year', $year)
             ->where('month', $month)
@@ -620,7 +580,6 @@ class MachineController extends Controller
             ->where('is_approved', true)
             ->get();
 
-        // Return the machine operations as a response
         return response()->json([
             'operations' => $operations
         ]);
@@ -634,10 +593,8 @@ class MachineController extends Controller
 
     //Show all code AND line to the table, take data from both machine and machineoperation database using relationship.
     public function showCodeLine() {
-        // Retrieve all machine operations with the related machine's line
         $machineOperations = MachineOperation::with('machine')->get();
 
-        // Extract code from machine operations and line from related machines
         $data = $machineOperations->map(function ($operation) {
             return [
                 'code' => $operation->code,
@@ -655,12 +612,10 @@ class MachineController extends Controller
             'line' => 'required|string',
         ]);
 
-        // Retrieve the input parameters
         $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');
 
-        // Retrieve machine operations based on the year, month, week, and line
         $operations = MachineOperation::select('id', 'machine_id', 'year', 'month', 'week', 'day', 'code', 'time', 'status', 'notes', 'current_line', 'is_changed', 'changed_by', 'change_date', 'is_approved', 'approved_by', 'is_rejected', 'rejected_by', 'created_at', 'updated_at')
             ->where('year', $year)
             ->where('month', $month)
@@ -672,7 +627,6 @@ class MachineController extends Controller
             ->where('status', 'PM')
             ->get();
 
-        // Return the machine operations as a response
         return response()->json([
             'operations' => $operations
         ]);
@@ -686,13 +640,11 @@ class MachineController extends Controller
             'line' => 'required|string',
         ]);
 
-        // Retrieve the input parameters
         $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
 
-        // Retrieve machine operations based on the year, month, week, and line
         $operations = MachineOperation::select('id', 'machine_id', 'year', 'month', 'week', 'day', 'code', 'time', 'status', 'notes', 'current_line', 'is_changed', 'changed_by', 'change_date', 'is_approved', 'approved_by', 'is_rejected', 'rejected_by', 'created_at', 'updated_at')
             ->where('year', $year)
             ->where('month', $month)
@@ -706,7 +658,6 @@ class MachineController extends Controller
             ->where('is_approved', true)
             ->get();
 
-        // Return the machine operations as a response
         return response()->json([
             'operations' => $operations
         ]);
