@@ -15,19 +15,19 @@ class CheckLine
      * @var array
      */
     protected $roleRoutes = [
-        'Line1' => 'Line1',
-        'Line2' => 'Line2',
-        'Line3' => 'Line3',
-        'Line4' => 'Line4',
-        'Line5' => 'Line5',
-        'Line7' => 'Line7',
-        'Line8a' => 'Line8a',
-        'Line8b' => 'Line8b',
-        'Line10' => 'Line10',
-        'Line11' => 'Line11',
-        'Line12' => 'Line12',
-        'Line13' => 'Line13',
-        'Line14' => 'Line14',
+        'Line1' => 'line1',
+        'Line2' => 'line2',
+        'Line3' => 'line3',
+        'Line4' => 'line4',
+        'Line5' => 'line5',
+        'Line7' => 'line7',
+        'Line8a' => 'line8a',
+        'Line8b' => 'line8b',
+        'Line10' => 'line10',
+        'Line11' => 'line11',
+        'Line12' => 'line12',
+        'Line13' => 'line13',
+        'Line14' => 'line14',
     ];
 
     /**
@@ -42,11 +42,13 @@ class CheckLine
         $role = $user ? $user->role : null;
 
         // Check if the role exists in the roleRoutes array
-        if ($role && isset($this->roleRoutes[$role])) {
-            $route = $this->roleRoutes[$role];
-            // Redirect if the request is not for the correct route
-            if (!$request->is($route)) {
-                return redirect($route);
+        if ($role && isset($this->roleLines[$role])) {
+            $expectedLine = $this->roleLines[$role];
+            $requestedLine = $request->route('line');
+
+            // Redirect if the requested line does not match the user's role
+            if ($requestedLine !== $expectedLine) {
+                return redirect()->route('pjl.line.dashboard', ['line' => $expectedLine]);
             }
         }
 

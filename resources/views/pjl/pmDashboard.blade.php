@@ -28,8 +28,8 @@
     </div>
 
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
-        <h3 class="text-3xl font-bold">PM Line 1</h3>
-    </div>
+                <h3 class="text-3xl font-bold">PM {{ ucfirst ($line) }}</h3>
+            </div>
 
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center" style="width: 91.666667%;" id="yearsList">
         <div class="flex flex-grow items-center space-x-4">
@@ -61,7 +61,7 @@
 @section('scripts')
 
 <script>
-    const selectedLine = 'Line1'; // Adjust the line value as needed
+    const selectedLine = '{{ ucfirst ($line) }}'; // Adjust the line value as needed
 
     document.addEventListener('DOMContentLoaded', function() {
         fetchMachineOperations();

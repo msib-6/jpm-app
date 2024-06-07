@@ -35,7 +35,7 @@
     <!-- Card Title -->
     <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
         <h3 id="title" class="text-2xl font-bold">
-            <span id="line-display">Loading...</span>
+            <span id="line-display">{{ ucfirst($line) }}</span>
         </h3>
         <!-- Container for buttons, each week's button will be appended here -->
         <div id="weeksList" class="mx-2">
@@ -107,7 +107,7 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Add Mesin</h2>
             <form id="addMesinForm">
-                <div id="mesinCheckboxContainer" class="mb-4">
+                <div id="mesinCheckboxContainer" class="mb-4" style="max-height: 450px; overflow-y: auto;">
                     <!-- Checkboxes will be appended here -->
                 </div>
                 <div class="flex justify-end">

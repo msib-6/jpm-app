@@ -27,20 +27,42 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
+    
         $request->session()->regenerate();
-
+    
         // Determine the user's role
         $user = Auth::user();
-        $role = $user->role;
-
+        $role = strtolower($user->role);
+    
+        // Log the user's role
+        \Log::info('User role: ' . $role);
+    
+        $lineRoles = [
+            'line1', 'line2', 'line3', 'line4', 'line5',
+            'line7', 'line8a', 'line8b', 'line10', 'line11',
+            'line12', 'line13', 'line14'
+        ];
+    
+        // Log the line roles
+        \Log::info('Line roles: ' . implode(', ', $lineRoles));
+    
+        if (in_array($role, $lineRoles)) {
+            \Log::info('Redirecting to pjl.line.dashboard with line: ' . $role);
+            return redirect()->route('pjl.line.dashboard', ['line' => $role]);
+        } else {
+            \Log::info('Role not in line roles');
+        }
+    
         // Redirect to the appropriate dashboard based on the user's role
         switch ($role) {
             case 'admin':
+                \Log::info('Redirecting to /admin');
                 return redirect('/admin');
-            case 'Manager':
+            case 'manager':
+                \Log::info('Redirecting to /manager/dashboard');
                 return redirect('/manager/dashboard');
             default:
+                \Log::info('Redirecting to home');
                 return redirect(RouteServiceProvider::HOME);
         }
     }
@@ -59,3 +81,4 @@ class AuthenticatedSessionController extends Controller
         return redirect('/');
     }
 }
+

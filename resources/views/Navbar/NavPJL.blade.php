@@ -4,20 +4,20 @@
         <img class='bx bxs-smile mt-4' src="{{ asset('Logo-Kalbe.0cf6623a.svg') }}" style="max-width: 180px; max-height: 160px; width: auto; height: auto;">
     </a>
     <ul class="side-menu top">
-        <li id="nav-jpm" class="side-item">
-            <a href="{{ route('pjl.dashboard') }}">
+    <li id="nav-jpm" class="side-item">
+            <a href="{{ route('pjl.line.dashboard', ['line' => Auth::user()->role]) }}">
                 <i class='bx bxs-dashboard'></i>
                 <span class="text">JPM</span>
             </a>
         </li>
         <li id="nav-pm" class="side-item">
-        <a href="{{ route('pjl.pmDashboard') }}">
+            <a href="{{ route('pjl.line.pmDashboard', ['line' => Auth::user()->role]) }}">
                 <i class='bx bx-grid'></i>
                 <span class="text">PM</span>
             </a>
         </li>
         <li id="nav-approval" class="side-item">
-            <a href="{{ route('pjl.approval') }}">
+            <a href="{{ route('pjl.line.approval', ['line' => Auth::user()->role]) }}">
                 <i class='bx bxs-doughnut-chart'></i>
                 <span class="text">Status</span>
             </a>
@@ -101,9 +101,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Menetapkan elemen sidebar yang aktif berdasarkan URL saat halaman dimuat
     function setInitialActiveItem() {
         const currentUrl = window.location.href;
-        const dashboardUrl = '{{ route('pjl.dashboard') }}';
-        const approvalUrl = '{{ route('pjl.approval') }}';
-        const pmUrl = '{{ route('pjl.pmDashboard') }}';
+        const dashboardUrl = '{{ route('pjl.line.dashboard', ['line' => Auth::user()->role]) }}';
+        const approvalUrl = '{{ route('pjl.line.approval', ['line' => Auth::user()->role]) }}';
+        const pmUrl = '{{ route('pjl.line.pmDashboard', ['line' => Auth::user()->role]) }}';
 
         if (currentUrl === dashboardUrl) {
             setActiveNavItem('nav-jpm');
@@ -117,11 +117,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Memuat konten awal berdasarkan URL saat halaman dimuat
+ 
     function loadInitialContent() {
         const currentUrl = window.location.href;
-        const dashboardUrl = '{{ route('pjl.dashboard') }}';
-        const approvalUrl = '{{ route('pjl.approval') }}';
-        const pmUrl = '{{ route('pjl.pmDashboard') }}';
+        const dashboardUrl = '{{ route('pjl.line.dashboard', ['line' => Auth::user()->role]) }}';
+        const approvalUrl = '{{ route('pjl.line.approval', ['line' => Auth::user()->role]) }}';
+        const pmUrl = '{{ route('pjl.line.pmDashboard', ['line' => Auth::user()->role]) }}';
 
         if (currentUrl === dashboardUrl) {
             loadContent(dashboardUrl, 'nav-jpm');
