@@ -80,5 +80,26 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+    public function adminOnlyMethod()
+    {
+        $this->checkRole('admin');
+        // Logic for admin only
+    }
+
+    /**
+     * Example method that requires manager role.
+     */
+    public function managerOnlyMethod()
+    {
+        $this->checkRole('manager');
+        // Logic for manager only
+    }
+    private function checkLineRole($line)
+    {
+        $user = Auth::user();
+        if (strtolower($user->role) !== $line) {
+            abort(403, 'Unauthorized action.');
+        }
+    }
 }
 

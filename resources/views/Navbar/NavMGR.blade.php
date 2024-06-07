@@ -10,12 +10,6 @@
                 <span class="text">Dashboard</span>
             </a>
         </li>
-        <li id="nav-approval" class="side-item">
-            <a href="{{ route('manager.approve') }}">
-                <i class='bx bxs-doughnut-chart'></i>
-                <span class="text">Status</span>
-            </a>
-        </li>
     </ul>
 </section>
 <!-- SIDEBAR -->

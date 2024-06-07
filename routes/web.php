@@ -104,4 +104,5 @@ Route::get('/guest/dashboard', function () {
     return view('guest.dashboardGuest');
 })->name('guest.dashboard');
 
+
 require __DIR__.'/auth.php';

@@ -15,40 +15,46 @@ class CheckLine
      * @var array
      */
     protected $roleRoutes = [
-        'Line1' => 'line1',
-        'Line2' => 'line2',
-        'Line3' => 'line3',
-        'Line4' => 'line4',
-        'Line5' => 'line5',
-        'Line7' => 'line7',
-        'Line8a' => 'line8a',
-        'Line8b' => 'line8b',
-        'Line10' => 'line10',
-        'Line11' => 'line11',
-        'Line12' => 'line12',
-        'Line13' => 'line13',
-        'Line14' => 'line14',
+        'line1' => 'line1',
+        'line2' => 'line2',
+        'line3' => 'line3',
+        'line4' => 'line4',
+        'line5' => 'line5',
+        'line7' => 'line7',
+        'line8a' => 'line8a',
+        'line8b' => 'line8b',
+        'line10' => 'line10',
+        'line11' => 'line11',
+        'line12' => 'line12',
+        'line13' => 'line13',
+        'line14' => 'line14',
     ];
 
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Assume you have a method to get the user role
+        // Get the authenticated user
         $user = Auth::user();
-        $role = $user ? $user->role : null;
 
-        // Check if the role exists in the roleRoutes array
-        if ($role && isset($this->roleLines[$role])) {
-            $expectedLine = $this->roleLines[$role];
-            $requestedLine = $request->route('line');
+        // If the user is authenticated, check their role
+        if ($user) {
+            $role = strtolower($user->role);
 
-            // Redirect if the requested line does not match the user's role
-            if ($requestedLine !== $expectedLine) {
-                return redirect()->route('pjl.line.dashboard', ['line' => $expectedLine]);
+            // Check if the role exists in the roleRoutes array
+            if (isset($this->roleRoutes[$role])) {
+                $expectedLine = $this->roleRoutes[$role];
+                $requestedLine = $request->route('line');
+
+                // Redirect if the requested line does not match the user's role
+                if ($requestedLine !== $expectedLine) {
+                    return redirect()->route('pjl.line.dashboard', ['line' => $expectedLine]);
+                }
             }
         }
 
