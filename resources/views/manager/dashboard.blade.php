@@ -30,76 +30,25 @@
 
 
         <div id="default-styled-tab-content bg-white shadow-lg rounded-3xl my-4 mx-auto flex items-center style="width: 91.666667%;">
-            <div class="my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black rounded-md flex flex-col items-start justify-center w-full" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                <button class="flex items-center justify-between bg-gray-100 bg-white border border-gray-200 rounded-lg w-11/12 mx-auto button-manager-dashboard">
-                    <div class="flex flex-col justify-center w-11/12">
-                        <div class="w-full">
-                            <h5 class="text-2xl font-bold text-black dark:bg-gray-700 py-2 px-100 rounded">Line 3</h5>
-                        </div>
-                        <div class="w-full">
-                            <h5 class="text-lg font-normal text-black dark:bg-gray-700 py-2 px-4 rounded">Week 4, Januari 2024</h5>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-center w-11/12">
-                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
-                        </svg>
-                    </div>
-                </button>
-
-                <button class="flex mt-7 items-center justify-between bg-gray-100 bg-white border border-gray-200 rounded-lg w-11/12 mx-auto button-manager-dashboard">
-                    <div class="flex flex-col justify-center w-11/12">
-                        <div class="w-full">
-                            <h5 class="text-2xl font-bold text-black dark:bg-gray-700 py-2 px-4 rounded">Line 3</h5>
-                        </div>
-                        <div class="w-full">
-                            <h5 class="text-lg font-normal text-black dark:bg-gray-700 py-2 px-4 rounded">Week 4, Januari 2024</h5>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-center w-11/12">
-                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
-                        </svg>
-                    </div>
-                </button>
+            <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+                <!-- Data Need Approve Disini -->
             </div>
 
-            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                <button class="flex items-center justify-between bg-gray-100 bg-white border-2 border-green-500 rounded-lg w-11/12 mx-auto button-manager-dashboard">
-                    <div class="flex flex-col justify-center w-11/12">
-                        <div class="w-full">
-                            <h5 class="text-2xl font-bold text-black dark:bg-gray-700 py-2 px-4 rounded">Line 3</h5>
-                        </div>
-                        <div class="w-full">
-                            <h5 class="text-lg font-normal text-black dark:bg-gray-700 py-2 px-4 rounded">Week 4, Januari 2024</h5>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-center w-11/12">
-                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
-                        </svg>
-                    </div>
-                </button>
-
-                <button class="flex mt-7 items-center justify-between bg-green-100 bg-white border-2 border-green-500 rounded-lg w-11/12 mx-auto button-manager-dashboard">
-                    <div class="flex flex-col justify-center w-11/12">
-                        <div class="w-full">
-                            <h5 class="text-2xl font-bold text-black dark:bg-gray-700 py-2 px-4 rounded">Line 2</h5>
-                        </div>
-                        <div class="w-full">
-                            <h5 class="text-lg font-normal text-black dark:bg-gray-700 py-2 px-4 rounded">Week 1, Januari 2024</h5>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-center w-11/12">
-                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
-                        </svg>
-                    </div>
-                </button>
+            <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                <!-- Data Approved Disini -->
             </div>
         </div>
     </div>
-</div>   
+</div>
 @endsection
+
+@section('scripts')
+
+<script>
+
+</script>
+
+@endsection
+
 </body>
 </html>

@@ -279,13 +279,13 @@
             })
             .then(result => {
                 console.log('Success:', result);
-                alert('Data saved successfully');
+                showAlert('Data saved successfully');
                 resetForm();
                 fetchData(line, params.get('year'), params.get('month'));
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Failed to save data: ' + (error.message || JSON.stringify(error)));
+                showAlert('Failed to save data: ' + (error.message || JSON.stringify(error)));
             });
     }
 
@@ -312,7 +312,7 @@
             })
             .then(result => {
                 console.log('Success:', result);
-                alert('Data deleted successfully');
+                showAlert('Data deleted successfully');
                 resetForm();
                 const params = new URLSearchParams(window.location.search);
                 fetchData(params.get('line'), params.get('year'), params.get('month'));
@@ -320,7 +320,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Failed to delete data: ' + (error.message || JSON.stringify(error)));
+                showAlert('Failed to delete data: ' + (error.message || JSON.stringify(error)));
             });
     }
 

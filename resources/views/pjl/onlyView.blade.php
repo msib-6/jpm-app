@@ -37,7 +37,6 @@
         <h3 id="title" class="text-2xl font-bold">
             <span id="line-display">Loading...</span>
         </h3>
-        <!-- Container for buttons, each week's button will be appended here -->
         <div id="weeksList" class="mx-2">
             <!-- Buttons for each week will be dynamically inserted here -->
         </div>
@@ -69,219 +68,8 @@
 
     <!-- Global Description Container -->
     <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex flex-col items-center" style="width: 91.666667%;">
-        <!-- Add Description Button -->
-        <button id="openGlobalDescModalButton" class="add-desc-button relative inline-flex items-center justify-center p-0.5 mb-4 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
-            <span class="relative add-desc-button2 px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                Add Description
-            </span>
-        </button>
-        <!-- Dynamic rows for Global Desc will be appended here -->
         <div id="globalDescs" class="flex flex-col items-center w-full">
             <!-- Descriptions will be dynamically inserted here -->
-        </div>
-    </div>
-
-    <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
-
-        <div class="flex justify-between items-center">
-            <div class="flex justify-start">
-                <button id="deleteWeekButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Week</button>
-            </div>
-
-            <div class="flex justify-end">
-                <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
-                <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Send Week</button>
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- Add Mesin Button -->
-    <button type="button" id="openModalButton" class="add-mesin-button text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-        Add Mesin
-    </button>
-
-    <!-- Modal Add Mesin-->
-    <div id="addMesinModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
-            <h2 class="text-2xl mb-4">Add Mesin</h2>
-            <form id="addMesinForm">
-                <div id="mesinCheckboxContainer" class="mb-4">
-                    <!-- Checkboxes will be appended here -->
-                </div>
-                <div class="flex justify-end">
-                    <button type="button" id="closeModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
-                    <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Add Mesin</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Add Data -->
-    <div id="addDataModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
-            <h2 class="text-2xl mb-4">Add Data</h2>
-            <form id="addDataForm">
-                <!-- Code -->
-                <div class="mb-4">
-                    <label for="dataCode" class="block text-gray-700">Kode</label>
-                    <input type="text" id="dataCode" class="w-full px-3 py-2 border rounded-lg" required>
-                </div>
-                <!-- Time -->
-                <div class="mb-4 time-picker">
-                    <label for="dataTime" class="block text-gray-700">Jam :</label>
-                    <div class="time-inputs">
-                        <div class="time-input">
-                            <button type="button" onclick="increaseHour()">&#9650;</button>
-                            <input type="number" id="hours" value="08" min="0" max="23" step="1" required>
-                            <button type="button" onclick="decreaseHour()">&#9660;</button>
-                        </div>
-                        <span>:</span>
-                        <div class="time-input">
-                            <button type="button" onclick="increaseMinute()">&#9650;</button>
-                            <input type="number" id="minutes" value="00" min="0" max="59" step="1" required>
-                            <button type="button" onclick="decreaseMinute()">&#9660;</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Notes -->
-                <div class="mb-4">
-                    <label for="dataNotes" class="block text-gray-700">Notes</label>
-                    <input type="text" id="dataNotes" class="w-full px-3 py-2 border rounded-lg">
-                </div>
-                <!-- Status -->
-                <div class="mb-4">
-                    <label for="dataStatus" class="block text-gray-700">Status</label>
-                    <select id="dataStatus" class="w-full px-3 py-2 border rounded-lg">
-                        <option value="SUPERVISI">SUPERVISI</option>
-                        <option value="VALIDASI">VALIDASI</option>
-                        <option value="MICRO">MICRO</option>
-                        <option value="PQ">PQ</option>
-                        <option value="TRIAL">TRIAL</option>
-                        <option value="STUDY PAT">STUDY PAT</option>
-                        <option value="STUDY BATCH CAMPAIGN">STUDY BATCH CAMPAIGN</option>
-                        <option value="BCP">BCP</option>
-                        <option value="OFF">OFF</option>
-                        <option value="CUSU">CUSU</option>
-                        <option value="DHT">DHT</option>
-                        <option value="CHT">CHT</option>
-                        <option value="KALIBRASI">KALIBRASI</option>
-                        <option value="OVERHAUL">OVERHAUL</option>
-                        <option value="CV">CV</option>
-                        <option value="CPV">CPV</option>
-                    </select>
-                </div>
-                <!-- Button -->
-                <div class="flex justify-end">
-                    <button type="button" id="closeDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
-                    <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Add Data</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Add Global Description -->
-    <div id="addGlobalDescModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
-            <h2 class="text-2xl mb-4">Add Global Description</h2>
-            <form id="addGlobalDescForm">
-                <div class="mb-4">
-                    <label for="globalDesc" class="block text-gray-700">Description</label>
-                    <textarea id="globalDesc" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
-                </div>
-                <div class="flex justify-end">
-                    <button type="button" id="closeGlobalDescModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
-                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Add Description</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Edit Data -->
-    <div id="editDataModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
-            <h2 class="text-2xl mb-4">Edit Data</h2>
-            <form id="editDataForm">
-                <!-- Code -->
-                <div class="mb-4">
-                    <label for="editDataCode" class="block text-gray-700">Kode</label>
-                    <input type="text" id="editDataCode" class="w-full px-3 py-2 border rounded-lg" required>
-                </div>
-                <!-- Day Selector -->
-                <div class="mb-4">
-                    <label for="editDay" class="block text-gray-700">Hari:</label>
-                    <select id="editDay" class="w-full px-3 py-2 border rounded-lg">
-                        <!-- Options will be dynamically populated -->
-                    </select>
-                </div>
-                <!-- Time -->
-                <div class="mb-4 time-picker">
-                    <label for="editDataTime" class="block text-gray-700">Jam :</label>
-                    <div class="time-inputs">
-                        <div class="time-input">
-                            <button type="button" onclick="increaseHourEdit()">&#9650;</button>
-                            <input type="number" id="editHours" value="08" min="0" max="23" step="1" required>
-                            <button type="button" onclick="decreaseHourEdit()">&#9660;</button>
-                        </div>
-                        <span>:</span>
-                        <div class="time-input">
-                            <button type="button" onclick="increaseMinuteEdit()">&#9650;</button>
-                            <input type="number" id="editMinutes" value="00" min="0" max="59" step="1" required>
-                            <button type="button" onclick="decreaseMinuteEdit()">&#9660;</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Notes -->
-                <div class="mb-4">
-                    <label for="editDataNotes" class="block text-gray-700">Notes</label>
-                    <input type="text" id="editDataNotes" class="w-full px-3 py-2 border rounded-lg">
-                </div>
-                <!-- Status -->
-                <div class="mb-4">
-                    <label for="editDataStatus" class="block text-gray-700">Status</label>
-                    <select id="editDataStatus" class="w-full px-3 py-2 border rounded-lg">
-                        <option value="SUPERVISI">SUPERVISI</option>
-                        <option value="VALIDASI">VALIDASI</option>
-                        <option value="MICRO">MICRO</option>
-                        <option value="PQ">PQ</option>
-                        <option value="TRIAL">TRIAL</option>
-                        <option value="STUDY PAT">STUDY PAT</option>
-                        <option value="STUDY BATCH CAMPAIGN">STUDY BATCH CAMPAIGN</option>
-                        <option value="BCP">BCP</option>
-                        <option value="OFF">OFF</option>
-                        <option value="CUSU">CUSU</option>
-                        <option value="DHT">DHT</option>
-                        <option value="CHT">CHT</option>
-                        <option value="KALIBRASI">KALIBRASI</option>
-                        <option value="OVERHAUL">OVERHAUL</option>
-                        <option value="CV">CV</option>
-                        <option value="CPV">CPV</option>
-                    </select>
-                </div>
-                <!-- Buttons -->
-                <div class="flex justify-between items-center">
-                    <button type="button" id="deleteOperationButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Operation</button>
-                    <div class="flex justify-end">
-                        <button type="button" id="closeEditDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
-                        <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Save Changes</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal View Global Description -->
-    <div id="viewGlobalDescModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
-            <h2 class="text-2xl mb-4">View Global Description</h2>
-            <div id="globalDescContent" class="mb-4">
-                <!-- Description content will be populated here -->
-            </div>
-            <div class="flex justify-between items-center">
-                <button type="button" id="deleteGlobalDescButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
-                <button type="button" id="closeViewGlobalDescModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
-            </div>
         </div>
     </div>
 
@@ -321,23 +109,10 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const viewGlobalDescModal = document.getElementById('viewGlobalDescModal');
         const globalDescs = document.getElementById('globalDescs');
-        let currentMachineId;
-        let currentDay;
-        let currentMonth;
-        let currentYear;
-        let currentGlobalDescId; // New variable for editing
-
 
         getQueryParams();
         setupAutoRefresh();
-
-        function viewGlobalDescription(desc) {
-            globalDescContent.textContent = desc.description;
-            currentGlobalDescId = desc.id;
-            viewGlobalDescModal.classList.remove('hidden');
-        }
 
         async function fetchAndDisplayGlobalDescriptions() {
             const params = new URLSearchParams(window.location.search);
@@ -356,7 +131,7 @@
             globalDescs.innerHTML = ''; // Clear existing descriptions
 
             filteredDescriptions.forEach(desc => {
-                const descButton = document.createElement('button');
+                const descButton = document.createElement('div');
                 descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
                 descButton.style.width = '90%';
                 descButton.textContent = desc.description;
@@ -367,13 +142,6 @@
             });
         }
 
-
-        function confirmDeleteGlobalDesc(id) {
-            currentGlobalDescId = id;
-            deleteConfirmMessage.textContent = "Are you sure you want to delete this global description?";
-            confirmDeleteButton.setAttribute('data-delete-mode', 'description');
-            confirmDeleteModal.classList.remove('hidden');
-        }
 
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
@@ -466,7 +234,7 @@
                 machineOperations.forEach(operation => {
                     const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
                     if (dayColumn) {
-                        const entry = document.createElement('button');
+                        const entry = document.createElement('div');
                         entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
                         entry.innerHTML = `
                     <p><strong>${operation.code}</strong></p>
@@ -490,47 +258,29 @@
                         dayColumn.appendChild(entry);
                     }
                 });
-
-                // Add "+ Add Data" button at the end of each day column
-                for (let i = 1; i <= 8; i++) {
-                    const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
-                    const dateParts = headerDate.split(' ');
-                    const day = parseInt(dateParts[0]);
-                    const dayColumn = document.getElementById(`daydata${machine.id}-${day}`);
-                    if (dayColumn) {
-                        const addButton = document.createElement('button');
-                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white w-10 h-10'; // Set width and height to 10 each for circular shape
-                        addButton.textContent = '+';
-                        addButton.onclick = function() {
-                            currentMachineId = machine.id;
-                            currentDay = day;
-                            currentMonth = getMonthNumber(dateParts[1]);
-                            currentYear = parseInt(dateParts[2]);
-                            addDataModal.classList.remove('hidden');
-                        };
-                        dayColumn.appendChild(addButton);
-                    }
-                }
             });
         }
 
-        function createDayElement(id) {
-            const container = document.querySelector('.grid');
-            const newDayElement = document.createElement('div');
-            newDayElement.id = id;
-            newDayElement.className = 'col-span-1 grid grid-rows-3 gap-2';
-            container.appendChild(newDayElement);
-            return newDayElement;
+        function showNotesPopup(event, notes) {
+            const popup = document.createElement('div');
+            popup.className = 'notes-popup';
+            popup.textContent = notes;
+            document.body.appendChild(popup);
+            const rect = event.target.getBoundingClientRect();
+            popup.style.top = `${rect.top + window.scrollY}px`;
+            popup.style.left = `${rect.right + 5 + window.scrollX}px`;
+        }
+
+        function hideNotesPopup() {
+            const popup = document.querySelector('.notes-popup');
+            if (popup) {
+                popup.remove();
+            }
         }
 
         function getMonthName(month) {
             const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             return monthNames[month - 1];
-        }
-
-        function getMonthNumber(monthName) {
-            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-            return monthNames.indexOf(monthName) + 1;
         }
 
         function setupWeekButtons(line, year, month) {
@@ -641,6 +391,95 @@
             }, 30000); // Refresh every 30 seconds
         }
 
+    });
+
+    function increaseHour() {
+        const hoursInput = document.getElementById('hours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours < 23) {
+            hours += 1;
+        } else {
+            hours = 0;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function decreaseHour() {
+        const hoursInput = document.getElementById('hours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours > 0) {
+            hours -= 1;
+        } else {
+            hours = 23;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function increaseMinute() {
+        const minutesInput = document.getElementById('minutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes < 59) {
+            minutes += 1;
+        } else {
+            minutes = 0;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
+
+    function decreaseMinute() {
+        const minutesInput = document.getElementById('minutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes > 0) {
+            minutes -= 1;
+        } else {
+            minutes = 59;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
+
+    function increaseHourEdit() {
+        const hoursInput = document.getElementById('editHours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours < 23) {
+            hours += 1;
+        } else {
+            hours = 0;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function decreaseHourEdit() {
+        const hoursInput = document.getElementById('editHours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours > 0) {
+            hours -= 1;
+        } else {
+            hours = 23;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function increaseMinuteEdit() {
+        const minutesInput = document.getElementById('editMinutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes < 59) {
+            minutes += 1;
+        } else {
+            minutes = 0;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
+
+    function decreaseMinuteEdit() {
+        const minutesInput = document.getElementById('editMinutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes > 0) {
+            minutes -= 1;
+        } else {
+            minutes = 59;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
 </script>
 
 </body>

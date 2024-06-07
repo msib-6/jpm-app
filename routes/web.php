@@ -87,6 +87,14 @@ Route::get('/pjl/pm', function (Request $request) {
     return view('pjl.pm', compact('line', 'year', 'month'));
 })->name('pjl.pm');
 
+Route::get('/pjl/onlyView', function (Request $request) {
+    $line = $request->query('line');  // Access 'line' parameter
+    $year = $request->query('year');  // Access 'year' parameter
+    $month = $request->query('month'); // Access 'month' parameter
+
+    return view('pjl.onlyView', compact('line', 'year', 'month'));
+})->name('pjl.onlyView');
+
 Route::get('/pjl/pmdashboard', function () {
     return view('pjl.pmDashboard');
 })->name('pjl.pmDashboard');

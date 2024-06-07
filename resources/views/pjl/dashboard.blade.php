@@ -135,7 +135,7 @@
             const monthIndex = (index + 1).toString();
             const weeks = monthWeekData[monthIndex] || [];
             const button = document.createElement('button');
-            button.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black rounded-md flex flex-col items-start justify-center w-full';
+            button.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black flex flex-col items-start justify-center w-full';
             button.style.height = '5em'; // consistent height for all month divs
 
             const monthSpan = document.createElement('span');
@@ -158,7 +158,7 @@
 
             // Add click event to navigate to the view page with parameters
             button.onclick = () => {
-                window.location.href = `/pjl/view?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
+                window.location.href = `/pjl/onlyView?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
             };
 
             monthsContainer.appendChild(button);

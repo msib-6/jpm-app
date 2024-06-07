@@ -262,26 +262,26 @@ class MachineController extends Controller
             'code' => 'required',
             'time' => 'required',
         ]);
-    
+
         try {
             $machineOperation = MachineOperation::find($machineOperationID);
-    
+
             $operationExist = MachineOperation::where('day', $validatedData['day'])
                 ->where('time', $validatedData['time'])
                 ->where('id', '!=', $machineOperationID)
                 ->first();
-    
+
             if ($operationExist) {
                 return response()->json(['message' => 'Another machine operation is already scheduled at this time!'], 409);
             }
-    
+
             if (!$machineOperation) {
                 return response()->json(['message' => 'Machine operation not found!'], 404);
             }
-    
+
             $user = User::find($userId);
             $username = $user ? $user->name : '';
-    
+
             $originalState = [
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
@@ -289,9 +289,9 @@ class MachineController extends Controller
                 'status' => $machineOperation->status,
                 'notes' => $machineOperation->notes,
             ];
-    
+
             $status = $request->input('status') ?? $machineOperation->status;
-    
+
             $machineOperation->update([
                 'day' => $validatedData['day'],
                 'code' => $validatedData['code'],
@@ -300,20 +300,20 @@ class MachineController extends Controller
                 'notes' => $request->input('notes'),
                 'changedBy' => $username,
             ]);
-    
+
             $weekOperations = MachineOperation::where('week', $machineOperation->week)
                 ->where('month', $machineOperation->month)
                 ->where('year', $machineOperation->year)
                 ->where('current_line', $machineOperation->current_line)
                 ->get();
-    
+
             foreach ($weekOperations as $operation) {
                 $operation->update([
                     'is_changed' => true,
                     'is_approved' => false,
                 ]);
             }
-    
+
             $newState = [
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
@@ -321,7 +321,7 @@ class MachineController extends Controller
                 'status' => $machineOperation->status,
                 'notes' => $machineOperation->notes,
             ];
-    
+
             Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => $machineOperationID,
@@ -331,29 +331,29 @@ class MachineController extends Controller
                     'new_state' => $newState,
                 ]),
             ]);
-    
+
             return response()->json($machineOperation, 200);
         } catch (\Exception $error) {
             \Log::error('Error editing machine operation: ' . $error->getMessage());
             return response()->json(['message' => $error->getMessage()], 400);
         }
     }
-    
+
     public function sendRevision(Request $request) {
         $userId = auth()->id();
-    
+
         $validatedData = $request->validate([
             'year' => 'required|string',
             'month' => 'required|string',
             'week' => 'required|string',
             'line' => 'required|string',
         ]);
-    
+
         $line = $request->input('line');
         $year = $validatedData['year'];
         $month = $validatedData['month'];
         $week = $validatedData['week'];
-    
+
         try {
             $operations = MachineOperation::where('year', $year)
                 ->where('month', $month)
@@ -364,22 +364,22 @@ class MachineController extends Controller
                     });
                 })
                 ->get();
-    
+
             if ($operations->isEmpty()) {
                 return response()->json(['message' => 'No machine operations found for the specified criteria'], 404);
             }
-    
+
             $originalStates = $operations->map(function ($operation) {
                 return [
                     'id' => $operation->id,
                     'is_sent' => $operation->is_sent,
                 ];
             });
-    
+
             foreach ($operations as $operation) {
                 $operation->update(['is_sent' => true]);
             }
-    
+
             Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => null,
@@ -394,7 +394,7 @@ class MachineController extends Controller
                     }),
                 ]),
             ]);
-    
+
             return response()->json(['message' => 'Machine operations marked as sent successfully'], 200);
         } catch (\Exception $e) {
             \Log::error('Error sending revision: ' . $e->getMessage());
@@ -563,7 +563,7 @@ class MachineController extends Controller
             ->get();
 
         return response()->json([
-            'operations' -> $operations
+            'operations' => $operations
         ]);
 
     }
