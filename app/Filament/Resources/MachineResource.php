@@ -18,6 +18,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -37,7 +38,19 @@ class MachineResource extends Resource
                     ->schema([
                         TextInput::make('machine_name')
                             ->required(),
-                        TextInput::make('category')
+                        Radio::make('category')
+                            ->options([
+                                'Granulasi' => 'Granulasi',
+                                'Drying' => 'Drying',
+                                'Final mix' => 'Final Mix',
+                                'Kompaksi' => 'Kompaksi',
+                                'Cetak' => 'Cetak',
+                                'Coating' => 'Coating',
+                                'Mixing' => 'Mixing',
+                                'Filling' => 'Filling',
+                                'Kemas' => 'Kemas',
+                            ])
+                            ->columns(2)
                             ->required(),
                         CheckboxList::make('line')
                             ->options([

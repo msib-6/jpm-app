@@ -115,7 +115,27 @@
     </div>
 </div>
 
+<!-- Custom Alert Modal -->
+<div id="custom-alert" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
+        <h2 class="text-xl font-bold mb-4">PJM Says</h2>
+        <p id="custom-alert-message" class="mb-4">This is a custom alert message.</p>
+        <div class="flex justify-between items-end">
+            <button onclick="closeAlert()" class="justify-end bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Close</button>
+        </div>
+    </div>
+</div>
+
 <script>
+    function showAlert(message) {
+        document.getElementById('custom-alert-message').textContent = message;
+        document.getElementById('custom-alert').classList.remove('hidden');
+    }
+
+    function closeAlert() {
+        document.getElementById('custom-alert').classList.add('hidden');
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         getQueryParams();
         setupAutoRefresh();
@@ -259,13 +279,13 @@
             })
             .then(result => {
                 console.log('Success:', result);
-                alert('Data saved successfully');
+                showAlert('Data saved successfully');
                 resetForm();
                 fetchData(line, params.get('year'), params.get('month'));
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Failed to save data: ' + (error.message || JSON.stringify(error)));
+                showAlert('Failed to save data: ' + (error.message || JSON.stringify(error)));
             });
     }
 
@@ -292,7 +312,7 @@
             })
             .then(result => {
                 console.log('Success:', result);
-                alert('Data deleted successfully');
+                showAlert('Data deleted successfully');
                 resetForm();
                 const params = new URLSearchParams(window.location.search);
                 fetchData(params.get('line'), params.get('year'), params.get('month'));
@@ -300,7 +320,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Failed to delete data: ' + (error.message || JSON.stringify(error)));
+                showAlert('Failed to delete data: ' + (error.message || JSON.stringify(error)));
             });
     }
 
