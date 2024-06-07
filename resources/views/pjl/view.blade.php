@@ -460,10 +460,12 @@
                     }
                 });
 
+                
                 mesinCheckboxContainer.innerHTML = ''; // Clear existing checkboxes
 
                 filteredMachines.forEach(machine => {
                     const checkbox = document.createElement('div');
+                    checkbox.className = 'inline-checkbox';
                     checkbox.className = 'flex flex-col items-start mb-2';
                     checkbox.innerHTML = `
                         <input type="checkbox" id="machine-${machine.id}" name="machines" value="${machine.machine_name}" class="mr-2">
