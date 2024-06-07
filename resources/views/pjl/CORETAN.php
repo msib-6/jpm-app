@@ -10,32 +10,10 @@
 </head>
 <body>
 <div class="container mx-auto px-4">
-    <!-- Breadcrumb -->
-    <nav class="flex ml-16" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-            <li class="inline-flex items-center">
-                <a href="/pjl/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                    <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 1 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
-                    </svg>
-                    Home
-                </a>
-            </li>
-            <li>
-                <div class="flex items-center">
-                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                    </svg>
-                    <a href="/pjl/view" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">PJL</a>
-                </div>
-            </li>
-        </ol>
-    </nav>
-
     <!-- Card Title -->
     <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
         <h3 id="title" class="text-2xl font-bold">
-            <span id="line-display">Loading...</span>
+            <span id="line-display">{{ ucfirst($line) }}</span>
         </h3>
         <!-- Container for buttons, each week's button will be appended here -->
         <div id="weeksList" class="mx-2">
@@ -52,8 +30,8 @@
             <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
             <!-- Dynamic date headers -->
             <div id="day1" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 1</span></div>
-            <div id="day2" class="flex flex-col justify-center items-center"><span class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2</span></div>
-            <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span style="font-size: 12px;">Date 3</span></div>
+            <div id="day2" class="flex flex-col justify-center items-center"><span class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2"></span></div>
+            <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span style="font-size: 12px;">Date 3"></span></div>
             <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span style="font-size: 12px;">Date 4"></span></div>
             <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span style="font-size: 12px;">Date 5"></span></div>
             <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span style="font-size: 12px;">Date 6"></span></div>
@@ -81,17 +59,19 @@
         </div>
     </div>
 
-    <!-- Button Week Bawah -->
     <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
+
         <div class="flex justify-between items-center">
             <div class="flex justify-start">
-                <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Week</button>
+                <button id="deleteWeekButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Week</button>
             </div>
+
             <div class="flex justify-end">
                 <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
-                <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Send Week</button>
+                <button id="sendWeekButton" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Send Week</button>
             </div>
         </div>
+
     </div>
 
 
@@ -105,7 +85,7 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Add Mesin</h2>
             <form id="addMesinForm">
-                <div id="mesinCheckboxContainer" class="mb-4">
+                <div id="mesinCheckboxContainer" class="mb-4" style="max-height: 450px; overflow-y: auto;">
                     <!-- Checkboxes will be appended here -->
                 </div>
                 <div class="flex justify-end">
@@ -152,8 +132,22 @@
                 <div class="mb-4">
                     <label for="dataStatus" class="block text-gray-700">Status</label>
                     <select id="dataStatus" class="w-full px-3 py-2 border rounded-lg">
-                        <option value="PJL">PJL</option>
-                        <option value="PM">PM</option>
+                        <option value="SUPERVISI">SUPERVISI</option>
+                        <option value="VALIDASI">VALIDASI</option>
+                        <option value="MICRO">MICRO</option>
+                        <option value="PQ">PQ</option>
+                        <option value="TRIAL">TRIAL</option>
+                        <option value="STUDY PAT">STUDY PAT</option>
+                        <option value="STUDY BATCH CAMPAIGN">STUDY BATCH CAMPAIGN</option>
+                        <option value="BCP">BCP</option>
+                        <option value="OFF">OFF</option>
+                        <option value="CUSU">CUSU</option>
+                        <option value="DHT">DHT</option>
+                        <option value="CHT">CHT</option>
+                        <option value="KALIBRASI">KALIBRASI</option>
+                        <option value="OVERHAUL">OVERHAUL</option>
+                        <option value="CV">CV</option>
+                        <option value="CPV">CPV</option>
                     </select>
                 </div>
                 <!-- Button -->
@@ -171,7 +165,7 @@
             <h2 class="text-2xl mb-4">Add Global Description</h2>
             <form id="addGlobalDescForm">
                 <div class="mb-4">
-                    <label for="globalDesc" class="text-gray-700">Description</label>
+                    <label for="globalDesc" class="block text-gray-700">Description</label>
                     <textarea id="globalDesc" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
                 </div>
                 <div class="flex justify-end">
@@ -225,8 +219,22 @@
                 <div class="mb-4">
                     <label for="editDataStatus" class="block text-gray-700">Status</label>
                     <select id="editDataStatus" class="w-full px-3 py-2 border rounded-lg">
-                        <option value="PJL">PJL</option>
-                        <option value="PM">PM</option>
+                        <option value="SUPERVISI">SUPERVISI</option>
+                        <option value="VALIDASI">VALIDASI</option>
+                        <option value="MICRO">MICRO</option>
+                        <option value="PQ">PQ</option>
+                        <option value="TRIAL">TRIAL</option>
+                        <option value="STUDY PAT">STUDY PAT</option>
+                        <option value="STUDY BATCH CAMPAIGN">STUDY BATCH CAMPAIGN</option>
+                        <option value="BCP">BCP</option>
+                        <option value="OFF">OFF</option>
+                        <option value="CUSU">CUSU</option>
+                        <option value="DHT">DHT</option>
+                        <option value="CHT">CHT</option>
+                        <option value="KALIBRASI">KALIBRASI</option>
+                        <option value="OVERHAUL">OVERHAUL</option>
+                        <option value="CV">CV</option>
+                        <option value="CPV">CPV</option>
                     </select>
                 </div>
                 <!-- Buttons -->
@@ -255,6 +263,20 @@
         </div>
     </div>
 
+    <!-- Modal View Machine Data -->
+    <div id="viewMachineDataModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4">View Machine Data</h2>
+            <div id="machineDataContent" class="mb-4">
+                <!-- Machine data content will be populated here -->
+            </div>
+            <div class="flex justify-between items-center">
+                <button type="button" id="deleteMachineDataButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
+                <button type="button" id="closeViewMachineDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Confirm Delete -->
     <div id="confirmDeleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
@@ -267,9 +289,29 @@
         </div>
     </div>
 
+    <!-- Custom Alert Modal -->
+    <div id="custom-alert" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
+            <h2 class="text-xl font-bold mb-4">PJM Says</h2>
+            <p id="custom-alert-message" class="mb-4">This is a custom alert message.</p>
+            <div class="flex justify-between items-end">
+                <button onclick="closeAlert()" class="justify-end bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Close</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
+    function showAlert(message) {
+        document.getElementById('custom-alert-message').textContent = message;
+        document.getElementById('custom-alert').classList.remove('hidden');
+    }
+
+    function closeAlert() {
+        document.getElementById('custom-alert').classList.add('hidden');
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const openModalButton = document.getElementById('openModalButton');
         const closeModalButton = document.getElementById('closeModalButton');
@@ -287,21 +329,25 @@
         const closeEditDataModalButton = document.getElementById('closeEditDataModalButton');
         const editDataForm = document.getElementById('editDataForm');
         const deleteOperationButton = document.getElementById('deleteOperationButton');
-        const globalDescs = document.getElementById('globalDescs');
         const viewGlobalDescModal = document.getElementById('viewGlobalDescModal');
-        const globalDescContent = document.getElementById('globalDescContent');
-        const deleteGlobalDescButton = document.getElementById('deleteGlobalDescButton');
         const closeViewGlobalDescModalButton = document.getElementById('closeViewGlobalDescModalButton');
+        const globalDescs = document.getElementById('globalDescs');
+        const deleteGlobalDescButton = document.getElementById('deleteGlobalDescButton');
+        const viewMachineDataModal = document.getElementById('viewMachineDataModal');
+        const closeViewMachineDataModalButton = document.getElementById('closeViewMachineDataModalButton');
+        const machineDataContent = document.getElementById('machineDataContent');
+        const deleteMachineDataButton = document.getElementById('deleteMachineDataButton');
         const confirmDeleteModal = document.getElementById('confirmDeleteModal');
         const deleteConfirmMessage = document.getElementById('deleteConfirmMessage');
-        const closeConfirmDeleteModalButton = document.getElementById('closeConfirmDeleteModalButton');
         const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+        const sendWeekButton = document.getElementById('sendWeekButton');
         let currentMachineId;
         let currentDay;
         let currentMonth;
         let currentYear;
-        let currentOperationId; // New variable for editing
-        let currentGlobalDescId; // New variable for global description
+        let currentOperationId;
+        let currentGlobalDescId;
+        let currentMachineDataId;
 
         openModalButton.addEventListener('click', async function() {
             await populateMesinCheckboxes();
@@ -340,14 +386,8 @@
             editDataForm.reset();
         });
 
-        deleteOperationButton.addEventListener('click', async function() {
-            confirmDeleteOperation();
-        });
-
-        confirmDeleteButton.addEventListener('click', async function() {
-            await deleteData(currentOperationId);
-            confirmDeleteModal.classList.add('hidden');
-            editDataModal.classList.add('hidden');
+        deleteOperationButton.addEventListener('click', function() {
+            confirmDeleteOperation(currentOperationId);
         });
 
         openGlobalDescModalButton.addEventListener('click', function() {
@@ -361,7 +401,7 @@
         addGlobalDescForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             await addGlobalDescription();
-            await fetchAndDisplayGlobalDescriptions(); // Fetch and display after adding a new description
+            await fetchAndDisplayGlobalDescriptions();
             addGlobalDescModal.classList.add('hidden');
             addGlobalDescForm.reset();
         });
@@ -370,19 +410,63 @@
             viewGlobalDescModal.classList.add('hidden');
         });
 
-        deleteGlobalDescButton.addEventListener('click', async function() {
+        closeConfirmDeleteModalButton.addEventListener('click', function() {
+            confirmDeleteModal.classList.add('hidden');
+        });
+
+        deleteGlobalDescButton.addEventListener('click', function() {
             confirmDeleteGlobalDesc(currentGlobalDescId);
         });
 
         confirmDeleteButton.addEventListener('click', async function() {
-            await deleteGlobalDescription(currentGlobalDescId);
+            const deleteMode = confirmDeleteButton.getAttribute('data-delete-mode');
+            if (deleteMode === 'operation') {
+                await deleteData(currentOperationId);
+                editDataModal.classList.add('hidden');
+            } else if (deleteMode === 'description') {
+                await deleteGlobalDescription(currentGlobalDescId);
+                viewGlobalDescModal.classList.add('hidden');
+                await fetchAndDisplayGlobalDescriptions();
+            } else if (deleteMode === 'machine') {
+                await deleteMachineData(currentMachineDataId);
+                viewMachineDataModal.classList.add('hidden');
+            }
             confirmDeleteModal.classList.add('hidden');
-            viewGlobalDescModal.classList.add('hidden');
-            await fetchAndDisplayGlobalDescriptions();
         });
 
-        closeConfirmDeleteModalButton.addEventListener('click', function() {
-            confirmDeleteModal.classList.add('hidden');
+        closeViewMachineDataModalButton.addEventListener('click', function() {
+            viewMachineDataModal.classList.add('hidden');
+        });
+
+        deleteMachineDataButton.addEventListener('click', function() {
+            confirmDeleteMachineData(currentMachineDataId);
+        });
+
+        sendWeekButton.addEventListener('click', async function() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+            const url = `http://127.0.0.1:8000/api/sendrevision?line=${line}&year=${year}&month=${month}&week=${week}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (response.ok) {
+                    window.location.href = `onlyView?line=${line}&year=${year}&month=${month}&week=${week}`;
+                } else {
+                    const errorData = await response.json();
+                    showAlert(`Error sending week data: ${errorData.message}`);
+                }
+            } catch (error) {
+                showAlert(`Error sending week data: ${error.message}`);
+            }
         });
 
         getQueryParams();
@@ -448,10 +532,10 @@
                 });
 
                 if (response.ok) {
-                    alert(`Machine ${machineName} added successfully`);
+                    showAlert(`Machine ${machineName} added successfully`);
                 } else {
                     const errorData = await response.json();
-                    alert(`Error adding machine ${machineName}: ${errorData.message}`);
+                    showAlert(`Error adding machine ${machineName}: ${errorData.message}`);
                 }
             }
         }
@@ -486,10 +570,10 @@
             });
 
             if (response.ok) {
-                alert(`Data added successfully`);
+                showAlert(`Data added successfully`);
             } else {
                 const errorData = await response.json();
-                alert(`Error adding data: ${errorData.message}`);
+                showAlert(`Error adding data: ${errorData.message}`);
             }
         }
 
@@ -525,10 +609,10 @@
             });
 
             if (response.ok) {
-                alert(`Data updated successfully`);
+                showAlert(`Data updated successfully`);
             } else {
                 const errorData = await response.json();
-                alert(`Error updating data: ${errorData.message}`);
+                showAlert(`Error updating data: ${errorData.message}`);
             }
         }
 
@@ -541,15 +625,17 @@
             });
 
             if (response.ok) {
-                alert(`Data deleted successfully`);
+                showAlert(`Data deleted successfully`);
             } else {
                 const errorData = await response.json();
-                alert(`Error deleting data: ${errorData.message}`);
+                showAlert(`Error deleting data: ${errorData.message}`);
             }
         }
 
-        function confirmDeleteOperation() {
+        function confirmDeleteOperation(id) {
+            currentOperationId = id;
             deleteConfirmMessage.textContent = "Are you sure you want to delete this machine operation?";
+            confirmDeleteButton.setAttribute('data-delete-mode', 'operation');
             confirmDeleteModal.classList.remove('hidden');
         }
 
@@ -576,10 +662,10 @@
             });
 
             if (response.ok) {
-                alert(`Global description added successfully`);
+                showAlert(`Global description added successfully`);
             } else {
                 const errorData = await response.json();
-                alert(`Error adding global description: ${errorData.message}`);
+                showAlert(`Error adding global description: ${errorData.message}`);
             }
         }
 
@@ -626,18 +712,52 @@
             });
 
             if (response.ok) {
-                alert(`Global description deleted successfully`);
+                showAlert(`Global description deleted successfully`);
             } else {
                 const errorData = await response.json();
-                alert(`Error deleting global description: ${errorData.message}`);
+                showAlert(`Error deleting global description: ${errorData.message}`);
             }
         }
 
         function confirmDeleteGlobalDesc(id) {
             currentGlobalDescId = id;
             deleteConfirmMessage.textContent = "Are you sure you want to delete this global description?";
+            confirmDeleteButton.setAttribute('data-delete-mode', 'description');
             confirmDeleteModal.classList.remove('hidden');
         }
+
+        function confirmDeleteMachineData(id) {
+            currentMachineDataId = id;
+            deleteConfirmMessage.textContent = "Are you sure you want to delete this machine data?";
+            confirmDeleteButton.setAttribute('data-delete-mode', 'machine');
+            confirmDeleteModal.classList.remove('hidden');
+        }
+
+        async function deleteMachineData(id) {
+            const response = await fetch(`http://127.0.0.1:8000/api/deleteweeklymachine/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                showAlert(`Machine data deleted successfully`);
+            } else {
+                const errorData = await response.json();
+                showAlert(`Error deleting machine data: ${errorData.message}`);
+            }
+        }
+
+        function viewMachineData(machine) {
+            const machineContent = `
+                <p><strong>Machine Name:</strong> ${machine.machine_name}</p>
+            `;
+            machineDataContent.innerHTML = machineContent;
+            currentMachineDataId = machine.id;
+            viewMachineDataModal.classList.remove('hidden');
+        }
+
 
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
@@ -701,16 +821,16 @@
                 const machineRow = document.createElement('div');
                 machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                 machineRow.innerHTML = `
-            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                <div class="flex flex-col justify-center items-center w-full h-full">
-                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                        ${category}
-                    </span>
-                    <span>${machine.machine_name}</span>
-                </div>
-            </div>
-        `;
+                    <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                        <div class="flex flex-col justify-center items-center w-full h-full">
+                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                                <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                                ${category}
+                            </span>
+                            <span>${machine.machine_name}</span>
+                        </div>
+                    </div>
+                `;
 
                 // Add day columns based on header days
                 for (let i = 1; i <= 8; i++) {
@@ -733,11 +853,11 @@
                         const entry = document.createElement('button');
                         entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
                         entry.innerHTML = `
-                    <p><strong>${operation.code}</strong></p>
-                    <p>${operation.time}</p>
-                    ${operation.status ? `<p>${operation.status}</p>` : ''}
-                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                `;
+                            <p><strong>${operation.code}</strong></p>
+                            <p>${operation.time}</p>
+                            ${operation.status ? `<p>${operation.status}</p>` : ''}
+                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                        `;
                         entry.onclick = function() {
                             openEditModal(operation);
                         };
@@ -775,6 +895,11 @@
                         dayColumn.appendChild(addButton);
                     }
                 }
+
+                // Add onclick event to view machine data modal
+                machineRow.querySelector('.mesin-jpm').onclick = function() {
+                    viewMachineData(machine);
+                };
             });
         }
 
@@ -919,7 +1044,7 @@
                 if (line && month && week && year) {
                     fetchDataForWeek(line, year, month, week);
                 }
-            }, 30000); // Refresh every 30 seconds
+            }, 15000); // Refresh every 30 seconds
         }
 
         function openEditModal(operation) {

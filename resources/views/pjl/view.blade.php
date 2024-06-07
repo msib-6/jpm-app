@@ -68,7 +68,7 @@
 
             <div class="flex justify-end">
                 <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
-                <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Send Week</button>
+                <button id="sendWeekButton" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Send Week</button>
             </div>
         </div>
 
@@ -340,7 +340,7 @@
         const confirmDeleteModal = document.getElementById('confirmDeleteModal');
         const deleteConfirmMessage = document.getElementById('deleteConfirmMessage');
         const confirmDeleteButton = document.getElementById('confirmDeleteButton');
-        const closeConfirmDeleteModalButton = document.getElementById('closeConfirmDeleteModalButton');
+        const sendWeekButton = document.getElementById('sendWeekButton');
         let currentMachineId;
         let currentDay;
         let currentMonth;
@@ -442,6 +442,33 @@
             confirmDeleteMachineData(currentMachineDataId);
         });
 
+        sendWeekButton.addEventListener('click', async function() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+            const url = `http://127.0.0.1:8000/api/sendrevision?line=${line}&year=${year}&month=${month}&week=${week}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (response.ok) {
+                    window.location.href = `onlyView?line=${line}&year=${year}&month=${month}&week=${week}`;
+                } else {
+                    const errorData = await response.json();
+                    showAlert(`Error sending week data: ${errorData.message}`);
+                }
+            } catch (error) {
+                showAlert(`Error sending week data: ${error.message}`);
+            }
+        });
+
         getQueryParams();
         setupAutoRefresh();
 
@@ -460,7 +487,6 @@
                     }
                 });
 
-                
                 mesinCheckboxContainer.innerHTML = ''; // Clear existing checkboxes
 
                 filteredMachines.forEach(machine => {
@@ -830,7 +856,7 @@
                         entry.innerHTML = `
                             <p><strong>${operation.code}</strong></p>
                             <p>${operation.time}</p>
-                            ${operation.status ? `<p>${operation.status}</p>` : ''}
+                            ${operation.status ? `<p class="text-red-600">${operation.status}</p>` : ''}
                             ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
                         `;
                         entry.onclick = function() {

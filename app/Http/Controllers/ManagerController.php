@@ -25,11 +25,11 @@ class ManagerController extends Controller
                                            ->where('is_changed', true)
                                            ->where('is_sent', true)
                                            ->get();
-    
+
         $waitingApprovalPerWeek = $waitingApproval->groupBy('week')->map(function ($weekGroup) {
             return $weekGroup->first();
         });
-    
+
         // Transform the collection to hide certain fields
         $waitingApprovalFiltered = $waitingApprovalPerWeek->map(function($machine) {
             return collect($machine)->except([
@@ -40,19 +40,18 @@ class ManagerController extends Controller
                 'time',
                 'status',
                 'notes',
-                'is_changed', 
-                'changed_by', 
-                'change_date', 
-                'is_approved', 
-                'approved_by', 
-                'created_at', 
+                'is_changed',
+                'changed_by',
+                'change_date',
+                'is_approved',
+                'approved_by',
+                'created_at',
                 'is_rejected',
                 'rejected_by',
                 'updated_at',
-                'current_line',
             ]);
         })->values();
-        
+
         // Return the transformed collection as a JSON response
         return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
     }
@@ -64,11 +63,11 @@ class ManagerController extends Controller
             'month' => 'required|string',
             'week' => 'required|string'
         ]);
-    
+
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
-    
+
         $waitingApproval = MachineOperation::where('is_approved', false)
                                             ->where('is_changed', true)
                                             ->where('is_sent',true)
@@ -76,26 +75,26 @@ class ManagerController extends Controller
                                             ->where('month', $month)
                                             ->where('week', $week)
                                             ->get();
-    
+
         $waitingApprovalFiltered = $waitingApproval->map(function($machine) {
             return collect($machine)->except([
                 'id',
                 'machine_id',
-                'is_changed', 
-                'changed_by', 
-                'change_date', 
-                'is_approved', 
-                'approved_by', 
-                'created_at', 
+                'is_changed',
+                'changed_by',
+                'change_date',
+                'is_approved',
+                'approved_by',
+                'created_at',
                 'updated_at',
                 'is_rejected',
                 'rejected_by',
             ]);
         });
-        
+
         return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
     }
-    
+
     public function approve(Request $request) {
         $userId = auth()->id();
         $year = $request->input('year');
@@ -163,7 +162,7 @@ class ManagerController extends Controller
             'month' => 'required|integer',
             'week' => 'required|integer',
         ]);
-    
+
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
@@ -173,7 +172,7 @@ class ManagerController extends Controller
             ->where('month', $month)
             ->where('week', $week)
             ->get();
-    
+
         if ($machineOperations->isEmpty()) {
             return response()->json(['message' => 'No MachineOperations found'], 404);
         }
@@ -202,7 +201,7 @@ class ManagerController extends Controller
         }
         return response()->json(['message' => 'Return successful'], 200);
     }
-    
+
     public function notify(Request $request) {
         $validatedData = $request->validate([
             'line' => 'required|string'
@@ -249,5 +248,5 @@ class ManagerController extends Controller
         return response()->json(['message' => 'Notifications sent successfully to all recipients.']);
     }
 
-    
+
 }

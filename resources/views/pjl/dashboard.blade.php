@@ -28,10 +28,9 @@
         </div>
     </div>
 
-
     <!-- Card Title -->
-    <div class="bg-white  p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
-        <h3 class="text-3xl font-bold">PJL {{ ucfirst ($line) }}</h3>
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
+        <h3 class="text-3xl font-bold">PJL {{ ucfirst($line) }}</h3>
     </div>
 
     <!-- Years Container -->
@@ -66,18 +65,19 @@
 @section('scripts')
 
 <script>
-    const selectedLine = '{{ ucfirst ($line) }}'; // Adjust the line value as needed
+    const selectedLine = '{{ ucfirst($line) }}'; // Adjust the line value as needed
+    console.log("Selected Line:", selectedLine); // Debugging: Check the value of selectedLine
 
     document.addEventListener('DOMContentLoaded', function() {
-        fetchMachineOperations();
+        fetchMachineOperations(selectedLine);
     });
 
-    function fetchMachineOperations() {
-        fetch('http://127.0.0.1:8000/api/showallmachineoperationpjl')
+    function fetchMachineOperations(line) {
+        fetch(`http://127.0.0.1:8000/api/showallmachineoperationpjl?current_line=${encodeURIComponent(line)}`)
             .then(response => response.json())
             .then(data => {
                 console.log('Data fetched successfully:', data); // Debugging: Check the API response data
-                processMachineData(data.operations);
+                processMachineData(data.operations.filter(machine => machine.current_line === line));
             })
             .catch(error => {
                 console.error("Error fetching machine operation data: ", error);
@@ -85,6 +85,7 @@
     }
 
     function processMachineData(machines) {
+        console.log("Machines Data:", machines); // Debugging: Check the machines data
         const yearsList = document.querySelector('#yearsList .flex-grow');
         if (!yearsList) {
             console.error("Years list flex container not found");
@@ -94,11 +95,9 @@
         yearsList.innerHTML = ''; // Clear previous year buttons if any
 
         const uniqueYears = new Set();
-        machines
-            .filter(machine => machine.line === selectedLine) // Filter by selected line
-            .forEach(machine => {
-                uniqueYears.add(machine.year);
-            });
+        machines.forEach(machine => {
+            uniqueYears.add(machine.year);
+        });
 
         // Convert the Set to an array and sort it
         const sortedYears = Array.from(uniqueYears).sort((a, b) => a - b);
@@ -120,13 +119,14 @@
     }
 
     function displayMonths(selectedYear, machines) {
+        console.log("Selected Year:", selectedYear); // Debugging: Check the selected year
         const monthsContainer = document.getElementById('monthsContainer');
         monthsContainer.innerHTML = ''; // Clear the container
         monthsContainer.classList.remove('hidden'); // Show the container when a year is selected
 
         const monthWeekData = {};
         machines
-            .filter(machine => machine.year === selectedYear && machine.line === selectedLine) // Filter by selected year and line
+            .filter(machine => machine.year === selectedYear && machine.current_line === selectedLine) // Ensure correct filtering here
             .forEach(machine => {
                 if (!monthWeekData[machine.month]) {
                     monthWeekData[machine.month] = new Set();
@@ -163,7 +163,6 @@
             // Add click event to navigate to the view page with parameters
             button.onclick = () => {
                 window.location.href = `/pjl/view?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
-
             };
 
             monthsContainer.appendChild(button);
@@ -215,7 +214,6 @@
         };
         yearsList.appendChild(yearButton);
     }
-
 </script>
 @endsection
 </body>

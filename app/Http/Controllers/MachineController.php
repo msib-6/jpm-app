@@ -570,6 +570,7 @@ class MachineController extends Controller
 
     // Function Show All Code Machine Operations For PJL
     public function showAllMachineOperationPjl() {
+
         $operations = MachineOperation::select(
             'machine_operations.*',
             'machines.id as machineAll_id',
