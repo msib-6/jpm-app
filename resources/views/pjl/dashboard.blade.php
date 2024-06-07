@@ -94,9 +94,11 @@
         yearsList.innerHTML = ''; // Clear previous year buttons if any
 
         const uniqueYears = new Set();
-        machines.forEach(machine => {
-            uniqueYears.add(machine.year);
-        });
+        machines
+            .filter(machine => machine.line === selectedLine) // Filter by selected line
+            .forEach(machine => {
+                uniqueYears.add(machine.year);
+            });
 
         // Convert the Set to an array and sort it
         const sortedYears = Array.from(uniqueYears).sort((a, b) => a - b);
@@ -123,12 +125,14 @@
         monthsContainer.classList.remove('hidden'); // Show the container when a year is selected
 
         const monthWeekData = {};
-        machines.filter(machine => machine.year === selectedYear).forEach(machine => {
-            if (!monthWeekData[machine.month]) {
-                monthWeekData[machine.month] = new Set();
-            }
-            monthWeekData[machine.month].add(machine.week);
-        });
+        machines
+            .filter(machine => machine.year === selectedYear && machine.line === selectedLine) // Filter by selected year and line
+            .forEach(machine => {
+                if (!monthWeekData[machine.month]) {
+                    monthWeekData[machine.month] = new Set();
+                }
+                monthWeekData[machine.month].add(machine.week);
+            });
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         months.forEach((monthName, index) => {
@@ -158,7 +162,7 @@
 
             // Add click event to navigate to the view page with parameters
             button.onclick = () => {
-                window.location.href = `/pjl/${encodeURIComponent(selectedLine)}/view?year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
+                window.location.href = `/pjl/view?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
 
             };
 
