@@ -25,47 +25,46 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
-    
-        $request->session()->regenerate();
-    
-        // Determine the user's role
-        $user = Auth::user();
-        $role = strtolower($user->role);
-    
-        // Log the user's role
-        \Log::info('User role: ' . $role);
-    
-        $lineRoles = [
-            'line1', 'line2', 'line3', 'line4', 'line5',
-            'line7', 'line8a', 'line8b', 'line10', 'line11',
-            'line12', 'line13', 'line14'
-        ];
-    
-        // Log the line roles
-        \Log::info('Line roles: ' . implode(', ', $lineRoles));
-    
-        if (in_array($role, $lineRoles)) {
-            \Log::info('Redirecting to pjl.line.dashboard with line: ' . $role);
-            return redirect()->route('pjl.line.dashboard', ['line' => $role]);
-        } else {
-            \Log::info('Role not in line roles');
-        }
-    
-        // Redirect to the appropriate dashboard based on the user's role
-        switch ($role) {
-            case 'admin':
-                \Log::info('Redirecting to /admin');
-                return redirect('/admin');
-            case 'manager':
-                \Log::info('Redirecting to /manager/dashboard');
-                return redirect('/manager/dashboard');
-            default:
-                \Log::info('Redirecting to home');
-                return redirect(RouteServiceProvider::HOME);
-        }
+{
+    $request->authenticate();
+    $request->session()->regenerate();
+
+    // Determine the user's role
+    $user = Auth::user();
+    $role = ucfirst(strtolower($user->role)); // Ubah huruf pertama menjadi besar
+
+    // Log the user's role
+    \Log::info('User role: ' . $role);
+
+    $lineRoles = [
+        'Line1', 'Line2', 'Line3', 'Line4', 'Line5',
+        'Line7', 'Line8a', 'Line8b', 'Line10', 'Line11',
+        'Line12', 'Line13', 'Line14'
+    ];
+
+    // Log the line roles
+    \Log::info('Line roles: ' . implode(', ', $lineRoles));
+
+    if (in_array($role, $lineRoles)) {
+        \Log::info('Redirecting to pjl.line.dashboard with line: ' . $role);
+        return redirect()->route('pjl.line.dashboard', ['line' => $role]);
+    } else {
+        \Log::info('Role not in line roles');
     }
+
+    // Redirect to the appropriate dashboard based on the user's role
+    switch ($role) {
+        case 'Admin':
+            \Log::info('Redirecting to /admin');
+            return redirect('/admin');
+        case 'Manager':
+            \Log::info('Redirecting to /manager/dashboard');
+            return redirect('/manager/dashboard');
+        default:
+            \Log::info('Redirecting to home');
+            return redirect(RouteServiceProvider::HOME);
+    }
+}
 
     /**
      * Destroy an authenticated session.
@@ -94,12 +93,4 @@ class AuthenticatedSessionController extends Controller
         $this->checkRole('manager');
         // Logic for manager only
     }
-    private function checkLineRole($line)
-    {
-        $user = Auth::user();
-        if (strtolower($user->role) !== $line) {
-            abort(403, 'Unauthorized action.');
-        }
-    }
 }
-

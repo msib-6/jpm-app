@@ -55,8 +55,6 @@ Route::middleware(['auth', 'line'])->group(function () {
         return view('pjl.onlyView', compact('line', 'year', 'month'));
     })->name('pjl.onlyView');
 
-
-
     Route::get('/pjl/{line}/pm', function (Request $request, $line) {
         $year = $request->query('year');
         $month = $request->query('month');
@@ -70,6 +68,7 @@ Route::middleware(['auth', 'line'])->group(function () {
     Route::get('/pjl/{line}/approval', function ($line) {
         return view('pjl.approval', ['line' => $line]);
     })->name('pjl.line.approval');
+
 });
 
 Route::get('/guest/index', function () {
