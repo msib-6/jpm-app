@@ -162,7 +162,7 @@
 
             // Add click event to navigate to the view page with parameters
             button.onclick = () => {
-                window.location.href = `/pjl/view?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
+                window.location.href = `/pjl/onlyView?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
             };
 
             monthsContainer.appendChild(button);

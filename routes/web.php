@@ -34,36 +34,39 @@ Route::middleware(['auth', 'line'])->group(function () {
     Route::get('/pjl/{line}/dashboard', function ($line) {
         return view('pjl.dashboard', ['line' => $line]);
     })->name('pjl.line.dashboard');
-    
+
     Route::get('/pjl/{line}/mesin', function ($line) {
         return view('pjl.mesin', ['line' => $line]);
     })->name('pjl.line.mesin');
 
-    Route::get('/pjl/{line}/view', function (Request $request, $line) {
+    Route::get('/pjl/view', function (Request $request) {
+        $line = $request->query('line');  // Access 'line' parameter
         $year = $request->query('year');  // Access 'year' parameter
         $month = $request->query('month'); // Access 'month' parameter
-    
+
         return view('pjl.view', compact('line', 'year', 'month'));
     })->name('pjl.view');
-    
-    Route::get('/pjl/{line}/onlyView', function (Request $request, $line) {
+
+    Route::get('/pjl/onlyView', function (Request $request) {
+        $line = $request->query('line');  // Access 'line' parameter
         $year = $request->query('year');  // Access 'year' parameter
         $month = $request->query('month'); // Access 'month' parameter
-    
+
         return view('pjl.onlyView', compact('line', 'year', 'month'));
     })->name('pjl.onlyView');
-    
-    
+
+
+
     Route::get('/pjl/{line}/pm', function (Request $request, $line) {
         $year = $request->query('year');
         $month = $request->query('month');
         return view('pjl.pm', compact('line', 'year', 'month'));
     })->name('pjl.line.pm');
-    
+
     Route::get('/pjl/{line}/pmdashboard', function ($line) {
         return view('pjl.pmDashboard', ['line' => $line]);
     })->name('pjl.line.pmDashboard');
-    
+
     Route::get('/pjl/{line}/approval', function ($line) {
         return view('pjl.approval', ['line' => $line]);
     })->name('pjl.line.approval');
