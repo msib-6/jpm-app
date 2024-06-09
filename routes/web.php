@@ -40,6 +40,7 @@ Route::middleware(['auth', 'line'])->group(function () {
     })->name('pjl.line.mesin');
 
     Route::get('/pjl/{line}/view', function (Request $request, $line) {
+        $line = $request->query('line');  // Access 'line' parameter
         $year = $request->query('year');  // Access 'year' parameter
         $month = $request->query('month'); // Access 'month' parameter
 
@@ -86,8 +87,12 @@ Route::middleware('manager')->group(function () {
         return view('manager.dashboard');
     })->name('manager.dashboard');
 
-    Route::get('/manager/approve', function () {
-        return view('manager.approve');
+    Route::get('/manager/approve', function (Request $request) {
+        $line = $request->query('line');
+        $year = $request->query('year');
+        $month = $request->query('month');
+        $week = $request->query('week');
+        return view('manager.approve', compact('line', 'year', 'month', 'week'));
     })->name('manager.approve');
 });
 

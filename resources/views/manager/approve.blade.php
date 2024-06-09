@@ -1,58 +1,492 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audit Log</title>
-    <link href="{{ asset('css/history.css') }}" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
-    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <link href="{{ asset('css/navbar.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <title>Approve / Return Manager</title>
+    @vite('resources/css/pjl/view.css')
 </head>
-<body class="bg-gray-100"> <!-- Tambahkan kelas bg-gray-100 untuk latar belakang -->
-@include('Navbar.NavMGR')
+<body>
+<div class="container mx-auto px-4">
+    <!-- Breadcrumb -->
+    <nav class="flex ml-16" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+            <li class="inline-flex items-center">
+                <a href="/pjl/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                    <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 1 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                    </svg>
+                    Home
+                </a>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                    </svg>
+                    <a href="/pjl/view" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">PJL</a>
+                </div>
+            </li>
+        </ol>
+    </nav>
 
-<section id="content" class="py-8 px-4"> <!-- Tambahkan kelas px-4 untuk memberikan ruang padding di sisi -->
-
-    <div class='container mx-auto'>
-        <div class='card flex justify-between'> <!-- Tambahkan kelas flex dan justify-between -->
-            <h1 class="text-left text-4xl font-bold text-gray-800">January</h1>
+    <!-- Card Title -->
+    <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
+        <h3 id="title" class="text-2xl font-bold">
+            <span id="line-display">Loading...</span>
+        </h3>
+        <div id="weeksList" class="mx-2">
+            <!-- Buttons for each week will be dynamically inserted here -->
         </div>
-        <div class='weeks-container'>
-            <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center mt-4" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
-                    <li class="me-2 mx-2 flex items-center p-0" role="presentation">
-                        <button class="inline-block p-0 border-b-2 rounded-t-lg" id="profile-styled-tab" data-tabs-target="#styled-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Waiting Approval</button>
-                    </li>
-                    <li class="me-2 mx-2 flex items-center p-0" role="presentation">
-                        <button class="inline-block p-0 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">Approved</button>
-                    </li>
+        <h3 class="text-2xl font-bold">
+            <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>
+        </h3>
+    </div>
 
-                </ul>
+    <!-- Header for Days -->
+    <div class="header-days bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none;" id="headerDays">
+        <div class="grid grid-cols-10 gap-4 text-center font-semibold">
+            <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
+            <!-- Dynamic date headers -->
+            <div id="day1" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 1</span></div>
+            <div id="day2" class="flex flex-col justifycenter items-center"><span class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2"></span></div>
+            <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span style="font-size: 12px;">Date 3"></span></div>
+            <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span style="font-size: 12px;">Date 4"></span></div>
+            <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span style="font-size: 12px;">Date 5"></span></div>
+            <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span style="font-size: 12px;">Date 6"></span></div>
+            <div id="day7" class="flex flex-col justify-center items-center"><span class="font-bold">Minggu</span><span style="font-size: 12px;">Date 7"></span></div>
+            <div id="day8" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 8"></span></div>
+        </div>
+    </div>
+
+    <!-- Data Container -->
+    <div id="dataContainer" class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+        <!-- Dynamic rows for machines will be appended here -->
+    </div>
+
+    <!-- Global Description Container -->
+    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex flex-col items-center" style="width: 91.666667%;">
+        <div id="globalDescs" class="flex flex-col items-center w-full">
+            <!-- Descriptions will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Modal Confirm Delete -->
+    <div id="confirmDeleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4">Confirm Delete</h2>
+            <p id="deleteConfirmMessage" class="mb-4">Are you sure you want to delete this item?</p>
+            <div class="flex justify-between items-center">
+                <button type="button" id="closeConfirmDeleteModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                <button type="button" id="confirmDeleteButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
             </div>
         </div>
+    </div>
 
-        <div class='summary-container bg-white shadow-lg rounded-lg p-6 mb-8'> <!-- Gunakan kelas Tailwind CSS untuk mengatur tampilan kontainer ringkasan -->
-            <div id="default-styled-tab-content">
-                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <div class="flex items-center justify-between bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                        <h5 class="text-3xl font-bold text-gray-900 dark:text-white">Line</h5>
-                        <svg class="w-6 h-6 text-gray-800 dark:text-white ml-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
-                        </svg>
+    <!-- Custom Alert Modal -->
+    <div id="custom-alert" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
+            <h2 class="text-xl font-bold mb-4">PJM Says</h2>
+            <p id="custom-alert-message" class="mb-4">This is a custom alert message.</p>
+            <div class="flex justify-between items-end">
+                <button onclick="closeAlert()" class="justify-end bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Close</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function showAlert(message) {
+        document.getElementById('custom-alert-message').textContent = message;
+        document.getElementById('custom-alert').classList.remove('hidden');
+    }
+
+    function closeAlert() {
+        document.getElementById('custom-alert').classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const globalDescs = document.getElementById('globalDescs');
+
+        getQueryParams();
+        setupAutoRefresh();
+
+        async function fetchAndDisplayGlobalDescriptions() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            const response = await fetch(`http://127.0.0.1:8000/api/showglobaldescription`);
+            const descriptions = await response.json();
+
+            const filteredDescriptions = descriptions.filter(desc => {
+                return desc.line === line && desc.month === month && desc.week === week && desc.year === year;
+            });
+
+            globalDescs.innerHTML = ''; // Clear existing descriptions
+
+            filteredDescriptions.forEach(desc => {
+                const descButton = document.createElement('div');
+                descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
+                descButton.style.width = '90%';
+                descButton.textContent = desc.description;
+                descButton.onclick = function() {
+                    viewGlobalDescription(desc);
+                };
+                globalDescs.appendChild(descButton);
+            });
+        }
+
+
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const year = params.get('year');
+
+            document.getElementById('line-display').textContent = line ? line : 'N/A';
+            document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
+            document.getElementById('year-display').textContent = year ? year : 'N/A';
+
+            setupWeekButtons(line, year, month);
+        }
+
+        async function fetchDataForWeek(line, year, month, week) {
+            const operationsUrl = `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`;
+            const machinesUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`;
+            const machineInfoUrl = `http://127.0.0.1:8000/api/showmachine`;
+
+            try {
+                const [operationsResponse, machinesResponse, machineInfoResponse] = await Promise.all([
+                    fetch(operationsUrl),
+                    fetch(machinesUrl),
+                    fetch(machineInfoUrl)
+                ]);
+
+                const operationsData = await operationsResponse.json();
+                const machinesData = await machinesResponse.json();
+                const machineInfoData = await machineInfoResponse.json();
+
+                const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
+
+                updateURL(line, year, month, week);
+                displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
+                await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        function updateURL(line, year, month, week) {
+            history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
+        }
+
+        function displayMachineData(operations, machines, machineInfoMap, week) {
+            const dataContainer = document.getElementById('dataContainer');
+            dataContainer.innerHTML = '';  // Clear existing rows
+
+            // Create a map for machine operations
+            const machineOperationsMap = new Map();
+            operations.forEach(operation => {
+                if (!machineOperationsMap.has(operation.machine_id)) {
+                    machineOperationsMap.set(operation.machine_id, []);
+                }
+                machineOperationsMap.get(operation.machine_id).push(operation);
+            });
+
+            machines.forEach(machine => {
+                const category = machineInfoMap.get(machine.machine_id);  // Fetch category using machine_id
+
+                const machineRow = document.createElement('div');
+                machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
+                machineRow.innerHTML = `
+                    <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                        <div class="flex flex-col justify-center items-center w-full h-full">
+                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                                <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                                ${category}
+                            </span>
+                            <span>${machine.machine_name}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
-</section>
+                `;
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-<script src="{{ asset('js/Navbar/script.js') }}"></script>
+                // Add day columns based on header days
+                for (let i = 1; i <= 8; i++) {
+                    const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
+                    const dateParts = headerDate.split(' ');
+                    const day = parseInt(dateParts[0]);
+                    const dayColumn = document.createElement('div');
+                    dayColumn.id = `daydata${machine.id}-${day}`;
+                    dayColumn.className = 'col-span-1 day-column';
+                    machineRow.appendChild(dayColumn);
+                }
+
+                dataContainer.appendChild(machineRow);
+
+                // Populate machine row with operations
+                const machineOperations = machineOperationsMap.get(machine.id) || [];
+                machineOperations.forEach(operation => {
+                    const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
+                    if (dayColumn) {
+                        const entry = document.createElement('div');
+                        entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
+                        entry.innerHTML = `
+                            <p><strong>${operation.code}</strong></p>
+                            <p>${operation.time}</p>
+                            ${operation.status ? `<p>${operation.status}</p>` : ''}
+                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                        `;
+                        entry.onclick = function() {
+                            openEditModal(operation);
+                        };
+
+                        if (operation.notes) {
+                            entry.onmouseenter = function(event) {
+                                showNotesPopup(event, operation.notes);
+                            };
+                            entry.onmouseleave = function() {
+                                hideNotesPopup();
+                            };
+                        }
+
+                        dayColumn.appendChild(entry);
+                    }
+                });
+            });
+        }
+
+        function showNotesPopup(event, notes) {
+            const popup = document.createElement('div');
+            popup.className = 'notes-popup';
+            popup.textContent = notes;
+            document.body.appendChild(popup);
+            const rect = event.target.getBoundingClientRect();
+            popup.style.top = `${rect.top + window.scrollY}px`;
+            popup.style.left = `${rect.right + 5 + window.scrollX}px`;
+        }
+
+        function hideNotesPopup() {
+            const popup = document.querySelector('.notes-popup');
+            if (popup) {
+                popup.remove();
+            }
+        }
+
+        function getMonthName(month) {
+            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            return monthNames[month - 1];
+        }
+
+        function setupWeekButtons(line, year, month) {
+            const weeksList = document.getElementById('weeksList');
+            weeksList.innerHTML = '';  // Clear existing buttons
+
+            // Get the start and end dates of the month
+            const startDate = new Date(year, month - 1, 1);
+
+            // Adjust the startDate to the previous Monday if it does not start on a Monday
+            if (startDate.getDay() !== 1) {
+                while (startDate.getDay() !== 1) {
+                    startDate.setDate(startDate.getDate() + 1);
+                }
+                startDate.setDate(startDate.getDate() - 7); // Go back 7 days to get the Monday of the previous week
+            }
+
+            let currentDate = new Date(startDate);
+            let weeks = [];
+            let week = [formatDate(currentDate)]; // Start the first week with the adjusted or found Monday
+
+            currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+
+            // Loop through the days, ensuring each week runs from Monday to the following Monday
+            while (true) {
+                week.push(formatDate(currentDate)); // Add the current day to the current week
+
+                if (currentDate.getDay() === 1 && week.length > 1) { // If it's Monday and not the first iteration
+                    weeks.push(week); // Complete the current week
+                    week = [formatDate(currentDate)]; // Start a new week with this Monday
+                }
+                currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+
+                // Break the loop if we've moved into the next month
+                if (currentDate.getMonth() !== month - 1 && currentDate.getDay() === 1) {
+                    break;
+                }
+            }
+
+            // Ensure the last week runs until the next Monday
+            while (currentDate.getDay() !== 1) { // Move to the last Monday of the month
+                week.push(formatDate(currentDate));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            week.push(formatDate(currentDate)); // Add the final Monday
+
+            if (week.length > 1) {
+                weeks.push(week);
+            }
+
+            // Create buttons for each week
+            weeks.forEach((week, index) => {
+                const weekButton = document.createElement('button');
+                weekButton.textContent = `Week ${index + 1}`;
+                weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
+                weekButton.onclick = () => {
+                    fetchDataForWeek(line, year, month, index + 1);
+                    updateURL(line, year, month, index + 1);
+                    document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove('text-purple-600'));
+                    weekButton.classList.add('text-purple-600');
+                    displayWeek(week);
+                };
+                weeksList.appendChild(weekButton);
+            });
+
+            // Automatically click the first week button
+            if (weeksList.children.length > 0) {
+                const params = new URLSearchParams(window.location.search);
+                const weekParam = params.get('week');
+                if (weekParam && weeksList.children[weekParam - 1]) {
+                    weeksList.children[weekParam - 1].click(); // Click the specified week
+                } else {
+                    weeksList.children[0].click(); // Default to the first week
+                }
+            }
+        }
+
+        function formatDate(date) {
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
+        }
+
+        function getWeekNumber(date) {
+            const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+            const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+            return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        }
+
+        function displayWeek(dates) {
+            // Show the header days when a week is displayed
+            document.getElementById('headerDays').style.display = 'block';
+
+            dates.forEach((date, index) => {
+                if (index < 8) { // Ensure we only update the 8 days
+                    const dayElement = document.getElementById(`day${index + 1}`);
+                    const dateParts = date.split(" ");
+                    dayElement.children[0].textContent = dateParts[0]; // Day name
+                    dayElement.children[1].textContent = `${dateParts[1]} ${dateParts[2]} ${dateParts[3]}`; // Full date
+                }
+            });
+        }
+
+        function setupAutoRefresh() {
+            setInterval(() => {
+                const params = new URLSearchParams(window.location.search);
+                const line = params.get('line');
+                const month = params.get('month');
+                const week = params.get('week');
+                const year = params.get('year');
+
+                if (line && month && week && year) {
+                    fetchDataForWeek(line, year, month, week);
+                }
+            }, 30000); // Refresh every 30 seconds
+        }
+
+    });
+
+    function increaseHour() {
+        const hoursInput = document.getElementById('hours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours < 23) {
+            hours += 1;
+        } else {
+            hours = 0;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function decreaseHour() {
+        const hoursInput = document.getElementById('hours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours > 0) {
+            hours -= 1;
+        } else {
+            hours = 23;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function increaseMinute() {
+        const minutesInput = document.getElementById('minutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes < 59) {
+            minutes += 1;
+        } else {
+            minutes = 0;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
+
+    function decreaseMinute() {
+        const minutesInput = document.getElementById('minutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes > 0) {
+            minutes -= 1;
+        } else {
+            minutes = 59;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
+
+    function increaseHourEdit() {
+        const hoursInput = document.getElementById('editHours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours < 23) {
+            hours += 1;
+        } else {
+            hours = 0;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function decreaseHourEdit() {
+        const hoursInput = document.getElementById('editHours');
+        let hours = parseInt(hoursInput.value, 10);
+        if (hours > 0) {
+            hours -= 1;
+        } else {
+            hours = 23;
+        }
+        hoursInput.value = hours.toString().padStart(2, '0');
+    }
+
+    function increaseMinuteEdit() {
+        const minutesInput = document.getElementById('editMinutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes < 59) {
+            minutes += 1;
+        } else {
+            minutes = 0;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
+
+    function decreaseMinuteEdit() {
+        const minutesInput = document.getElementById('editMinutes');
+        let minutes = parseInt(minutesInput.value, 10);
+        if (minutes > 0) {
+            minutes -= 1;
+        } else {
+            minutes = 59;
+        }
+        minutesInput.value = minutes.toString().padStart(2, '0');
+    }
+</script>
+
 </body>
 </html>
