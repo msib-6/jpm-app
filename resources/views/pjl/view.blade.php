@@ -59,19 +59,16 @@
         </div>
     </div>
 
+    <!--  Button Bawah  -->
     <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
-
         <div class="flex justify-between items-center">
             <div class="flex justify-start">
-                <button id="deleteWeekButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Week</button>
-            </div>
-
-            <div class="flex justify-end">
                 <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
+            </div>
+            <div class="flex justify-end">
                 <button id="sendWeekButton" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Send Week</button>
             </div>
         </div>
-
     </div>
 
 
@@ -765,6 +762,7 @@
             const line = params.get('line');
             const month = params.get('month');
             const year = params.get('year');
+            const week = params.get('week');
 
             document.getElementById('line-display').textContent = line ? line : 'N/A';
             document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
@@ -940,7 +938,7 @@
             return monthNames.indexOf(monthName) + 1;
         }
 
-        function setupWeekButtons(line, year, month) {
+        function setupWeekButtons(line, year, month, activeWeek) {
             const weeksList = document.getElementById('weeksList');
             weeksList.innerHTML = '';  // Clear existing buttons
 
@@ -993,6 +991,11 @@
                 const weekButton = document.createElement('button');
                 weekButton.textContent = `Week ${index + 1}`;
                 weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
+                if (index + 1 === parseInt(activeWeek)) {
+                    weekButton.classList.add('text-purple-600');
+                } else {
+                    weekButton.classList.add('text-gray-400', 'cursor-not-allowed');
+                }
                 weekButton.onclick = () => {
                     fetchDataForWeek(line, year, month, index + 1);
                     updateURL(line, year, month, index + 1);
@@ -1003,9 +1006,11 @@
                 weeksList.appendChild(weekButton);
             });
 
-            // Automatically click the first week button
-            if (weeksList.children.length > 0) {
-                weeksList.children[0].click(); // Using children[0] to ensure it's an element
+            // Automatically click the specified week button
+            const params = new URLSearchParams(window.location.search);
+            const weekParam = params.get('week');
+            if (weekParam && weeksList.children[weekParam - 1]) {
+                weeksList.children[weekParam - 1].click(); // Click the specified week
             }
         }
 

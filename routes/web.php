@@ -43,6 +43,7 @@ Route::middleware(['auth', 'line'])->group(function () {
         $line = $request->query('line');  // Access 'line' parameter
         $year = $request->query('year');  // Access 'year' parameter
         $month = $request->query('month'); // Access 'month' parameter
+        $week = $request->query('week');
 
         return view('pjl.view', compact('line', 'year', 'month'));
     })->name('pjl.view');
@@ -56,6 +57,7 @@ Route::middleware(['auth', 'line'])->group(function () {
     })->name('pjl.onlyView');
 
     Route::get('/pjl/{line}/pm', function (Request $request, $line) {
+        $line = $request->query('line');  // Access 'line' parameter
         $year = $request->query('year');
         $month = $request->query('month');
         return view('pjl.pm', compact('line', 'year', 'month'));

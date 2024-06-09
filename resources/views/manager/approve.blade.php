@@ -14,7 +14,7 @@
     <nav class="flex ml-16" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
             <li class="inline-flex items-center">
-                <a href="/pjl/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                <a href="/manager/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 1 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
                     </svg>
@@ -26,7 +26,7 @@
                     <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                     </svg>
-                    <a href="/pjl/view" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">PJL</a>
+                    <a href="/manager/view" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">PJL</a>
                 </div>
             </li>
         </ol>
@@ -73,6 +73,19 @@
         </div>
     </div>
 
+    <!--  Button Bawah  -->
+    <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
+        <div class="flex justify-between items-center">
+            <div class="flex justify-start">
+                <button id="returnWeekButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Return JPM</button>
+            </div>
+            <div class="flex justify-end">
+                <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
+                <button id="approveWeekButton" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Approve</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Confirm Delete -->
     <div id="confirmDeleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
@@ -110,6 +123,8 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const globalDescs = document.getElementById('globalDescs');
+        const approveButton = document.getElementById('approveWeekButton');
+        const returnButton = document.getElementById('returnWeekButton');
 
         getQueryParams();
         setupAutoRefresh();
@@ -148,12 +163,13 @@
             const line = params.get('line');
             const month = params.get('month');
             const year = params.get('year');
+            const week = params.get('week');
 
             document.getElementById('line-display').textContent = line ? line : 'N/A';
             document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
             document.getElementById('year-display').textContent = year ? year : 'N/A';
 
-            setupWeekButtons(line, year, month);
+            setupWeekButtons(line, year, month, week);
         }
 
         async function fetchDataForWeek(line, year, month, week) {
@@ -176,6 +192,20 @@
 
                 updateURL(line, year, month, week);
                 displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
+
+                const isApproved = operationsData.operations.some(operation => operation.is_approved === 1);
+                if (isApproved) {
+                    approveButton.disabled = true;
+                    returnButton.disabled = true;
+                    approveButton.classList.add('cursor-not-allowed', 'opacity-50');
+                    returnButton.classList.add('cursor-not-allowed', 'opacity-50');
+                } else {
+                    approveButton.disabled = false;
+                    returnButton.disabled = false;
+                    approveButton.classList.remove('cursor-not-allowed', 'opacity-50');
+                    returnButton.classList.remove('cursor-not-allowed', 'opacity-50');
+                }
+
                 await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -283,7 +313,7 @@
             return monthNames[month - 1];
         }
 
-        function setupWeekButtons(line, year, month) {
+        function setupWeekButtons(line, year, month, activeWeek) {
             const weeksList = document.getElementById('weeksList');
             weeksList.innerHTML = '';  // Clear existing buttons
 
@@ -335,26 +365,29 @@
             weeks.forEach((week, index) => {
                 const weekButton = document.createElement('button');
                 weekButton.textContent = `Week ${index + 1}`;
-                weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
-                weekButton.onclick = () => {
-                    fetchDataForWeek(line, year, month, index + 1);
-                    updateURL(line, year, month, index + 1);
-                    document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove('text-purple-600'));
+                weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0';
+                if (index + 1 === parseInt(activeWeek)) {
                     weekButton.classList.add('text-purple-600');
-                    displayWeek(week);
+                } else {
+                    weekButton.classList.add('text-gray-400', 'cursor-not-allowed');
+                }
+                weekButton.onclick = () => {
+                    if (weekButton.classList.contains('text-purple-600')) {
+                        fetchDataForWeek(line, year, month, index + 1);
+                        updateURL(line, year, month, index + 1);
+                        document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove('text-purple-600'));
+                        weekButton.classList.add('text-purple-600');
+                        displayWeek(week);
+                    }
                 };
                 weeksList.appendChild(weekButton);
             });
 
-            // Automatically click the first week button
-            if (weeksList.children.length > 0) {
-                const params = new URLSearchParams(window.location.search);
-                const weekParam = params.get('week');
-                if (weekParam && weeksList.children[weekParam - 1]) {
-                    weeksList.children[weekParam - 1].click(); // Click the specified week
-                } else {
-                    weeksList.children[0].click(); // Default to the first week
-                }
+            // Automatically click the specified week button
+            const params = new URLSearchParams(window.location.search);
+            const weekParam = params.get('week');
+            if (weekParam && weeksList.children[weekParam - 1]) {
+                weeksList.children[weekParam - 1].click(); // Click the specified week
             }
         }
 
@@ -397,6 +430,30 @@
             }, 30000); // Refresh every 30 seconds
         }
 
+        approveButton.onclick = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const year = params.get('year');
+            const month = params.get('month');
+            const week = params.get('week');
+
+            if (confirm('Are you sure you want to approve this week\'s JPM?')) {
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/api/approve?year=${year}&month=${month}&week=${week}`, {
+                        method: 'GET'
+                    });
+
+                    if (response.ok) {
+                        alert('Approval successful');
+                        fetchDataForWeek(params.get('line'), year, month, week);
+                    } else {
+                        alert('Failed to approve the week');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while approving the week');
+                }
+            }
+        };
     });
 
     function increaseHour() {
