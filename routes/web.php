@@ -39,15 +39,14 @@ Route::middleware(['auth', 'line'])->group(function () {
         return view('pjl.mesin', ['line' => $line]);
     })->name('pjl.line.mesin');
 
-    Route::get('/pjl/view', function (Request $request) {
-        $line = $request->query('line');  // Access 'line' parameter
+    Route::get('/pjl/{line}/view', function (Request $request, $line) {
         $year = $request->query('year');  // Access 'year' parameter
         $month = $request->query('month'); // Access 'month' parameter
 
         return view('pjl.view', compact('line', 'year', 'month'));
     })->name('pjl.view');
 
-    Route::get('/pjl/onlyView', function (Request $request) {
+    Route::get('/pjl/{line}/onlyView', function (Request $request, $line) {
         $line = $request->query('line');  // Access 'line' parameter
         $year = $request->query('year');  // Access 'year' parameter
         $month = $request->query('month'); // Access 'month' parameter
