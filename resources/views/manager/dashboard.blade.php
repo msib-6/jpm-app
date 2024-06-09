@@ -28,15 +28,13 @@
         </div>
     </div>
 
+    <div id="default-styled-tab-content" class="bg-white shadow-lg rounded-3xl my-4 mx-auto flex items-center" style="width: 91.666667%;">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden w-full" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+            <!-- Data Need Approve Disini -->
+        </div>
 
-        <div id="default-styled-tab-content bg-white shadow-lg rounded-3xl my-4 mx-auto flex items-center style="width: 91.666667%;">
-            <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                <!-- Data Need Approve Disini -->
-            </div>
-
-            <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                <!-- Data Approved Disini -->
-            </div>
+        <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden w-full" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+            <!-- Data Approved Disini -->
         </div>
     </div>
 </div>
@@ -45,7 +43,30 @@
 @section('scripts')
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('http://127.0.0.1:8000/api/showwaitingapprovalcard')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('styled-profile');
+                data.WaitingApproval.forEach(item => {
+                    const button = document.createElement('button');
+                    button.classList.add('my-2', 'bg-white', 'p-2', 'shadow-md', 'py-4', 'px-4', 'text-black', 'rounded-md', 'flex', 'justify-between', 'items-center', 'w-full');
+                    button.innerHTML = `
+                <div>
+                    <h5 class="text-xl font-bold text-black">${item.current_line}</h5>
+                    <h5 class="text-md font-normal text-black">Week ${item.week}, ${getMonthName(item.month)} ${item.year}</h5>
+                </div>
+            `;
+                    container.appendChild(button);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    });
 
+    function getMonthName(monthNumber) {
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        return months[monthNumber - 1];
+    }
 </script>
 
 @endsection

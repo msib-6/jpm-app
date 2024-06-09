@@ -15,19 +15,19 @@ class CheckLine
      * @var array
      */
     protected $roleRoutes = [
-        'Line1' => 'Line1',
-        'Line2' => 'Line2',
-        'Line3' => 'Line3',
-        'Line4' => 'Line4',
-        'Line5' => 'Line5',
-        'Line7' => 'Line7',
-        'Line8a' => 'Line8a',
-        'Line8b' => 'Line8b',
-        'Line10' => 'Line10',
-        'Line11' => 'Line11',
-        'Line12' => 'Line12',
-        'Line13' => 'Line13',
-        'Line14' => 'Line14'
+        'Line1' => 'line1',
+        'Line2' => 'line2',
+        'Line3' => 'line3',
+        'Line4' => 'line4',
+        'Line5' => 'line5',
+        'Line7' => 'line7',
+        'Line8a' => 'line8a',
+        'Line8b' => 'line8b',
+        'Line10' => 'line10',
+        'Line11' => 'line11',
+        'Line12' => 'line12',
+        'Line13' => 'line13',
+        'Line14' => 'line14'
     ];
 
     /**
