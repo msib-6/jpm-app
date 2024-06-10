@@ -129,6 +129,7 @@
                 <div class="mb-4">
                     <label for="dataStatus" class="block text-gray-700">Status</label>
                     <select id="dataStatus" class="w-full px-3 py-2 border rounded-lg">
+                        <option value=""></option>
                         <option value="SUPERVISI">SUPERVISI</option>
                         <option value="VALIDASI">VALIDASI</option>
                         <option value="MICRO">MICRO</option>
@@ -216,6 +217,7 @@
                 <div class="mb-4">
                     <label for="editDataStatus" class="block text-gray-700">Status</label>
                     <select id="editDataStatus" class="w-full px-3 py-2 border rounded-lg">
+                        <option value=""></option>
                         <option value="SUPERVISI">SUPERVISI</option>
                         <option value="VALIDASI">VALIDASI</option>
                         <option value="MICRO">MICRO</option>
@@ -680,16 +682,38 @@
             const week = params.get('week');
             const year = params.get('year');
 
-            const response = await fetch(`http://127.0.0.1:8000/api/showglobaldescription`);
-            const descriptions = await response.json();
+            let descriptionPromises = [];
+            if (week === "1") {
+                const prevMonth = (month - 1 === 0) ? 12 : month - 1;
+                const prevYear = (month - 1 === 0) ? year - 1 : year;
 
-            const filteredDescriptions = descriptions.filter(desc => {
-                return desc.line === line && desc.month === month && desc.week === week && desc.year === year;
-            });
+                descriptionPromises = [
+                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${year}&month=${month}&week=${week}`),
+                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`),
+                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`)
+                ];
+            } else {
+                descriptionPromises = [
+                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${year}&month=${month}&week=${week}`)
+                ];
+            }
+
+            const descriptionsResponses = await Promise.all(descriptionPromises);
+            let descriptions = [];
+            for (const response of descriptionsResponses) {
+                const data = await response.json();
+                descriptions = descriptions.concat(data);
+            }
+
+            const uniqueDescriptions = descriptions.filter((desc, index, self) =>
+                    index === self.findIndex((d) => (
+                        d.id === desc.id
+                    ))
+            );
 
             globalDescs.innerHTML = ''; // Clear existing descriptions
 
-            filteredDescriptions.forEach(desc => {
+            uniqueDescriptions.forEach(desc => {
                 const descButton = document.createElement('button');
                 descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
                 descButton.style.width = '90%';
@@ -756,7 +780,6 @@
             viewMachineDataModal.classList.remove('hidden');
         }
 
-
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
@@ -772,25 +795,68 @@
         }
 
         async function fetchDataForWeek(line, year, month, week) {
-            const operationsUrl = `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`;
-            const machinesUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`;
-            const machineInfoUrl = `http://127.0.0.1:8000/api/showmachine`;
+            let operationsUrls = [];
+            let machinesUrls = [];
+            let machineInfoUrls = [];
+
+            if (week === "1") {
+                const prevMonth = (month - 1 === 0) ? 12 : month - 1;
+                const prevYear = (month - 1 === 0) ? year - 1 : year;
+
+                operationsUrls = [
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                ];
+
+                machinesUrls = [
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                ];
+
+                machineInfoUrls = [
+                    `http://127.0.0.1:8000/api/showmachine`
+                ];
+            } else {
+                operationsUrls = [
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
+                ];
+
+                machinesUrls = [
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`
+                ];
+
+                machineInfoUrls = [
+                    `http://127.0.0.1:8000/api/showmachine`
+                ];
+            }
 
             try {
-                const [operationsResponse, machinesResponse, machineInfoResponse] = await Promise.all([
-                    fetch(operationsUrl),
-                    fetch(machinesUrl),
-                    fetch(machineInfoUrl)
+                const [operationsResponses, machinesResponses, machineInfoResponse] = await Promise.all([
+                    Promise.all(operationsUrls.map(url => fetch(url))),
+                    Promise.all(machinesUrls.map(url => fetch(url))),
+                    fetch(machineInfoUrls[0])
                 ]);
 
-                const operationsData = await operationsResponse.json();
-                const machinesData = await machinesResponse.json();
+                let operationsData = [];
+                for (const response of operationsResponses) {
+                    const data = await response.json();
+                    operationsData = operationsData.concat(data.operations);
+                }
+
+                let machinesData = [];
+                for (const response of machinesResponses) {
+                    const data = await response.json();
+                    machinesData = machinesData.concat(data);
+                }
+
                 const machineInfoData = await machineInfoResponse.json();
 
                 const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
                 updateURL(line, year, month, week);
-                displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
+                displayMachineData(operationsData, machinesData, machineInfoMap, week);
                 await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -1015,7 +1081,7 @@
         }
 
         function formatDate(date) {
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const days = ['Minggu', 'Senin', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
         }
 
