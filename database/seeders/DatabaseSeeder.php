@@ -75,58 +75,5 @@ class DatabaseSeeder extends Seeder
             'date' => '2024-04-01 00:00:00',
         ]);
 
-        MachineOperation::create([
-            'machine_id' => 1,
-            'year' => '2024',
-            'month' => '4',
-            'week' => '1',
-            'day' => '7',
-            'code' => 'ABC123',
-            'time' => '08:00',
-            'status' => 'PJL',
-            'notes' => 'Notes 1',
-            'current_line' => 'Line1',
-            'is_changed' => true,
-            'changed_by' => 'None',
-            'change_date' => now(),
-            'is_approved' => false,
-            'approved_by' => 'None',
-        ]);
-        
-        MachineOperation::create([
-            'machine_id' => 1,
-            'year' => '2024',
-            'month' => '4',
-            'week' => '1',
-            'day' => '1',
-            'code' => 'ABC123',
-            'time' => '09:00',
-            'status' => 'PJL',
-            'notes' => 'Notes 1',
-            'current_line' => 'Line1',
-            'is_changed' => true,
-            'changed_by' => 'None',
-            'change_date' => now(),
-            'is_approved' => false,
-            'approved_by' => 'None',
-        ]);
-
-        MachineOperation::create([
-            'machine_id' => 1,
-            'year' => '2024',
-            'month' => '4',
-            'week' => '1',
-            'day' => '2',
-            'code' => 'ABC123',
-            'time' => '10:00',
-            'status' => 'PJL',
-            'notes' => 'Notes 1',
-            'current_line' => 'Line1',
-            'is_changed' => true,
-            'changed_by' => 'None',
-            'change_date' => now(),
-            'is_approved' => false,
-            'approved_by' => 'None',
-        ]);
     }
 }

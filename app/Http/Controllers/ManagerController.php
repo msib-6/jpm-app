@@ -112,6 +112,10 @@ class ManagerController extends Controller
             return response()->json(['message' => 'No MachineOperations found'], 404);
         }
 
+        if (is_null($approvedBy)) {
+            $approvedBy = '';
+        }
+
         if ($machineOperations->contains('is_changed', true)) {
             foreach ($machineOperations as $machineOperation) {
 
@@ -120,6 +124,7 @@ class ManagerController extends Controller
                     'changed_by' => '',
                     'is_approved' => true,
                     'approved_by' => $approvedBy,
+                    'is_sent' => false,
                 ]);
 
             }
