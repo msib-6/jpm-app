@@ -19,17 +19,7 @@
     <nav>
         <i class='bx bx-menu'></i>
         <form action="#">
-            <div class="form-input">
-                <input type="search" placeholder="Search...">
-                <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
-            </div>
         </form>
-        <input type="checkbox" id="switch-mode" style="display: none;">
-        <label for="switch-mode" class="switch-mode"></label>
-        <a href="#" class="notification">
-            <i class='bx bxs-bell'></i>
-            <span class="num">8</span>
-        </a>
         <div class="profile" style="position: relative;">
             <img src="{{ asset('avatar1.png') }}" id="profileImage" style="cursor: pointer;">
             <div class="dropdown" id="profileDropdown" style="display: none; position: absolute; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; z-index: 1000;">
