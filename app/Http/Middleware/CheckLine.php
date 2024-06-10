@@ -72,6 +72,11 @@ class CheckLine
                 // If the role does not exist in the roleRoutes array, return a 403 response
                 abort(403, 'Unauthorized access');
             }
+
+            // Additional check: Ensure the user is not trying to access a role they do not have
+            if ($requestedLine !== $role) {
+                abort(403, 'Unauthorized access');
+            }
         } else {
             // If the user is not authenticated, return a 403 response
             abort(403, 'Unauthorized access');

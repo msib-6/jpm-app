@@ -21,10 +21,32 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                $user = Auth::user();
+                $role = ucfirst(strtolower($user->role)); // Ubah huruf pertama menjadi besar
+
+                $lineRoles = [
+                    'Line1', 'Line2', 'Line3', 'Line4', 'Line5',
+                    'Line7', 'Line8a', 'Line8b', 'Line10', 'Line11',
+                    'Line12', 'Line13', 'Line14'
+                ];
+
+                if (in_array($role, $lineRoles)) {
+                    return redirect()->route('pjl.line.dashboard', ['line' => $role]);
+                }
+
+                // Redirect to the appropriate dashboard based on the user's role
+                switch ($role) {
+                    case 'Admin':
+                        return redirect('/admin');
+                    case 'Manager':
+                        return redirect('/manager/dashboard');
+                    default:
+                        return redirect('/dashboard'); // Ubah ini ke halaman dashboard yang sesuai
+                }
             }
         }
 
         return $next($request);
     }
 }
+

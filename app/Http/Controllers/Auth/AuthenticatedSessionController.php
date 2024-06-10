@@ -62,7 +62,7 @@ class AuthenticatedSessionController extends Controller
             return redirect('/manager/dashboard');
         default:
             \Log::info('Redirecting to home');
-            return redirect(RouteServiceProvider::HOME);
+            return redirect('/dashboard');
     }
 }
 
@@ -92,5 +92,20 @@ class AuthenticatedSessionController extends Controller
     {
         $this->checkRole('manager');
         // Logic for manager only
+    }
+    protected function checkRole($role)
+    {
+        $user = Auth::user();
+
+        if ($user->role !== ucfirst(strtolower($role))) {
+            // Redirect based on user role
+            if (in_array($user->role, ['Line1', 'Line2', 'Line3', 'Line4', 'Line5', 'Line7', 'Line8a', 'Line8b', 'Line10', 'Line11', 'Line12', 'Line13', 'Line14'])) {
+                return redirect()->route('pjl.line.dashboard', ['line' => $user->role]);
+            } elseif ($user->role === 'Manager') {
+                return redirect('/manager/dashboard');
+            } elseif ($user->role === 'Admin') {
+                return redirect('/admin');
+            }
+        }
     }
 }
