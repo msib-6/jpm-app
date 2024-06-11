@@ -7,7 +7,7 @@
         <li id="nav-dashboard" class="side-item">
             <a href="{{ route('manager.dashboard') }}">
                 <i class='bx bxs-dashboard'></i>
-                <span class="text">Dashboard</span>
+                <span class="text">Status</span>
             </a>
         </li>
     </ul>
