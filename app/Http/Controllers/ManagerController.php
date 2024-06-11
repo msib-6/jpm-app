@@ -97,14 +97,14 @@ class ManagerController extends Controller
 
     public function approve(Request $request) {
         $userId = auth()->id();
-        $current_line = $request->input('current_line');
+        $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
         $approvedBy = $userId;
 
 
-        $machineOperations = MachineOperation::where('current_line', $current_line)
+        $machineOperations = MachineOperation::where('line', $line)
             ->where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
@@ -118,49 +118,49 @@ class ManagerController extends Controller
             $approvedBy = '';
         }
 
-        if ($machineOperations->contains('is_changed', true)) {
-            foreach ($machineOperations as $machineOperation) {
-
-                $machineOperation->update([
-                    'is_changed' => false,
-                    'changed_by' => '',
-                    'is_approved' => true,
-                    'approved_by' => $approvedBy,
-                    'is_sent' => false,
-                ]);
-
-            }
-
-            $manager = Manager::where('current_line', $current_line)
-                ->where('year', $year)
-                ->where('month', $month)
-                ->where('week', $week)
-                ->first();
-
-            if ($manager) {
-                $manager->update([
-                    'revision_number' => $manager->revision_number + 1,
-                ]);
-            } else {
-                Manager::create([
-                    'current_line' => $current_line,
-                    'year' => $year,
-                    'month' => $month,
-                    'week' => $week,
-                    'revision_number' => 1, // Starting revision number if creating new
-                ]);
-            }
-
-            Audits::create([
-                'users_id' => $userId,
-                'machineoperation_id' => $machineOperation->id,
-                'event' => 'approve',
-                'changes' => 'Approve changes',
-            ]);
-        } else {
+        if ($machineOperations->contains('is_changed', false)) {
             return response()->json(['message' => 'No changes to approve'], 404);
         }
 
+        foreach ($machineOperations as $machineOperation) {
+
+            $machineOperation->update([
+                'is_changed' => false,
+                'changed_by' => '',
+                'is_approved' => true,
+                'approved_by' => $approvedBy,
+                'is_sent' => false,
+            ]);
+
+        }
+
+        $manager = Manager::where('line', $line)
+            ->where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->first();
+
+        if ($manager) {
+            $manager->update([
+                'revision_number' => $manager->revision_number + 1,
+            ]);
+        } else {
+            Manager::create([
+                'line' => $line,
+                'year' => $year,
+                'month' => $month,
+                'week' => $week,
+                'revision_number' => 1, // Starting revision number if creating new
+            ]);
+        }
+
+        Audits::create([
+            'users_id' => $userId,
+            'machineoperation_id' => $machineOperation->id,
+            'event' => 'approve',
+            'changes' => 'Approve changes',
+        ]);
+        
         return response()->json(['message' => 'Approval successful'], 200);
     }
 

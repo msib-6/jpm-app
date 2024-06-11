@@ -378,6 +378,7 @@ class MachineController extends Controller
 
             foreach ($operations as $operation) {
                 $operation->update(['is_sent' => true]);
+                $operation->update(['is_approved' => false]);
             }
 
             Audits::create([
