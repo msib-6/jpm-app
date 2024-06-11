@@ -42,6 +42,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Fetch and display waiting approval data
         fetch('http://127.0.0.1:8000/api/showwaitingapprovalcard')
             .then(response => response.json())
             .then(data => {
@@ -62,9 +63,8 @@
                 });
             })
             .catch(error => console.error('Error fetching data:', error));
-    });
 
-    document.addEventListener('DOMContentLoaded', function() {
+        // Fetch and display approved data
         fetch('http://127.0.0.1:8000/api/showapprovedcard')
             .then(response => response.json())
             .then(data => {
