@@ -70,6 +70,7 @@ Route::get('/showaudit', [AuditController::class, 'showAudit'])->name('show.audi
 //Show Approval Route
 Route::get('/showwaitingapproval', [ManagerController::class, 'showWaitingApproval'])->name('show.waiting.approval');
 Route::get('/showwaitingapprovalcard', [ManagerController::class, 'showWaitingApprovalCard'])->name('show.waiting.approval.card');
+Route::get('/showapprovedcard', [ManagerController::class, 'showApprovedCard'])->name('show.approved.card');
 
 //Manager Route
 Route::post('/approve', [ManagerController::class, 'approve'])->name('approve');

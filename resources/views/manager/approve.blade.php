@@ -436,27 +436,21 @@
             const year = params.get('year');
             const month = params.get('month');
             const week = params.get('week');
-            const url = `http://127.0.0.1:8000/api/approve?current_line=${line}&year=${year}&month=${month}&week=${week}`;
 
-            if (confirm('Are you sure you want to approve this week\'s JPM?')) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    });
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/approve?current_line=${line}&year=${year}&month=${month}&week=${week}`, {
+                    method: 'POST'
+                });
 
-                    if (response.ok) {
-                        alert('Approval successful');
-                        fetchDataForWeek(line, year, month, week);
-                    } else {
-                        alert('Failed to approve the week');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('An error occurred while approving the week');
+                if (response.ok) {
+                    alert('Approval successful');
+                    fetchDataForWeek(line, year, month, week);
+                } else {
+                    alert('Failed to approve the week');
                 }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while approving the week');
             }
         };
     });

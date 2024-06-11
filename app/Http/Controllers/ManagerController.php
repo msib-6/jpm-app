@@ -56,6 +56,43 @@ class ManagerController extends Controller
         return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
     }
 
+    //Show waiting approval in card
+    public function showApprovedCard(){
+        $ApprovedJPM = MachineOperation::where('is_approved', true)
+                                            ->where('is_changed', true)
+                                            ->where('is_sent', false)
+                                            ->get();
+
+        $ApprovedPerWeek = $ApprovedJPM->groupBy('week')->map(function ($weekGroup) {
+            return $weekGroup->first();
+        });
+
+        // Transform the collection to hide certain fields
+        $ApprovedFiltered = $ApprovedPerWeek->map(function($machine) {
+            return collect($machine)->except([
+                'id',
+                'machine_id',
+                'day',
+                'code',
+                'time',
+                'status',
+                'notes',
+                'is_changed',
+                'changed_by',
+                'change_date',
+                'is_approved',
+                'approved_by',
+                'created_at',
+                'is_rejected',
+                'rejected_by',
+                'updated_at',
+            ]);
+        })->values();
+
+        // Return the transformed collection as a JSON response
+        return response()->json(['ApprovedCard' => $ApprovedFiltered], 200);
+    }
+
     //Show waiting approval in detail (clicked card)
     public function showWaitingApproval(Request $request){
         $request->validate([
@@ -160,7 +197,7 @@ class ManagerController extends Controller
             'event' => 'approve',
             'changes' => 'Approve changes',
         ]);
-        
+
         return response()->json(['message' => 'Approval successful'], 200);
     }
 
