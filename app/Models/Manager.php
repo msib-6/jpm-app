@@ -14,6 +14,7 @@ class Manager extends Model
         'year',
         'month',
         'week',
+        'line',
         'revision_number',
     ];
 }
