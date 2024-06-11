@@ -819,7 +819,23 @@
                 machineInfoUrls = [
                     `http://127.0.0.1:8000/api/showmachine`
                 ];
-            } else {
+            } 
+            // else if (week === "5" || week === "6") {
+            //     countWeek5 = count(week===5);
+            //     countWeek6 = count(week===6);
+            //     if(countweek5+countweek6 <= 8) {
+
+            //     }
+            //     const nextMonth  = (month+1 === 13) ? 1 : month + 1;
+            //     const nextYear = (month+1 === 13) ? year + 1 : month + 1;
+
+            //     operationUrls = [
+            //         `http://127.0.0.1:8000/api/showmachineoperation?line=${nextMonth
+            //     ]
+            }
+            
+            
+            else {
                 operationsUrls = [
                     `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
                 ];
