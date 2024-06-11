@@ -75,7 +75,7 @@
                 <div id="bagian-2" class="hidden">
                     
                     <div class="p-6">
-                        <h3 class="text-4xl mb-8 font-bold">LINE</h3>
+                        <h3 class="text-4xl mb-4 font-bold">LINE</h3>
                         <div id="line-container" class="scrollable-container">
                             <!-- Line buttons will be populated here -->
                         </div>
@@ -266,7 +266,7 @@
                     lines.forEach(line => {
                         const button = document.createElement('button');
                         button.textContent = `${line}`;
-                        button.className = 'btn w-48 h-16 text-lg ml-4 mb-4 text-left';
+                        button.className = 'btn w-48 h-10 text-xl ml-4 mb-4 text-left';
                         button.addEventListener('click', () => selectLine(line));
                         lineContainer.appendChild(button);
                     });
