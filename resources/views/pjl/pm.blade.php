@@ -39,22 +39,22 @@
     </div>
 
     <div id="globalDescContainer" class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-start" style="width: 91.666667%;">
-        <div class="justify-start" style="max-height: 450px; overflow-y: auto;">
+        <div class="justify-start" style="max-height: 28em; overflow-y: auto;">
             <p class="text-2xl font-bold">View Data</p>
             <div id="dataContainer">
                 <!-- Dynamic machine data will be loaded here -->
             </div>
         </div>
-        <div class="justify-end">
+        <div class="justify-end" style="max-width: 28em; overflow-y: auto;">
             <h2 class="text-2xl font-bold mb-4">Add/Edit Data PM</h2>
             <form id="addDataForm">
                 <!-- Hidden field for operation ID -->
                 <input type="hidden" id="operationId">
 
                 <!-- Select Mesin Data -->
-                <div class="mb-4">
+                <div class="mb-4" >
                     <label for="machineSelect" class="block text-gray-700">Pilih Mesin</label>
-                    <select id="machineSelect" class="w-full px-3 py-2 border rounded-lg">
+                    <select id="machineSelect" class="w-full px-3 py-2 border rounded-lg" style="max-width: 28em;">
                         <option value="">Pilih Mesin</option>
                     </select>
                 </div>
