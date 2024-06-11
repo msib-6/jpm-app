@@ -675,54 +675,55 @@
             viewGlobalDescModal.classList.remove('hidden');
         }
 
-        async function fetchAndDisplayGlobalDescriptions() {
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const month = params.get('month');
-            const week = params.get('week');
-            const year = params.get('year');
-
+        async function fetchAndDisplayGlobalDescriptions(line, year, month, week) {
             let descriptionPromises = [];
+
             if (week === "1") {
                 const prevMonth = (month - 1 === 0) ? 12 : month - 1;
                 const prevYear = (month - 1 === 0) ? year - 1 : year;
 
                 descriptionPromises = [
-                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${year}&month=${month}&week=${week}`),
+                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${year}&month=${month}&week=1`),
                     fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`),
                     fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`)
                 ];
+
             } else {
                 descriptionPromises = [
                     fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${year}&month=${month}&week=${week}`)
                 ];
             }
 
-            const descriptionsResponses = await Promise.all(descriptionPromises);
-            let descriptions = [];
-            for (const response of descriptionsResponses) {
-                const data = await response.json();
-                descriptions = descriptions.concat(data);
+            try {
+                const descriptionsResponses = await Promise.all(descriptionPromises);
+
+                let descriptions = [];
+                for (const response of descriptionsResponses) {
+                    const data = await response.json();
+                    descriptions = descriptions.concat(data);
+                }
+
+                const uniqueDescriptions = descriptions.filter((desc, index, self) =>
+                        index === self.findIndex((d) => (
+                            d.id === desc.id
+                        ))
+                );
+
+                globalDescs.innerHTML = ''; // Clear existing descriptions
+
+                uniqueDescriptions.forEach(desc => {
+                    const descButton = document.createElement('button');
+                    descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
+                    descButton.style.width = '90%';
+                    descButton.textContent = desc.description;
+                    descButton.onclick = function() {
+                        viewGlobalDescription(desc);
+                    };
+                    globalDescs.appendChild(descButton);
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
-
-            const uniqueDescriptions = descriptions.filter((desc, index, self) =>
-                    index === self.findIndex((d) => (
-                        d.id === desc.id
-                    ))
-            );
-
-            globalDescs.innerHTML = ''; // Clear existing descriptions
-
-            uniqueDescriptions.forEach(desc => {
-                const descButton = document.createElement('button');
-                descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
-                descButton.style.width = '90%';
-                descButton.textContent = desc.description;
-                descButton.onclick = function() {
-                    viewGlobalDescription(desc);
-                };
-                globalDescs.appendChild(descButton);
-            });
         }
 
         async function deleteGlobalDescription(id) {
