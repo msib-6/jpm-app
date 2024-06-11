@@ -491,9 +491,9 @@
                 filteredMachines.forEach(machine => {
                     const checkbox = document.createElement('div');
                     checkbox.className = 'inline-checkbox';
-                    checkbox.className = 'flex flex-col items-start mb-2';
+                    checkbox.className = 'flex items-center mb-2';
                     checkbox.innerHTML = `
-                        <input type="checkbox" id="machine-${machine.id}" name="machines" value="${machine.machine_name}" class="mr-2">
+                        <input type="checkbox" id="machine-${machine.id}" name="machines" value="${machine.machine_name}" class="mr-2 mb-4">
                         <label for="machine-${machine.id}" class="text-gray-700">
                             <span class="block">${machine.machine_name}</span>
                             <span class="block text-sm text-gray-500">${machine.category}</span>
