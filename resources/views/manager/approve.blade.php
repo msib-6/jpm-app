@@ -432,19 +432,24 @@
 
         approveButton.onclick = async () => {
             const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
             const year = params.get('year');
             const month = params.get('month');
             const week = params.get('week');
+            const url = `http://127.0.0.1:8000/api/approve?current_line=${line}&year=${year}&month=${month}&week=${week}`;
 
             if (confirm('Are you sure you want to approve this week\'s JPM?')) {
                 try {
-                    const response = await fetch(`http://127.0.0.1:8000/api/approve?year=${year}&month=${month}&week=${week}`, {
-                        method: 'GET'
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
                     });
 
                     if (response.ok) {
                         alert('Approval successful');
-                        fetchDataForWeek(params.get('line'), year, month, week);
+                        fetchDataForWeek(line, year, month, week);
                     } else {
                         alert('Failed to approve the week');
                     }

@@ -59,19 +59,16 @@
         </div>
     </div>
 
+    <!--  Button Bawah  -->
     <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
-
         <div class="flex justify-between items-center">
             <div class="flex justify-start">
-                <button id="deleteWeekButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Delete Week</button>
-            </div>
-
-            <div class="flex justify-end">
                 <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
+            </div>
+            <div class="flex justify-end">
                 <button id="sendWeekButton" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Send Week</button>
             </div>
         </div>
-
     </div>
 
 
@@ -132,6 +129,7 @@
                 <div class="mb-4">
                     <label for="dataStatus" class="block text-gray-700">Status</label>
                     <select id="dataStatus" class="w-full px-3 py-2 border rounded-lg">
+                        <option value=""></option>
                         <option value="SUPERVISI">SUPERVISI</option>
                         <option value="VALIDASI">VALIDASI</option>
                         <option value="MICRO">MICRO</option>
@@ -219,6 +217,7 @@
                 <div class="mb-4">
                     <label for="editDataStatus" class="block text-gray-700">Status</label>
                     <select id="editDataStatus" class="w-full px-3 py-2 border rounded-lg">
+                        <option value=""></option>
                         <option value="SUPERVISI">SUPERVISI</option>
                         <option value="VALIDASI">VALIDASI</option>
                         <option value="MICRO">MICRO</option>
@@ -491,9 +490,10 @@
 
                 filteredMachines.forEach(machine => {
                     const checkbox = document.createElement('div');
-                    checkbox.className = 'flex flex-col items-start mb-2';
+                    checkbox.className = 'inline-checkbox';
+                    checkbox.className = 'flex items-center mb-2';
                     checkbox.innerHTML = `
-                        <input type="checkbox" id="machine-${machine.id}" name="machines" value="${machine.machine_name}" class="mr-2">
+                        <input type="checkbox" id="machine-${machine.id}" name="machines" value="${machine.machine_name}" class="mr-2 mb-4">
                         <label for="machine-${machine.id}" class="text-gray-700">
                             <span class="block">${machine.machine_name}</span>
                             <span class="block text-sm text-gray-500">${machine.category}</span>
@@ -682,16 +682,38 @@
             const week = params.get('week');
             const year = params.get('year');
 
-            const response = await fetch(`http://127.0.0.1:8000/api/showglobaldescription`);
-            const descriptions = await response.json();
+            let descriptionPromises = [];
+            if (week === "1") {
+                const prevMonth = (month - 1 === 0) ? 12 : month - 1;
+                const prevYear = (month - 1 === 0) ? year - 1 : year;
 
-            const filteredDescriptions = descriptions.filter(desc => {
-                return desc.line === line && desc.month === month && desc.week === week && desc.year === year;
-            });
+                descriptionPromises = [
+                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${year}&month=${month}&week=${week}`),
+                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`),
+                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`)
+                ];
+            } else {
+                descriptionPromises = [
+                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${year}&month=${month}&week=${week}`)
+                ];
+            }
+
+            const descriptionsResponses = await Promise.all(descriptionPromises);
+            let descriptions = [];
+            for (const response of descriptionsResponses) {
+                const data = await response.json();
+                descriptions = descriptions.concat(data);
+            }
+
+            const uniqueDescriptions = descriptions.filter((desc, index, self) =>
+                    index === self.findIndex((d) => (
+                        d.id === desc.id
+                    ))
+            );
 
             globalDescs.innerHTML = ''; // Clear existing descriptions
 
-            filteredDescriptions.forEach(desc => {
+            uniqueDescriptions.forEach(desc => {
                 const descButton = document.createElement('button');
                 descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
                 descButton.style.width = '90%';
@@ -758,12 +780,12 @@
             viewMachineDataModal.classList.remove('hidden');
         }
 
-
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
             const month = params.get('month');
             const year = params.get('year');
+            const week = params.get('week');
 
             document.getElementById('line-display').textContent = line ? line : 'N/A';
             document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
@@ -773,25 +795,68 @@
         }
 
         async function fetchDataForWeek(line, year, month, week) {
-            const operationsUrl = `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`;
-            const machinesUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`;
-            const machineInfoUrl = `http://127.0.0.1:8000/api/showmachine`;
+            let operationsUrls = [];
+            let machinesUrls = [];
+            let machineInfoUrls = [];
+
+            if (week === "1") {
+                const prevMonth = (month - 1 === 0) ? 12 : month - 1;
+                const prevYear = (month - 1 === 0) ? year - 1 : year;
+
+                operationsUrls = [
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                ];
+
+                machinesUrls = [
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                ];
+
+                machineInfoUrls = [
+                    `http://127.0.0.1:8000/api/showmachine`
+                ];
+            } else {
+                operationsUrls = [
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
+                ];
+
+                machinesUrls = [
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`
+                ];
+
+                machineInfoUrls = [
+                    `http://127.0.0.1:8000/api/showmachine`
+                ];
+            }
 
             try {
-                const [operationsResponse, machinesResponse, machineInfoResponse] = await Promise.all([
-                    fetch(operationsUrl),
-                    fetch(machinesUrl),
-                    fetch(machineInfoUrl)
+                const [operationsResponses, machinesResponses, machineInfoResponse] = await Promise.all([
+                    Promise.all(operationsUrls.map(url => fetch(url))),
+                    Promise.all(machinesUrls.map(url => fetch(url))),
+                    fetch(machineInfoUrls[0])
                 ]);
 
-                const operationsData = await operationsResponse.json();
-                const machinesData = await machinesResponse.json();
+                let operationsData = [];
+                for (const response of operationsResponses) {
+                    const data = await response.json();
+                    operationsData = operationsData.concat(data.operations);
+                }
+
+                let machinesData = [];
+                for (const response of machinesResponses) {
+                    const data = await response.json();
+                    machinesData = machinesData.concat(data);
+                }
+
                 const machineInfoData = await machineInfoResponse.json();
 
                 const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
                 updateURL(line, year, month, week);
-                displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
+                displayMachineData(operationsData, machinesData, machineInfoMap, week);
                 await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -855,7 +920,7 @@
                         entry.innerHTML = `
                             <p><strong>${operation.code}</strong></p>
                             <p>${operation.time}</p>
-                            ${operation.status ? `<p>${operation.status}</p>` : ''}
+                            ${operation.status ? `<p class="text-red-600">${operation.status}</p>` : ''}
                             ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
                         `;
                         entry.onclick = function() {
@@ -939,7 +1004,7 @@
             return monthNames.indexOf(monthName) + 1;
         }
 
-        function setupWeekButtons(line, year, month) {
+        function setupWeekButtons(line, year, month, activeWeek) {
             const weeksList = document.getElementById('weeksList');
             weeksList.innerHTML = '';  // Clear existing buttons
 
@@ -992,6 +1057,11 @@
                 const weekButton = document.createElement('button');
                 weekButton.textContent = `Week ${index + 1}`;
                 weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
+                if (index + 1 === parseInt(activeWeek)) {
+                    weekButton.classList.add('text-purple-600');
+                } else {
+                    weekButton.classList.add('text-gray-400', 'cursor-not-allowed');
+                }
                 weekButton.onclick = () => {
                     fetchDataForWeek(line, year, month, index + 1);
                     updateURL(line, year, month, index + 1);
@@ -1002,14 +1072,16 @@
                 weeksList.appendChild(weekButton);
             });
 
-            // Automatically click the first week button
-            if (weeksList.children.length > 0) {
-                weeksList.children[0].click(); // Using children[0] to ensure it's an element
+            // Automatically click the specified week button
+            const params = new URLSearchParams(window.location.search);
+            const weekParam = params.get('week');
+            if (weekParam && weeksList.children[weekParam - 1]) {
+                weeksList.children[weekParam - 1].click(); // Click the specified week
             }
         }
 
         function formatDate(date) {
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const days = ['Minggu', 'Senin', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
         }
 

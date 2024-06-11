@@ -97,13 +97,15 @@ class ManagerController extends Controller
 
     public function approve(Request $request) {
         $userId = auth()->id();
+        $current_line = $request->input('current_line');
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
         $approvedBy = $userId;
 
 
-        $machineOperations = MachineOperation::where('year', $year)
+        $machineOperations = MachineOperation::where('current_line', $current_line)
+            ->where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
             ->get();
@@ -129,7 +131,8 @@ class ManagerController extends Controller
 
             }
 
-            $manager = Manager::where('year', $year)
+            $manager = Manager::where('current_line', $current_line)
+                ->where('year', $year)
                 ->where('month', $month)
                 ->where('week', $week)
                 ->first();
@@ -140,6 +143,7 @@ class ManagerController extends Controller
                 ]);
             } else {
                 Manager::create([
+                    'current_line' => $current_line,
                     'year' => $year,
                     'month' => $month,
                     'week' => $week,
