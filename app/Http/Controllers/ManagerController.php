@@ -141,7 +141,7 @@ class ManagerController extends Controller
         $approvedBy = $userId;
 
 
-        $machineOperations = MachineOperation::where('line', $line)
+        $machineOperations = MachineOperation::where('current_line', $line)
             ->where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
@@ -155,9 +155,9 @@ class ManagerController extends Controller
             $approvedBy = '';
         }
 
-        if ($machineOperations->contains('is_changed', false)) {
-            return response()->json(['message' => 'No changes to approve'], 404);
-        }
+        // if ($machineOperations->contains('is_changed', false)) {
+        //     return response()->json(['message' => 'No changes to approve'], 404);
+        // }
 
         foreach ($machineOperations as $machineOperation) {
 

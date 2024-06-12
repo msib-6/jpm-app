@@ -819,23 +819,7 @@
                 machineInfoUrls = [
                     `http://127.0.0.1:8000/api/showmachine`
                 ];
-            } 
-            // else if (week === "5" || week === "6") {
-            //     countWeek5 = count(week===5);
-            //     countWeek6 = count(week===6);
-            //     if(countweek5+countweek6 <= 8) {
-
-            //     }
-            //     const nextMonth  = (month+1 === 13) ? 1 : month + 1;
-            //     const nextYear = (month+1 === 13) ? year + 1 : month + 1;
-
-            //     operationUrls = [
-            //         `http://127.0.0.1:8000/api/showmachineoperation?line=${nextMonth
-            //     ]
-            }
-            
-            
-            else {
+            } else {
                 operationsUrls = [
                     `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
                 ];
@@ -905,7 +889,7 @@
                 machineRow.innerHTML = `
                     <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
                         <div class="flex flex-col justify-center items-center w-full h-full">
-                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium mt-2 px-2.5 py-0.5 rounded-full mb-1">
+                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
                                 <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
                                 ${category}
                             </span>
@@ -1098,7 +1082,7 @@
         }
 
         function formatDate(date) {
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const days = ['Minggu', 'Senin', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
         }
 
@@ -1133,7 +1117,7 @@
                 if (line && month && week && year) {
                     fetchDataForWeek(line, year, month, week);
                 }
-            }, 15000); // Refresh every 30 seconds
+            }, 10000); // Refresh every 30 seconds
         }
 
         function openEditModal(operation) {
