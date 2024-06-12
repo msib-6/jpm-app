@@ -165,11 +165,7 @@
             const year = params.get('year');
             const week = params.get('week');
 
-<<<<<<< HEAD
             document.getElementById('line-display').textContent = line ? line.replace('Line', 'Line ') : 'N/A';
-=======
-            document.getElementById('line-display').textContent = current_line ? current_line : 'N/A';
->>>>>>> 0b616c71b05f91b2482db2528a45b5ae73502746
             document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
             document.getElementById('year-display').textContent = year ? year : 'N/A';
 
