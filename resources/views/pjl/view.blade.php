@@ -13,7 +13,7 @@
     <!-- Card Title -->
     <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
         <h3 id="title" class="text-2xl font-bold">
-            <span id="line-display">{{ ucfirst($line) }}</span>
+            <span id="line-display">{{ ucfirst(str_replace('Line', 'Line ', $line)) }}</span>
         </h3>
         <!-- Container for buttons, each week's button will be appended here -->
         <div id="weeksList" class="mx-2">

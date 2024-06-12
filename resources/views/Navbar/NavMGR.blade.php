@@ -1,12 +1,12 @@
 <!-- SIDEBAR -->
 <section id="sidebar">
 <a href="#" class="brand">
-        <img class='bx bxs-smile mt-4' src="{{ asset('Logo-Kalbe.0cf6623a.svg') }}" style="max-width: 180px; max-height: 160px; width: auto; height: auto;">
+<img class='bx bxs-smile mt-10 p-2 ml-2' src="{{ asset('Logo-Kalbe.0cf6623a.svg') }}" style="max-width: 200px; max-height: 190px; width: auto; height: auto;">
     </a>
     <ul class="side-menu top">
         <li id="nav-dashboard" class="side-item">
             <a href="{{ route('manager.dashboard') }}">
-                <i class='bx bxs-dashboard'></i>
+                <i class='bx bxs-doughnut-chart'></i>
                 <span class="text">Status</span>
             </a>
         </li>
@@ -17,7 +17,7 @@
 <!-- NAVBAR -->
 <section id="content">
     <nav>
-        <i class='bx bx-menu'></i>
+        <i class='bx bx-menu bx-menu-large'></i>
         <form action="#">
         </form>
         <div class="profile" style="position: relative;">

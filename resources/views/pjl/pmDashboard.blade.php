@@ -16,11 +16,11 @@
         <div class="flex" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                 <li class="inline-flex items-center">
-                    <a href="/pjl/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                        <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <a href="/pjl/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                        <svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                             <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
                         </svg>
-                        Home
+                        <span class="align-middle" style="line-height: 1.5; margin-top: 2px; font-size: 1rem;">Home</span>
                     </a>
                 </li>
             </ol>
@@ -28,13 +28,13 @@
     </div>
 
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
-                <h3 class="text-3xl font-bold">PM {{ ucfirst ($line) }}</h3>
+                <h3 class="text-3xl font-bold">PM {{ ucfirst(str_replace('Line', 'Line ', $line)) }}</h3>
             </div>
 
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center" style="width: 91.666667%;" id="yearsList">
         <div class="flex flex-grow items-center space-x-4">
         </div>
-        <button class="bg-purple-100 text-purple-600 h-10 text-lg px-4 rounded-lg border-0 py-2" onclick="openModal()">Add year</button>
+        <button class="bg-purple-100 text-purple-600 h-10 text-sm px-6 rounded-lg border-0 py-3" onclick="openModal()">Add Year</button>
     </div>
 
 
@@ -115,24 +115,31 @@
 
     function displayMonths(selectedYear, machines) {
         const monthsContainer = document.getElementById('monthsContainer');
-        monthsContainer.innerHTML = '';
-        monthsContainer.classList.remove('hidden');
+        monthsContainer.innerHTML = ''; // Clear the container
+        monthsContainer.classList.remove('hidden'); // Show the container when a year is selected
 
         const monthWeekData = {};
-        machines.filter(machine => machine.year === selectedYear && machine.current_line === selectedLine && machine.status === "PM").forEach(machine => {
-            if (!monthWeekData[machine.month]) {
-                monthWeekData[machine.month] = new Set();
-            }
-            monthWeekData[machine.month].add(machine.week);
-        });
+        machines
+            .filter(machine => machine.year === selectedYear && machine.current_line === selectedLine && machine.status === "PM")
+            .forEach(machine => {
+                if (!monthWeekData[machine.month]) {
+                    monthWeekData[machine.month] = new Set();
+                }
+                monthWeekData[machine.month].add(machine.week);
+            });
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const leftContainer = document.createElement('div');
+        const rightContainer = document.createElement('div');
+        leftContainer.className = 'w-1/2 pr-2';
+        rightContainer.className = 'w-1/2 pl-2';
+
         months.forEach((monthName, index) => {
             const monthIndex = (index + 1).toString();
             const weeks = monthWeekData[monthIndex] || new Set();
             const button = document.createElement('button');
-            button.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black rounded-md flex flex-col items-start justify-center w-full';
-            button.style.height = '5em';
+            button.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black flex flex-col items-start justify-center w-full';
+            button.style.height = '5em'; // consistent height for all month divs
 
             const monthSpan = document.createElement('span');
             monthSpan.textContent = monthName + ' ';
@@ -156,8 +163,18 @@
                 window.location.href = `/pjl/${encodeURIComponent(selectedLine)}/pm?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
             };
 
-            monthsContainer.appendChild(button);
+            if (index < 6) {
+                leftContainer.appendChild(button);
+            } else {
+                rightContainer.appendChild(button);
+            }
         });
+
+        const flexContainer = document.createElement('div');
+        flexContainer.className = 'flex';
+        flexContainer.appendChild(leftContainer);
+        flexContainer.appendChild(rightContainer);
+        monthsContainer.appendChild(flexContainer);
     }
 
     function openModal() {
