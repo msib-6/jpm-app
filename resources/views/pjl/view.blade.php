@@ -138,6 +138,7 @@
                         <option value="STUDY PAT">STUDY PAT</option>
                         <option value="STUDY BATCH CAMPAIGN">STUDY BATCH CAMPAIGN</option>
                         <option value="BCP">BCP</option>
+                        <option value="BREAKDOWN">BREAKDOWN</option>
                         <option value="OFF">OFF</option>
                         <option value="CUSU">CUSU</option>
                         <option value="DHT">DHT</option>
@@ -226,6 +227,7 @@
                         <option value="STUDY PAT">STUDY PAT</option>
                         <option value="STUDY BATCH CAMPAIGN">STUDY BATCH CAMPAIGN</option>
                         <option value="BCP">BCP</option>
+                        <option value="BREAKDOWN">BREAKDOWN</option>
                         <option value="OFF">OFF</option>
                         <option value="CUSU">CUSU</option>
                         <option value="DHT">DHT</option>
