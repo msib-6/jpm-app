@@ -22,7 +22,6 @@ class ManagerController extends Controller
     //Show waiting approval in card
     public function showWaitingApprovalCard(){
         $waitingApproval = MachineOperation::where('is_approved', false)
-                                           ->where('is_changed', true)
                                            ->where('is_sent', true)
                                            ->get();
 
@@ -134,14 +133,14 @@ class ManagerController extends Controller
 
     public function approve(Request $request) {
         $userId = auth()->id();
-        $line = $request->input('line');
+        $current_line = $request->input('current_line');
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
         $approvedBy = $userId;
 
 
-        $machineOperations = MachineOperation::where('line', $line)
+        $machineOperations = MachineOperation::where('current_line', $current_line)
             ->where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
@@ -171,7 +170,7 @@ class ManagerController extends Controller
 
         }
 
-        $manager = Manager::where('line', $line)
+        $manager = Manager::where('current_line', $current_line)
             ->where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
@@ -183,7 +182,7 @@ class ManagerController extends Controller
             ]);
         } else {
             Manager::create([
-                'line' => $line,
+                'current_line' => $current_line,
                 'year' => $year,
                 'month' => $month,
                 'week' => $week,

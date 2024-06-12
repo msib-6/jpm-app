@@ -16,7 +16,7 @@
             <li class="inline-flex items-center">
                 <a href="/manager/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 1 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 1 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
                     </svg>
                     Home
                 </a>
@@ -26,7 +26,7 @@
                     <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                     </svg>
-                    <a href="/manager/view" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">PJL</a>
+                    <a href="/manager/view" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Approve Manager</a>
                 </div>
             </li>
         </ol>
@@ -131,7 +131,7 @@
 
         async function fetchAndDisplayGlobalDescriptions() {
             const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
+            const current_line = params.get('current_line');
             const month = params.get('month');
             const week = params.get('week');
             const year = params.get('year');
@@ -140,7 +140,7 @@
             const descriptions = await response.json();
 
             const filteredDescriptions = descriptions.filter(desc => {
-                return desc.line === line && desc.month === month && desc.week === week && desc.year === year;
+                return desc.line === current_line && desc.month === month && desc.week === week && desc.year === year;
             });
 
             globalDescs.innerHTML = ''; // Clear existing descriptions
@@ -160,21 +160,21 @@
 
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
+            const current_line = params.get('current_line');
             const month = params.get('month');
             const year = params.get('year');
             const week = params.get('week');
 
-            document.getElementById('line-display').textContent = line ? line : 'N/A';
+            document.getElementById('line-display').textContent = current_line ? current_line : 'N/A';
             document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
             document.getElementById('year-display').textContent = year ? year : 'N/A';
 
-            setupWeekButtons(line, year, month, week);
+            setupWeekButtons(current_line, year, month, week);
         }
 
-        async function fetchDataForWeek(line, year, month, week) {
-            const operationsUrl = `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`;
-            const machinesUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`;
+        async function fetchDataForWeek(current_line, year, month, week) {
+            const operationsUrl = `http://127.0.0.1:8000/api/showmachineoperation?line=${current_line}&year=${year}&month=${month}&week=${week}`;
+            const machinesUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${current_line}&year=${year}&month=${month}&week=${week}`;
             const machineInfoUrl = `http://127.0.0.1:8000/api/showmachine`;
 
             try {
@@ -190,7 +190,7 @@
 
                 const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
-                updateURL(line, year, month, week);
+                updateURL(current_line, year, month, week);
                 displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
 
                 const isApproved = operationsData.operations.some(operation => operation.is_approved === 1);
@@ -212,8 +212,8 @@
             }
         }
 
-        function updateURL(line, year, month, week) {
-            history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
+        function updateURL(current_line, year, month, week) {
+            history.pushState({}, '', `?current_line=${current_line}&year=${year}&month=${month}&week=${week}`);
         }
 
         function displayMachineData(operations, machines, machineInfoMap, week) {
@@ -237,7 +237,7 @@
                 machineRow.innerHTML = `
                     <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
                         <div class="flex flex-col justify-center items-center w-full h-full">
-                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium mt-2 px-2.5 py-0.5 rounded-full mb-1">
+                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
                                 <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
                                 ${category}
                             </span>
@@ -313,7 +313,7 @@
             return monthNames[month - 1];
         }
 
-        function setupWeekButtons(line, year, month, activeWeek) {
+        function setupWeekButtons(current_line, year, month, activeWeek) {
             const weeksList = document.getElementById('weeksList');
             weeksList.innerHTML = '';  // Clear existing buttons
 
@@ -373,8 +373,8 @@
                 }
                 weekButton.onclick = () => {
                     if (weekButton.classList.contains('text-purple-600')) {
-                        fetchDataForWeek(line, year, month, index + 1);
-                        updateURL(line, year, month, index + 1);
+                        fetchDataForWeek(current_line, year, month, index + 1);
+                        updateURL(current_line, year, month, index + 1);
                         document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove('text-purple-600'));
                         weekButton.classList.add('text-purple-600');
                         displayWeek(week);
@@ -419,38 +419,72 @@
         function setupAutoRefresh() {
             setInterval(() => {
                 const params = new URLSearchParams(window.location.search);
-                const line = params.get('line');
+                const current_line = params.get('current_line');
                 const month = params.get('month');
                 const week = params.get('week');
                 const year = params.get('year');
 
-                if (line && month && week && year) {
-                    fetchDataForWeek(line, year, month, week);
+                if (current_line && month && week && year) {
+                    fetchDataForWeek(current_line, year, month, week);
                 }
             }, 30000); // Refresh every 30 seconds
         }
 
         approveButton.onclick = async () => {
             const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
+            const current_line = params.get('current_line');
             const year = params.get('year');
             const month = params.get('month');
             const week = params.get('week');
 
             try {
-                const response = await fetch(`http://127.0.0.1:8000/api/approve?current_line=${line}&year=${year}&month=${month}&week=${week}`, {
-                    method: 'POST'
+                const response = await fetch(`http://127.0.0.1:8000/api/approve`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ current_line, year, month, week })
                 });
 
                 if (response.ok) {
-                    alert('Approval successful');
-                    fetchDataForWeek(line, year, month, week);
+                    showAlert('Approval successful');
+                    fetchDataForWeek(current_line, year, month, week);
                 } else {
-                    alert('Failed to approve the week');
+                    const errorData = await response.json();
+                    showAlert(`Failed to approve the week: ${errorData.message}`);
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while approving the week');
+                showAlert('An error occurred while approving the week');
+            }
+        };
+
+        returnButton.onclick = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const current_line = params.get('current_line');
+            const year = params.get('year');
+            const month = params.get('month');
+            const week = params.get('week');
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/return`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ current_line, year, month, week })
+                });
+
+                if (response.ok) {
+                    showAlert('Return successful');
+                    fetchDataForWeek(current_line, year, month, week);
+                } else {
+                    const errorData = await response.json();
+                    showAlert(`Failed to return the week: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('An error occurred while returning the week');
             }
         };
     });

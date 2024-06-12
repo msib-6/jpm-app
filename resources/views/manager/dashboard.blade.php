@@ -57,7 +57,7 @@
                         </div>
                     `;
                     button.onclick = function() {
-                        window.location.href = `http://127.0.0.1:8000/manager/approve?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
+                        window.location.href = `http://127.0.0.1:8000/manager/approve?current_line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
                     };
                     container.appendChild(button);
                 });
