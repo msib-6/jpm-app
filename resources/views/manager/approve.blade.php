@@ -432,7 +432,7 @@
 
         approveButton.onclick = async () => {
             const params = new URLSearchParams(window.location.search);
-            const current_line = params.get('current_line');
+            const line = params.get('line');
             const year = params.get('year');
             const month = params.get('month');
             const week = params.get('week');
@@ -443,12 +443,12 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ current_line, year, month, week })
+                    body: JSON.stringify({ line, year, month, week })
                 });
 
                 if (response.ok) {
                     showAlert('Approval successful');
-                    fetchDataForWeek(current_line, year, month, week);
+                    fetchDataForWeek(line, year, month, week);
                 } else {
                     const errorData = await response.json();
                     showAlert(`Failed to approve the week: ${errorData.message}`);
