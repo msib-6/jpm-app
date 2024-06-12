@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('year');
             $table->integer('month');
             $table->integer('week');
-            $table->integer('line');
+            $table->string('line');
             $table->integer('revision_number')->default(0);
             $table->timestamps();
         });
