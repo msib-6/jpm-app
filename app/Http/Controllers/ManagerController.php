@@ -170,7 +170,7 @@ class ManagerController extends Controller
 
         }
 
-        $manager = Manager::where('current_line', $current_line)
+        $manager = Manager::where('current_line', $line)
             ->where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
@@ -182,7 +182,7 @@ class ManagerController extends Controller
             ]);
         } else {
             Manager::create([
-                'current_line' => $current_line,
+                'current_line' => $line,
                 'year' => $year,
                 'month' => $month,
                 'week' => $week,

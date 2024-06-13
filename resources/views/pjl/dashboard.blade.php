@@ -17,7 +17,7 @@
         <div class="flex" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                 <li class="inline-flex items-center">
-                    <a href="/pjl/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                    <a href="/pjl/{{ ucfirst($line) }}/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                         <svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                             <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
                         </svg>
@@ -30,7 +30,7 @@
 
     <!-- Card Title -->
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
-        <h3 class="text-3xl font-bold">PJL {{ ucfirst($line) }}</h3>
+        <h3 class="text-3xl font-bold">PJL {{ ucfirst(str_replace('Line', 'Line ', $line)) }}</h3>
     </div>
 
     <!-- Years Container -->
@@ -38,7 +38,7 @@
         <div class="flex flex-grow items-center space-x-4">
             <!-- Dynamic year buttons will be added here -->
         </div>
-        <button class="bg-purple-100 text-purple-600 h-10 text-lg px-4 rounded-lg border-0 py-2" onclick="openModal()">Add year</button>
+        <button class="bg-purple-100 text-purple-600 h-10 text-sm px-6 py-3 rounded-lg border-0" onclick="openModal()">Add year</button>
     </div>
 
     <!-- Year Modal -->
@@ -46,7 +46,7 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <div class="mt-3 text-center relative">
                 <span class="close-btn absolute top-0 right-0 cursor-pointer text-black px-3 text-2xl font-bold" onclick="closeModal()">&times;</span>
-                <p class="text-lg font-semibold pt-1 pb-3">Add New Year:</p>
+                <p class="text-s font-semibold pt-1 pb-3">Add New Year:</p>
                 <div id="yearOptions" class="mt-2">
                     <!-- Year In Here -->
                 </div>
@@ -135,6 +135,11 @@
             });
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const leftContainer = document.createElement('div');
+        const rightContainer = document.createElement('div');
+        leftContainer.className = 'w-1/2 pr-2';
+        rightContainer.className = 'w-1/2 pl-2';
+
         months.forEach((monthName, index) => {
             const monthIndex = (index + 1).toString();
             const weeks = monthWeekData[monthIndex] || [];
@@ -165,8 +170,18 @@
                 window.location.href = `/pjl/${encodeURIComponent(selectedLine)}/onlyView?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
             };
 
-            monthsContainer.appendChild(button);
+            if (index < 6) {
+                leftContainer.appendChild(button);
+            } else {
+                rightContainer.appendChild(button);
+            }
         });
+
+        const flexContainer = document.createElement('div');
+        flexContainer.className = 'flex';
+        flexContainer.appendChild(leftContainer);
+        flexContainer.appendChild(rightContainer);
+        monthsContainer.appendChild(flexContainer);
     }
 
     function openModal() {

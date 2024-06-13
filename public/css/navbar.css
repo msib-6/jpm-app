@@ -646,3 +646,8 @@ body {
 		min-width: 420px;
 	}
 }
+
+/* Tambahkan ini di bagian akhir file CSS Anda */
+.bx-menu-large {
+    font-size: 1.7em; /* Atur ukuran sesuai kebutuhan, misalnya 2em atau 32px */
+}
