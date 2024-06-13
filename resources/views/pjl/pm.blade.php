@@ -166,12 +166,17 @@
         const month = params.get('month');
         const year = params.get('year');
 
-        document.getElementById('line-display').textContent = line || 'N/A';
+        document.getElementById('line-display').textContent = formatLineDisplay(line) || 'N/A';
         document.getElementById('month-display').textContent = month ? getMonthName(parseInt(month)) : 'N/A';
         document.getElementById('year-display').textContent = year || 'N/A';
 
         fetchData(line, year, month);
         fetchMachineData(line, year, month);
+    }
+
+    function formatLineDisplay(line) {
+        if (!line) return line;
+        return line.replace(/(\D+)(\d+)/, '$1 $2');
     }
 
     function fetchData(line, year, month) {

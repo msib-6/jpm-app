@@ -25,7 +25,7 @@
                                     Dashboard
                                 </a>
                             </li>
-                            <li id="breadcrumb-1" style="display: none;">
+                            <!-- <li id="breadcrumb-1" style="display: none;">
                                 <div class="flex items-center">
                                     <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
@@ -50,7 +50,7 @@
                                 </div>
                             </li>
                         </ol>
-                    </nav>
+                    </nav> -->
                     <!-- Breadcrumb -->
                     <h3 class="text-4xl mb-8 font-bold">Welcome To JPM View (Guest Mode)</h3>
                     <p class="text-lg mb-8">Selamat datang di halaman dashboard eksklusif JPM! Di sini, Anda akan menemukan rangkuman yang komprehensif dan terperinci mengenai aktivitas operasional yang vital bagi kesuksesan bisnis Anda. Melalui visualisasi data yang intuitif dan informatif, Anda dapat dengan mudah melacak kinerja operasional, menganalisis tren, dan mengidentifikasi potensi area perbaikan.</p>
@@ -93,7 +93,7 @@
                 <!-- Bagian 3 -->
                 <div id="bagian-3" class="hidden">
                     <div class="p-6">
-                    <!-- Breadcrumb
+                    <!-- Breadcrumb -->
                     <nav class="flex" aria-label="Breadcrumb">
                     <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                 <li class="inline-flex items-center">
@@ -123,7 +123,7 @@
                                 </div>
                             </li>
                         </ol>
-                    </nav> -->
+                    </nav>
                         <h3 class="text-4xl mb-8 font-bold">YEAR</h3>
                         <div id="year-container" class="scrollable-container">
                             <!-- Year buttons will be populated here -->
@@ -142,7 +142,7 @@
                 <!-- Bagian 4 -->
                 <div id="bagian-4" class="hidden">
                     <div class="p-6">
-                    <!-- Breadcrumb
+                    <!-- Breadcrumb -->
                     <nav class="flex" aria-label="Breadcrumb">
                     <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                                 <li class="inline-flex items-center">
@@ -181,7 +181,7 @@
                                 </div>
                             </li>
                         </ol>
-                    </nav> -->
+                    </nav>
                         <h3 class="text-4xl mb-2 ml-16 font-bold">MONTH</h3>
                         <div id="month-container" class="scrollable-container">
                             <!-- Month buttons will be populated here -->
@@ -203,7 +203,7 @@
 </div>
 
 
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 let selectedLine = null;
@@ -222,7 +222,6 @@
                 document.getElementById('bagian-4').classList.add('hidden');
                 document.getElementById('pindah-ke-bagian-2').classList.add('hidden');
                 fetchLines();
-                updateBreadcrumb();
                 });
 
                 // Event listeners for back buttons
@@ -266,7 +265,7 @@
                     lines.forEach(line => {
                         const button = document.createElement('button');
                         button.textContent = `${line}`;
-                        button.className = 'btn w-48 h-10 text-xl ml-4 mb-4 text-left';
+                        button.className = 'btn w-48 h-16 text-lg ml-4 mb-4 text-left';
                         button.addEventListener('click', () => selectLine(line));
                         lineContainer.appendChild(button);
                     });
@@ -277,7 +276,6 @@
                     selectedLine = line;
                     document.getElementById('bagian-2').classList.add('hidden');
                     document.getElementById('bagian-3').classList.remove('hidden');
-                    document.getElementById('breadcrumb-2').style.display = 'flex'; // Tampilkan breadcrumb "Year"
                     fetchYears(line);
                 }
 
@@ -311,7 +309,6 @@
                     selectedYear = year;
                     document.getElementById('bagian-3').classList.add('hidden');
                     document.getElementById('bagian-4').classList.remove('hidden');
-                    document.getElementById('breadcrumb-3').style.display = 'flex'; // Tampilkan breadcrumb "Month"
                     fetchMonths(selectedLine, year);
                 }
 
@@ -334,44 +331,15 @@
                     months.forEach(month => {
                         const button = document.createElement('button');
                         button.textContent = monthName(month);
-                        button.className = 'btn w-48 h-10 text-xl ml-4 mb-4 text-left';
+                        button.className = 'btn w-48 h-16 text-lg ml-4 mb-4 text-left';
                         button.addEventListener('click', () => {
                             window.location.href = `/guest/viewGuest?line=${selectedLine}&year=${selectedYear}&month=${month}`;
                         });
                         monthContainer.appendChild(button);
                     });
                 }
-               
-
             });
         </script>
-        <script>
-    document.getElementById('pindah-ke-bagian-2').addEventListener('click', function() {
-        document.getElementById('breadcrumb-1').style.display = 'flex';
-        document.getElementById('bagian-2').classList.remove('hidden');
-    });
-
-    document.getElementById('kembali-ke-bagian-1').addEventListener('click', function() {
-        document.getElementById('breadcrumb-1').style.display = 'none';
-        document.getElementById('bagian-2').classList.add('hidden');
-        document.getElementById('breadcrumb-2').style.display = 'none'; // Also hide breadcrumb-2 when going back
-     });
-     document.getElementById('kembali-ke-bagian-2').addEventListener('click', function() {
-        document.getElementById('breadcrumb-2').style.display = 'none';
-        document.getElementById('bagian-3').classList.add('hidden');
-        document.getElementById('breadcrumb-3').style.display = 'none'; // Also hide breadcrumb-2 when going back
-     });
-     document.getElementById('kembali-ke-bagian-3').addEventListener('click', function() {
-        document.getElementById('breadcrumb-3').style.display = 'none';
-        document.getElementById('bagian-4').classList.add('hidden');
-        document.getElementById('breadcrumb-4').style.display = 'none'; // Also hide breadcrumb-2 when going back
-     });
-
-
-
-
-</script>
-
         <script>
   console.clear();
 </script>

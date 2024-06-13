@@ -790,7 +790,7 @@
             const year = params.get('year');
             const week = params.get('week');
 
-            document.getElementById('line-display').textContent = line ? line : 'N/A';
+            document.getElementById('line-display').textContent = line ? line.replace('Line', 'Line ') : 'N/A';
             document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
             document.getElementById('year-display').textContent = year ? year : 'N/A';
 
