@@ -133,7 +133,7 @@ class ManagerController extends Controller
 
     public function approve(Request $request) {
         $userId = auth()->id();
-        $current_line = $request->input('current_line');
+        $line = $request->input('current_line');
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
@@ -154,9 +154,9 @@ class ManagerController extends Controller
             $approvedBy = '';
         }
 
-        // if ($machineOperations->contains('is_changed', false)) {
-        //     return response()->json(['message' => 'No changes to approve'], 404);
-        // }
+        if ($machineOperations->contains('is_changed', false)) {
+            return response()->json(['message' => 'No changes to approve'], 404);
+        }
 
         foreach ($machineOperations as $machineOperation) {
 
