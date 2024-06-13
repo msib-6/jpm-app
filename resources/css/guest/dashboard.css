@@ -16,7 +16,7 @@ body {
 }
 
 .text-container {
-    max-width: 70%;
+    max-width: 90%;
 }
 
 .text-container h3 {
@@ -90,11 +90,6 @@ body {
             height: 100vh;
             flex-wrap: wrap; /* Tambahkan ini untuk memastikan responsif */
         }
-        .left-section {
-            width: 70%;
-            padding-top: 250px;
-            padding-left: 50px;
-        }
         .right-section {
             width: 30%;
             padding-top: 270px;
@@ -133,7 +128,9 @@ body {
     max-width: 100%;
     height: auto;
 }
-
+.hidden {
+    display: none;
+}
 
 @media (max-width: 768px) {
     .section {
