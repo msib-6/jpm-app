@@ -144,7 +144,7 @@
             globalDescs.innerHTML = ''; // Clear existing descriptions
 
             filteredDescriptions.forEach(desc => {
-                const descButton = document.createElement('div');
+                const descButton = document.createElement('button');
                 descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
                 descButton.style.width = '90%';
                 descButton.textContent = desc.description;

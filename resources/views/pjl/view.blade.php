@@ -59,11 +59,11 @@
         </div>
     </div>
 
-    <!--  Button Bawah  -->
+    <!-- Button Bawah -->
     <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
         <div class="flex justify-between items-center">
             <div class="flex justify-start">
-                <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
+                <button id="historyButton" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
             </div>
             <div class="flex justify-end">
                 <button id="sendWeekButton" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Send Week</button>
@@ -71,13 +71,12 @@
         </div>
     </div>
 
-
     <!-- Add Mesin Button -->
     <button type="button" id="openModalButton" class="add-mesin-button text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
         Add Mesin
     </button>
 
-    <!-- Modal Add Mesin-->
+    <!-- Modal Add Mesin -->
     <div id="addMesinModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Add Mesin</h2>
@@ -301,6 +300,18 @@
         </div>
     </div>
 
+    <!-- History Modal -->
+    <div id="historyModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-3xl">
+            <h2 class="text-2xl mb-4">History</h2>
+            <div id="historyContent" class="mb-4 overflow-y-auto" style="max-height: 450px;">
+                <!-- History content will be populated here -->
+            </div>
+            <div class="flex justify-end">
+                <button type="button" id="closeHistoryModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -342,6 +353,10 @@
         const deleteConfirmMessage = document.getElementById('deleteConfirmMessage');
         const confirmDeleteButton = document.getElementById('confirmDeleteButton');
         const sendWeekButton = document.getElementById('sendWeekButton');
+        const historyButton = document.getElementById('historyButton');
+        const historyModal = document.getElementById('historyModal');
+        const closeHistoryModalButton = document.getElementById('closeHistoryModalButton');
+        const historyContent = document.getElementById('historyContent');
         let currentMachineId;
         let currentDay;
         let currentMonth;
@@ -468,6 +483,15 @@
             } catch (error) {
                 showAlert(`Error sending week data: ${error.message}`);
             }
+        });
+
+        historyButton.addEventListener('click', async function() {
+            await fetchAndDisplayHistory();
+            historyModal.classList.remove('hidden');
+        });
+
+        closeHistoryModalButton.addEventListener('click', function() {
+            historyModal.classList.add('hidden');
         });
 
         getQueryParams();
@@ -677,55 +701,32 @@
             viewGlobalDescModal.classList.remove('hidden');
         }
 
-        async function fetchAndDisplayGlobalDescriptions(line, year, month, week) {
-            let descriptionPromises = [];
+        async function fetchAndDisplayGlobalDescriptions() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
 
-            if (week === "1") {
-                const prevMonth = (month - 1 === 0) ? 12 : month - 1;
-                const prevYear = (month - 1 === 0) ? year - 1 : year;
+            const response = await fetch(`http://127.0.0.1:8000/api/showglobaldescription`);
+            const descriptions = await response.json();
 
-                descriptionPromises = [
-                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${year}&month=${month}&week=1`),
-                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`),
-                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`)
-                ];
+            const filteredDescriptions = descriptions.filter(desc => {
+                return desc.line === line && desc.month === month && desc.week === week && desc.year === year;
+            });
 
-            } else {
-                descriptionPromises = [
-                    fetch(`http://127.0.0.1:8000/api/showglobaldescription?line=${line}&year=${year}&month=${month}&week=${week}`)
-                ];
-            }
+            globalDescs.innerHTML = ''; // Clear existing descriptions
 
-            try {
-                const descriptionsResponses = await Promise.all(descriptionPromises);
-
-                let descriptions = [];
-                for (const response of descriptionsResponses) {
-                    const data = await response.json();
-                    descriptions = descriptions.concat(data);
-                }
-
-                const uniqueDescriptions = descriptions.filter((desc, index, self) =>
-                        index === self.findIndex((d) => (
-                            d.id === desc.id
-                        ))
-                );
-
-                globalDescs.innerHTML = ''; // Clear existing descriptions
-
-                uniqueDescriptions.forEach(desc => {
-                    const descButton = document.createElement('button');
-                    descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
-                    descButton.style.width = '90%';
-                    descButton.textContent = desc.description;
-                    descButton.onclick = function() {
-                        viewGlobalDescription(desc);
-                    };
-                    globalDescs.appendChild(descButton);
-                });
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
+            filteredDescriptions.forEach(desc => {
+                const descButton = document.createElement('button');
+                descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
+                descButton.style.width = '90%';
+                descButton.textContent = desc.description;
+                descButton.onclick = function() {
+                    viewGlobalDescription(desc);
+                };
+                globalDescs.appendChild(descButton);
+            });
         }
 
         async function deleteGlobalDescription(id) {
@@ -1084,7 +1085,7 @@
         }
 
         function formatDate(date) {
-            const days = ['Minggu', 'Senin', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
         }
 
@@ -1152,6 +1153,107 @@
             currentOperationId = operation.id;
             editDataModal.classList.remove('hidden');
         }
+
+        async function fetchAndDisplayHistory() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/showaudit`);
+                const audits = await response.json();
+
+                const filteredAudits = audits.filter(audit => {
+                    const newState = audit.changes ? audit.changes.new_state : null;
+                    return newState && newState.line === line && newState.month == month && newState.week == week && newState.year == year;
+                });
+
+                const historyContent = document.getElementById('historyContent');
+                historyContent.innerHTML = ''; // Clear existing content
+
+                filteredAudits.forEach(audit => {
+                    const newState = audit.changes ? audit.changes.new_state : null;
+                    if (!newState) return;
+
+                    let historyEntry = document.createElement('div');
+                    historyEntry.className = 'bg-white p-4 shadow-md rounded-md mb-2';
+
+                    if (newState.day && newState.code && newState.time && newState.status) {
+                        historyEntry.innerHTML = `
+                            <p>
+                                <span><strong>Event:</strong></span>
+                                <span style="color: green;">${audit.event}</span>
+                            </p>
+                            <p>
+                                <span><strong>Add</strong></span>
+                                <span> data JPM pada Week </span>
+                                <span style="color: blue;">${newState.week}</span>,
+                                <span style="color: blue;">${newState.day}</span>
+                                <span>${getMonthName(newState.month)}</span>
+                                <span style="color: blue;">${newState.year}</span>.
+                                <span>Kode Ruah: </span>
+                                <span style="color: blue;">${newState.code}</span>,
+                                <span>Jam: </span>
+                                <span style="color: blue;">${newState.time}</span>,
+                                <span>Status: </span>
+                                <span style="color: blue;">${newState.status}</span>,
+                                <span>Notes: </span>
+                                <span style="color: blue;">${newState.notes}</span>
+                            </p>
+                        `;
+                    } else if (newState.description) {
+                        historyEntry.innerHTML = `
+                            <p>
+                                <span><strong>Event:</strong></span>
+                                <span style="color: green;">${audit.event}</span>
+                            </p>
+                            <p>
+                                <span><strong>Add description</strong></span>
+                                <span> pada Week </span>
+                                <span style="color: blue;">${newState.week}</span>,
+                                <span style="color: blue;">${getMonthName(newState.month)}</span>
+                                <span style="color: blue;">${newState.year}</span>.
+                                <span>Deskripsi: </span>
+                                <span style="color: blue;">${newState.description}</span>
+                            </p>
+                        `;
+                    } else if (newState.machineName) {
+                        historyEntry.innerHTML = `
+                            <p>
+                                <span><strong>Event:</strong></span>
+                                <span style="color: green;">${audit.event}</span>
+                            </p>
+                            <p>
+                                <span><strong>Add Mesin Data</strong></span>
+                                <span> pada Week </span>
+                                <span style="color: blue;">${newState.week}</span>,
+                                <span>${getMonthName(newState.month)}</span>
+                                <span style="color: blue;">${newState.year}</span>.
+                                <span>Nama Mesin : </span>
+                                <span style="color: blue;">${newState.machineName}</span>
+                            </p>
+                        `;
+                    } else {
+                        historyEntry.innerHTML = `
+                            <p><strong>Event:</strong> ${audit.event}</p>
+                            <p><strong>Audit ID:</strong> ${audit.audit_id}</p>
+                            <p><strong>Machine Operation ID:</strong> ${audit.machineoperation_id}</p>
+                            <p><strong>Changes:</strong></p>
+                            <pre>${JSON.stringify(audit.changes, null, 2)}</pre>
+                        `;
+                    }
+
+                    historyContent.appendChild(historyEntry);
+                });
+            } catch (error) {
+                console.error("Error fetching history:", error);
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', fetchAndDisplayHistory);
 
     });
 
