@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body style="background-image: url('{{ asset('elegant.jpg') }}'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
+<body style="background-image: url('{{ asset('ELEMECH.png.jpg') }}'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
 @extends('pjl.layout')
 
 @section('title', 'Dashboard')
