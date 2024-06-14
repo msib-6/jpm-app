@@ -131,7 +131,7 @@
 
         async function fetchAndDisplayGlobalDescriptions() {
             const params = new URLSearchParams(window.location.search);
-            const current_line = params.get('current_line');
+            const line = params.get('line');
             const month = params.get('month');
             const week = params.get('week');
             const year = params.get('year');
@@ -140,7 +140,7 @@
             const descriptions = await response.json();
 
             const filteredDescriptions = descriptions.filter(desc => {
-                return desc.line === current_line && desc.month === month && desc.week === week && desc.year === year;
+                return desc.line === line && desc.month === month && desc.week === week && desc.year === year;
             });
 
             globalDescs.innerHTML = ''; // Clear existing descriptions
@@ -160,21 +160,21 @@
 
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
-            const current_line = params.get('current_line');
+            const line = params.get('line');
             const month = params.get('month');
             const year = params.get('year');
             const week = params.get('week');
 
-            document.getElementById('line-display').textContent = current_line ? current_line.replace('Line', 'Line ') : 'N/A';
+            document.getElementById('line-display').textContent = line ? line.replace('Line', 'Line ') : 'N/A';
             document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
             document.getElementById('year-display').textContent = year ? year : 'N/A';
 
-            setupWeekButtons(current_line, year, month, week);
+            setupWeekButtons(line, year, month, week);
         }
 
-        async function fetchDataForWeek(current_line, year, month, week) {
-            const operationsUrl = `http://127.0.0.1:8000/api/showmachineoperation?line=${current_line}&year=${year}&month=${month}&week=${week}`;
-            const machinesUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${current_line}&year=${year}&month=${month}&week=${week}`;
+        async function fetchDataForWeek(line, year, month, week) {
+            const operationsUrl = `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`;
+            const machinesUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`;
             const machineInfoUrl = `http://127.0.0.1:8000/api/showmachine`;
 
             try {
@@ -190,7 +190,7 @@
 
                 const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
-                updateURL(current_line, year, month, week);
+                updateURL(line, year, month, week);
                 displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
 
                 const isApproved = operationsData.operations.some(operation => operation.is_approved === 1);
@@ -212,8 +212,8 @@
             }
         }
 
-        function updateURL(current_line, year, month, week) {
-            history.pushState({}, '', `?current_line=${current_line}&year=${year}&month=${month}&week=${week}`);
+        function updateURL(line, year, month, week) {
+            history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
         }
 
         function displayMachineData(operations, machines, machineInfoMap, week) {
@@ -419,13 +419,13 @@
         function setupAutoRefresh() {
             setInterval(() => {
                 const params = new URLSearchParams(window.location.search);
-                const current_line = params.get('current_line');
+                const line = params.get('line');
                 const month = params.get('month');
                 const week = params.get('week');
                 const year = params.get('year');
 
-                if (current_line && month && week && year) {
-                    fetchDataForWeek(current_line, year, month, week);
+                if (line && month && week && year) {
+                    fetchDataForWeek(line, year, month, week);
                 }
             }, 30000); // Refresh every 30 seconds
         }
@@ -461,7 +461,7 @@
 
         returnButton.onclick = async () => {
             const params = new URLSearchParams(window.location.search);
-            const current_line = params.get('current_line');
+            const line = params.get('line');
             const year = params.get('year');
             const month = params.get('month');
             const week = params.get('week');
@@ -472,12 +472,12 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ current_line, year, month, week })
+                    body: JSON.stringify({ line, year, month, week })
                 });
 
                 if (response.ok) {
                     showAlert('Return successful');
-                    fetchDataForWeek(current_line, year, month, week);
+                    fetchDataForWeek(line, year, month, week);
                 } else {
                     const errorData = await response.json();
                     showAlert(`Failed to return the week: ${errorData.message}`);

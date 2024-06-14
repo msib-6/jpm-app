@@ -58,7 +58,6 @@ class ManagerController extends Controller
     //Show waiting approval in card
     public function showApprovedCard(){
         $ApprovedJPM = MachineOperation::where('is_approved', true)
-                                            ->where('is_changed', true)
                                             ->where('is_sent', false)
                                             ->get();
 
@@ -133,7 +132,7 @@ class ManagerController extends Controller
 
     public function approve(Request $request) {
         $userId = auth()->id();
-        $line = $request->input('current_line');
+        $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
@@ -154,9 +153,9 @@ class ManagerController extends Controller
             $approvedBy = '';
         }
 
-        if ($machineOperations->contains('is_changed', false)) {
-            return response()->json(['message' => 'No changes to approve'], 404);
-        }
+//        if ($machineOperations->contains('is_changed', false)) {
+//            return response()->json(['message' => 'No changes to approve'], 404);
+//        }
 
         foreach ($machineOperations as $machineOperation) {
 
@@ -170,7 +169,7 @@ class ManagerController extends Controller
 
         }
 
-        $manager = Manager::where('current_line', $line)
+        $manager = Manager::where('line', $line)
             ->where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
@@ -182,7 +181,7 @@ class ManagerController extends Controller
             ]);
         } else {
             Manager::create([
-                'current_line' => $line,
+                'line' => $line,
                 'year' => $year,
                 'month' => $month,
                 'week' => $week,
