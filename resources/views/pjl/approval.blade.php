@@ -6,7 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
     @vite('public/css/history.css')
 </head>
-<body class="bg-gray-100">
+<body style="background-image: url('{{ asset('elegant.jpg') }}'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
 @extends('pjl.layout')
 
 @section('title', 'Approval PJL')
