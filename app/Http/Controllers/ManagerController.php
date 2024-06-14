@@ -226,6 +226,7 @@ class ManagerController extends Controller
 
                 $machineOperation->update([
                     'is_changed' => false,
+                    'is_send' => false,
                     'changed_by' => '',
                     'is_approved' => false,
                     'is_rejected' => true,

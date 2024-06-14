@@ -1,635 +1,296 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-    <title>Machine Schedule Display</title>
-    @vite('resources/css/pjl/view.css')
-</head>
-<body>
-<div class="container mx-auto px-4">
-    <!-- Breadcrumb -->
-    <nav class="flex ml-16 mt-3" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-            <li class="inline-flex items-center">
-                <a href="/pjl/{{ ucfirst($line) }}/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                    <svg class="w-3 h-3 me-2.5 ml-2 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 1 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
-                    </svg>
-                    Home
-                </a>
-            </li>
-            <li>
-                <div class="flex items-center">
-                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                    </svg>
-                    <a href="/pjl/view" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">PJL</a>
-                </div>
-            </li>
-        </ol>
-    </nav>
+<?php
 
-    <!-- Card Title -->
-    <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
-        <h3 id="title" class="text-2xl font-bold">
-            <span id="line-display">Loading...</span>
-        </h3>
-        <div id="weeksList" class="mx-2">
-            <!-- Buttons for each week will be dynamically inserted here -->
-        </div>
-        <h3 class="text-2xl font-bold">
-            <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>
-        </h3>
-    </div>
-
-    <!-- Header for Days -->
-    <div class="header-days bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none;" id="headerDays">
-        <div class="grid grid-cols-10 gap-4 text-center font-semibold">
-            <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
-            <!-- Dynamic date headers -->
-            <div id="day1" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 1</span></div>
-            <div id="day2" class="flex flex-col justifycenter items-center"><span class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2"></span></div>
-            <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span style="font-size: 12px;">Date 3"></span></div>
-            <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span style="font-size: 12px;">Date 4"></span></div>
-            <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span style="font-size: 12px;">Date 5"></span></div>
-            <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span style="font-size: 12px;">Date 6"></span></div>
-            <div id="day7" class="flex flex-col justify-center items-center"><span class="font-bold">Minggu</span><span style="font-size: 12px;">Date 7"></span></div>
-            <div id="day8" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 8"></span></div>
-        </div>
-    </div>
-
-    <!-- Data Container -->
-    <div id="dataContainer" class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
-        <!-- Dynamic rows for machines will be appended here -->
-    </div>
-
-    <!-- Global Description Container -->
-    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex flex-col items-center" style="width: 91.666667%;">
-        <div id="globalDescs" class="flex flex-col items-center w-full">
-            <!-- Descriptions will be dynamically inserted here -->
-        </div>
-    </div>
-
-    <!--  Button Bawah  -->
-    <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
-        <div class="flex justify-between items-center">
-            <div class="flex justify-start">
-                <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
-            </div>
-            <div class="flex justify-end">
-                <button id="editWeekButton" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Edit</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Confirm Delete -->
-    <div id="confirmDeleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
-            <h2 class="text-2xl mb-4">Confirm Delete</h2>
-            <p id="deleteConfirmMessage" class="mb-4">Are you sure you want to delete this item?</p>
-            <div class="flex justify-between items-center">
-                <button type="button" id="closeConfirmDeleteModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
-                <button type="button" id="confirmDeleteButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Custom Alert Modal -->
-    <div id="custom-alert" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
-            <h2 class="text-xl font-bold mb-4">PJM Says</h2>
-            <p id="custom-alert-message" class="mb-4">This is a custom alert message.</p>
-            <div class="flex justify-between items-end">
-                <button onclick="closeAlert()" class="justify-end bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- History Modal -->
-    <div id="historyModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-3xl">
-            <h2 class="text-2xl mb-4">History</h2>
-            <div id="historyContent" class="mb-4 overflow-y-auto" style="max-height: 450px;">
-                <!-- History content will be populated here -->
-            </div>
-            <div class="flex justify-end">
-                <button type="button" id="closeHistoryModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function showAlert(message) {
-        document.getElementById('custom-alert-message').textContent = message;
-        document.getElementById('custom-alert').classList.remove('hidden');
-    }
-
-    function closeAlert() {
-        document.getElementById('custom-alert').classList.add('hidden');
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const editWeekButton = document.getElementById('editWeekButton');
-        const addDataModal = document.getElementById('addDataModal');
-        const globalDescs = document.getElementById('globalDescs');
-        const historyButton = document.getElementById('historyButton');
-        const historyModal = document.getElementById('historyModal');
-        const closeHistoryModalButton = document.getElementById('closeHistoryModalButton');
-        let currentMachineId;
-        let currentDay;
-        let currentMonth;
-        let currentYear;
+namespace App\Http\Controllers;
+use App\Models\Machine;
+use App\Models\GlobalDescription;
+use App\Models\MachineData;
+use App\Models\MachineOperation;
+use App\Models\User;
+use App\Models\Audits;
+use App\Models\Manager;
+use App\Mail\NotificationEmail;
+use App\Mail\RejectionEmail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 
-        historyButton.addEventListener('click', async function() {
-            await fetchAndDisplayHistory();
-            historyModal.classList.remove('hidden');
+class ManagerController extends Controller
+{
+
+    //Show waiting approval in card
+    public function showWaitingApprovalCard(){
+        $waitingApproval = MachineOperation::where('is_approved', false)
+            ->where('is_sent', true)
+            ->get();
+
+        $waitingApprovalPerWeek = $waitingApproval->groupBy('week')->map(function ($weekGroup) {
+            return $weekGroup->first();
         });
 
-        closeHistoryModalButton.addEventListener('click', function() {
-            historyModal.classList.add('hidden');
+        // Transform the collection to hide certain fields
+        $waitingApprovalFiltered = $waitingApprovalPerWeek->map(function($machine) {
+            return collect($machine)->except([
+                'id',
+                'machine_id',
+                'day',
+                'code',
+                'time',
+                'status',
+                'notes',
+                'is_changed',
+                'changed_by',
+                'change_date',
+                'is_approved',
+                'approved_by',
+                'created_at',
+                'is_rejected',
+                'rejected_by',
+                'updated_at',
+            ]);
+        })->values();
+
+        // Return the transformed collection as a JSON response
+        return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
+    }
+
+    //Show waiting approval in card
+    public function showApprovedCard(){
+        $ApprovedJPM = MachineOperation::where('is_approved', true)
+            ->where('is_sent', false)
+            ->get();
+
+        $ApprovedPerWeek = $ApprovedJPM->groupBy('week')->map(function ($weekGroup) {
+            return $weekGroup->first();
         });
 
-        getQueryParams();
-        setupAutoRefresh();
+        // Transform the collection to hide certain fields
+        $ApprovedFiltered = $ApprovedPerWeek->map(function($machine) {
+            return collect($machine)->except([
+                'id',
+                'machine_id',
+                'day',
+                'code',
+                'time',
+                'status',
+                'notes',
+                'is_changed',
+                'changed_by',
+                'change_date',
+                'is_approved',
+                'approved_by',
+                'created_at',
+                'is_rejected',
+                'rejected_by',
+                'updated_at',
+            ]);
+        })->values();
+
+        // Return the transformed collection as a JSON response
+        return response()->json(['ApprovedCard' => $ApprovedFiltered], 200);
+    }
+
+    //Show waiting approval in detail (clicked card)
+    public function showWaitingApproval(Request $request){
+        $request->validate([
+            'year' => 'required|string',
+            'month' => 'required|string',
+            'week' => 'required|string'
+        ]);
+
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $week = $request->input('week');
+
+        $waitingApproval = MachineOperation::where('is_approved', false)
+            ->where('is_changed', true)
+            ->where('is_sent',true)
+            ->where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->get();
+
+        $waitingApprovalFiltered = $waitingApproval->map(function($machine) {
+            return collect($machine)->except([
+                'id',
+                'machine_id',
+                'is_changed',
+                'changed_by',
+                'change_date',
+                'is_approved',
+                'approved_by',
+                'created_at',
+                'updated_at',
+                'is_rejected',
+                'rejected_by',
+            ]);
+        });
+
+        return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
+    }
+
+    public function approve(Request $request) {
+        $userId = auth()->id();
+        $line = $request->input('line');
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $week = $request->input('week');
+        $approvedBy = $userId;
 
 
-        async function fetchAndDisplayGlobalDescriptions() {
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const month = params.get('month');
-            const week = params.get('week');
-            const year = params.get('year');
+        $machineOperations = MachineOperation::where('current_line', $line)
+            ->where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->get();
 
-            const response = await fetch(`http://127.0.0.1:8000/api/showglobaldescription`);
-            const descriptions = await response.json();
-
-            const filteredDescriptions = descriptions.filter(desc => {
-                return desc.line === line && desc.month === month && desc.week === week && desc.year === year;
-            });
-
-            globalDescs.innerHTML = ''; // Clear existing descriptions
-
-            filteredDescriptions.forEach(desc => {
-                const descButton = document.createElement('button');
-                descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
-                descButton.style.width = '90%';
-                descButton.textContent = desc.description;
-                descButton.onclick = function() {
-                    viewGlobalDescription(desc);
-                };
-                globalDescs.appendChild(descButton);
-            });
+        if ($machineOperations->isEmpty()) {
+            return response()->json(['message' => 'No MachineOperations found'], 404);
         }
 
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const month = params.get('month');
-            const year = params.get('year');
-            const week = params.get('week');
-
-            document.getElementById('line-display').textContent = line ? line.replace('Line', 'Line ') : 'N/A';
-            document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
-            document.getElementById('year-display').textContent = year ? year : 'N/A';
-
-            setupWeekButtons(line, year, month);
+        if (is_null($approvedBy)) {
+            $approvedBy = '';
         }
 
-        async function fetchDataForWeek(line, year, month, week) {
-            let operationsUrls = [];
-            let machinesUrls = [];
-            let machineInfoUrls = [];
+//        if ($machineOperations->contains('is_changed', false)) {
+//            return response()->json(['message' => 'No changes to approve'], 404);
+//        }
 
-            if (week === "1") {
-                const prevMonth = (month - 1 === 0) ? 12 : month - 1;
-                const prevYear = (month - 1 === 0) ? year - 1 : year;
+        foreach ($machineOperations as $machineOperation) {
 
-                operationsUrls = [
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
-                ];
+            $machineOperation->update([
+                'is_changed' => false,
+                'changed_by' => '',
+                'is_approved' => true,
+                'approved_by' => $approvedBy,
+                'is_sent' => false,
+            ]);
 
-                machinesUrls = [
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
-                ];
+        }
 
-                machineInfoUrls = [
-                    `http://127.0.0.1:8000/api/showmachine`
-                ];
-            } else {
-                operationsUrls = [
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
-                ];
+        $manager = Manager::where('line', $line)
+            ->where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->first();
 
-                machinesUrls = [
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`
-                ];
+        if ($manager) {
+            $manager->update([
+                'revision_number' => $manager->revision_number + 1,
+            ]);
+        } else {
+            Manager::create([
+                'line' => $line,
+                'year' => $year,
+                'month' => $month,
+                'week' => $week,
+                'revision_number' => 1, // Starting revision number if creating new
+            ]);
+        }
 
-                machineInfoUrls = [
-                    `http://127.0.0.1:8000/api/showmachine`
-                ];
-            }
+        Audits::create([
+            'users_id' => $userId,
+            'machineoperation_id' => $machineOperation->id,
+            'event' => 'approve',
+            'changes' => 'Approve changes',
+        ]);
 
-            try {
-                const [operationsResponses, machinesResponses, machineInfoResponse] = await Promise.all([
-                    Promise.all(operationsUrls.map(url => fetch(url))),
-                    Promise.all(machinesUrls.map(url => fetch(url))),
-                    fetch(machineInfoUrls[0])
+        return response()->json(['message' => 'Approval successful'], 200);
+    }
+
+    public function return(Request $request) {
+        $userId = auth()->id();
+        $request->validate([
+            'year' => 'required|integer',
+            'month' => 'required|integer',
+            'week' => 'required|integer',
+        ]);
+
+        $year = $request->input('year');
+        $month = $request->input('month');
+        $week = $request->input('week');
+        $rejectedBy = $userId;
+
+        $machineOperations = MachineOperation::where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->get();
+
+        if ($machineOperations->isEmpty()) {
+            return response()->json(['message' => 'No MachineOperations found'], 404);
+        }
+
+        if ($machineOperations->contains('is_changed', true)) {
+            foreach ($machineOperations as $machineOperation) {
+
+                $machineOperation->update([
+                    'is_changed' => false,
+                    'changed_by' => '',
+                    'is_approved' => false,
+                    'is_rejected' => true,
+                    'rejected_by' => $rejectedBy,
                 ]);
-
-                let operationsData = [];
-                for (const response of operationsResponses) {
-                    const data = await response.json();
-                    operationsData = operationsData.concat(data.operations);
-                }
-
-                let machinesData = [];
-                for (const response of machinesResponses) {
-                    const data = await response.json();
-                    machinesData = machinesData.concat(data);
-                }
-
-                const machineInfoData = await machineInfoResponse.json();
-
-                const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
-
-                updateURL(line, year, month, week);
-                displayMachineData(operationsData, machinesData, machineInfoMap, week);
-                await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
-            } catch (error) {
-                console.error("Error fetching data:", error);
             }
+            Audits::create([
+                'users_id' => $userId,
+                'machineoperation_id' => $machineOperation->id,
+                'event' => 'returned',
+                'changes' => 'Return changes'
+            ]);
+
+        }
+        else {
+            return response()->json(['message' => 'No changes to return'], 404);
+        }
+        return response()->json(['message' => 'Return successful'], 200);
+    }
+
+    public function notify(Request $request) {
+        $validatedData = $request->validate([
+            'line' => 'required|string'
+        ]);
+
+        $users = User::whereJsonContains('email_role', $validatedData['line'])->get();
+
+        if ($users->isEmpty()) {
+            return response()->json(['error' => 'No users found with the specified email role.'], 404);
         }
 
-        function updateURL(line, year, month, week) {
-            history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
+        $recipients = $users->pluck('email')->toArray();
+
+        try {
+            Mail::to($recipients)->send(new NotificationEmail());
+        } catch (\Exception $e) {
+            \Log::error('Error sending email: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to send email: ' . $e->getMessage()], 500);
         }
 
-        function displayMachineData(operations, machines, machineInfoMap, week) {
-            const dataContainer = document.getElementById('dataContainer');
-            dataContainer.innerHTML = '';  // Clear existing rows
+        return response()->json(['message' => 'Notifications sent successfully to all recipients.']);
+    }
 
-            // Create a map for machine operations
-            const machineOperationsMap = new Map();
-            operations.forEach(operation => {
-                if (!machineOperationsMap.has(operation.machine_id)) {
-                    machineOperationsMap.set(operation.machine_id, []);
-                }
-                machineOperationsMap.get(operation.machine_id).push(operation);
-            });
+    public function notifyRejection(Request $request) {
+        $validatedData = $request->validate([
+            'line' => 'required|string'
+        ]);
 
-            machines.forEach(machine => {
-                const category = machineInfoMap.get(machine.machine_id);  // Fetch category using machine_id
+        $users = User::whereJsonContains('email_role', $validatedData['line'])->get();
 
-                const machineRow = document.createElement('div');
-                machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
-                machineRow.innerHTML = `
-                    <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                        <div class="flex flex-col justify-center items-center w-full h-full">
-                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                                <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                                ${category}
-                            </span>
-                            <span>${machine.machine_name}</span>
-                        </div>
-                    </div>
-                `;
-
-                // Add day columns based on header days
-                for (let i = 1; i <= 8; i++) {
-                    const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
-                    const dateParts = headerDate.split(' ');
-                    const day = parseInt(dateParts[0]);
-                    const dayColumn = document.createElement('div');
-                    dayColumn.id = `daydata${machine.id}-${day}`;
-                    dayColumn.className = 'col-span-1 day-column';
-                    machineRow.appendChild(dayColumn);
-                }
-
-                dataContainer.appendChild(machineRow);
-
-                // Populate machine row with operations
-                const machineOperations = machineOperationsMap.get(machine.id) || [];
-                machineOperations.forEach(operation => {
-                    const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
-                    if (dayColumn) {
-                        const entry = document.createElement('button');
-                        entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
-                        entry.innerHTML = `
-                            <p><strong>${operation.code}</strong></p>
-                            <p>${operation.time}</p>
-                            ${operation.status ? `<p class="text-red-600">${operation.status}</p>` : ''}
-                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                        `;
-                        entry.onclick = function() {
-                            openEditModal(operation);
-                        };
-
-                        if (operation.notes) {
-                            entry.onmouseenter = function(event) {
-                                showNotesPopup(event, operation.notes);
-                            };
-                            entry.onmouseleave = function() {
-                                hideNotesPopup();
-                            };
-                        }
-
-                        dayColumn.appendChild(entry);
-                    }
-                });
-
-                // Add "+ Add Data" button at the end of each day column
-                for (let i = 1; i <= 8; i++) {
-                    const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
-                    const dateParts = headerDate.split(' ');
-                    const day = parseInt(dateParts[0]);
-                    const dayColumn = document.getElementById(`daydata${machine.id}-${day}`);
-                    if (dayColumn) {
-                        const addButton = document.createElement('button');
-                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white w-10 h-10'; // Set width and height to 10 each for circular shape
-                        addButton.textContent = '+';
-                        addButton.onclick = function() {
-                            currentMachineId = machine.id;
-                            currentDay = day;
-                            currentMonth = getMonthNumber(dateParts[1]);
-                            currentYear = parseInt(dateParts[2]);
-                            addDataModal.classList.remove('hidden');
-                        };
-                        dayColumn.appendChild(addButton);
-                    }
-                }
-
-                // Add onclick event to view machine data modal
-                machineRow.querySelector('.mesin-jpm').onclick = function() {
-                    viewMachineData(machine);
-                };
-            });
+        if ($users->isEmpty()) {
+            return response()->json(['error' => 'No users found with the specified email role.'], 404);
         }
 
-        function showNotesPopup(event, notes) {
-            const popup = document.createElement('div');
-            popup.className = 'notes-popup';
-            popup.textContent = notes;
-            document.body.appendChild(popup);
-            const rect = event.target.getBoundingClientRect();
-            popup.style.top = `${rect.top + window.scrollY}px`;
-            popup.style.left = `${rect.right + 5 + window.scrollX}px`;
+        $recipients = $users->pluck('email')->toArray();
+
+        try {
+            Mail::to($recipients)->send(new RejectionEmail());
+        } catch (\Exception $e) {
+            \Log::error('Error sending email: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to send email: ' . $e->getMessage()], 500);
         }
 
-        function hideNotesPopup() {
-            const popup = document.querySelector('.notes-popup');
-            if (popup) {
-                popup.remove();
-            }
-        }
-
-        function getMonthName(month) {
-            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-            return monthNames[month - 1];
-        }
-
-        function getMonthNumber(monthName) {
-            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-            return monthNames.indexOf(monthName) + 1;
-        }
-
-        function setupWeekButtons(line, year, month, activeWeek) {
-            const weeksList = document.getElementById('weeksList');
-            weeksList.innerHTML = '';  // Clear existing buttons
-
-            // Get the start and end dates of the month
-            const startDate = new Date(year, month - 1, 1);
-
-            // Adjust the startDate to the previous Monday if it does not start on a Monday
-            if (startDate.getDay() !== 1) {
-                while (startDate.getDay() !== 1) {
-                    startDate.setDate(startDate.getDate() + 1);
-                }
-                startDate.setDate(startDate.getDate() - 7); // Go back 7 days to get the Monday of the previous week
-            }
-
-            let currentDate = new Date(startDate);
-            let weeks = [];
-            let week = [formatDate(currentDate)]; // Start the first week with the adjusted or found Monday
-
-            currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
-
-            // Loop through the days, ensuring each week runs from Monday to the following Monday
-            while (true) {
-                week.push(formatDate(currentDate)); // Add the current day to the current week
-
-                if (currentDate.getDay() === 1 && week.length > 1) { // If it's Monday and not the first iteration
-                    weeks.push(week); // Complete the current week
-                    week = [formatDate(currentDate)]; // Start a new week with this Monday
-                }
-                currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
-
-                // Break the loop if we've moved into the next month
-                if (currentDate.getMonth() !== month - 1 && currentDate.getDay() === 1) {
-                    break;
-                }
-            }
-
-            // Ensure the last week runs until the next Monday
-            while (currentDate.getDay() !== 1) { // Move to the last Monday of the month
-                week.push(formatDate(currentDate));
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-            week.push(formatDate(currentDate)); // Add the final Monday
-
-            if (week.length > 1) {
-                weeks.push(week);
-            }
-
-            // Create buttons for each week
-            weeks.forEach((week, index) => {
-                const weekButton = document.createElement('button');
-                weekButton.textContent = `Week ${index + 1}`;
-                weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
-                if (index + 1 === parseInt(activeWeek)) {
-                    weekButton.classList.add('text-purple-600');
-                } else {
-                    weekButton.classList.add('text-gray-400', 'cursor-not-allowed');
-                }
-                weekButton.onclick = () => {
-                    fetchDataForWeek(line, year, month, index + 1);
-                    updateURL(line, year, month, index + 1);
-                    document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove('text-purple-600'));
-                    weekButton.classList.add('text-purple-600');
-                    displayWeek(week);
-                };
-                weeksList.appendChild(weekButton);
-            });
-
-            // Automatically click the specified week button
-            const params = new URLSearchParams(window.location.search);
-            const weekParam = params.get('week');
-            if (weekParam && weeksList.children[weekParam - 1]) {
-                weeksList.children[weekParam - 1].click(); // Click the specified week
-            }
-        }
-
-        function formatDate(date) {
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
-        }
+        return response()->json(['message' => 'Notifications sent successfully to all recipients.']);
+    }
 
 
-        function displayWeek(dates) {
-            // Show the header days when a week is displayed
-            document.getElementById('headerDays').style.display = 'block';
-
-            dates.forEach((date, index) => {
-                if (index < 8) { // Ensure we only update the 8 days
-                    const dayElement = document.getElementById(`day${index + 1}`);
-                    const dateParts = date.split(" ");
-                    dayElement.children[0].textContent = dateParts[0]; // Day name
-                    dayElement.children[1].textContent = `${dateParts[1]} ${dateParts[2]} ${dateParts[3]}`; // Full date
-                }
-            });
-        }
-
-        function setupAutoRefresh() {
-            setInterval(() => {
-                const pathSegments = window.location.pathname.split('/');
-                const line = pathSegments[2];
-                const params = new URLSearchParams(window.location.search);
-                const month = params.get('month');
-                const week = params.get('week');
-                const year = params.get('year');
-
-                if (line && month && week && year) {
-                    fetchDataForWeek(line, year, month, week);
-                }
-            }, 60000); // Refresh every 60 seconds
-        }
-
-        editWeekButton.addEventListener('click', function() {
-            const pathSegments = window.location.pathname.split('/');
-            const line = pathSegments[2];
-            const params = new URLSearchParams(window.location.search);
-            const month = params.get('month');
-            const week = params.get('week');
-            const year = params.get('year');
-
-            if (line && month && week && year) {
-                window.location.href = `http://127.0.0.1:8000/pjl/${line}/view?line=${line}&year=${year}&month=${month}&week=${week}`;
-            } else {
-                showAlert('Error: Missing line, year, month, or week.');
-            }
-        });
-
-
-        async function fetchAndDisplayHistory() {
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const month = params.get('month');
-            const week = params.get('week');
-            const year = params.get('year');
-
-            try {
-                const response = await fetch(`http://127.0.0.1:8000/api/showaudit`);
-                const audits = await response.json();
-
-                const filteredAudits = audits.filter(audit => {
-                    const newState = audit.changes ? audit.changes.new_state : null;
-                    return newState && newState.line === line && newState.month == month && newState.week == week && newState.year == year;
-                });
-
-                const historyContent = document.getElementById('historyContent');
-                historyContent.innerHTML = ''; // Clear existing content
-
-                filteredAudits.forEach(audit => {
-                    const newState = audit.changes ? audit.changes.new_state : null;
-                    if (!newState) return;
-
-                    let historyEntry = document.createElement('div');
-                    historyEntry.className = 'bg-white p-4 shadow-md rounded-md mb-2';
-
-                    if (newState.day && newState.code && newState.time && newState.status) {
-                        historyEntry.innerHTML = `
-                            <p>
-                                <span><strong>Event:</strong></span>
-                                <span style="color: green;">${audit.event}</span>
-                            </p>
-                            <p>
-                                <span><strong>Add</strong></span>
-                                <span> data JPM pada Week </span>
-                                <span style="color: blue;">${newState.week}</span>,
-                                <span style="color: blue;">${newState.day}</span>
-                                <span>${getMonthName(newState.month)}</span>
-                                <span style="color: blue;">${newState.year}</span>.
-                                <span>Kode Ruah: </span>
-                                <span style="color: blue;">${newState.code}</span>,
-                                <span>Jam: </span>
-                                <span style="color: blue;">${newState.time}</span>,
-                                <span>Status: </span>
-                                <span style="color: blue;">${newState.status}</span>,
-                                <span>Notes: </span>
-                                <span style="color: blue;">${newState.notes}</span>
-                            </p>
-                        `;
-                    } else if (newState.description) {
-                        historyEntry.innerHTML = `
-                            <p>
-                                <span><strong>Event:</strong></span>
-                                <span style="color: green;">${audit.event}</span>
-                            </p>
-                            <p>
-                                <span><strong>Add description</strong></span>
-                                <span> pada Week </span>
-                                <span style="color: blue;">${newState.week}</span>,
-                                <span style="color: blue;">${getMonthName(newState.month)}</span>
-                                <span style="color: blue;">${newState.year}</span>.
-                                <span>Deskripsi: </span>
-                                <span style="color: blue;">${newState.description}</span>
-                            </p>
-                        `;
-                    } else if (newState.machineName) {
-                        historyEntry.innerHTML = `
-                            <p>
-                                <span><strong>Event:</strong></span>
-                                <span style="color: green;">${audit.event}</span>
-                            </p>
-                            <p>
-                                <span><strong>Add Mesin Data</strong></span>
-                                <span> pada Week </span>
-                                <span style="color: blue;">${newState.week}</span>,
-                                <span>${getMonthName(newState.month)}</span>
-                                <span style="color: blue;">${newState.year}</span>.
-                                <span>Nama Mesin : </span>
-                                <span style="color: blue;">${newState.machineName}</span>
-                            </p>
-                        `;
-                    } else {
-                        historyEntry.innerHTML = `
-                            <p><strong>Event:</strong> ${audit.event}</p>
-                            <p><strong>Audit ID:</strong> ${audit.audit_id}</p>
-                            <p><strong>Machine Operation ID:</strong> ${audit.machineoperation_id}</p>
-                            <p><strong>Changes:</strong></p>
-                            <pre>${JSON.stringify(audit.changes, null, 2)}</pre>
-                        `;
-                    }
-
-                    historyContent.appendChild(historyEntry);
-                });
-            } catch (error) {
-                console.error("Error fetching history:", error);
-            }
-        }
-        document.addEventListener('DOMContentLoaded', fetchAndDisplayHistory);
-
-    });
-
-</script>
-
-</body>
-</html>
+}
