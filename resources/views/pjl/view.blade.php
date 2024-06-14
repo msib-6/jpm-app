@@ -6,6 +6,20 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <title>Machine Schedule Display</title>
+    <style>
+        .status-only {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .notes-popup {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+    </style>
     @vite('resources/css/pjl/view.css')
 </head>
 <body>
@@ -884,6 +898,14 @@
                 machineOperationsMap.get(operation.machine_id).push(operation);
             });
 
+            // Sort machines by specified categories
+            const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating', 'Mixing', 'Filling', 'Kemas'];
+            machines.sort((a, b) => {
+                const categoryA = machineInfoMap.get(a.machine_id) || 'Unknown';
+                const categoryB = machineInfoMap.get(b.machine_id) || 'Unknown';
+                return categoryOrder.indexOf(categoryA) - categoryOrder.indexOf(categoryB);
+            });
+
             machines.forEach(machine => {
                 const category = machineInfoMap.get(machine.machine_id);  // Fetch category using machine_id
 
@@ -914,14 +936,25 @@
 
                 dataContainer.appendChild(machineRow);
 
-                // Populate machine row with operations
+                // Sort machine operations by time in ascending order, with "PM" status given priority
                 const machineOperations = machineOperationsMap.get(machine.id) || [];
+                machineOperations.sort((a, b) => {
+                    if (a.status === 'PM') return -1;
+                    if (b.status === 'PM') return 1;
+                    const [hoursA, minutesA] = a.time.split(':').map(Number);
+                    const [hoursB, minutesB] = b.time.split(':').map(Number);
+                    return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
+                });
+
                 machineOperations.forEach(operation => {
                     const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
                     if (dayColumn) {
                         const entry = document.createElement('button');
                         entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
-                        entry.innerHTML = `
+                        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
+                            <p class="status-only">${operation.status}</p>
+                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                        ` : `
                             <p><strong>${operation.code}</strong></p>
                             <p>${operation.time}</p>
                             ${operation.status ? `<p class="text-red-600">${operation.status}</p>` : ''}
@@ -1120,7 +1153,7 @@
                 if (line && month && week && year) {
                     fetchDataForWeek(line, year, month, week);
                 }
-            }, 10000); // Refresh every 30 seconds
+            }, 10000); // Refresh every 10 seconds
         }
 
         function openEditModal(operation) {
