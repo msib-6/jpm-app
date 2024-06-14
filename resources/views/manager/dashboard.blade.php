@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
+    @vite('public/css/history.css')
 </head>
 <body style="background-image: url('{{ asset('elegant.jpg') }}'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
 @extends('manager.layout')
