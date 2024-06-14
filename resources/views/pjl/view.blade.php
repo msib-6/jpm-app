@@ -951,6 +951,7 @@
                     if (dayColumn) {
                         const entry = document.createElement('button');
                         entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
+                        entry.style.minHeight = '6em'; // Set the height to 3em
                         entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
                             <p class="status-only">${operation.status}</p>
                             ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}

@@ -79,7 +79,7 @@
                 if (data.ApprovedCard.length === 0) {
                     const message = document.createElement('p');
                     message.classList.add('text-center', 'text-gray-500', 'font-bold');
-                    message.textContent = 'Tidak Ada Approved';
+                    message.textContent = 'Tidak Ada Data Approved';
                     container.appendChild(message);
                 } else {
                     data.ApprovedCard.forEach(item => {
