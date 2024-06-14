@@ -19,6 +19,46 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             z-index: 1000;
         }
+        .status-pm {
+            background-color: #ffeb3b; /* Warna kuning */
+            color: black;
+        }
+        .status-bcp {
+            background-color: #f44336; /* Warna merah */
+            color: white;
+        }
+        .status-off {
+            background-color: #9e9e9e; /* Warna abu-abu */
+            color: white;
+        }
+        .status-cusu {
+            background-color: #3f51b5; /* Warna biru */
+            color: white;
+        }
+        .status-dht {
+            background-color: #009688; /* Warna teal */
+            color: white;
+        }
+        .status-cht {
+            background-color: #cddc39; /* Warna lime */
+            color: black;
+        }
+        .status-kalibrasi {
+            background-color: #ff5722; /* Warna oranye */
+            color: white;
+        }
+        .status-overhaul {
+            background-color: #673ab7; /* Warna deep purple */
+            color: white;
+        }
+        .status-cv {
+            background-color: #00bcd4; /* Warna cyan */
+            color: white;
+        }
+        .status-cpv {
+            background-color: #795548; /* Warna brown */
+            color: white;
+        }
     </style>
     @vite('resources/css/pjl/view.css')
 </head>
@@ -44,13 +84,13 @@
             <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
             <!-- Dynamic date headers -->
             <div id="day1" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 1</span></div>
-            <div id="day2" class="flex flex-col justify-center items-center"><span class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2"></span></div>
-            <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span style="font-size: 12px;">Date 3"></span></div>
-            <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span style="font-size: 12px;">Date 4"></span></div>
-            <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span style="font-size: 12px;">Date 5"></span></div>
-            <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span style="font-size: 12px;">Date 6"></span></div>
-            <div id="day7" class="flex flex-col justify-center items-center"><span class="font-bold">Minggu</span><span style="font-size: 12px;">Date 7"></span></div>
-            <div id="day8" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 8"></span></div>
+            <div id="day2" class="flex flex-col justify-center items-center"><span class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2</span></div>
+            <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span style="font-size: 12px;">Date 3</span></div>
+            <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span style="font-size: 12px;">Date 4</span></div>
+            <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span style="font-size: 12px;">Date 5</span></div>
+            <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span style="font-size: 12px;">Date 6</span></div>
+            <div id="day7" class="flex flex-col justify-center items-center"><span class="font-bold">Minggu</span><span style="font-size: 12px;">Date 7</span></div>
+            <div id="day8" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 8</span></div>
         </div>
     </div>
 
@@ -948,9 +988,32 @@
 
                 machineOperations.forEach(operation => {
                     const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
-                    if (dayColumn) {
-                        const entry = document.createElement('button');
-                        entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
+        if (dayColumn) {
+            const entry = document.createElement('button');
+            entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
+
+            // Tambahkan kelas CSS berdasarkan status
+            if (operation.status === 'PM') {
+                entry.classList.add('status-pm');
+            } else if (operation.status === 'BCP') {
+                entry.classList.add('status-bcp');
+            } else if (operation.status === 'OFF') {
+                entry.classList.add('status-off');
+            } else if (operation.status === 'CUSU') {
+                entry.classList.add('status-cusu');
+            } else if (operation.status === 'DHT') {
+                entry.classList.add('status-dht');
+            } else if (operation.status === 'CHT') {
+                entry.classList.add('status-cht');
+            } else if (operation.status === 'KALIBRASI') {
+                entry.classList.add('status-kalibrasi');
+            } else if (operation.status === 'OVERHAUL') {
+                entry.classList.add('status-overhaul');
+            } else if (operation.status === 'CV') {
+                entry.classList.add('status-cv');
+            } else if (operation.status === 'CPV') {
+                entry.classList.add('status-cpv');
+            }
                         entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
                             <p class="status-only">${operation.status}</p>
                             ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}

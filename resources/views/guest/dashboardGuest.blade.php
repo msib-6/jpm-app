@@ -30,7 +30,8 @@
                     </nav>
                     <!-- Breadcrumb -->
                     <div class="text-container">
-                        <h3 class="text-4xl mb-8 font-bold">Welcome To JPM View (Guest Mode)</h3>
+                        <h3 class="text-4xl mb-8 font-bold">Welcome To JPM View</h3>
+                        <h3 class="text-4xl mb-8 font-bold">(Guest Mode)</h3>
                         <p class="text-lg mb-8">Selamat datang di halaman dashboard eksklusif JPM! Di sini, Anda akan menemukan rangkuman yang komprehensif dan terperinci mengenai aktivitas operasional yang vital bagi kesuksesan bisnis Anda. Melalui visualisasi data yang intuitif dan informatif, Anda dapat dengan mudah melacak kinerja operasional, menganalisis tren, dan mengidentifikasi potensi area perbaikan.</p>
                         <button type="button" id="pindah-ke-bagian-2" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 inline-flex items-center">
                             Pilih Line

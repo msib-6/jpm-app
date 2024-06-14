@@ -58,3 +58,16 @@ body {
     margin-top: 2em;
     opacity: 0.85;
 }
+
+.status-pm {
+    background-color: #ffeb3b; /* Warna kuning */
+    color: black;
+}
+.status-bcp {
+    background-color: #f44336; /* Warna merah */
+    color: white;
+}
+.status-off {
+    background-color: #9e9e9e; /* Warna abu-abu */
+    color: white;
+}
