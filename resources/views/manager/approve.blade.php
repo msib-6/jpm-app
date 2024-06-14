@@ -194,7 +194,13 @@
                 displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
 
                 const isApproved = operationsData.operations.some(operation => operation.is_approved === 1);
+                const isRejected = operationsData.operations.some(operation => operation.is_rejected === 1);
                 if (isApproved) {
+                    approveButton.disabled = true;
+                    returnButton.disabled = true;
+                    approveButton.classList.add('cursor-not-allowed', 'opacity-50');
+                    returnButton.classList.add('cursor-not-allowed', 'opacity-50');
+                } else if (isRejected) {
                     approveButton.disabled = true;
                     returnButton.disabled = true;
                     approveButton.classList.add('cursor-not-allowed', 'opacity-50');
@@ -488,94 +494,6 @@
             }
         };
     });
-
-    function increaseHour() {
-        const hoursInput = document.getElementById('hours');
-        let hours = parseInt(hoursInput.value, 10);
-        if (hours < 23) {
-            hours += 1;
-        } else {
-            hours = 0;
-        }
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    function decreaseHour() {
-        const hoursInput = document.getElementById('hours');
-        let hours = parseInt(hoursInput.value, 10);
-        if (hours > 0) {
-            hours -= 1;
-        } else {
-            hours = 23;
-        }
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    function increaseMinute() {
-        const minutesInput = document.getElementById('minutes');
-        let minutes = parseInt(minutesInput.value, 10);
-        if (minutes < 59) {
-            minutes += 1;
-        } else {
-            minutes = 0;
-        }
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
-
-    function decreaseMinute() {
-        const minutesInput = document.getElementById('minutes');
-        let minutes = parseInt(minutesInput.value, 10);
-        if (minutes > 0) {
-            minutes -= 1;
-        } else {
-            minutes = 59;
-        }
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
-
-    function increaseHourEdit() {
-        const hoursInput = document.getElementById('editHours');
-        let hours = parseInt(hoursInput.value, 10);
-        if (hours < 23) {
-            hours += 1;
-        } else {
-            hours = 0;
-        }
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    function decreaseHourEdit() {
-        const hoursInput = document.getElementById('editHours');
-        let hours = parseInt(hoursInput.value, 10);
-        if (hours > 0) {
-            hours -= 1;
-        } else {
-            hours = 23;
-        }
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    function increaseMinuteEdit() {
-        const minutesInput = document.getElementById('editMinutes');
-        let minutes = parseInt(minutesInput.value, 10);
-        if (minutes < 59) {
-            minutes += 1;
-        } else {
-            minutes = 0;
-        }
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
-
-    function decreaseMinuteEdit() {
-        const minutesInput = document.getElementById('editMinutes');
-        let minutes = parseInt(minutesInput.value, 10);
-        if (minutes > 0) {
-            minutes -= 1;
-        } else {
-            minutes = 59;
-        }
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
 </script>
 
 </body>

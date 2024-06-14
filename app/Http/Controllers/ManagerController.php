@@ -201,18 +201,14 @@ class ManagerController extends Controller
 
     public function return(Request $request) {
         $userId = auth()->id();
-        $request->validate([
-            'year' => 'required|integer',
-            'month' => 'required|integer',
-            'week' => 'required|integer',
-        ]);
-
+        $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');
         $week = $request->input('week');
         $rejectedBy = $userId;
 
-        $machineOperations = MachineOperation::where('year', $year)
+        $machineOperations = MachineOperation::where('current_line', $line)
+            ->where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
             ->get();
@@ -221,31 +217,33 @@ class ManagerController extends Controller
             return response()->json(['message' => 'No MachineOperations found'], 404);
         }
 
-        if ($machineOperations->contains('is_changed', true)) {
-            foreach ($machineOperations as $machineOperation) {
-
-                $machineOperation->update([
-                    'is_changed' => false,
-                    'is_send' => false,
-                    'changed_by' => '',
-                    'is_approved' => false,
-                    'is_rejected' => true,
-                    'rejected_by' => $rejectedBy,
-                ]);
-            }
-        Audits::create([
-            'users_id' => $userId,
-            'machineoperation_id' => $machineOperation->id,
-            'event' => 'returned',
-            'changes' => 'Return changes'
-        ]);
-
+        if (is_null($rejectedBy)) {
+            $rejectedBy = '';
         }
-        else {
-            return response()->json(['message' => 'No changes to return'], 404);
+
+        foreach ($machineOperations as $machineOperation) {
+            $machineOperation->is_changed = false;
+            $machineOperation->is_sent = false;
+            $machineOperation->changed_by = '';
+            $machineOperation->is_approved = false;
+            $machineOperation->is_rejected = true;
+            $machineOperation->rejected_by = $rejectedBy;
+            $machineOperation->save();  // Use save() instead of update() to ensure proper field updates
         }
+
+        foreach ($machineOperations as $machineOperation) {
+            Audits::create([
+                'users_id' => $userId,
+                'machineoperation_id' => $machineOperation->id,
+                'event' => 'return',
+                'changes' => 'Return changes',
+            ]);
+        }
+
         return response()->json(['message' => 'Return successful'], 200);
     }
+
+
 
     public function notify(Request $request) {
         $validatedData = $request->validate([

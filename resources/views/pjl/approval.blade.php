@@ -31,12 +31,12 @@
     <div id="default-styled-tab-content" class="bg-white shadow-lg rounded-3xl my-4 mx-auto flex items-center" style="width: 91.666667%;">
         <div class="bg-white p-6 rounded-3xl my-4 mx-auto hidden w-full" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab" style="min-height: 30em;">
             <!-- Data Need Approve Disini -->
-            <p id="no-return-approval" class="text-center text-gray-500 hidden">Tidak ada return approval</p>
+            <p id="no-return-approval" class="text-center text-gray-500 font-bold hidden">Tidak ada return approval</p>
         </div>
 
         <div class="bg-white p-6 rounded-3xl my-4 mx-auto summary-container hidden w-full" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="min-height: 30em;">
             <!-- Data Approved Disini -->
-            <p id="no-approved-data" class="text-center text-gray-500 hidden">Tidak ada data approved</p>
+            <p id="no-approved-data" class="text-center text-gray-500 font-bold hidden">Tidak ada data approved</p>
         </div>
     </div>
 </div>
@@ -60,7 +60,10 @@
                 .then(data => {
                     profileContent.innerHTML = '';
                     if (data.ReturnApproval.length === 0) {
-                        noReturnApprovalMessage.classList.remove('hidden');
+                        const message = document.createElement('p');
+                        message.classList.add('text-center', 'text-gray-500', 'font-bold');
+                        message.textContent = 'Tidak Ada Return Approval';
+                        container.appendChild(message);
                     } else {
                         noReturnApprovalMessage.classList.add('hidden');
                         data.ReturnApproval.forEach(item => {
@@ -74,7 +77,7 @@
                                     </div>
                                 `;
                                 button.onclick = function() {
-                                    window.location.href = `http://127.0.0.1:8000/manager/return?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
+                                    window.location.href = `http://127.0.0.1:8000/pjl/return?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
                                 };
                                 profileContent.appendChild(button);
                             }
@@ -91,7 +94,10 @@
                 .then(data => {
                     dashboardContent.innerHTML = '';
                     if (data.ApprovedCard.length === 0) {
-                        noApprovedDataMessage.classList.remove('hidden');
+                        const message = document.createElement('p');
+                        message.classList.add('text-center', 'text-gray-500', 'font-bold');
+                        message.textContent = 'Tidak Ada Data Approved';
+                        container.appendChild(message);
                     } else {
                         noApprovedDataMessage.classList.add('hidden');
                         data.ApprovedCard.forEach(item => {
@@ -105,7 +111,7 @@
                                     </div>
                                 `;
                                 button.onclick = function() {
-                                    window.location.href = `http://127.0.0.1:8000/manager/approved?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
+                                    window.location.href = `http://127.0.0.1:8000/pjl/approved?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
                                 };
                                 dashboardContent.appendChild(button);
                             }
