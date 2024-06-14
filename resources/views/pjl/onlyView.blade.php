@@ -108,6 +108,18 @@
         </div>
     </div>
 
+    <!-- History Modal -->
+    <div id="historyModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-3xl">
+            <h2 class="text-2xl mb-4">History</h2>
+            <div id="historyContent" class="mb-4 overflow-y-auto" style="max-height: 450px;">
+                <!-- History content will be populated here -->
+            </div>
+            <div class="flex justify-end">
+                <button type="button" id="closeHistoryModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -121,8 +133,16 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const globalDescs = document.getElementById('globalDescs');
         const editWeekButton = document.getElementById('editWeekButton');
+        const addDataModal = document.getElementById('addDataModal');
+        const globalDescs = document.getElementById('globalDescs');
+        const historyButton = document.getElementById('historyButton');
+        const historyModal = document.getElementById('historyModal');
+        const closeHistoryModalButton = document.getElementById('closeHistoryModalButton');
+        let currentMachineId;
+        let currentDay;
+        let currentMonth;
+        let currentYear;
 
         getQueryParams();
         setupAutoRefresh();
@@ -170,25 +190,68 @@
         }
 
         async function fetchDataForWeek(line, year, month, week) {
-            const operationsUrl = `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`;
-            const machinesUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`;
-            const machineInfoUrl = `http://127.0.0.1:8000/api/showmachine`;
+            let operationsUrls = [];
+            let machinesUrls = [];
+            let machineInfoUrls = [];
+
+            if (week === "1") {
+                const prevMonth = (month - 1 === 0) ? 12 : month - 1;
+                const prevYear = (month - 1 === 0) ? year - 1 : year;
+
+                operationsUrls = [
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                ];
+
+                machinesUrls = [
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                ];
+
+                machineInfoUrls = [
+                    `http://127.0.0.1:8000/api/showmachine`
+                ];
+            } else {
+                operationsUrls = [
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
+                ];
+
+                machinesUrls = [
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`
+                ];
+
+                machineInfoUrls = [
+                    `http://127.0.0.1:8000/api/showmachine`
+                ];
+            }
 
             try {
-                const [operationsResponse, machinesResponse, machineInfoResponse] = await Promise.all([
-                    fetch(operationsUrl),
-                    fetch(machinesUrl),
-                    fetch(machineInfoUrl)
+                const [operationsResponses, machinesResponses, machineInfoResponse] = await Promise.all([
+                    Promise.all(operationsUrls.map(url => fetch(url))),
+                    Promise.all(machinesUrls.map(url => fetch(url))),
+                    fetch(machineInfoUrls[0])
                 ]);
 
-                const operationsData = await operationsResponse.json();
-                const machinesData = await machinesResponse.json();
+                let operationsData = [];
+                for (const response of operationsResponses) {
+                    const data = await response.json();
+                    operationsData = operationsData.concat(data.operations);
+                }
+
+                let machinesData = [];
+                for (const response of machinesResponses) {
+                    const data = await response.json();
+                    machinesData = machinesData.concat(data);
+                }
+
                 const machineInfoData = await machineInfoResponse.json();
 
                 const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
                 updateURL(line, year, month, week);
-                displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
+                displayMachineData(operationsData, machinesData, machineInfoMap, week);
                 await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -294,6 +357,11 @@
         function getMonthName(month) {
             const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             return monthNames[month - 1];
+        }
+
+        function getMonthNumber(monthName) {
+            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            return monthNames.indexOf(monthName) + 1;
         }
 
         function setupWeekButtons(line, year, month) {
@@ -419,95 +487,111 @@
                 showAlert('Error: Missing line, year, month, or week.');
             }
         });
+
+
+        async function fetchAndDisplayHistory() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/showaudit`);
+                const audits = await response.json();
+
+                const filteredAudits = audits.filter(audit => {
+                    const newState = audit.changes ? audit.changes.new_state : null;
+                    return newState && newState.line === line && newState.month == month && newState.week == week && newState.year == year;
+                });
+
+                const historyContent = document.getElementById('historyContent');
+                historyContent.innerHTML = ''; // Clear existing content
+
+                filteredAudits.forEach(audit => {
+                    const newState = audit.changes ? audit.changes.new_state : null;
+                    if (!newState) return;
+
+                    let historyEntry = document.createElement('div');
+                    historyEntry.className = 'bg-white p-4 shadow-md rounded-md mb-2';
+
+                    if (newState.day && newState.code && newState.time && newState.status) {
+                        historyEntry.innerHTML = `
+                            <p>
+                                <span><strong>Event:</strong></span>
+                                <span style="color: green;">${audit.event}</span>
+                            </p>
+                            <p>
+                                <span><strong>Add</strong></span>
+                                <span> data JPM pada Week </span>
+                                <span style="color: blue;">${newState.week}</span>,
+                                <span style="color: blue;">${newState.day}</span>
+                                <span>${getMonthName(newState.month)}</span>
+                                <span style="color: blue;">${newState.year}</span>.
+                                <span>Kode Ruah: </span>
+                                <span style="color: blue;">${newState.code}</span>,
+                                <span>Jam: </span>
+                                <span style="color: blue;">${newState.time}</span>,
+                                <span>Status: </span>
+                                <span style="color: blue;">${newState.status}</span>,
+                                <span>Notes: </span>
+                                <span style="color: blue;">${newState.notes}</span>
+                            </p>
+                        `;
+                    } else if (newState.description) {
+                        historyEntry.innerHTML = `
+                            <p>
+                                <span><strong>Event:</strong></span>
+                                <span style="color: green;">${audit.event}</span>
+                            </p>
+                            <p>
+                                <span><strong>Add description</strong></span>
+                                <span> pada Week </span>
+                                <span style="color: blue;">${newState.week}</span>,
+                                <span style="color: blue;">${getMonthName(newState.month)}</span>
+                                <span style="color: blue;">${newState.year}</span>.
+                                <span>Deskripsi: </span>
+                                <span style="color: blue;">${newState.description}</span>
+                            </p>
+                        `;
+                    } else if (newState.machineName) {
+                        historyEntry.innerHTML = `
+                            <p>
+                                <span><strong>Event:</strong></span>
+                                <span style="color: green;">${audit.event}</span>
+                            </p>
+                            <p>
+                                <span><strong>Add Mesin Data</strong></span>
+                                <span> pada Week </span>
+                                <span style="color: blue;">${newState.week}</span>,
+                                <span>${getMonthName(newState.month)}</span>
+                                <span style="color: blue;">${newState.year}</span>.
+                                <span>Nama Mesin : </span>
+                                <span style="color: blue;">${newState.machineName}</span>
+                            </p>
+                        `;
+                    } else {
+                        historyEntry.innerHTML = `
+                            <p><strong>Event:</strong> ${audit.event}</p>
+                            <p><strong>Audit ID:</strong> ${audit.audit_id}</p>
+                            <p><strong>Machine Operation ID:</strong> ${audit.machineoperation_id}</p>
+                            <p><strong>Changes:</strong></p>
+                            <pre>${JSON.stringify(audit.changes, null, 2)}</pre>
+                        `;
+                    }
+
+                    historyContent.appendChild(historyEntry);
+                });
+            } catch (error) {
+                console.error("Error fetching history:", error);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', fetchAndDisplayHistory);
+
+
+
     });
 
-    function increaseHour() {
-        const hoursInput = document.getElementById('hours');
-        let hours = parseInt(hoursInput.value, 10);
-        if (hours < 23) {
-            hours += 1;
-        } else {
-            hours = 0;
-        }
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    function decreaseHour() {
-        const hoursInput = document.getElementById('hours');
-        let hours = parseInt(hoursInput.value, 10);
-        if (hours > 0) {
-            hours -= 1;
-        } else {
-            hours = 23;
-        }
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    function increaseMinute() {
-        const minutesInput = document.getElementById('minutes');
-        let minutes = parseInt(minutesInput.value, 10);
-        if (minutes < 59) {
-            minutes += 1;
-        } else {
-            minutes = 0;
-        }
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
-
-    function decreaseMinute() {
-        const minutesInput = document.getElementById('minutes');
-        let minutes = parseInt(minutesInput.value, 10);
-        if (minutes > 0) {
-            minutes -= 1;
-        } else {
-            minutes = 59;
-        }
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
-
-    function increaseHourEdit() {
-        const hoursInput = document.getElementById('editHours');
-        let hours = parseInt(hoursInput.value, 10);
-        if (hours < 23) {
-            hours += 1;
-        } else {
-            hours = 0;
-        }
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    function decreaseHourEdit() {
-        const hoursInput = document.getElementById('editHours');
-        let hours = parseInt(hoursInput.value, 10);
-        if (hours > 0) {
-            hours -= 1;
-        } else {
-            hours = 23;
-        }
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    function increaseMinuteEdit() {
-        const minutesInput = document.getElementById('editMinutes');
-        let minutes = parseInt(minutesInput.value, 10);
-        if (minutes < 59) {
-            minutes += 1;
-        } else {
-            minutes = 0;
-        }
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
-
-    function decreaseMinuteEdit() {
-        const minutesInput = document.getElementById('editMinutes');
-        let minutes = parseInt(minutesInput.value, 10);
-        if (minutes > 0) {
-            minutes -= 1;
-        } else {
-            minutes = 59;
-        }
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
 </script>
 
 </body>
