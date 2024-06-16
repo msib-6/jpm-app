@@ -229,6 +229,7 @@ class ManagerController extends Controller
             $machineOperation->is_rejected = true;
             $machineOperation->rejected_by = $rejectedBy;
             $machineOperation->save();  // Use save() instead of update() to ensure proper field updates
+            
         }
 
         foreach ($machineOperations as $machineOperation) {

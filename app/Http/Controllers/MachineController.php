@@ -349,7 +349,7 @@ class MachineController extends Controller
             'line' => 'required|string',
         ]);
 
-        $line = $request->input('line');
+        $line = $validatedData['line'];
         $year = $validatedData['year'];
         $month = $validatedData['month'];
         $week = $validatedData['week'];
@@ -358,11 +358,12 @@ class MachineController extends Controller
             $operations = MachineOperation::where('year', $year)
                 ->where('month', $month)
                 ->where('week', $week)
-                ->whereHas('machineData', function($query) use ($line) {
-                    $query->whereHas('machine', function($query) use ($line) {
-                        $query->whereJsonContains('line', $line);
-                    });
-                })
+//                ->whereHas('machineData', function($query) use ($line) {
+//                    $query->whereHas('machine', function($query) use ($line) {
+//                        $query->whereJsonContains('line', $line);
+//                    });
+//                })
+                ->where('current_line',$line)
                 ->get();
 
             if ($operations->isEmpty()) {
@@ -377,8 +378,10 @@ class MachineController extends Controller
             });
 
             foreach ($operations as $operation) {
-                $operation->update(['is_sent' => true]);
-                $operation->update(['is_approved' => false]);
+                $operation->is_sent = true;
+                $operation->is_approved = false;
+                $operation->is_rejected = false;
+                $operation->save();
             }
 
             Audits::create([
