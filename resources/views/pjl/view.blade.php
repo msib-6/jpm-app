@@ -20,44 +20,53 @@
             z-index: 1000;
         }
         .status-pm {
-            background-color: #ffeb3b; /* Warna kuning */
-            color: black;
+        background: rgb(47,128,237) !important;
+        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+        color: white !important;
         }
+   
         .status-bcp {
-            background-color: #f44336; /* Warna merah */
-            color: white;
+            background-color: #f44336 !important; /* Warna merah */
+            color: white !important;
         }
         .status-off {
-            background-color: #9e9e9e; /* Warna abu-abu */
-            color: white;
+            background-color: #9e9e9e !important; /* Warna abu-abu */
+            color: white !important;
         }
         .status-cusu {
-            background-color: #3f51b5; /* Warna biru */
-            color: white;
+            background: rgb(47,128,237) !important;
+        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+        color: white !important;
         }
         .status-dht {
-            background-color: #009688; /* Warna teal */
-            color: white;
+            background: rgb(47,128,237) !important;
+        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+        color: white !important;
         }
         .status-cht {
-            background-color: #cddc39; /* Warna lime */
-            color: black;
+            background: rgb(47,128,237) !important;
+        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+        color: white !important;
         }
         .status-kalibrasi {
-            background-color: #ff5722; /* Warna oranye */
-            color: white;
+            background: rgb(47,128,237) !important;
+        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+        color: white !important;
         }
         .status-overhaul {
-            background-color: #673ab7; /* Warna deep purple */
-            color: white;
+            background: rgb(47,128,237) !important;
+        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+        color: white !important;
         }
         .status-cv {
-            background-color: #00bcd4; /* Warna cyan */
-            color: white;
+            background: rgb(47,128,237) !important;
+        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+        color: white !important;
         }
         .status-cpv {
-            background-color: #795548; /* Warna brown */
-            color: white;
+            background: rgb(47,128,237) !important;
+        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+        color: white !important;
         }
     </style>
     @vite('resources/css/pjl/view.css')
@@ -976,75 +985,67 @@
 
                 dataContainer.appendChild(machineRow);
 
+                    
+
+
                 // Sort machine operations by time in ascending order, with "PM" status given priority
                 const machineOperations = machineOperationsMap.get(machine.id) || [];
-                machineOperations.sort((a, b) => {
-                    if (a.status === 'PM') return -1;
-                    if (b.status === 'PM') return 1;
-                    const [hoursA, minutesA] = a.time.split(':').map(Number);
-                    const [hoursB, minutesB] = b.time.split(':').map(Number);
-                    return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
-                });
+machineOperations.sort((a, b) => {
+    if (a.status === 'PM') return -1;
+    if (b.status === 'PM') return 1;
+    const [hoursA, minutesA] = a.time.split(':').map(Number);
+    const [hoursB, minutesB] = b.time.split(':').map(Number);
+    return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
+});
 
-                machineOperations.forEach(operation => {
-                    const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
-// <<<<<<< HEAD
-//         if (dayColumn) {
-//             const entry = document.createElement('button');
-//             entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
+machineOperations.forEach(operation => {
+    const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
 
-//             // Tambahkan kelas CSS berdasarkan status
-//             if (operation.status === 'PM') {
-//                 entry.classList.add('status-pm');
-//             } else if (operation.status === 'BCP') {
-//                 entry.classList.add('status-bcp');
-//             } else if (operation.status === 'OFF') {
-//                 entry.classList.add('status-off');
-//             } else if (operation.status === 'CUSU') {
-//                 entry.classList.add('status-cusu');
-//             } else if (operation.status === 'DHT') {
-//                 entry.classList.add('status-dht');
-//             } else if (operation.status === 'CHT') {
-//                 entry.classList.add('status-cht');
-//             } else if (operation.status === 'KALIBRASI') {
-//                 entry.classList.add('status-kalibrasi');
-//             } else if (operation.status === 'OVERHAUL') {
-//                 entry.classList.add('status-overhaul');
-//             } else if (operation.status === 'CV') {
-//                 entry.classList.add('status-cv');
-//             } else if (operation.status === 'CPV') {
-//                 entry.classList.add('status-cpv');
-//             }
-// =======
-                    if (dayColumn) {
-                        const entry = document.createElement('button');
-                        entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
-                        entry.style.minHeight = '6em'; // Set the height to 3em
-                        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
-                            <p class="status-only">${operation.status}</p>
-                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                        ` : `
-                            <p><strong>${operation.code}</strong></p>
-                            <p>${operation.time}</p>
-                            ${operation.status ? `<p class="text-red-600">${operation.status}</p>` : ''}
-                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                        `;
-                        entry.onclick = function() {
-                            openEditModal(operation);
-                        };
+    if (dayColumn) {
+        const entry = document.createElement('button');
+        const statusClass = {
+            'PM': 'status-pm',
+            'BCP': 'status-bcp',
+            'OFF': 'status-off',
+            'CUSU': 'status-cusu',
+            'DHT': 'status-dht',
+            'CHT': 'status-cht',
+            'KALIBRASI': 'status-kalibrasi',
+            'OVERHAUL': 'status-overhaul',
+            'CV': 'status-cv',
+            'CPV': 'status-cpv'
+        }[operation.status] || '';  // Gunakan kelas sesuai status atau kelas kosong jika tidak ada
 
-                        if (operation.notes) {
-                            entry.onmouseenter = function(event) {
-                                showNotesPopup(event, operation.notes);
-                            };
-                            entry.onmouseleave = function() {
-                                hideNotesPopup();
-                            };
-                        }
+        entry.className = `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
+        entry.style.minHeight = '6em'; // Set the height to 6em
 
-                        dayColumn.appendChild(entry);
-                    }
-                });
+        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
+            <p class="status-only">${operation.status}</p>
+            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+        ` : `
+            <p><strong>${operation.code}</strong></p>
+            <p>${operation.time}</p>
+            ${operation.status ? `<p class="text-red-600">${operation.status}</p>` : ''}
+            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+        `;
+        entry.onclick = function() {
+            openEditModal(operation);
+        };
+
+        if (operation.notes) {
+            entry.onmouseenter = function(event) {
+                showNotesPopup(event, operation.notes);
+            };
+            entry.onmouseleave = function() {
+                hideNotesPopup();
+            };
+        }
+
+        dayColumn.appendChild(entry);
+    }
+});
+
+
 
                 // Add "+ Add Data" button at the end of each day column
                 for (let i = 1; i <= 8; i++) {
