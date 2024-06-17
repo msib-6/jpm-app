@@ -55,7 +55,42 @@ class ManagerController extends Controller
         return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
     }
 
-    //Show waiting approval in card
+    //Show return in card
+    public function showReturnCard(){
+        $returnApproval = MachineOperation::where('is_rejected', true)
+            ->get();
+
+        $returnApproval = $returnApproval->groupBy('week')->map(function ($weekGroup) {
+            return $weekGroup->first();
+        });
+
+        // Transform the collection to hide certain fields
+        $returnApprovalFiltered = $returnApproval->map(function($machine) {
+            return collect($machine)->except([
+                'id',
+                'machine_id',
+                'day',
+                'code',
+                'time',
+                'status',
+                'notes',
+                'is_changed',
+                'changed_by',
+                'change_date',
+                'is_approved',
+                'approved_by',
+                'created_at',
+                'is_rejected',
+                'rejected_by',
+                'updated_at',
+            ]);
+        })->values();
+
+        // Return the transformed collection as a JSON response
+        return response()->json(['RejectedApproval' => $returnApprovalFiltered], 200);
+    }
+
+    //Show waiting Approved in card
     public function showApprovedCard(){
         $ApprovedJPM = MachineOperation::where('is_approved', true)
                                             ->where('is_sent', false)
@@ -229,7 +264,7 @@ class ManagerController extends Controller
             $machineOperation->is_rejected = true;
             $machineOperation->rejected_by = $rejectedBy;
             $machineOperation->save();  // Use save() instead of update() to ensure proper field updates
-            
+
         }
 
         foreach ($machineOperations as $machineOperation) {
