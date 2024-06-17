@@ -32,7 +32,7 @@
             <!-- Data Need Approve Disini -->
         </div>
 
-        <div class="bg-white p-6 rounded-3xl my-4 mx-auto summary-container hidden w-full" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="min-height: 30em;">
+        <div class="bg-white p-6 rounded-3xl my-4 mx-auto hidden w-full" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="min-height: 30em;">
             <!-- Data Approved Disini -->
         </div>
     </div>
@@ -93,7 +93,7 @@
                             </div>
                         `;
                         button.onclick = function() {
-                            window.location.href = `http://127.0.0.1:8000/manager/approved?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
+                            window.location.href = `http://127.0.0.1:8000/manager/approve?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
                         };
                         container.appendChild(button);
                     });

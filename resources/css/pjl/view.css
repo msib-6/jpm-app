@@ -6,6 +6,68 @@ body {
     position: relative;
 }
 
+.status-only {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+.notes-popup {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+.status-pm {
+    background: rgb(47,128,237) !important;
+    background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+    color: white !important;
+}
+
+.status-bcp {
+    background-color: #f44336 !important; /* Warna merah */
+    color: white !important;
+}
+.status-off {
+    background-color: #9e9e9e !important; /* Warna abu-abu */
+    color: white !important;
+}
+.status-cusu {
+    background: rgb(47,128,237) !important;
+    background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+    color: white !important;
+}
+.status-dht {
+    background: rgb(47,128,237) !important;
+    background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+    color: white !important;
+}
+.status-cht {
+    background: rgb(47,128,237) !important;
+    background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+    color: white !important;
+}
+.status-kalibrasi {
+    background: rgb(47,128,237) !important;
+    background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+    color: white !important;
+}
+.status-overhaul {
+    background: rgb(47,128,237) !important;
+    background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+    color: white !important;
+}
+.status-cv {
+    background: rgb(47,128,237) !important;
+    background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+    color: white !important;
+}
+.status-cpv {
+    background: rgb(47,128,237) !important;
+    background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+    color: white !important;
+}
+
 .notes-popup {
     position: absolute;
     background: #FFFFFF;

@@ -6,69 +6,6 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <title>Machine Schedule Display</title>
-    <style>
-        .status-only {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-        .notes-popup {
-            position: absolute;
-            background-color: white;
-            border: 1px solid #ccc;
-            padding: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-        .status-pm {
-        background: rgb(47,128,237) !important;
-        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
-        color: white !important;
-        }
-   
-        .status-bcp {
-            background-color: #f44336 !important; /* Warna merah */
-            color: white !important;
-        }
-        .status-off {
-            background-color: #9e9e9e !important; /* Warna abu-abu */
-            color: white !important;
-        }
-        .status-cusu {
-            background: rgb(47,128,237) !important;
-        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
-        color: white !important;
-        }
-        .status-dht {
-            background: rgb(47,128,237) !important;
-        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
-        color: white !important;
-        }
-        .status-cht {
-            background: rgb(47,128,237) !important;
-        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
-        color: white !important;
-        }
-        .status-kalibrasi {
-            background: rgb(47,128,237) !important;
-        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
-        color: white !important;
-        }
-        .status-overhaul {
-            background: rgb(47,128,237) !important;
-        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
-        color: white !important;
-        }
-        .status-cv {
-            background: rgb(47,128,237) !important;
-        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
-        color: white !important;
-        }
-        .status-cpv {
-            background: rgb(47,128,237) !important;
-        background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
-        color: white !important;
-        }
-    </style>
     @vite('resources/css/pjl/view.css')
 </head>
 <body>
@@ -985,65 +922,65 @@
 
                 dataContainer.appendChild(machineRow);
 
-                    
+
 
 
                 // Sort machine operations by time in ascending order, with "PM" status given priority
                 const machineOperations = machineOperationsMap.get(machine.id) || [];
-machineOperations.sort((a, b) => {
-    if (a.status === 'PM') return -1;
-    if (b.status === 'PM') return 1;
-    const [hoursA, minutesA] = a.time.split(':').map(Number);
-    const [hoursB, minutesB] = b.time.split(':').map(Number);
-    return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
-});
+                machineOperations.sort((a, b) => {
+                    if (a.status === 'PM') return -1;
+                    if (b.status === 'PM') return 1;
+                    const [hoursA, minutesA] = a.time.split(':').map(Number);
+                    const [hoursB, minutesB] = b.time.split(':').map(Number);
+                    return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
+                });
 
-machineOperations.forEach(operation => {
-    const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
+                machineOperations.forEach(operation => {
+                    const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
 
-    if (dayColumn) {
-        const entry = document.createElement('button');
-        const statusClass = {
-            'PM': 'status-pm',
-            'BCP': 'status-bcp',
-            'OFF': 'status-off',
-            'CUSU': 'status-cusu',
-            'DHT': 'status-dht',
-            'CHT': 'status-cht',
-            'KALIBRASI': 'status-kalibrasi',
-            'OVERHAUL': 'status-overhaul',
-            'CV': 'status-cv',
-            'CPV': 'status-cpv'
-        }[operation.status] || '';  // Gunakan kelas sesuai status atau kelas kosong jika tidak ada
+                    if (dayColumn) {
+                        const entry = document.createElement('button');
+                        const statusClass = {
+                            'PM': 'status-pm',
+                            'BCP': 'status-bcp',
+                            'OFF': 'status-off',
+                            'CUSU': 'status-cusu',
+                            'DHT': 'status-dht',
+                            'CHT': 'status-cht',
+                            'KALIBRASI': 'status-kalibrasi',
+                            'OVERHAUL': 'status-overhaul',
+                            'CV': 'status-cv',
+                            'CPV': 'status-cpv'
+                        }[operation.status] || '';  // Gunakan kelas sesuai status atau kelas kosong jika tidak ada
 
-        entry.className = `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
-        entry.style.minHeight = '6em'; // Set the height to 6em
+                        entry.className = `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
+                        entry.style.minHeight = '6em'; // Set the height to 6em
 
-        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
+                        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
             <p class="status-only">${operation.status}</p>
             ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
         ` : `
             <p><strong>${operation.code}</strong></p>
             <p>${operation.time}</p>
-            ${operation.status ? `<p class="text-red-600">${operation.status}</p>` : ''}
+            ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
             ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
         `;
-        entry.onclick = function() {
-            openEditModal(operation);
-        };
+                        entry.onclick = function() {
+                            openEditModal(operation);
+                        };
 
-        if (operation.notes) {
-            entry.onmouseenter = function(event) {
-                showNotesPopup(event, operation.notes);
-            };
-            entry.onmouseleave = function() {
-                hideNotesPopup();
-            };
-        }
+                        if (operation.notes) {
+                            entry.onmouseenter = function(event) {
+                                showNotesPopup(event, operation.notes);
+                            };
+                            entry.onmouseleave = function() {
+                                hideNotesPopup();
+                            };
+                        }
 
-        dayColumn.appendChild(entry);
-    }
-});
+                        dayColumn.appendChild(entry);
+                    }
+                });
 
 
 

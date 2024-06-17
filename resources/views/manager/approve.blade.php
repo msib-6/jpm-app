@@ -109,10 +109,22 @@
         </div>
     </div>
 
+    <!-- Modal Confirm Action -->
+    <div id="confirmActionModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 class="text-2xl mb-4" id="actionModalTitle">Confirm Action</h2>
+            <p id="actionConfirmMessage" class="mb-4">Are you sure you want to perform this action?</p>
+            <div class="flex justify-between items-center">
+                <button type="button" id="closeConfirmActionModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                <button type="button" id="confirmActionButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Confirm</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    function showAlert(message) {
+        function showAlert(message) {
         document.getElementById('custom-alert-message').textContent = message;
         document.getElementById('custom-alert').classList.remove('hidden');
     }
@@ -125,6 +137,24 @@
         const globalDescs = document.getElementById('globalDescs');
         const approveButton = document.getElementById('approveWeekButton');
         const returnButton = document.getElementById('returnWeekButton');
+        const confirmActionModal = document.getElementById('confirmActionModal');
+        const closeConfirmActionModalButton = document.getElementById('closeConfirmActionModalButton');
+        const confirmActionButton = document.getElementById('confirmActionButton');
+        const actionModalTitle = document.getElementById('actionModalTitle');
+        const actionConfirmMessage = document.getElementById('actionConfirmMessage');
+
+        function showActionConfirmation(title, message, action) {
+            actionModalTitle.textContent = title;
+            actionConfirmMessage.textContent = message;
+            confirmActionButton.onclick = action;
+            confirmActionModal.classList.remove('hidden');
+        }
+
+        function closeActionConfirmation() {
+            confirmActionModal.classList.add('hidden');
+        }
+
+        closeConfirmActionModalButton.addEventListener('click', closeActionConfirmation);
 
         getQueryParams();
         setupAutoRefresh();
@@ -436,62 +466,92 @@
             }, 30000); // Refresh every 30 seconds
         }
 
+        // Approve Button
         approveButton.onclick = async () => {
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const year = params.get('year');
-            const month = params.get('month');
-            const week = params.get('week');
+            showActionConfirmation('Approve Confirmation', 'Are you sure you want to approve this week?', async () => {
+                const params = new URLSearchParams(window.location.search);
+                const line = params.get('line');
+                const year = params.get('year');
+                const month = params.get('month');
+                const week = params.get('week');
 
-            try {
-                const response = await fetch(`http://127.0.0.1:8000/api/approve`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ line, year, month, week })
-                });
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/api/approve`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ line, year, month, week })
+                    });
 
-                if (response.ok) {
-                    showAlert('Approval successful');
-                    fetchDataForWeek(line, year, month, week);
-                } else {
-                    const errorData = await response.json();
-                    showAlert(`Failed to approve the week: ${errorData.message}`);
+                    if (response.ok) {
+                        showAlert('Approval successful');
+                        fetchDataForWeek(line, year, month, week);
+
+                        // Notify on success
+                        fetch(`http://127.0.0.1:8000/api/notify?line=${line}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to send notification');
+                                }
+                            })
+                            .catch(error => console.error('Notification error:', error));
+
+                        closeActionConfirmation();
+                        window.location.href = '/manager/dashboard'; // Redirect to dashboard
+                    } else {
+                        const errorData = await response.json();
+                        showAlert(`Failed to approve the week: ${errorData.message}`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert('An error occurred while approving the week');
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                showAlert('An error occurred while approving the week');
-            }
+            });
         };
 
+        // Return Button
         returnButton.onclick = async () => {
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const year = params.get('year');
-            const month = params.get('month');
-            const week = params.get('week');
+            showActionConfirmation('Return Confirmation', 'Are you sure you want to return this week?', async () => {
+                const params = new URLSearchParams(window.location.search);
+                const line = params.get('line');
+                const year = params.get('year');
+                const month = params.get('month');
+                const week = params.get('week');
 
-            try {
-                const response = await fetch(`http://127.0.0.1:8000/api/return`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ line, year, month, week })
-                });
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/api/return`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ line, year, month, week })
+                    });
 
-                if (response.ok) {
-                    showAlert('Return successful');
-                    fetchDataForWeek(line, year, month, week);
-                } else {
-                    const errorData = await response.json();
-                    showAlert(`Failed to return the week: ${errorData.message}`);
+                    if (response.ok) {
+                        showAlert('Return successful');
+                        fetchDataForWeek(line, year, month, week);
+
+                        // Notify on success
+                        fetch(`http://127.0.0.1:8000/api/notify-reject?line=${line}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to send notification');
+                                }
+                            })
+                            .catch(error => console.error('Notification error:', error));
+
+                        closeActionConfirmation();
+                        window.location.href = '/manager/dashboard'; // Redirect to dashboard
+                    } else {
+                        const errorData = await response.json();
+                        showAlert(`Failed to return the week: ${errorData.message}`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert('An error occurred while returning the week');
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                showAlert('An error occurred while returning the week');
-            }
+            });
         };
     });
 </script>
