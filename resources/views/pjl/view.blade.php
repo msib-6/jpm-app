@@ -1025,7 +1025,7 @@ machineOperations.forEach(operation => {
         ` : `
             <p><strong>${operation.code}</strong></p>
             <p>${operation.time}</p>
-            ${operation.status ? `<p class="text-red-600">${operation.status}</p>` : ''}
+            ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
             ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
         `;
         entry.onclick = function() {
