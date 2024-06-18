@@ -55,7 +55,7 @@
 
         profileTab.addEventListener('click', function() {
             // Fetch and display return approval data
-            fetch('http://127.0.0.1:8000/api/showreturnapprovalcard')
+            fetch('http://127.0.0.1:8000/api/showreturncard')
                 .then(response => response.json())
                 .then(data => {
                     profileContent.innerHTML = '';
