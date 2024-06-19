@@ -320,6 +320,7 @@ class MachineController extends Controller
             }
 
             $newState = [
+                'id' => $machineOperation->id,
                 'year' => $machineOperation->year,
                 'month' => $machineOperation->month,
                 'week' => $machineOperation->week,

@@ -1,0 +1,275 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background: url('../../../public/elegant.jpg'); /* Ganti dengan path gambar Anda */
+    background-attachment: fixed; /* Membuat background tetap di tempat saat di-scroll */
+    background-size: cover; /* Mengatur gambar agar mengisi area latar belakang sepenuhnya */
+    position: relative;
+}
+
+.status-only {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.notes-popup {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+.status-pm {
+    background: rgb(47,128,237) !important;
+    background: linear-gradient(90deg, rgba(47,128,237,1) 0%, rgba(58,149,238,1) 35%, rgba(86,204,242,1) 100%) !important;
+    color: white !important;
+}
+
+.status-bcp {
+    background: rgb(255,65,108);
+    background: linear-gradient(114deg, rgba(255,65,108,1) 18%, rgba(255,75,43,1) 100%);
+    color: white !important;
+}
+.status-off {
+    background: rgb(60,60,60) !important;
+    color: white !important;
+}
+
+/* .status-cusu {
+    background: rgb(89,180,195);
+background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
+color: white !important;
+} */
+.status-cusu {
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
+    color: white !important;
+}
+.status-dht {
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
+    color: white !important;
+}
+.status-cht {
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
+    color: white !important;
+}
+.status-kalibrasi {
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
+    color: white !important;
+}
+.status-overhaul {
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
+    color: white !important;
+}
+.status-cv {
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
+    color: white !important;
+}
+.status-cpv {
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
+    color: white !important;
+}
+
+#dataContainer{
+    min-height: 30em;
+}
+
+.notes-popup {
+    position: absolute;
+    background: #FFFFFF;
+    border: 1px solid #ccc;
+    padding: 10px;
+    max-width: 15em;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.isi-jpm{
+    background-color: #F8F9FB;
+    border-radius: 1em;
+    border-color: #E1E1E1;
+    box-shadow: 0.2em 0.1em 0.2em rgba(0, 0, 0, 0.1);
+}
+
+.mesin-jpm{
+    background-color: #F8F9FB;
+    border-radius: 1em;
+    border-color: #E1E1E1;
+    box-shadow: 0.2em 0.1em 0.2em rgba(0, 0, 0, 0.1);
+}
+
+.desc-container{
+    height: 5em;
+}
+
+#globalDescContainer{
+    min-height: 30em;
+}
+
+.headers-days{
+    background-color: #F8F9FB;
+}
+
+
+.add-mesin-button {
+    width: 10em;
+    height: 4em;
+    position: fixed;
+    bottom: 2.5em;
+    right: 2.5em;
+    z-index: 1000; /* Pastikan tombol muncul di atas elemen lain */
+}
+
+/* Granulasi */
+.custom-badge1 {
+    background-color: #63D110;
+    background-image: linear-gradient(to right bottom, #32ae10, #43b911, #52c411, #61cf11, #70da10); /* Warna kustom */
+
+}
+/* Drying */
+.custom-badge2 {
+    background-color: #ff7878;
+    background-image: linear-gradient(to right bottom, #b0220e, #bb1f16, #c51c1d, #d01725, #db102d);
+
+}
+/* Final Mix/Camas */
+.custom-badge3 {
+    background-color: #5078f2;
+    background-image: linear-gradient(to right bottom, #1a397d, #1b4489, #1b4f96, #1c5aa2, #1c66ae);
+
+}
+/* Cetak */
+.custom-badge4 {
+    background-color: #f4f5f6;
+    background-image: linear-gradient(to right bottom, #5a2a8e, #5a2c96, #592f9e, #5732a6, #5435af);
+}
+/* Coating */
+.custom-badge5 {
+    background-color: #f5d3c8;
+    background-image: linear-gradient(to right bottom, #aa8759, #b8905d, #c59962, #d4a366, #e2ac6b);
+}
+/* Kemas */
+.custom-badge6 {
+    background-color: #ffd72f;
+    background-image: linear-gradient(to right bottom, #aa0d5e, #b8056f, #c40181, #d00296, #d90dac);
+}
+/* Mixing */
+.custom-badge7 {
+    background-color: #f5d3c8;
+    background-image: linear-gradient(to right bottom, #e5a70d, #ce2424);
+}
+/* Filling */
+.custom-badge8 {
+    background-color: #f5d3c8;
+    background-image: linear-gradient(to right bottom, #11accb, #c522e1);
+}
+/* Kompaksi */
+.custom-badge9 {
+    background-color: #f5d3c8;
+    background-image: linear-gradient(to right bottom, #6a11cb, #2575fc);
+}
+
+
+
+.custom-badge {
+    background-color: #82947A; /* Warna kustom */
+    color: white;
+    font-size: 0.75rem; /* 12px */
+    font-weight: 500;
+    padding: 0.125rem 0.625rem; /* Padding atas-bawah: 2px, kiri-kanan: 10px */
+    border-radius: 9999px;
+}
+
+.add-jpm-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #E9E9E9; /* Light purple background */
+    color: #000000; /* Dark purple text */
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+
+.day-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Align items at the top */
+    gap: 0.5rem;
+}
+
+.entry-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+
+/* Custom CSS for time input */
+.time-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+.time-picker label {
+    margin-bottom: 0.5rem;
+}
+.time-inputs {
+    display: flex;
+    align-items: center;
+}
+.time-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0.5rem;
+}
+.time-input input {
+    text-align: center;
+    width: 50px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 1.25rem;
+    -moz-appearance: textfield;
+}
+.time-input input::-webkit-inner-spin-button,
+.time-input input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.time-input button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+}
+.time-input button:hover {
+    color: #4c51bf;
+
+}
+
+
+
+.add-desc-button{
+    width: 90%;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-desc-button2{
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
