@@ -40,38 +40,38 @@ background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 1
 color: white !important;
 } */
 .status-cusu {
-    background: rgb(133,118,255);
-    background: linear-gradient(114deg, rgba(133,118,255,1) 23%, rgba(123,201,255,1) 100%);
-color: white !important;
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
+    color: white !important;
 }
 .status-dht {
-    background: rgb(65,201,226);
-background: linear-gradient(112deg, rgba(65,201,226,1) 0%, rgba(172,226,225,1) 100%);
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
     color: white !important;
 }
 .status-cht {
-    background: rgb(89,180,195);
+background: rgb(89,180,195);
 background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
-    color: white !important;
+color: white !important;
 }
 .status-kalibrasi {
-    background: rgb(90,114,160);
-background: linear-gradient(112deg, rgba(90,114,160,1) 22%, rgba(131,180,255,1) 100%);
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
     color: white !important;
 }
 .status-overhaul {
-    background: rgb(161,221,112);
-background: linear-gradient(112deg, rgba(161,221,112,1) 0%, rgba(246,238,201,1) 100%);
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
     color: white !important;
 }
 .status-cv {
-    background: rgb(83,86,255);
-    background: linear-gradient(112deg, rgba(83,86,255,1) 35%, rgba(225,247,245,1) 100%);
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
     color: white !important;
 }
 .status-cpv {
-    background: rgb(95,93,156);
-    background: linear-gradient(146deg, rgba(95,93,156,1) 28%, rgba(225,247,245,1) 100%);
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
     color: white !important;
 }
 
