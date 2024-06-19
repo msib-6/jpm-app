@@ -19,14 +19,14 @@
 
     <!-- Header for Days -->
     <div class="header-days bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width:100%;" id="headerDays">
-        <div class="flex justify-between text-center font-semibold">
-            <div class="flex-1 font-bold items-center justify-center text-sm">Tanggal</div>
-            <div class="flex-1 font-bold items-center justify-center text-sm">Jam</div>
-            <div class="flex-1 font-bold items-center justify-center text-sm">Line</div>
-            <div class="flex-1 font-bold items-center justify-center text-sm">Kode Produk</div>
-            <div class="flex-1 font-bold items-center justify-center text-sm">No Batch</div>
-            <div class="flex-1 font-bold items-center justify-center text-sm">Tanggal dan Waktu Revisi JPM</div>
-            <div class="flex-1 font-bold items-center justify-center text-sm">Keterangan</div>
+        <div class="flex justify-between text-center p-2 font-semibold">
+            <div class="flex-1 font-bold items-center justify-center text-large">Tanggal</div>
+            <div class="flex-1 font-bold items-center justify-center text-large">Jam</div>
+            <div class="flex-1 font-bold items-center justify-center text-large">Line</div>
+            <div class="flex-1 font-bold items-center justify-center text-large">Kode Produk</div>
+            <div class="flex-1 font-bold items-center justify-center text-large">No Batch</div>
+            <div class="flex-1 font-bold items-center justify-center text-large">Data Update JPM</div>
+            <div class="flex-1 font-bold items-center justify-center text-large">Keterangan</div>
         </div>
     </div>
 
