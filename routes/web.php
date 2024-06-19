@@ -29,6 +29,9 @@ Route::get('/summary', function () {
 Route::get('/auditlog', function () {
     return view('history.auditlog');
 });
+Route::get('/logistik', function () {
+    return view('logistik.dashboard');
+});
 
 Route::middleware(['auth', 'line'])->group(function () {
     Route::get('/pjl/{line}/dashboard', function ($line) {
