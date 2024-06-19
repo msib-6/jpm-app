@@ -47,6 +47,9 @@
 
     <!-- Global Description Container -->
     <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex flex-col items-center" style="width: 91.666667%;">
+        <h1 class="font-bold text-2xl mb-4">
+            Description
+        </h1>
         <!-- Add Description Button -->
         <button id="openGlobalDescModalButton" class="add-desc-button relative inline-flex items-center justify-center p-0.5 mb-4 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
             <span class="relative add-desc-button2 px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
@@ -719,7 +722,7 @@
 
             filteredDescriptions.forEach(desc => {
                 const descButton = document.createElement('button');
-                descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
+                descButton.className = 'my-2 bg-white descWeek p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
                 descButton.style.width = '90%';
                 descButton.textContent = desc.description;
                 descButton.onclick = function() {
@@ -922,9 +925,6 @@
 
                 dataContainer.appendChild(machineRow);
 
-
-
-
                 // Sort machine operations by time in ascending order, with "PM" status given priority
                 const machineOperations = machineOperationsMap.get(machine.id) || [];
                 machineOperations.sort((a, b) => {
@@ -957,32 +957,31 @@
                         entry.style.minHeight = '6em'; // Set the height to 6em
 
                         entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
-            <p class="status-only">${operation.status}</p>
-            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-        ` : `
-            <p><strong>${operation.code}</strong></p>
-            <p>${operation.time}</p>
-            ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
-            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-        `;
+                            <p class="status-only">${operation.status}</p>
+                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                        ` : `
+                            <p><strong>${operation.code}</strong></p>
+                            <p>${operation.time}</p>
+                            ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
+                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                        `;
+                        entry.onmouseenter = function(event) {
+                            if (operation.notes) {
+                                showNotesPopup(event, `Line: ${operation.current_line}\nNotes: ${operation.notes}`);
+                            } else {
+                                showNotesPopup(event, `Line: ${operation.current_line}`);
+                            }
+                        };
+                        entry.onmouseleave = function() {
+                            hideNotesPopup();
+                        };
                         entry.onclick = function() {
                             openEditModal(operation);
                         };
 
-                        if (operation.notes) {
-                            entry.onmouseenter = function(event) {
-                                showNotesPopup(event, operation.notes);
-                            };
-                            entry.onmouseleave = function() {
-                                hideNotesPopup();
-                            };
-                        }
-
                         dayColumn.appendChild(entry);
                     }
                 });
-
-
 
                 // Add "+ Add Data" button at the end of each day column
                 for (let i = 1; i <= 8; i++) {
@@ -1015,7 +1014,7 @@
         function showNotesPopup(event, notes) {
             const popup = document.createElement('div');
             popup.className = 'notes-popup';
-            popup.textContent = notes;
+            popup.innerHTML = notes.split('\n').map(line => `<strong>${line.split(':')[0]}</strong>: ${line.split(':')[1]}`).join('<br>');
             document.body.appendChild(popup);
             const rect = event.target.getBoundingClientRect();
             popup.style.top = `${rect.top + window.scrollY}px`;

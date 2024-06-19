@@ -45,35 +45,5 @@ class DatabaseSeeder extends Seeder
             'email_role' => ['Line1'],
         ]);
 
-        Machine::create([
-            'machine_name' => 'Machine 1',
-            'category' => 'Category 1',
-            'line' => ['Line1', 'Line 4', 'Line8a'],
-        ]);
-
-        Machine::create([
-            'machine_name' => 'Machine 2',
-            'category' => 'Category 2',
-            'line' => ['Line1', 'Line2'],
-        ]);
-
-        MachineData::create([
-            'machine_id' => 1,
-            'machine_name' => 'Machine 1',
-            'year' => '2024',
-            'month' => '4',
-            'week' => '1',
-            'date' => '2024-04-01 00:00:00',
-        ]);
-
-        MachineData::create([
-            'machine_id' => 2,
-            'machine_name' => 'Machine 2',
-            'year' => '2024',
-            'month' => '4',
-            'week' => '1',
-            'date' => '2024-04-01 00:00:00',
-        ]);
-
     }
 }

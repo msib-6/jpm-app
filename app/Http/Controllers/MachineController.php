@@ -283,6 +283,10 @@ class MachineController extends Controller
             $username = $user ? $user->name : '';
 
             $originalState = [
+                'year' => $machineOperation->year,
+                'month' => $machineOperation->month,
+                'week' => $machineOperation->week,
+                'line' => $machineOperation->current_line,
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
                 'time' => $machineOperation->time,
@@ -315,6 +319,10 @@ class MachineController extends Controller
             }
 
             $newState = [
+                'year' => $machineOperation->year,
+                'month' => $machineOperation->month,
+                'week' => $machineOperation->week,
+                'line' => $machineOperation->current_line,
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
                 'time' => $machineOperation->time,
@@ -457,6 +465,10 @@ class MachineController extends Controller
             }
 
             $originalState = [
+                'year' => $machineOperation->year,
+                'month' => $machineOperation->month,
+                'week' => $machineOperation->week,
+                'line' => $machineOperation->current_line,
                 'day' => $machineOperation->day,
                 'code' => $machineOperation->code,
                 'time' => $machineOperation->time,
@@ -492,6 +504,7 @@ class MachineController extends Controller
             $globalDescription = GlobalDescription::find($globalDescriptionID);
 
             $originalState = [
+                'line' => $globalDescription->line,
                 'description' => $globalDescription->description,
                 'year' => $globalDescription->year,
                 'month' => $globalDescription->month,

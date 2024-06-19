@@ -29,7 +29,6 @@ body {
 }
 
 
-
 /* view warna di card */
 
 /* Custom colors */
@@ -56,7 +55,7 @@ body {
 /* Cetak */
 .custom-badge4 {
     background-color: #f4f5f6;
-    background-image: linear-gradient(to right bottom, #5a2a8e, #5a2c96, #592f9e, #5732a6, #5435af); 
+    background-image: linear-gradient(to right bottom, #5a2a8e, #5a2c96, #592f9e, #5732a6, #5435af);
 }
 /* Coating */
 .custom-badge5 {
@@ -71,12 +70,12 @@ body {
 /* Mixing */
 .custom-badge7 {
     background-color: #f5d3c8;
-    background-image: linear-gradient(to right bottom, #e5a70d, #ce2424); 
+    background-image: linear-gradient(to right bottom, #e5a70d, #ce2424);
 }
 /* Filling */
 .custom-badge8 {
     background-color: #f5d3c8;
-    background-image: linear-gradient(to right bottom, #11accb, #c522e1); 
+    background-image: linear-gradient(to right bottom, #11accb, #c522e1);
 }
 /* Kompaksi */
 .custom-badge9 {

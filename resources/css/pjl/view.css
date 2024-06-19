@@ -75,6 +75,10 @@ color: white !important;
     color: white !important;
 }
 
+#dataContainer{
+    min-height: 30em;
+}
+
 .notes-popup {
     position: absolute;
     background: #FFFFFF;
@@ -105,7 +109,7 @@ color: white !important;
 }
 
 #globalDescContainer{
-    min-height: 20em;
+    min-height: 30em;
 }
 
 .headers-days{
