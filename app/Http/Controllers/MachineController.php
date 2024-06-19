@@ -292,6 +292,7 @@ class MachineController extends Controller
                 'time' => $machineOperation->time,
                 'status' => $machineOperation->status,
                 'notes' => $machineOperation->notes,
+                'updated_at' => $machineOperation->updated_at,
             ];
 
             $status = $request->input('status') ?? $machineOperation->status;
@@ -328,6 +329,7 @@ class MachineController extends Controller
                 'time' => $machineOperation->time,
                 'status' => $machineOperation->status,
                 'notes' => $machineOperation->notes,
+                'updated_at' => $machineOperation->updated_at,
             ];
 
             Audits::create([
@@ -381,7 +383,12 @@ class MachineController extends Controller
             $originalStates = $operations->map(function ($operation) {
                 return [
                     'id' => $operation->id,
+                    'year' => $operation->year,
+                    'month' => $operation->month,
+                    'week' => $operation->week,
+                    'line' => $operation->current_line,
                     'is_sent' => $operation->is_sent,
+                    'updated_at' => $operation->updated_at,
                 ];
             });
 
@@ -476,6 +483,7 @@ class MachineController extends Controller
                 'is_changed' => $machineOperation->is_changed,
                 'is_approved' => $machineOperation->is_approved,
                 'changedBy' => $machineOperation->changedBy,
+                'updated_at' => $machineOperation->updated_at,
             ];
 
             $machineOperation->delete();
@@ -504,6 +512,7 @@ class MachineController extends Controller
             $globalDescription = GlobalDescription::find($globalDescriptionID);
 
             $originalState = [
+                'updated_at' => $globalDescription->updated_at,
                 'line' => $globalDescription->line,
                 'description' => $globalDescription->description,
                 'year' => $globalDescription->year,

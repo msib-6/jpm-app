@@ -77,7 +77,7 @@
     <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
         <div class="flex justify-between items-center">
             <div class="flex justify-start">
-                <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
+                <button id="historyButton" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
             </div>
             <div class="flex justify-end">
                 <button id="editWeekButton" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Edit</button>
@@ -434,7 +434,7 @@
         }
 
         function formatDate(date) {
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const days = ['Minggu', 'Senin', 'Senin', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
         }
 
@@ -487,7 +487,6 @@
                 showAlert('Error: Missing line, year, month, or week.');
             }
         });
-
 
         async function fetchAndDisplayHistory() {
             const params = new URLSearchParams(window.location.search);
@@ -586,27 +585,16 @@
                 console.error("Error fetching history:", error);
             }
         }
+
         document.addEventListener('DOMContentLoaded', fetchAndDisplayHistory);
 
-        // Fetch the current is_sent status and disable the edit button if true
-        async function checkIsSentStatus() {
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const month = params.get('month');
-            const week = params.get('week');
-            const year = params.get('year');
-
-            const response = await fetch(`http://127.0.0.1:8000/api/checkissent?line=${line}&month=${month}&week=${week}&year=${year}`);
-            const result = await response.json();
-
-            if (result.is_sent) {
-                editWeekButton.disabled = true;
-                editWeekButton.classList.add('bg-gray-500', 'cursor-not-allowed');
-                editWeekButton.classList.remove('bg-blue-500', 'hover:bg-blue-600');
-            }
+        // Disable edit button if is_sent is true
+        if ({{ is_sent }}) {
+            editWeekButton.disabled = true;
+            editWeekButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+            editWeekButton.classList.remove('bg-blue-500', 'hover:bg-blue-600');
         }
 
-        checkIsSentStatus();
     });
 
 </script>
