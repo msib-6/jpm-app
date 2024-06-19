@@ -68,6 +68,10 @@
 
     <!-- Global Description Container -->
     <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex flex-col items-center" style="width: 91.666667%;">
+        <h1 class="font-bold text-2xl mb-4">
+            Description
+        </h1>
+        <!-- Dynamic rows for Global Desc will be appended here -->
         <div id="globalDescs" class="flex flex-col items-center w-full">
             <!-- Descriptions will be dynamically inserted here -->
         </div>
@@ -77,7 +81,7 @@
     <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
         <div class="flex justify-between items-center">
             <div class="flex justify-start">
-                <button id="historyButton" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
+                <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
             </div>
             <div class="flex justify-end">
                 <button id="editWeekButton" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Edit</button>
@@ -139,6 +143,7 @@
         const historyButton = document.getElementById('historyButton');
         const historyModal = document.getElementById('historyModal');
         const closeHistoryModalButton = document.getElementById('closeHistoryModalButton');
+        const historyContent = document.getElementById('historyContent');
         let currentMachineId;
         let currentDay;
         let currentMonth;
@@ -147,9 +152,15 @@
         getQueryParams();
         setupAutoRefresh();
 
+        function viewGlobalDescription(desc) {
+            globalDescContent.textContent = desc.description;
+            currentGlobalDescId = desc.id;
+            viewGlobalDescModal.classList.remove('hidden');
+        }
+
         async function fetchAndDisplayGlobalDescriptions() {
             const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
+            const line = window.location.pathname.split('/')[2];
             const month = params.get('month');
             const week = params.get('week');
             const year = params.get('year');
@@ -165,7 +176,7 @@
 
             filteredDescriptions.forEach(desc => {
                 const descButton = document.createElement('button');
-                descButton.className = 'my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
+                descButton.className = 'my-2 bg-white descWeek p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
                 descButton.style.width = '90%';
                 descButton.textContent = desc.description;
                 descButton.onclick = function() {
@@ -275,22 +286,30 @@
                 machineOperationsMap.get(operation.machine_id).push(operation);
             });
 
+            // Sort machines by specified categories
+            const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating', 'Mixing', 'Filling', 'Kemas'];
+            machines.sort((a, b) => {
+                const categoryA = machineInfoMap.get(a.machine_id) || 'Unknown';
+                const categoryB = machineInfoMap.get(b.machine_id) || 'Unknown';
+                return categoryOrder.indexOf(categoryA) - categoryOrder.indexOf(categoryB);
+            });
+
             machines.forEach(machine => {
                 const category = machineInfoMap.get(machine.machine_id);  // Fetch category using machine_id
 
                 const machineRow = document.createElement('div');
                 machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                 machineRow.innerHTML = `
-            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                <div class="flex flex-col justify-center items-center w-full h-full">
-                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 mt-2 rounded-full mb-1">
-                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                        ${category}
-                    </span>
-                    <span class="mb-2">${machine.machine_name}</span>
-                </div>
-            </div>
-        `;
+                    <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                        <div class="flex flex-col justify-center items-center w-full h-full">
+                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                                <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                                ${category}
+                            </span>
+                            <span>${machine.machine_name}</span>
+                        </div>
+                    </div>
+                `;
 
                 // Add day columns based on header days
                 for (let i = 1; i <= 8; i++) {
@@ -305,42 +324,75 @@
 
                 dataContainer.appendChild(machineRow);
 
-                // Populate machine row with operations
+                // Sort machine operations by time in ascending order, with "PM" status given priority
                 const machineOperations = machineOperationsMap.get(machine.id) || [];
+                machineOperations.sort((a, b) => {
+                    if (a.status === 'PM') return -1;
+                    if (b.status === 'PM') return 1;
+                    const [hoursA, minutesA] = a.time.split(':').map(Number);
+                    const [hoursB, minutesB] = b.time.split(':').map(Number);
+                    return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
+                });
+
                 machineOperations.forEach(operation => {
                     const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
+
                     if (dayColumn) {
-                        const entry = document.createElement('div');
-                        entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
-                        entry.innerHTML = `
-                    <p><strong>${operation.code}</strong></p>
-                    <p>${operation.time}</p>
-                    ${operation.status ? `<p>${operation.status}</p>` : ''}
-                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                `;
+                        const entry = document.createElement('button');
+                        const statusClass = {
+                            'PM': 'status-pm',
+                            'BCP': 'status-bcp',
+                            'OFF': 'status-off',
+                            'CUSU': 'status-cusu',
+                            'DHT': 'status-dht',
+                            'CHT': 'status-cht',
+                            'KALIBRASI': 'status-kalibrasi',
+                            'OVERHAUL': 'status-overhaul',
+                            'CV': 'status-cv',
+                            'CPV': 'status-cpv'
+                        }[operation.status] || '';  // Gunakan kelas sesuai status atau kelas kosong jika tidak ada
+
+                        entry.className = `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
+                        entry.style.minHeight = '6em'; // Set the height to 6em
+
+                        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
+                            <p class="status-only">${operation.status}</p>
+                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                        ` : `
+                            <p><strong>${operation.code}</strong></p>
+                            <p>${operation.time}</p>
+                            ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
+                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                        `;
+                        entry.onmouseenter = function(event) {
+                            if (operation.notes) {
+                                showNotesPopup(event, `Line: ${operation.current_line}\nNotes: ${operation.notes}`);
+                            } else {
+                                showNotesPopup(event, `Line: ${operation.current_line}`);
+                            }
+                        };
+                        entry.onmouseleave = function() {
+                            hideNotesPopup();
+                        };
                         entry.onclick = function() {
                             openEditModal(operation);
                         };
 
-                        if (operation.notes) {
-                            entry.onmouseenter = function(event) {
-                                showNotesPopup(event, operation.notes);
-                            };
-                            entry.onmouseleave = function() {
-                                hideNotesPopup();
-                            };
-                        }
-
                         dayColumn.appendChild(entry);
                     }
                 });
+
+                // Add onclick event to view machine data modal
+                machineRow.querySelector('.mesin-jpm').onclick = function() {
+                    viewMachineData(machine);
+                };
             });
         }
 
         function showNotesPopup(event, notes) {
             const popup = document.createElement('div');
             popup.className = 'notes-popup';
-            popup.textContent = notes;
+            popup.innerHTML = notes.split('\n').map(line => `<strong>${line.split(':')[0]}</strong>: ${line.split(':')[1]}`).join('<br>');
             document.body.appendChild(popup);
             const rect = event.target.getBoundingClientRect();
             popup.style.top = `${rect.top + window.scrollY}px`;
@@ -434,7 +486,7 @@
         }
 
         function formatDate(date) {
-            const days = ['Minggu', 'Senin', 'Senin', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
         }
 
@@ -487,6 +539,7 @@
                 showAlert('Error: Missing line, year, month, or week.');
             }
         });
+
 
         async function fetchAndDisplayHistory() {
             const params = new URLSearchParams(window.location.search);
@@ -585,16 +638,7 @@
                 console.error("Error fetching history:", error);
             }
         }
-
         document.addEventListener('DOMContentLoaded', fetchAndDisplayHistory);
-
-        // Disable edit button if is_sent is true
-        if ({{ is_sent }}) {
-            editWeekButton.disabled = true;
-            editWeekButton.classList.add('bg-gray-400', 'cursor-not-allowed');
-            editWeekButton.classList.remove('bg-blue-500', 'hover:bg-blue-600');
-        }
-
     });
 
 </script>
