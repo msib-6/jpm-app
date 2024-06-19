@@ -588,8 +588,25 @@
         }
         document.addEventListener('DOMContentLoaded', fetchAndDisplayHistory);
 
+        // Fetch the current is_sent status and disable the edit button if true
+        async function checkIsSentStatus() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
 
+            const response = await fetch(`http://127.0.0.1:8000/api/checkissent?line=${line}&month=${month}&week=${week}&year=${year}`);
+            const result = await response.json();
 
+            if (result.is_sent) {
+                editWeekButton.disabled = true;
+                editWeekButton.classList.add('bg-gray-500', 'cursor-not-allowed');
+                editWeekButton.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+            }
+        }
+
+        checkIsSentStatus();
     });
 
 </script>
