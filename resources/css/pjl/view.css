@@ -74,6 +74,11 @@ color: white !important;
     background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
     color: white !important;
 }
+.status-breakdown {
+    background: rgb(89,180,195);
+    background: linear-gradient(112deg, rgba(89,180,195,1) 0%, rgba(116,226,145,1) 100%);
+    color: white !important;
+}
 
 #dataContainer{
     min-height: 30em;

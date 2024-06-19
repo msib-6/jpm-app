@@ -947,16 +947,17 @@
                             'CUSU': 'status-cusu',
                             'DHT': 'status-dht',
                             'CHT': 'status-cht',
-                            'KALIBRASI': 'status-kalibrasi',
+                            'KALIBRASI': 'status-kalibrasBi',
                             'OVERHAUL': 'status-overhaul',
                             'CV': 'status-cv',
-                            'CPV': 'status-cpv'
+                            'CPV': 'status-cpv',
+                            'BREAKDOWN': 'status-breakdown'
                         }[operation.status] || '';  // Gunakan kelas sesuai status atau kelas kosong jika tidak ada
 
                         entry.className = `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
                         entry.style.minHeight = '6em'; // Set the height to 6em
 
-                        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
+                        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF','BREAKDOWN', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
                             <p class="status-only">${operation.status}</p>
                             ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
                         ` : `
