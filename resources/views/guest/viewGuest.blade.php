@@ -78,7 +78,7 @@
                             </nav>
 
     <!-- Card Title -->
-    <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
+    <div class="bg-white p-6 opacity-75 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
         <h3 id="title" class="text-2xl font-bold">
             <span id="line-display">Loading...</span>
         </h3>
@@ -92,7 +92,7 @@
     </div>
 
     <!-- Weeks Container -->
-    <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;" id="weeksList">
+    <div class="bg-white opacity-75 p-6  rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;" id="weeksList">
         <!-- Buttons for each week will be appended here -->
     </div>
 
