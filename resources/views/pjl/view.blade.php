@@ -960,11 +960,13 @@
                         entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF','BREAKDOWN', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
                             <p class="status-only">${operation.status}</p>
                             ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                            ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
                         ` : `
                             <p><strong>${operation.code}</strong></p>
                             <p>${operation.time}</p>
                             ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
                             ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                            ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
                         `;
                         entry.onmouseenter = function(event) {
                             if (operation.notes) {
