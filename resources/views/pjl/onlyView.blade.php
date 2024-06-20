@@ -446,6 +446,8 @@
                     startDate.setDate(startDate.getDate() + 1);
                 }
                 startDate.setDate(startDate.getDate() - 7); // Go back 7 days to get the Monday of the previous week
+            } else {
+                startDate.setDate(startDate.getDate() - 7); // Go back 7 days even if it is already Monday
             }
 
             let currentDate = new Date(startDate);
@@ -453,6 +455,7 @@
             let week = [formatDate(currentDate)]; // Start the first week with the adjusted or found Monday
 
             currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+
 
             // Loop through the days, ensuring each week runs from Monday to the following Monday
             while (true) {
@@ -555,6 +558,35 @@
             } else {
                 showAlert('Error: Missing line, year, month, or week.');
             }
+        });
+
+        async function checkWaitingApprovalStatus() {
+            const pathSegments = window.location.pathname.split('/');
+            const line = pathSegments[2];
+            const params = new URLSearchParams(window.location.search);
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            const response = await fetch(`http://127.0.0.1:8000/api/showwaitingapprovalcard`);
+            const approvalData = await response.json();
+
+            if (approvalData.WaitingApproval.some(approval =>
+                approval.year === year &&
+                approval.month === month &&
+                approval.week === week &&
+                approval.current_line === line &&
+                approval.is_sent === 1)) {
+                const editWeekButton = document.getElementById('editWeekButton');
+                editWeekButton.disabled = true;
+                editWeekButton.classList.add('cursor-not-allowed', 'opacity-50');
+                editWeekButton.classList.remove('hover:bg-blue-600');
+            }
+        }
+
+        // Panggil fungsi ini setelah DOM content loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            checkWaitingApprovalStatus();
         });
 
 
