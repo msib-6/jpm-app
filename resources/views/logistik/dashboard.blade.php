@@ -6,7 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <title>Machine Schedule Display</title>
-    @vite('resources/css/logistik/logistik.css')
+    <!-- @vite('resources/css/logistik/logistik.css') -->
 </head>
 <body>
 <div class="container mx-auto px-4">
@@ -38,26 +38,39 @@
 
 <script>
     async function fetchAuditData() {
-        const response = await fetch('http://127.0.0.1:8000/api/showaudit');
-        const auditData = await response.json();
+        try {
+            const auditResponse = await fetch('http://127.0.0.1:8000/api/showaudit');
+            const audits = await auditResponse.json();
 
-        const fetchOperationsPromises = auditData.map(async (audit) => {
-            if (audit.event === 'edit') {
-                const newState = audit.changes.new_state;
-                const operationResponse = await fetch(`http://127.0.0.1:8000/api/showallmachineoperationpjl?id=${newState.id}`);
-                const operationData = await operationResponse.json();
+            const operationResponse = await fetch('http://127.0.0.1:8000/api/showallmachineoperationpjl');
+            const operationData = await operationResponse.json();
+            const operations = operationData.operations;
 
-                if (operationData.operations.length > 0) {
-                    const operation = operationData.operations[0];
-                    let status = '';
+            const dataContainer = document.getElementById('dataContainer');
 
-                    if (operation.is_approved === 1) {
-                        status = 'Approved';
-                    } else if (operation.is_rejected === 1) {
-                        status = 'Rejected';
-                    } else if (operation.is_sent === 1) {
-                        status = 'Waiting Approval';
+            audits.forEach(audit => {
+                if (audit.event === 'edit') {
+                    const newState = audit.changes.new_state;
+                    const idOperationUpdate = parseInt(newState.id);
+
+                    // Find the corresponding operation by ID
+                    const operation = operations.find(op => op.id === idOperationUpdate);
+
+                    // Determine the status based on is_approved, is_rejected, and is_sent
+                    let keterangan = '';
+                    if (operation) {
+                        if (operation.is_approved === 1) {
+                            keterangan = "Approved";
+                        } else if (operation.is_rejected === 1) {
+                            keterangan = "Rejected";
+                        } else if (operation.is_sent === 1) {
+                            keterangan = "Waiting Approval";
+                        }
                     }
+
+                    // Formatting Date
+                    const dateParts = newState.day.split('-');
+                    const formattedDate = `${dateParts[0]} ${["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"][parseInt(dateParts[1]) - 1]} ${dateParts[2]}`;
 
                     // Formatting Updated Date and Time
                     const originalDate = new Date(newState.updated_at);
@@ -71,31 +84,38 @@
                     const formattedTime = `${String(updatedHours).padStart(2, '0')}:${String(originalDate.getMinutes()).padStart(2, '0')}:${String(originalDate.getSeconds()).padStart(2, '0')}`;
                     const formattedUpdatedDate = `${updatedDay} ${updatedMonth} ${updatedYear}, ${formattedTime}`;
 
+                    // Kode Produk Extraction
+                    let kodeProdukMatch = newState.code.match(/[a-zA-Z]+/g);
+                    let kodeProduk = kodeProdukMatch ? kodeProdukMatch[0] : '';
+                    if (kodeProduk.length !== 5) {
+                        kodeProduk = kodeProduk.slice(1, 6);
+                    }
+
+                    // Formatting Line
+                    const formattedLine = newState.line ? newState.line.replace(/(\D+)(\d+)/, '$1 $2') : '';
+
                     // Creating the row
                     const row = document.createElement('div');
-                    row.className = 'flex justify-between text-center p-2';
+                    row.className = 'grid grid-cols-7 gap-4 text-center p-2';
                     row.innerHTML = `
-                    <div class="flex-1 items-center justify-center">${newState.day}</div>
-                    <div class="flex-1 items-center justify-center">${newState.time}</div>
-                    <div class="flex-1 items-center justify-center">${newState.line}</div>
-                    <div class="flex-1 items-center justify-center">${newState.code}</div>
-                    <div class="flex-1 items-center justify-center">${newState.code}</div>
-                    <div class="flex-1 items-center justify-center">${formattedUpdatedDate}</div>
-                    <div class="flex-1 items-center justify-center">${newState.notes ? newState.notes : ''}</div>
-                    <div class="flex-1 items-center justify-center">${status}</div>
-                `;
+                        <div class="flex-1 items-center justify-center">${formattedDate}</div>
+                        <div class="flex-1 items-center justify-center">${newState.time}</div>
+                        <div class="flex-1 items-center justify-center">${formattedLine}</div>
+                        <div class="flex-1 items-center justify-center">${kodeProduk}</div>
+                        <div class="flex-1 items-center justify-center">${newState.code}</div>
+                        <div class="flex-1 items-center justify-center">${formattedUpdatedDate}</div>
+                        <div class="flex-1 items-center justify-center">${keterangan}</div>
+                    `;
 
-                    const dataContainer = document.getElementById('dataContainer');
                     dataContainer.appendChild(row);
                 }
-            }
-        });
-
-        await Promise.all(fetchOperationsPromises);
+            });
+        } catch (error) {
+            console.error('Error fetching audit data:', error);
+        }
     }
 
     document.addEventListener('DOMContentLoaded', fetchAuditData);
-
 </script>
 </body>
 </html>
