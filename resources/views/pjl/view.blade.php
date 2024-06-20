@@ -806,7 +806,7 @@
             let machinesUrls = [];
             let machineInfoUrls = [];
 
-            if (week === "1") {
+            if (week === 1) {
                 const prevMonth = (month - 1 === 0) ? 12 : month - 1;
                 const prevYear = (month - 1 === 0) ? year - 1 : year;
 
@@ -869,6 +869,7 @@
                 console.error("Error fetching data:", error);
             }
         }
+
 
         function updateURL(line, year, month, week) {
             history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
@@ -1063,6 +1064,8 @@
                     startDate.setDate(startDate.getDate() + 1);
                 }
                 startDate.setDate(startDate.getDate() - 7); // Go back 7 days to get the Monday of the previous week
+            } else {
+                startDate.setDate(startDate.getDate() - 7); // Go back 7 days even if it is already Monday
             }
 
             let currentDate = new Date(startDate);

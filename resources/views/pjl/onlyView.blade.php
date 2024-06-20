@@ -151,6 +151,23 @@
 
         getQueryParams();
         setupAutoRefresh();
+        checkIsSentStatus();
+
+        async function checkIsSentStatus() {
+            const pathSegments = window.location.pathname.split('/');
+            const line = pathSegments[2];
+            const params = new URLSearchParams(window.location.search);
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            const response = await fetch(`http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`);
+            const operations = await response.json();
+
+            if (operations.some(operation => operation.is_sent === 1)) {
+                editWeekButton.style.display = 'none';
+            }
+        }
 
         function viewGlobalDescription(desc) {
             globalDescContent.textContent = desc.description;
@@ -522,7 +539,7 @@
                 if (line && month && week && year) {
                     fetchDataForWeek(line, year, month, week);
                 }
-            }, 60000); // Refresh every 30 seconds
+            }, 60000); // Refresh every 60 seconds
         }
 
         editWeekButton.addEventListener('click', function() {
