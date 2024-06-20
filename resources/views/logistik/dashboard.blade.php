@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-    <title>Machine Schedule Display</title>
-    <!-- @vite('resources/css/logistik/logistik.css') -->
+    <title>Logistik</title>
+    @vite('resources/css/logistik/logistik.css')
 </head>
 <body>
 <div class="container mx-auto px-4">
@@ -31,7 +31,7 @@
     </div>
 
     <!-- Data Container -->
-    <div id="dataContainer" class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 100%;">
+    <div id="dataContainer" class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 100%; min-height: 30em; max-height: 30em; overflow-y: auto;">
         <!-- Dynamic rows for machines will be appended here -->
     </div>
 </div>
