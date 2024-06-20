@@ -806,7 +806,7 @@
             let machinesUrls = [];
             let machineInfoUrls = [];
 
-            if (week === 1) {
+            if (week === "1") {
                 const prevMonth = (month - 1 === 0) ? 12 : month - 1;
                 const prevYear = (month - 1 === 0) ? year - 1 : year;
 
@@ -869,7 +869,6 @@
                 console.error("Error fetching data:", error);
             }
         }
-
 
         function updateURL(line, year, month, week) {
             history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
