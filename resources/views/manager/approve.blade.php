@@ -33,7 +33,7 @@
     </nav>
 
     <!-- Card Title -->
-    <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
+    <div class="bg-white  p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <h3 id="title" class="text-2xl font-bold">
             <span id="line-display">Loading...</span>
         </h3>
@@ -46,7 +46,7 @@
     </div>
 
     <!-- Header for Days -->
-    <div class="header-days bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none;" id="headerDays">
+    <div class="header-days bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);" id="headerDays">
         <div class="grid grid-cols-10 gap-4 text-center font-semibold">
             <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
             <!-- Dynamic date headers -->
@@ -62,7 +62,7 @@
     </div>
 
     <!-- Data Container -->
-    <div id="dataContainer" class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+    <div id="dataContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <!-- Dynamic rows for machines will be appended here -->
     </div>
 

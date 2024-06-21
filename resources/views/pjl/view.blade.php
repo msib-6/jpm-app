@@ -11,7 +11,7 @@
 <body>
 <div class="container mx-auto px-4">
     <!-- Card Title -->
-    <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
+    <div class="bg-gray-100 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <h3 id="title" class="text-2xl font-bold">
             <span id="line-display">{{ ucfirst(str_replace('Line', 'Line ', $line)) }}</span>
         </h3>
@@ -25,7 +25,7 @@
     </div>
 
     <!-- Header for Days -->
-    <div class="header-days bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none;" id="headerDays">
+    <div class="header-days bg-gray-100  p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);" id="headerDays">
         <div class="grid grid-cols-10 gap-4 text-center font-semibold">
             <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
             <!-- Dynamic date headers -->
@@ -41,7 +41,7 @@
     </div>
 
     <!-- Data Container -->
-    <div id="dataContainer" class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%;">
+    <div id="dataContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <!-- Dynamic rows for machines will be appended here -->
     </div>
 
@@ -105,7 +105,7 @@
 
                 <div class="mb-4">
                     <label for="dataCode" class="block text-gray-700">Kode</label>
-                    <input type="text" id="dataCode" class="w-full px-3 py-2 border rounded-lg" required>
+                    <input type="text" id="dataCode" class="w-full px-3 py-2 border rounded-lg" required placeholder="Contoh: KTNLGG12345" maxlength="11">
                 </div>
                 <!-- Time -->
                 <div class="mb-4 time-picker">
@@ -297,7 +297,7 @@
     <!-- Custom Alert Modal -->
     <div id="custom-alert" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
-            <h2 class="text-xl font-bold mb-4">JPM Says</h2>
+            <h2 class="text-xl font-bold mb-4">Alert</h2>
             <p id="custom-alert-message" class="mb-4">This is a custom alert message.</p>
             <div class="flex justify-between items-end">
                 <button onclick="closeAlert()" class="justify-end bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Close</button>
@@ -913,7 +913,7 @@
                                 <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
                                 ${category}
                             </span>
-                            <span>${machine.machine_name}</span>
+                            <span class="text-sm">${machine.machine_name}</span>
                         </div>
                     </div>
                 `;
@@ -1000,7 +1000,7 @@
                     const dayColumn = document.getElementById(`daydata${machine.id}-${day}`);
                     if (dayColumn) {
                         const addButton = document.createElement('button');
-                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white w-10 h-10'; // Set width and height to 10 each for circular shape
+                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white text-xs w-7 h-7'; // Set width and height to 10 each for circular shape
                         addButton.textContent = '+';
                         addButton.onclick = function() {
                             currentMachineId = machine.id;
