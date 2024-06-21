@@ -101,6 +101,8 @@
             <h2 class="text-2xl mb-4">Add Data</h2>
             <form id="addDataForm">
                 <!-- Code -->
+                <input type="text" id="userId" hidden value="{{auth()->user()->id}}">
+
                 <div class="mb-4">
                     <label for="dataCode" class="block text-gray-700">Kode</label>
                     <input type="text" id="dataCode" class="w-full px-3 py-2 border rounded-lg" required>
@@ -571,6 +573,7 @@
 
         async function addDataToMachine(machineId, day, month, year) {
             const dataCode = document.getElementById('dataCode').value;
+            const userId = document.getElementById('userId').value;
             const hours = document.getElementById('hours').value;
             const minutes = document.getElementById('minutes').value;
             const dataTime = `${hours}:${minutes}`;
@@ -594,9 +597,12 @@
                     line,
                     month,
                     week,
-                    year
+                    year,
+                    userId,
                 }),
             });
+
+            console.log(response);
 
             if (response.ok) {
                 showAlert(`Data added successfully`);

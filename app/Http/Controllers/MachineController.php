@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Audits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 
 class MachineController extends Controller
@@ -120,9 +121,9 @@ class MachineController extends Controller
 
     //Add Machine Operation, input to machineOperation database
     public function addMachineOperation(Request $request, $line, $machineID) {
-        $userId = auth()->id();
-
+        
         try {
+            $userId = $request->input('userId');
             $day = $request->input('day');
             $code = $request->input('code');
             $time = $request->input('time');
