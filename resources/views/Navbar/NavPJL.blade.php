@@ -1,7 +1,7 @@
 <!-- SIDEBAR -->
-<section id="sidebar">
-    <a href="#" class="brand">
-        <img class='bx bxs-smile mt-10 p-2 ml-2' src="{{ asset('Logo-Kalbe.0cf6623a.svg') }}" style="max-width: 200px; max-height: 190px; width: auto; height: auto;">
+<section id="sidebar" class="hide">
+    <a href="#" class="brand" style="display: flex; justify-content: center;">
+        <img class='bx bxs-smile mt-10 p-1' src="{{ asset('Logo-Kalbe.0cf6623a.svg') }}" style="max-width: 150px; max-height: 140px; width: auto; height: auto;">
     </a>
     <ul class="side-menu top">
     <li id="nav-jpm" class="side-item">
@@ -33,10 +33,10 @@
         <form action="#">
         </form>
         <div class="profile" style="position: relative;">
-            <img src="{{ asset('avatar1.png') }}" id="profileImage" style="cursor: pointer;">
-            <div class="dropdown" id="profileDropdown" style="display: none; position: absolute; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; z-index: 1000;">
+            <img src="{{ asset('profile.png') }}" id="profileImage" style="cursor: pointer;">
+            <div class="dropdown" id="profileDropdown" style="display: none; position: absolute; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; z-index: 1000; width: 100px; opacity: 0; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease;">
             <div class="py-0">
-                    <a href="#" id="signOut" class="block px-4 py-2 text-sm  hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                    <a href="#" id="signOut" class="block px-4 py-2 text-sm text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" style="display: block; width: 100%; transition: background-color 0.3s ease;">Sign out</a>
                 </div>
             </div>
         </div>
@@ -138,18 +138,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     profileImage.addEventListener('click', function(event) {
         event.preventDefault();
-        // Toggle visibility
+        // Toggle visibility with transition
         if (profileDropdown.style.display === 'none' || profileDropdown.style.display === '') {
             profileDropdown.style.display = 'block';
+            setTimeout(() => {
+                profileDropdown.style.opacity = '1';
+                profileDropdown.style.transform = 'translateY(0)';
+            }, 10); // Small delay to trigger transition
         } else {
-            profileDropdown.style.display = 'none';
+            profileDropdown.style.opacity = '0';
+            profileDropdown.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                profileDropdown.style.display = 'none';
+            }, 300); // Match the duration of the transition
         }
     });
 
     // Hide dropdown when clicking outside
     document.addEventListener('click', function(event) {
         if (!profileImage.contains(event.target) && !profileDropdown.contains(event.target)) {
-            profileDropdown.style.display = 'none';
+            profileDropdown.style.opacity = '0';
+            profileDropdown.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                profileDropdown.style.display = 'none';
+            }, 300); // Match the duration of the transition
         }
     });
 

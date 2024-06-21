@@ -17,6 +17,23 @@ body {
     height: 15.625em;
     padding: 3.125em;
 }
+.gaussian {
+    position: relative;
+    overflow: hidden;
+}
+
+.gaussian::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: blur(5px);
+    z-index: -1;
+    margin: -20px; /* Adjust this value to control the blur spread */
+}
 
 /* Styling umum untuk seleksi form */
 .form-select {

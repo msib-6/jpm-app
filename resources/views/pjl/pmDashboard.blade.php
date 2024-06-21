@@ -4,6 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .month-container {
+            transition: transform 0.3s ease;
+        }
+        .month-container:hover {
+            transform: scale(1.05);
+        }
+        .zoom-in {
+            opacity: 0;
+            transform: scale(0.5);
+            animation: zoomIn 0.5s forwards;
+        }
+        @keyframes zoomIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
 </head>
 <body style="background-image: url('{{ asset('ELEMECH.png') }}'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
 @extends('pjl.layout')
@@ -27,11 +46,11 @@
         </div>
     </div>
 
-    <div class="bg-white p-6 opacity-75 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
+    <div class="bg-gray-100 p-6  rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
                 <h3 class="text-3xl font-bold">PM {{ ucfirst(str_replace('Line', 'Line ', $line)) }}</h3>
             </div>
 
-    <div class="bg-white p-6 opacity-75 rounded-3xl shadow-2xl my-4 mx-auto flex items-center" style="width: 91.666667%;" id="yearsList">
+    <div class="bg-gray-100 p-6  rounded-3xl shadow-2xl my-4 mx-auto flex items-center" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);" id="yearsList">
         <div class="flex flex-grow items-center space-x-4">
         </div>
         <button class="bg-purple-100 text-purple-600 h-10 text-sm px-6 rounded-lg border-0 py-3" onclick="openModal()">Add Year</button>
@@ -51,7 +70,7 @@
     </div>
 
 
-    <div class="bg-white p-6 opacity-75 rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden" id="monthsContainer" style="width: 91.666667%;">
+    <div class="bg-gray-100 p-6  rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden" id="monthsContainer" style="width: 91.666667%;backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
 
     </div>
 
@@ -108,13 +127,17 @@
         yearButton.textContent = year;
         yearButton.className = 'text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
         yearButton.onclick = () => {
-            displayMonths(year, machines);
+            displayMonths(year, machines,);
         };
         yearsList.appendChild(yearButton);
     }
 
     function displayMonths(selectedYear, machines) {
         const monthsContainer = document.getElementById('monthsContainer');
+        if (!monthsContainer) {
+            console.error("monthsContainer not found");
+            return;
+        }
         monthsContainer.innerHTML = ''; // Clear the container
         monthsContainer.classList.remove('hidden'); // Show the container when a year is selected
 
@@ -130,9 +153,11 @@
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const leftContainer = document.createElement('div');
+        const middleContainer = document.createElement('div');
         const rightContainer = document.createElement('div');
-        leftContainer.className = 'w-1/2 pr-2';
-        rightContainer.className = 'w-1/2 pl-2';
+        leftContainer.className = 'w-1/3 pr-2';
+        middleContainer.className = 'w-1/3 px-2';
+        rightContainer.className = 'w-1/3 pl-2';
 
         months.forEach((monthName, index) => {
             const monthIndex = (index + 1).toString();
@@ -140,7 +165,6 @@
             const button = document.createElement('button');
             button.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black flex flex-col items-start justify-center w-full';
             button.style.height = '5em'; // consistent height for all month divs
-
             const monthSpan = document.createElement('span');
             monthSpan.textContent = monthName + ' ';
             monthSpan.className = 'text-lg font-bold';
@@ -163,8 +187,10 @@
                 window.location.href = `/pjl/${encodeURIComponent(selectedLine)}/pm?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
             };
 
-            if (index < 6) {
+            if (index % 3 === 0) {
                 leftContainer.appendChild(button);
+            } else if (index % 3 === 1) {
+                middleContainer.appendChild(button);
             } else {
                 rightContainer.appendChild(button);
             }
@@ -173,6 +199,7 @@
         const flexContainer = document.createElement('div');
         flexContainer.className = 'flex';
         flexContainer.appendChild(leftContainer);
+        flexContainer.appendChild(middleContainer);
         flexContainer.appendChild(rightContainer);
         monthsContainer.appendChild(flexContainer);
     }

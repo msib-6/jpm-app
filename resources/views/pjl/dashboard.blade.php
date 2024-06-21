@@ -4,6 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .month-container {
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 1rem;
+            background-color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .month-container:hover {
+            transform: scale(1.1);
+        }
+        .month-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        .week-list {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.875rem; /* Ukuran teks untuk "Week" */
+        }
+        .week-item {
+            background-color: #E9D5FF; /* Warna latar belakang lingkaran sesuai dengan warna ungu pada tombol "Add year" */
+            color: #7C3AED; /* Warna teks sesuai dengan warna ungu pada tombol "Add year" */
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 2rem;
+            height: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tambahkan bayangan */
+        }
+        .zoom-in {
+            opacity: 0;
+            transform: scale(0.8);
+            animation: zoomIn 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+        @keyframes zoomIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
 </head>
 <body style="background-image: url('{{ asset('ELEMECH.png') }}'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
 @extends('pjl.layout')
@@ -29,12 +77,12 @@
     </div>
 
     <!-- Card Title -->
-    <div class="bg-white p-6 opacity-75 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
-        <h3 class="text-3xl font-bold">PJL {{ ucfirst(str_replace('Line', 'Line ', $line)) }}</h3>
+    <div class="bg-gray-100 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center zoom-in" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
+    <h3 class="text-3xl font-bold relative z-10">PJL {{ ucfirst(str_replace('Line', 'Line ', $line)) }}</h3>
     </div>
 
     <!-- Years Container -->
-    <div class="bg-white p-6 opacity-75 rounded-3xl shadow-2xl my-4 mx-auto flex items-center" style="width: 91.666667%;" id="yearsList">
+    <div class="bg-gray-100 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center zoom-in" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);" id="yearsList">
         <div class="flex flex-grow items-center space-x-4">
             <!-- Dynamic year buttons will be added here -->
         </div>
@@ -55,7 +103,7 @@
     </div>
 
     <!-- Month Container initially hidden -->
-    <div class="bg-white p-6 opacity-75 rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden" id="monthsContainer" style="width: 91.666667%;">
+    <div class="bg-white p-6  rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden" id="monthsContainer" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <!-- Months will be added here by JavaScript -->
     </div>
 
@@ -94,15 +142,10 @@
 
         yearsList.innerHTML = ''; // Clear previous year buttons if any
 
-        const uniqueYears = new Set();
-        machines.forEach(machine => {
-            uniqueYears.add(machine.year);
-        });
+        const uniqueYears = [...new Set(machines.map(machine => machine.year))]; // Convert the Set to an array and sort it
+        uniqueYears.sort((a, b) => a - b);
 
-        // Convert the Set to an array and sort it
-        const sortedYears = Array.from(uniqueYears).sort((a, b) => a - b);
-
-        sortedYears.forEach(year => {
+        uniqueYears.forEach(year => {
             addYearButton(year, machines); // Adjusted to pass machines for displayMonths function
         });
     }
@@ -119,14 +162,13 @@
     }
 
     function displayMonths(selectedYear, machines) {
-        console.log("Selected Year:", selectedYear); // Debugging: Check the selected year
         const monthsContainer = document.getElementById('monthsContainer');
         monthsContainer.innerHTML = ''; // Clear the container
         monthsContainer.classList.remove('hidden'); // Show the container when a year is selected
 
         const monthWeekData = {};
         machines
-            .filter(machine => machine.year === selectedYear && machine.current_line === selectedLine) // Ensure correct filtering here
+            .filter(machine => machine.year === selectedYear && machine.current_line === selectedLine)
             .forEach(machine => {
                 if (!monthWeekData[machine.month]) {
                     monthWeekData[machine.month] = new Set();
@@ -136,53 +178,65 @@
 
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const leftContainer = document.createElement('div');
+        const middleContainer = document.createElement('div');
         const rightContainer = document.createElement('div');
-        leftContainer.className = 'w-1/2 pr-2';
-        rightContainer.className = 'w-1/2 pl-2';
+        leftContainer.className = 'w-1/3 pr-2';
+        middleContainer.className = 'w-1/3 px-2';
+        rightContainer.className = 'w-1/3 pl-2';
 
         months.forEach((monthName, index) => {
             const monthIndex = (index + 1).toString();
             const weeks = monthWeekData[monthIndex] || [];
-            const button = document.createElement('button');
-            button.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black flex flex-col items-start justify-center w-full';
-            button.style.height = '5em'; // consistent height for all month divs
+            const monthDiv = document.createElement('div');
+            monthDiv.className = 'month-container';
 
             const monthSpan = document.createElement('span');
-            monthSpan.textContent = monthName + ' ';
-            monthSpan.className = 'text-lg font-bold';
-            button.appendChild(monthSpan);
+            monthSpan.textContent = monthName;
+            monthSpan.className = 'month-name';
+            monthDiv.appendChild(monthSpan);
 
+            const weekDiv = document.createElement('div');
+            weekDiv.className = 'week-list';
             if (weeks.size === 0) {
-                const weekSpan = document.createElement('span');
-                weekSpan.textContent = '0 Week';
-                weekSpan.className = 'block text-s text-left w-full month-item-week';
-                button.appendChild(weekSpan);
+                weekDiv.textContent = '0 Week';
             } else {
-                const weeksArray = Array.from(weeks).map(week => `Week ${week}`).join(', ');
-                const weekSpan = document.createElement('span');
-                weekSpan.textContent = weeksArray;
-                weekSpan.className = 'text-s';
-                button.appendChild(weekSpan);
+                const weeksArray = Array.from(weeks).map(week => `W${week}`);
+                weeksArray.forEach(week => {
+                    const weekSpan = document.createElement('span');
+                    weekSpan.textContent = week;
+                    weekSpan.className = 'week-item';
+                    weekDiv.appendChild(weekSpan);
+                });
             }
+            monthDiv.appendChild(weekDiv);
 
             // Add click event to navigate to the view page with parameters
-            button.onclick = () => {
+            monthDiv.onclick = () => {
                 window.location.href = `/pjl/${encodeURIComponent(selectedLine)}/onlyView?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
             };
 
-            if (index < 6) {
-                leftContainer.appendChild(button);
+            if (index % 3 === 0) {
+                leftContainer.appendChild(monthDiv);
+            } else if (index % 3 === 1) {
+                middleContainer.appendChild(monthDiv);
             } else {
-                rightContainer.appendChild(button);
+                rightContainer.appendChild(monthDiv);
             }
+
+            // Apply the zoom-in class after rendering
+            setTimeout(() => {
+                monthDiv.classList.add('zoom-in');
+            }, 100);
         });
 
         const flexContainer = document.createElement('div');
         flexContainer.className = 'flex';
         flexContainer.appendChild(leftContainer);
+        flexContainer.appendChild(middleContainer);
         flexContainer.appendChild(rightContainer);
         monthsContainer.appendChild(flexContainer);
     }
+
 
     function openModal() {
         const existingYears = new Set();
@@ -233,3 +287,4 @@
 @endsection
 </body>
 </html>
+

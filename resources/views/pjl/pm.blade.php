@@ -32,13 +32,13 @@
         </ol>
     </nav>
 
-    <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%;">
+    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <h3 id="title" class="text-2xl font-bold">PM: <span id="line-display">Loading...</span></h3>
         <div id="weeksList" class="mx-2"></div>
         <h3 class="text-2xl font-bold"><span id="month-display">Loading...</span> <span id="year-display">Loading...</span></h3>
     </div>
 
-    <div id="globalDescContainer" class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-start" style="width: 91.666667%;">
+    <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-start" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <div class="justify-start" style="max-height: 28em; overflow-y: auto;">
             <p class="text-2xl font-bold">View Data</p>
             <div id="dataContainer">
