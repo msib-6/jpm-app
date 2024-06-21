@@ -10,13 +10,7 @@ class Audits extends Model
     USE hasFactory;
     protected $table = 'audits';
 
-    protected $fillable = [
-        'user_id',
-        'machine_operation_id',
-        'event',
-        'timestamp',
-        'changes',
-    ];
+   protected $guarded;
 
     // Define relationships if needed
     public function user()

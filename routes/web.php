@@ -43,6 +43,9 @@ Route::middleware(['auth', 'line'])->group(function () {
     })->name('pjl.line.mesin');
 
     Route::get('/pjl/{line}/view', function (Request $request, $line) {
+
+        // $user = Auth::user()->id;
+        // dd('')
         $line = $request->query('line');  // Access 'line' parameter
         $year = $request->query('year');  // Access 'year' parameter
         $month = $request->query('month'); // Access 'month' parameter
