@@ -118,7 +118,7 @@
 <!-- Custom Alert Modal -->
 <div id="custom-alert" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
     <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
-        <h2 class="text-xl font-bold mb-4">PJM Says</h2>
+        <h2 class="text-xl font-bold mb-4">Alert</h2>
         <p id="custom-alert-message" class="mb-4">This is a custom alert message.</p>
         <div class="flex justify-between items-end">
             <button onclick="closeAlert()" class="justify-end bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Close</button>
