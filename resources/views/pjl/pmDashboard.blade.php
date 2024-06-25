@@ -5,16 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('css/tailwind.min.css') }}" rel="stylesheet">
     <style>
-        .month-container {
-            transition: transform 0.3s ease;
+           .month-container {
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 1rem;
+            background-color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .month-container:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
+        }
+        .month-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        .week-list {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.875rem; /* Ukuran teks untuk "Week" */
+        }
+        .week-item {
+            background-color: #E9D5FF; /* Warna latar belakang lingkaran sesuai dengan warna ungu pada tombol "Add year" */
+            color: #7C3AED; /* Warna teks sesuai dengan warna ungu pada tombol "Add year" */
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 2rem;
+            height: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tambahkan bayangan */
         }
         .zoom-in {
             opacity: 0;
-            transform: scale(0.5);
-            animation: zoomIn 0.5s forwards;
+            transform: scale(0.8);
+            animation: zoomIn 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
         @keyframes zoomIn {
             to {
@@ -46,11 +75,11 @@
         </div>
     </div>
 
-    <div class="bg-gray-100 p-6  rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
+    <div class="bg-gray-100 p-6  rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center zoom-in" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
                 <h3 class="text-3xl font-bold">PM {{ ucfirst(str_replace('Line', 'Line ', $line)) }}</h3>
             </div>
 
-    <div class="bg-gray-100 p-6  rounded-3xl shadow-2xl my-4 mx-auto flex items-center" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);" id="yearsList">
+    <div class="bg-gray-100 p-6  rounded-3xl shadow-2xl my-4 mx-auto flex items-center zoom-in" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);" id="yearsList">
         <div class="flex flex-grow items-center space-x-4">
         </div>
         <button class="bg-purple-100 text-purple-600 h-10 text-sm px-6 rounded-lg border-0 py-3" onclick="openModal()">Add Year</button>
@@ -70,7 +99,7 @@
     </div>
 
 
-    <div class="bg-gray-100 p-6  rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden" id="monthsContainer" style="width: 91.666667%;backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
+    <div class="bg-gray-100 p-6  rounded-3xl shadow-2xl my-4 mx-auto summary-container hidden zoom-in" id="monthsContainer" style="width: 91.666667%;backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
 
     </div>
 
@@ -160,41 +189,43 @@
         rightContainer.className = 'w-1/3 pl-2';
 
         months.forEach((monthName, index) => {
-            const monthIndex = (index + 1).toString();
-            const weeks = monthWeekData[monthIndex] || new Set();
-            const button = document.createElement('button');
-            button.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-1 px-2 text-black flex flex-col items-start justify-center w-full';
-            button.style.height = '5em'; // consistent height for all month divs
-            const monthSpan = document.createElement('span');
-            monthSpan.textContent = monthName + ' ';
-            monthSpan.className = 'text-lg font-bold';
-            button.appendChild(monthSpan);
+    const monthIndex = (index + 1).toString();
+    const weeks = monthWeekData[monthIndex] || new Set();
+    const monthDiv = document.createElement('div');
+    monthDiv.className = 'month-container';
 
-            if (weeks.size === 0) {
-                const weekSpan = document.createElement('span');
-                weekSpan.textContent = 'No PM Data';
-                weekSpan.className = 'block text-s text-left w-full month-item-week';
-                button.appendChild(weekSpan);
-            } else {
-                const weeksArray = Array.from(weeks).map(week => week === "1" ? "Ada Data PM" : `Week ${week}`).join(', ');
-                const weekSpan = document.createElement('span');
-                weekSpan.textContent = weeksArray;
-                weekSpan.className = 'text-s';
-                button.appendChild(weekSpan);
-            }
+    const monthSpan = document.createElement('span');
+    monthSpan.textContent = monthName;
+    monthSpan.className = 'month-name';
+    monthDiv.appendChild(monthSpan);
 
-            button.onclick = () => {
-                window.location.href = `/pjl/${encodeURIComponent(selectedLine)}/pm?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
-            };
+    const weekDiv = document.createElement('div');
+    weekDiv.className = 'week-list';
+    if (weeks.size === 0) {
+        const weekSpan = document.createElement('span');
+        weekSpan.textContent = 'No PM Data';
+        weekDiv.appendChild(weekSpan);
+    } else {
+        const weeksArray = Array.from(weeks).map(week => week === "1" ? "Ada Data PM" : `W${week}`).join(', ');
+        const weekSpan = document.createElement('span');
+        weekSpan.textContent = weeksArray;
+        weekSpan.className = 'week-item';
+        weekDiv.appendChild(weekSpan);
+    }
+    monthDiv.appendChild(weekDiv);
 
-            if (index % 3 === 0) {
-                leftContainer.appendChild(button);
-            } else if (index % 3 === 1) {
-                middleContainer.appendChild(button);
-            } else {
-                rightContainer.appendChild(button);
-            }
-        });
+    monthDiv.onclick = () => {
+        window.location.href = `/pjl/${encodeURIComponent(selectedLine)}/pm?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
+    };
+
+    if (index % 3 === 0) {
+        leftContainer.appendChild(monthDiv);
+    } else if (index % 3 === 1) {
+        middleContainer.appendChild(monthDiv);
+    } else {
+        rightContainer.appendChild(monthDiv);
+    }
+});
 
         const flexContainer = document.createElement('div');
         flexContainer.className = 'flex';
