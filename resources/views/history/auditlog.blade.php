@@ -45,35 +45,81 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 <script>
+    // async function fetchAuditData() {
+    //     const response = await fetch('http://127.0.0.1:8000/api/showaudit');
+    //     const data = await response.json();
+    //     displayAuditData(data);
+    // }
+
+    // function displayAuditData(data) {
+    //     const container = document.getElementById('data-container');
+    //     container.innerHTML = ''; // Clear previous content
+    //     data.forEach(item => {
+    //         let content = '';
+    //         if (item.event === 'send_revision') {
+    //             const date = new Date(item.changes.original_state[0].updated_at);
+    //             date.setHours(date.getHours() + 7);
+    //             const formattedDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
+    //             const formattedTime = date.toTimeString().split(':');
+    //             content = `<p>Data Week ${item.changes.original_state[0].week}, ${formattedDate} telah berhasil dikirim pada tanggal ${formattedDate}, pukul ${formattedTime[0]}:${formattedTime[1]}</p>`;
+    //         } else {
+    //             content = `<p>${JSON.stringify(item)}</p>`;
+    //         }
+    //         const div = document.createElement('div');
+    //         div.classList.add('audit-item');
+    //         div.className = 'bg-white p-4 shadow-md rounded-md mb-2';
+    //         div.innerHTML = content;
+    //         container.appendChild(div);
+    //     });
+    // }
+
+    // document.addEventListener('DOMContentLoaded', fetchAuditData);
+
+    
     async function fetchAuditData() {
+    try {
         const response = await fetch('http://127.0.0.1:8000/api/showaudit');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
         const data = await response.json();
         displayAuditData(data);
+    } catch (error) {
+        console.error('Error fetching audit data:', error);
     }
+}
 
-    function displayAuditData(data) {
-        const container = document.getElementById('data-container');
-        container.innerHTML = ''; // Clear previous content
-        data.forEach(item => {
-            let content = '';
-            if (item.event === 'send_revision') {
-                const date = new Date(item.changes.original_state[0].updated_at);
-                date.setHours(date.getHours() + 7);
-                const formattedDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
-                const formattedTime = date.toTimeString().split(':');
-                content = `<p>Data Week ${item.changes.original_state[0].week}, ${formattedDate} telah berhasil dikirim pada tanggal ${formattedDate}, pukul ${formattedTime[0]}:${formattedTime[1]}</p>`;
-            } else {
-                content = `<p>${JSON.stringify(item)}</p>`;
-            }
-            const div = document.createElement('div');
-            div.classList.add('audit-item');
-            div.className = 'bg-white p-4 shadow-md rounded-md mb-2';
-            div.innerHTML = content;
-            container.appendChild(div);
-        });
-    }
+function displayAuditData(data) {
+    const container = document.getElementById('data-container');
+    container.innerHTML = ''; // Clear previous content
 
-    document.addEventListener('DOMContentLoaded', fetchAuditData);
+    // Ensure the data is sorted in descending order based on the updated_at field
+    const sortedData = data.sort((a, b) => {
+        const dateA = new Date(a.changes?.original_state[0]?.updated_at || 0);
+        const dateB = new Date(b.changes?.original_state[0]?.updated_at || 0);
+        return dateB - dateA;
+    });
+
+    sortedData.forEach(item => {
+        let content = '';
+        if (item.event === 'send_revision') {
+            const date = new Date(item.changes.original_state[0].updated_at);
+            date.setHours(date.getHours() + 7);
+            const formattedDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
+            const formattedTime = date.toTimeString().split(':');
+            content = `<p>Data Week ${item.changes.original_state[0].week}, ${formattedDate} telah berhasil dikirim pada tanggal ${formattedDate}, pukul ${formattedTime[0]}:${formattedTime[1]}</p>`;
+        } else {
+            content = `<p>${JSON.stringify(item)}</p>`;
+        }
+        const div = document.createElement('div');
+        div.classList.add('audit-item');
+        div.className = 'bg-white p-4 shadow-md rounded-md mb-2';
+        div.innerHTML = content;
+        container.appendChild(div);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', fetchAuditData);
 </script>
 
 </body>

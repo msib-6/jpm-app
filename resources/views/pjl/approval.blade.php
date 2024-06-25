@@ -34,7 +34,7 @@
             <p id="no-return-approval" class="text-center text-gray-500 font-bold hidden">Tidak ada return approval</p>
         </div>
 
-        <div class="bg-white p-6 rounded-3xl my-4 mx-auto summary-container hidden w-full" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="min-height: 30em;">
+        <div class="bg-white p-6 rounded-3xl my-4 mx-auto hidden w-full" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="min-height: 30em;">
             <!-- Data Approved Disini -->
             <p id="no-approved-data" class="text-center text-gray-500 font-bold hidden">Tidak ada data approved</p>
         </div>
@@ -51,7 +51,7 @@
         const dashboardContent = document.getElementById('styled-dashboard');
         const noReturnApprovalMessage = document.getElementById('no-return-approval');
         const noApprovedDataMessage = document.getElementById('no-approved-data');
-        const currentLine = 'Line1'; // Replace with the actual current line value if available
+        const currentLine = 'Line12'; // Replace with the actual current line value if available
 
         profileTab.addEventListener('click', function() {
             // Fetch and display return approval data
@@ -59,14 +59,14 @@
                 .then(response => response.json())
                 .then(data => {
                     profileContent.innerHTML = '';
-                    if (data.ReturnApproval.length === 0) {
+                    if (data.RejectedApproval.length === 0) {
                         const message = document.createElement('p');
                         message.classList.add('text-center', 'text-gray-500', 'font-bold');
                         message.textContent = 'Tidak Ada Return Approval';
                         container.appendChild(message);
                     } else {
                         noReturnApprovalMessage.classList.add('hidden');
-                        data.ReturnApproval.forEach(item => {
+                        data.RejectedApproval.forEach(item => {
                             if (item.current_line === currentLine) {
                                 const button = document.createElement('button');
                                 button.classList.add('my-2', 'bg-white', 'p-2', 'shadow-md', 'py-4', 'px-4', 'text-black', 'rounded-md', 'flex', 'justify-between', 'items-center', 'w-full');
