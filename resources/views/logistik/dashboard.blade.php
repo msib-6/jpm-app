@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{{ asset('css/tailwind.min.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <title>Logistik</title>
     @vite('resources/css/logistik/logistik.css')
@@ -15,6 +15,23 @@
         <h3 id="title" class="text-2xl font-bold">
             <span id="line-display">Logistik</span>
         </h3>
+    </div>
+
+    <!-- Filter and Export Buttons -->
+    <div class="flex justify-between my-4">
+        <div class="flex space-x-4">
+            <select id="lineFilter" class="p-2 rounded-lg border">
+                <option value="">Filter by Line</option>
+                <!-- Populate this dynamically -->
+            </select>
+            <select id="statusFilter" class="p-2 rounded-lg border">
+                <option value="">Filter by Status</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Waiting Approval">Waiting Approval</option>
+            </select>
+        </div>
+        <button id="exportPDF" class="p-2 bg-blue-500 text-white rounded-lg">Export to PDF</button>
     </div>
 
     <!-- Header for Data -->
@@ -47,6 +64,9 @@
             const operations = operationData.operations;
 
             const dataContainer = document.getElementById('dataContainer');
+            dataContainer.innerHTML = ''; // Clear previous data
+
+            const lines = new Set();
 
             audits.forEach(audit => {
                 if (audit.event === 'edit') {
@@ -65,7 +85,7 @@
                             keterangan = "Rejected";
                         } else if (operation.is_sent === 1) {
                             keterangan = "Waiting Approval";
-                        }
+                        } 
                     }
 
                     // Formatting Date
@@ -93,6 +113,7 @@
 
                     // Formatting Line
                     const formattedLine = newState.line ? newState.line.replace(/(\D+)(\d+)/, '$1 $2') : '';
+                    lines.add(formattedLine);
 
                     // Creating the row
                     const row = document.createElement('div');
@@ -110,12 +131,64 @@
                     dataContainer.appendChild(row);
                 }
             });
+
+            // Populate line filter
+            const lineFilter = document.getElementById('lineFilter');
+            lineFilter.innerHTML = '<option value="">Filter by Line</option>'; // Reset options
+            lines.forEach(line => {
+                const option = document.createElement('option');
+                option.value = line;
+                option.textContent = line;
+                lineFilter.appendChild(option);
+            });
+
         } catch (error) {
             console.error('Error fetching audit data:', error);
         }
     }
 
+    function filterData() {
+        const lineFilter = document.getElementById('lineFilter').value;
+        const statusFilter = document.getElementById('statusFilter').value;
+
+        const rows = document.querySelectorAll('#dataContainer > div');
+        rows.forEach(row => {
+            const line = row.children[2].textContent.trim();
+            const status = row.children[6].textContent.trim();
+
+            if ((lineFilter && line !== lineFilter) || (statusFilter && status !== statusFilter)) {
+                row.style.display = 'none';
+            } else {
+                row.style.display = 'grid';
+            }
+        });
+    }
+
+    async function exportToPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        const rows = document.querySelectorAll('#dataContainer > div');
+
+        let y = 10;
+        rows.forEach((row, index) => {
+            const text = Array.from(row.children).map(cell => cell.textContent.trim()).join(' | ');
+            doc.text(text, 10, y);
+            y += 10;
+            if (index % 28 === 27) {
+                doc.addPage();
+                y = 10;
+            }
+        });
+
+        doc.save('logistik.pdf');
+    }
+
     document.addEventListener('DOMContentLoaded', fetchAuditData);
+    document.getElementById('lineFilter').addEventListener('change', filterData);
+    document.getElementById('statusFilter').addEventListener('change', filterData);
+    document.getElementById('exportPDF').addEventListener('click', exportToPDF);
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </body>
 </html>
