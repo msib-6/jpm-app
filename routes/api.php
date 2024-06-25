@@ -72,6 +72,8 @@ Route::get('/showwaitingapproval', [ManagerController::class, 'showWaitingApprov
 Route::get('/showwaitingapprovalcard', [ManagerController::class, 'showWaitingApprovalCard'])->name('show.waiting.approval.card');
 Route::get('/showapprovedcard', [ManagerController::class, 'showApprovedCard'])->name('show.approved.card');
 Route::get('/showreturncard', [ManagerController::class, 'showReturnCard'])->name('show.return.card');
+Route::get('/showrevision', [ManagerController::class, 'showRevision'])->name('show.revision');
+
 
 //Manager Route
 Route::post('/approve', [ManagerController::class, 'approve'])->name('approve');
