@@ -7,6 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <title>Machine Schedule Display</title>
     @vite('resources/css/pjl/view.css')
+    <style>
+        .thin-plus {
+            font-weight: 400; /* Mengatur ketebalan font menjadi lebih tipis */
+        }
+    </style>
 </head>
 <body>
 <div class="container mx-auto px-4">
@@ -1000,7 +1005,7 @@
                     const dayColumn = document.getElementById(`daydata${machine.id}-${day}`);
                     if (dayColumn) {
                         const addButton = document.createElement('button');
-                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white text-xs w-7 h-7'; // Set width and height to 10 each for circular shape
+                        addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white text-xs w-7 h-7 thin-plus'; // Set width and height to 10 each for circular shape
                         addButton.textContent = '+';
                         addButton.onclick = function() {
                             currentMachineId = machine.id;
