@@ -90,6 +90,14 @@ class ManagerController extends Controller
         return response()->json(['RejectedApproval' => $returnApprovalFiltered], 200);
     }
 
+    //    SHOW MANAGER REVISION
+    public function showRevision() {
+        $revision = Manager::all();
+        return response()->json($revision);
+        //return view('globalDescriptions', ['globalDescriptions' => $globalDescriptions]);
+    }
+
+
     //Show waiting Approved in card
     public function showApprovedCard(){
         $ApprovedJPM = MachineOperation::where('is_approved', true)
