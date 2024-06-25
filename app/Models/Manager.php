@@ -16,5 +16,6 @@ class Manager extends Model
         'week',
         'line',
         'revision_number',
+        'return_notes',
     ];
 }

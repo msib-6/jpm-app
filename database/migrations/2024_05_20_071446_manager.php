@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('week');
             $table->string('line');
             $table->integer('revision_number')->default(0);
+            $table->string('return_notes')->nullable();
             $table->timestamps();
         });
     }

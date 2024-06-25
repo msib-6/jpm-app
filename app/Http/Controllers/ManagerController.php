@@ -166,7 +166,7 @@ class ManagerController extends Controller
     }
 
     public function approve(Request $request) {
-        $userId = auth()->id();
+        $userId = $request->input('userId');
         $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');
@@ -235,7 +235,7 @@ class ManagerController extends Controller
     }
 
     public function return(Request $request) {
-        $userId = auth()->id();
+        $userId = $request->input('userId');
         $line = $request->input('line');
         $year = $request->input('year');
         $month = $request->input('month');

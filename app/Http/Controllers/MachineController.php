@@ -18,7 +18,6 @@ class MachineController extends Controller
     // -------------------------------- ADD MACHINE FUNCTIONS --------------------------------
     //Add Machine. input to machine database
     public function addMachine(Request $request) {
-        $userId = auth()->id();
 
         try {
             // Validate the incoming request data
@@ -27,6 +26,7 @@ class MachineController extends Controller
                 'category' => 'required|string|max:255',
                 'line' => 'required|string|max:255',
             ]);
+            $userId = $request->input('userId');
 
             // Check if the machine already exists
             $existingMachineData = Machine::where('machine_name', $request->input('machineName'))->first();
@@ -40,6 +40,7 @@ class MachineController extends Controller
             $machine->machine_name = $validatedData['machine_name'];
             $machine->category = $validatedData['category'];
             $machine->line = $validatedData['line'];
+            
             $machine->save();
 
             Audits::create([
@@ -48,7 +49,7 @@ class MachineController extends Controller
                 'event' => 'add',
                 'changes' => json_encode([
                     'original_state' => '',
-                    'new_state' => $request->all(),
+                    'new_state' => array_merge($request->all(), ['updated_at' => $machine->updated_at]),
                 ])
             ]);
 
@@ -61,8 +62,7 @@ class MachineController extends Controller
 
     // Add weekly Machine, input to machineData database
     public function addWeeklyMachine(Request $request) {
-        $userId = auth()->id();
-
+        $userId = $request->input('userId');
         try {
             $machineOrigin = Machine::where('machine_name', $request->input('machineName'))->first();
 
@@ -129,6 +129,7 @@ class MachineController extends Controller
             $time = $request->input('time');
             $status = $request->input('status');
             $notes = $request->input('notes');
+            
 
             $machineData = MachineData::find($machineID);
             if (!$machineData) {
@@ -199,10 +200,10 @@ class MachineController extends Controller
 
     //Add Global Description below tables, input to globalDescription database
     public function addGlobalDescription(Request $request) {
-        $userId = auth()->id();
 
         try {
             // Validate the incoming request data
+            $userId = $request->input('userId');
             $validatedData = $request->validate([
                 'description' => 'required|string|max:255',
                 'year' => 'required|integer',
@@ -257,7 +258,7 @@ class MachineController extends Controller
     // -------------------------------- EDIT MACHINE FUNCTIONS --------------------------------
     //Edit Machine, edit machine data
     public function editMachineOperation(Request $request, $machineOperationID) {
-        $userId = auth()->id();
+        $userId = $request->input('userId');
         $validatedData = $request->validate([
             'day' => 'required',
             'code' => 'required',
@@ -352,7 +353,7 @@ class MachineController extends Controller
     }
 
     public function sendRevision(Request $request) {
-        $userId = auth()->id();
+        $userId = $request->input('userId');
 
         $validatedData = $request->validate([
             'year' => 'required|string',
@@ -429,7 +430,7 @@ class MachineController extends Controller
     // ------------------------------- DELETE MACHINE FUNCTIONS -------------------------------
     //Delete Weekly Machine, delete machine data from database and all related Machine operation
     public function deleteWeeklyMachine(Request $request, $machineID) {
-        $userId = auth()->id();
+        $userId = $request->input('userId');
 
         try {
             $machineData = MachineData::find($machineID);
@@ -464,7 +465,7 @@ class MachineController extends Controller
 
     //Delete Machine operation, delete machine operation from the database
     public function deleteMachineOperation(Request $request, $machineOperationID) {
-        $userId = auth()->id();
+        $userId = $request->input('userId');
 
         try {
             $machineOperation = MachineOperation::find($machineOperationID);
@@ -508,7 +509,7 @@ class MachineController extends Controller
 
     //Delete Global description, delete global description from the database
     public function deleteGlobalDescription(Request $request, $globalDescriptionID) {
-        $userId = auth()->id();
+        $userId = $request->input('userId');
 
         try {
             $globalDescription = GlobalDescription::find($globalDescriptionID);
