@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('css/tailwind.min.css') }}" rel="stylesheet">
     @vite('public/css/history.css')
+    <style>
+                .zoom-in {
+            opacity: 0;
+            transform: scale(0.8);
+            animation: zoomIn 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+        @keyframes zoomIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
 </head>
 <body style="background-image: url('{{ asset('ELEMECH.png') }}'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
 @extends('pjl.layout')
@@ -14,7 +27,7 @@
 @section('content')
 
 <div class='container mx-auto px-4'>
-    <div class='weeks-container my-4 mx-auto flex justify-between items-center shadow-2xl rounded-3xl p-6' style="width: 91.666667%;backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
+    <div class='weeks-container my-4 mx-auto zoom-in flex justify-between items-center shadow-2xl rounded-3xl p-6' style="width: 91.666667%;backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <h1 class="text-4xl font-bold text-gray-800">Status</h1>
         <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center mt-4" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
@@ -28,7 +41,7 @@
         </div>
     </div>
 
-    <div id="default-styled-tab-content" class="bg-white shadow-lg rounded-3xl my-4 mx-auto flex items-center opacity-75" style="width: 91.666667%;">
+    <div id="default-styled-tab-content" class="bg-white zoom-in shadow-lg rounded-3xl my-4 mx-auto flex items-center opacity-75" style="width: 91.666667%;">
         <div class="bg-white p-6 rounded-3xl my-4 mx-auto hidden w-full" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab" style="min-height: 30em;">
             <!-- Data Need Approve Disini -->
             <p id="no-return-approval" class="text-center text-gray-500 font-bold hidden">Tidak ada return approval</p>

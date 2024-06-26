@@ -54,141 +54,138 @@
 </div>
 
 <script>
-    async function fetchAuditData() {
-        try {
-            const auditResponse = await fetch('http://127.0.0.1:8000/api/showaudit');
-            const audits = await auditResponse.json();
+async function fetchAuditData() {
+    try {
+        const auditResponse = await fetch('http://127.0.0.1:8000/api/showaudit');
+        const audits = await auditResponse.json();
 
-            const operationResponse = await fetch('http://127.0.0.1:8000/api/showallmachineoperationpjl');
-            const operationData = await operationResponse.json();
-            const operations = operationData.operations;
+        const operationResponse = await fetch('http://127.0.0.1:8000/api/showallmachineoperationpjl');
+        const operationData = await operationResponse.json();
+        const operations = operationData.operations;
 
-            const dataContainer = document.getElementById('dataContainer');
-            dataContainer.innerHTML = ''; // Clear previous data
+        const dataContainer = document.getElementById('dataContainer');
+        dataContainer.innerHTML = ''; // Clear previous data
 
-            const lines = new Set();
+        const lines = new Set();
 
-            audits.forEach(audit => {
-                if (audit.event === 'edit') {
-                    const newState = audit.changes.new_state;
-                    const idOperationUpdate = parseInt(newState.id);
+        audits.forEach(audit => {
+            if (audit.event === 'edit') {
+                const newState = audit.changes.new_state;
+                const idOperationUpdate = parseInt(newState.id);
 
-                    // Find the corresponding operation by ID
-                    const operation = operations.find(op => op.id === idOperationUpdate);
+                const operation = operations.find(op => op.id === idOperationUpdate);
 
-                    // Determine the status based on is_approved, is_rejected, and is_sent
-                    let keterangan = '';
-                    if (operation) {
-                        if (operation.is_approved === 1) {
-                            keterangan = "Approved";
-                        } else if (operation.is_rejected === 1) {
-                            keterangan = "Rejected";
-                        } else if (operation.is_sent === 1) {
-                            keterangan = "Waiting Approval";
-                        } 
-                    }
-
-                    // Formatting Date
-                    const dateParts = newState.day.split('-');
-                    const formattedDate = `${dateParts[0]} ${["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"][parseInt(dateParts[1]) - 1]} ${dateParts[2]}`;
-
-                    // Formatting Updated Date and Time
-                    const originalDate = new Date(newState.updated_at);
-                    const updatedDay = originalDate.getUTCDate();
-                    const updatedMonth = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"][originalDate.getUTCMonth()];
-                    const updatedYear = originalDate.getUTCFullYear();
-                    let updatedHours = originalDate.getUTCHours() + 7;
-                    if (updatedHours >= 24) {
-                        updatedHours -= 24;
-                    }
-                    const formattedTime = `${String(updatedHours).padStart(2, '0')}:${String(originalDate.getMinutes()).padStart(2, '0')}:${String(originalDate.getSeconds()).padStart(2, '0')}`;
-                    const formattedUpdatedDate = `${updatedDay} ${updatedMonth} ${updatedYear}, ${formattedTime}`;
-
-                    // Kode Produk Extraction
-                    let kodeProdukMatch = newState.code.match(/[a-zA-Z]+/g);
-                    let kodeProduk = kodeProdukMatch ? kodeProdukMatch[0] : '';
-                    if (kodeProduk.length !== 5) {
-                        kodeProduk = kodeProduk.slice(1, 6);
-                    }
-
-                    // Formatting Line
-                    const formattedLine = newState.line ? newState.line.replace(/(\D+)(\d+)/, '$1 $2') : '';
-                    lines.add(formattedLine);
-
-                    // Creating the row
-                    const row = document.createElement('div');
-                    row.className = 'grid grid-cols-7 gap-4 text-center p-2';
-                    row.innerHTML = `
-                        <div class="flex-1 items-center justify-center">${formattedDate}</div>
-                        <div class="flex-1 items-center justify-center">${newState.time}</div>
-                        <div class="flex-1 items-center justify-center">${formattedLine}</div>
-                        <div class="flex-1 items-center justify-center">${kodeProduk}</div>
-                        <div class="flex-1 items-center justify-center">${newState.code}</div>
-                        <div class="flex-1 items-center justify-center">${formattedUpdatedDate}</div>
-                        <div class="flex-1 items-center justify-center">${keterangan}</div>
-                    `;
-
-                    dataContainer.appendChild(row);
+                let keterangan = '';
+                if (operation) {
+                    if (operation.is_approved === 1) {
+                        keterangan = "Approved";
+                    } else if (operation.is_rejected === 1) {
+                        keterangan = "Rejected";
+                    } else if (operation.is_sent === 1) {
+                        keterangan = "Waiting Approval";
+                    } 
                 }
-            });
 
-            // Populate line filter
-            const lineFilter = document.getElementById('lineFilter');
-            lineFilter.innerHTML = '<option value="">Filter by Line</option>'; // Reset options
-            lines.forEach(line => {
-                const option = document.createElement('option');
-                option.value = line;
-                option.textContent = line;
-                lineFilter.appendChild(option);
-            });
+                const dateParts = newState.day.split('-');
+                const formattedDate = `${dateParts[0]} ${["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"][parseInt(dateParts[1]) - 1]} ${dateParts[2]}`;
 
-        } catch (error) {
-            console.error('Error fetching audit data:', error);
+                const originalDate = new Date(newState.updated_at);
+                const updatedDay = originalDate.getUTCDate();
+                const updatedMonth = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"][originalDate.getUTCMonth()];
+                const updatedYear = originalDate.getUTCFullYear();
+                let updatedHours = originalDate.getUTCHours() + 7;
+                if (updatedHours >= 24) {
+                    updatedHours -= 24;
+                }
+                const formattedTime = `${String(updatedHours).padStart(2, '0')}:${String(originalDate.getMinutes()).padStart(2, '0')}:${String(originalDate.getSeconds()).padStart(2, '0')}`;
+                const formattedUpdatedDate = `${updatedDay} ${updatedMonth} ${updatedYear}, ${formattedTime}`;
+
+                let kodeProdukMatch = newState.code.match(/[a-zA-Z]+/g);
+                let kodeProduk = kodeProdukMatch ? kodeProdukMatch[0] : '';
+                if (kodeProduk.length !== 5) {
+                    kodeProduk = kodeProduk.slice(1, 6);
+                }
+
+                const formattedLine = newState.line ? newState.line.replace(/(\D+)(\d+)/, '$1 $2') : '';
+                lines.add(formattedLine);
+
+                const row = document.createElement('div');
+                row.className = 'grid grid-cols-7 gap-4 text-center p-2';
+                row.innerHTML = `
+                    <div class="col-span-1">${formattedDate}</div>
+                    <div class="col-span-1">${newState.time}</div>
+                    <div class="col-span-1">${formattedLine}</div>
+                    <div class="col-span-1">${kodeProduk}</div>
+                    <div class="col-span-1">${newState.code}</div>
+                    <div class="col-span-1">${formattedUpdatedDate}</div>
+                    <div class="col-span-1">${keterangan}</div>
+                `;
+
+                dataContainer.appendChild(row);
+            }
+        });
+
+        const lineFilter = document.getElementById('lineFilter');
+        lineFilter.innerHTML = '<option value="">Filter by Line</option>';
+        lines.forEach(line => {
+            const option = document.createElement('option');
+            option.value = line;
+            option.textContent = line;
+            lineFilter.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error('Error fetching audit data:', error);
+    }
+}
+
+function filterData() {
+    const lineFilter = document.getElementById('lineFilter').value;
+    const statusFilter = document.getElementById('statusFilter').value;
+
+    const rows = document.querySelectorAll('#dataContainer > div');
+    rows.forEach(row => {
+        const line = row.children[2].textContent.trim();
+        const status = row.children[6].textContent.trim();
+
+        if ((lineFilter && line !== lineFilter) || (statusFilter && status !== statusFilter)) {
+            row.style.display = 'none';
+        } else {
+            row.style.display = 'grid';
         }
-    }
+    });
+}
 
-    function filterData() {
-        const lineFilter = document.getElementById('lineFilter').value;
-        const statusFilter = document.getElementById('statusFilter').value;
+function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('landscape');
 
-        const rows = document.querySelectorAll('#dataContainer > div');
-        rows.forEach(row => {
-            const line = row.children[2].textContent.trim();
-            const status = row.children[6].textContent.trim();
+    doc.text('Logistik', 14, 16);
+    
+    const rows = Array.from(document.querySelectorAll('#dataContainer > div')).map(row => {
+        return Array.from(row.children).map(cell => cell.textContent.trim());
+    });
 
-            if ((lineFilter && line !== lineFilter) || (statusFilter && status !== statusFilter)) {
-                row.style.display = 'none';
-            } else {
-                row.style.display = 'grid';
-            }
-        });
-    }
+    const headers = [['Tanggal', 'Jam', 'Line', 'Kode Produk', 'No Batch', 'Data Update JPM', 'Keterangan']];
+    const data = headers.concat(rows);
 
-    async function exportToPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        const rows = document.querySelectorAll('#dataContainer > div');
+    doc.autoTable({
+        head: headers,
+        body: data.slice(1),
+        startY: 20,
+        theme: 'striped'
+    });
 
-        let y = 10;
-        rows.forEach((row, index) => {
-            const text = Array.from(row.children).map(cell => cell.textContent.trim()).join(' | ');
-            doc.text(text, 10, y);
-            y += 10;
-            if (index % 28 === 27) {
-                doc.addPage();
-                y = 10;
-            }
-        });
+    doc.save('logistik.pdf');
+}
 
-        doc.save('logistik.pdf');
-    }
+document.addEventListener('DOMContentLoaded', fetchAuditData);
+document.getElementById('lineFilter').addEventListener('change', filterData);
+document.getElementById('statusFilter').addEventListener('change', filterData);
+document.getElementById('exportPDF').addEventListener('click', exportToPDF);
 
-    document.addEventListener('DOMContentLoaded', fetchAuditData);
-    document.getElementById('lineFilter').addEventListener('change', filterData);
-    document.getElementById('statusFilter').addEventListener('change', filterData);
-    document.getElementById('exportPDF').addEventListener('click', exportToPDF);
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </body>
 </html>

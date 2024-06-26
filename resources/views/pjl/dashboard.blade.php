@@ -90,7 +90,7 @@
     </div>
 
     <!-- Year Modal -->
-    <div id="yearModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div id="yearModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden zoom-in">
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <div class="mt-3 text-center relative">
                 <span class="close-btn absolute top-0 right-0 cursor-pointer text-black px-3 text-2xl font-bold" onclick="closeModal()">&times;</span>
