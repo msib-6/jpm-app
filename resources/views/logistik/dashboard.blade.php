@@ -18,7 +18,7 @@
     </div>
 
     <!-- Filter and Export Buttons -->
-    <div class="flex justify-between my-4">
+    <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between">
         <div class="flex space-x-4">
             <select id="lineFilter" class="p-2 rounded-lg border">
                 <option value="">Filter by Line</option>
@@ -31,7 +31,7 @@
                 <option value="Waiting Approval">Waiting Approval</option>
             </select>
         </div>
-        <button id="exportPDF" class="p-2 bg-blue-500 text-white rounded-lg">Export to PDF</button>
+        <button id="exportPDF" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">Export to PDF</button>
     </div>
 
     <!-- Header for Data -->
@@ -185,7 +185,7 @@ document.getElementById('statusFilter').addEventListener('change', filterData);
 document.getElementById('exportPDF').addEventListener('click', exportToPDF);
 
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script src="{{ asset('js/jspdf.umd.min.js') }}"></script>
+<script src="{{ asset('js/jspdf.plugin.autotable.js') }}"></script>
 </body>
 </html>
