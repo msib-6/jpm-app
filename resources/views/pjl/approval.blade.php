@@ -41,13 +41,13 @@
         </div>
     </div>
 
-    <div id="default-styled-tab-content" class="bg-white zoom-in shadow-lg rounded-3xl my-4 mx-auto flex items-center opacity-75" style="width: 91.666667%;">
-        <div class="bg-white p-6 rounded-3xl my-4 mx-auto hidden w-full" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab" style="min-height: 30em;">
+    <div id="default-styled-tab-content" class="bg-white zoom-in shadow-lg rounded-3xl my-4 mx-auto flex items-center" style="width: 91.666667%;backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
+        <div class=" p-6 rounded-3xl my-4 mx-auto hidden w-full" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab" style="min-height: 30em;">
             <!-- Data Need Approve Disini -->
             <p id="no-return-approval" class="text-center text-gray-500 font-bold hidden">Tidak ada return approval</p>
         </div>
 
-        <div class="bg-white p-6 rounded-3xl my-4 mx-auto hidden w-full" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="min-height: 30em;">
+        <div class=" p-6 rounded-3xl my-4 mx-auto hidden w-full" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="min-height: 30em;">
             <!-- Data Approved Disini -->
             <p id="no-approved-data" class="text-center text-gray-500 font-bold hidden">Tidak ada data approved</p>
         </div>
