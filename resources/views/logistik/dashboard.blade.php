@@ -12,13 +12,13 @@
 <div class="container mx-auto px-4">
     <!-- Card Title -->
     <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 100%;">
-        <h3 id="title" class="text-2xl font-bold">
+        <h3 id="title" class="text-3xl font-bold relative z-10">
             <span id="line-display">Logistik</span>
         </h3>
     </div>
 
     <!-- Filter and Export Buttons -->
-    <div class="flex justify-between my-4">
+    <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between">
         <div class="flex space-x-4">
             <select id="lineFilter" class="p-2 rounded-lg border">
                 <option value="">Filter by Line</option>
@@ -31,7 +31,7 @@
                 <option value="Waiting Approval">Waiting Approval</option>
             </select>
         </div>
-        <button id="exportPDF" class="p-2 bg-blue-500 text-white rounded-lg">Export to PDF</button>
+        <button id="exportPDF" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">Export to PDF</button>
     </div>
 
     <!-- Header for Data -->
@@ -161,31 +161,41 @@ function exportToPDF() {
     const doc = new jsPDF('landscape');
 
     doc.text('Logistik', 14, 16);
-    
-    const rows = Array.from(document.querySelectorAll('#dataContainer > div')).map(row => {
+
+    const lineFilter = document.getElementById('lineFilter').value;
+    const statusFilter = document.getElementById('statusFilter').value;
+
+    const rows = Array.from(document.querySelectorAll('#dataContainer > div')).filter(row => {
+        const line = row.children[2].textContent.trim();
+        const status = row.children[6].textContent.trim();
+        return (!lineFilter || line === lineFilter) && (!statusFilter || status === statusFilter);
+    }).map(row => {
         return Array.from(row.children).map(cell => cell.textContent.trim());
     });
 
     const headers = [['Tanggal', 'Jam', 'Line', 'Kode Produk', 'No Batch', 'Data Update JPM', 'Keterangan']];
-    const data = headers.concat(rows);
 
     doc.autoTable({
         head: headers,
-        body: data.slice(1),
+        body: rows,
         startY: 20,
-        theme: 'striped'
+        headStyles: { fillColor: [146, 97, 232] },
+        theme: 'striped',
     });
 
     doc.save('logistik.pdf');
 }
 
-document.addEventListener('DOMContentLoaded', fetchAuditData);
-document.getElementById('lineFilter').addEventListener('change', filterData);
-document.getElementById('statusFilter').addEventListener('change', filterData);
-document.getElementById('exportPDF').addEventListener('click', exportToPDF);
+document.addEventListener('DOMContentLoaded', function() {
+    fetchAuditData();
 
+    document.getElementById('lineFilter').addEventListener('change', filterData);
+    document.getElementById('statusFilter').addEventListener('change', filterData);
+    document.getElementById('exportPDF').addEventListener('click', exportToPDF);
+});
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+<script src="{{ asset('js/jspdf.umd.min.js') }}"></script>
+<script src="{{ asset('js/jspdf.plugin.autotable.js') }}"></script>
 </body>
 </html>

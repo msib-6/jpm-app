@@ -24,6 +24,10 @@ body {
     color: white !important;
 }
 
+.thin-plus {
+    font-weight: 400; /* Mengatur ketebalan font menjadi lebih tipis */
+}
+
 .status-bcp {
     background: rgb(255,65,108);
 background: linear-gradient(114deg, rgba(255,65,108,1) 18%, rgba(255,75,43,1) 100%);
