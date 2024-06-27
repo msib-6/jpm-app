@@ -225,6 +225,9 @@
     } else {
         rightContainer.appendChild(monthDiv);
     }
+    setTimeout(() => {
+                monthDiv.classList.add('zoom-in');
+            }, 100);
 });
 
         const flexContainer = document.createElement('div');
