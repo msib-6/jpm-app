@@ -14,9 +14,9 @@
     <nav class="flex ml-16 mt-3" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
             <li class="inline-flex items-center">
-                <a href="/manager/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                <a href="/pjl/{{ ucfirst($line) }}/approval" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     <svg class="w-3 h-3 me-2.5 ml-2 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 1 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 1 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
                     </svg>
                     Home
                 </a>
@@ -26,7 +26,7 @@
                     <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                     </svg>
-                    <a href="/manager/view" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Approve Manager</a>
+                    <a href="/pjl/{{ ucfirst($line) }}/return" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Return JPM</a>
                 </div>
             </li>
         </ol>
@@ -77,11 +77,10 @@
     <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
         <div class="flex justify-between items-center">
             <div class="flex justify-start">
-                <button id="returnWeekButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Return JPM</button>
+                <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
             </div>
             <div class="flex justify-end">
-                <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
-                <button id="approveWeekButton" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Approve</button>
+                <button id="editWeekButton" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Edit</button>
             </div>
         </div>
     </div>
@@ -136,7 +135,8 @@
 
 <script>
     function showAlert(message) {
-        document.getElementById('custom-alert-message').textContent = message;
+        const alertMessage = message.replace(/\n/g, '<br>');
+        document.getElementById('custom-alert-message').innerHTML = alertMessage;
         document.getElementById('custom-alert').classList.remove('hidden');
     }
 
@@ -146,7 +146,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const globalDescs = document.getElementById('globalDescs');
-        const approveButton = document.getElementById('approveWeekButton');
+        const editButton = document.getElementById('editWeekButton');
         const returnButton = document.getElementById('returnWeekButton');
         const confirmActionModal = document.getElementById('confirmActionModal');
         const closeConfirmActionModalButton = document.getElementById('closeConfirmActionModalButton');
@@ -224,6 +224,7 @@
             document.getElementById('year-display').textContent = year ? year : 'N/A';
 
             setupWeekButtons(line, year, month, week);
+            fetchRevisionAndShowAlert(line, year, month, week);
         }
 
         async function fetchDataForWeek(line, year, month, week) {
@@ -247,28 +248,37 @@
                 updateURL(line, year, month, week);
                 displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
 
-                const isApproved = operationsData.operations.some(operation => operation.is_approved === 1);
-                const isRejected = operationsData.operations.some(operation => operation.is_rejected === 1);
-                if (isApproved) {
-                    approveButton.disabled = true;
-                    returnButton.disabled = true;
-                    approveButton.classList.add('cursor-not-allowed', 'opacity-50');
-                    returnButton.classList.add('cursor-not-allowed', 'opacity-50');
-                } else if (isRejected) {
-                    approveButton.disabled = true;
-                    returnButton.disabled = true;
-                    approveButton.classList.add('cursor-not-allowed', 'opacity-50');
-                    returnButton.classList.add('cursor-not-allowed', 'opacity-50');
+                const isSent = operationsData.operations.some(operation => operation.is_sent === 1);
+                if (isSent) {
+                    editButton.disabled = true;
+                    editButton.classList.add('cursor-not-allowed', 'opacity-50');
                 } else {
-                    approveButton.disabled = false;
-                    returnButton.disabled = false;
-                    approveButton.classList.remove('cursor-not-allowed', 'opacity-50');
-                    returnButton.classList.remove('cursor-not-allowed', 'opacity-50');
+                    editButton.disabled = false;
+                    editButton.classList.remove('cursor-not-allowed', 'opacity-50');
+                    editButton.onclick = function () {
+                        window.location.href = `http://127.0.0.1:8000/pjl/${line}/view?line=${line}&year=${year}&month=${month}&week=${week}`;
+                    };
                 }
 
                 await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
             } catch (error) {
                 console.error("Error fetching data:", error);
+            }
+        }
+
+        async function fetchRevisionAndShowAlert(line, year, month, week) {
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/showrevision?line=${line}&year=${year}&month=${month}&week=${week}`);
+                const revisionData = await response.json();
+
+                if (revisionData.length > 0) {
+                    const revision = revisionData[0].revision_number;
+                    const returnMessage = revisionData[0].return_notes;
+                    const alertMessage = `Revisi ke = ${revision}\nPesan Return = ${returnMessage}`;
+                    showAlert(alertMessage);
+                }
+            } catch (error) {
+                console.error("Error fetching revision data:", error);
             }
         }
 
@@ -489,50 +499,6 @@
                 }
             }, 30000); // Refresh every 30 seconds
         }
-
-        // Approve Button
-        approveButton.onclick = async () => {
-            showActionConfirmation('Approve Confirmation', 'Are you sure you want to approve this week?', async () => {
-                const params = new URLSearchParams(window.location.search);
-                const line = params.get('line');
-                const year = params.get('year');
-                const month = params.get('month');
-                const week = params.get('week');
-
-                try {
-                    const response = await fetch(`http://127.0.0.1:8000/api/approve`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ line, year, month, week })
-                    });
-
-                    if (response.ok) {
-                        showAlert('Approval successful');
-                        fetchDataForWeek(line, year, month, week);
-
-                        // Notify on success
-                        fetch(`http://127.0.0.1:8000/api/notify?line=${line}`)
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Failed to send notification');
-                                }
-                            })
-                            .catch(error => console.error('Notification error:', error));
-
-                        closeActionConfirmation();
-                        window.location.href = '/manager/dashboard'; // Redirect to dashboard
-                    } else {
-                        const errorData = await response.json();
-                        showAlert(`Failed to approve the week: ${errorData.message}`);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    showAlert('An error occurred while approving the week');
-                }
-            });
-        };
 
         // Return Button
         returnButton.onclick = async () => {

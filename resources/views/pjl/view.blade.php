@@ -112,7 +112,7 @@
             <h2 class="text-2xl mb-4">Add Data</h2>
             <form id="addDataForm">
                 <!-- Code -->
-                <input type="text" id="userId" hidden value="{{auth()->user()->id}}">
+                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
 
                 <div class="mb-4">
                     <label for="dataCode" class="block text-gray-700">Kode</label>
@@ -124,7 +124,7 @@
                     <div class="time-inputs">
                         <div class="time-input">
                             <button type="button" onclick="increaseHour()">&#9650;</button>
-                            <input type="number" id="hours" value="08" min="0" max="23" step="1" required>
+                            <input type="number" id="hours" value="07" min="0" max="23" step="1" required>
                             <button type="button" onclick="decreaseHour()">&#9660;</button>
                         </div>
                         <span>:</span>
@@ -213,7 +213,7 @@
                     <div class="time-inputs">
                         <div class="time-input">
                             <button type="button" onclick="increaseHourEdit()">&#9650;</button>
-                            <input type="number" id="editHours" value="08" min="0" max="23" step="1" required>
+                            <input type="number" id="editHours" value="07" min="0" max="23" step="1" required>
                             <button type="button" onclick="decreaseHourEdit()">&#9660;</button>
                         </div>
                         <span>:</span>
@@ -867,10 +867,10 @@
                 return revision.line === line && revision.year == year && revision.month == month && revision.week == week;
             });
 
-            const revisionNumber = revision ? revision.revision_number : "NEW";
+            const revisionNumber = revision ? revision.revision_number : "0";
 
             document.getElementById('revision_number').innerHTML = `
-                <h3 class="text-2xl font-bold">Rev: ${revisionNumber}</h3>
+                <h3 class="text-xl font-bold">${revisionNumber} Revisi</h3>
             `;
         }
 

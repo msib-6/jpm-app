@@ -64,7 +64,7 @@
         const dashboardContent = document.getElementById('styled-dashboard');
         const noReturnApprovalMessage = document.getElementById('no-return-approval');
         const noApprovedDataMessage = document.getElementById('no-approved-data');
-        const currentLine = 'Line12'; // Replace with the actual current line value if available
+        const currentLine = '{{ ucfirst($line) }}'; // Replace with the actual current line value if available
 
         profileTab.addEventListener('click', function() {
             // Fetch and display return approval data
@@ -90,7 +90,7 @@
                                     </div>
                                 `;
                                 button.onclick = function() {
-                                    window.location.href = `http://127.0.0.1:8000/pjl/return?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
+                                    window.location.href = `http://127.0.0.1:8000/pjl/${item.current_line}/return?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
                                 };
                                 profileContent.appendChild(button);
                             }
@@ -124,7 +124,7 @@
                                     </div>
                                 `;
                                 button.onclick = function() {
-                                    window.location.href = `http://127.0.0.1:8000/pjl/approved?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
+                                    window.location.href = `http://127.0.0.1:8000/pjl/${item.current_line}/onlyview?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
                                 };
                                 dashboardContent.appendChild(button);
                             }

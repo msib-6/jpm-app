@@ -54,6 +54,14 @@ Route::middleware(['auth', 'line'])->group(function () {
         return view('pjl.view', compact('line', 'year', 'month'));
     })->name('pjl.view');
 
+    Route::get('/pjl/{line}/return', function (Request $request) {
+        $line = $request->query('line');
+        $year = $request->query('year');
+        $month = $request->query('month');
+        $week = $request->query('week');
+        return view('pjl.return', compact('line', 'year', 'month', 'week'));
+    })->name('pjl.return');
+
     Route::get('/pjl/{line}/onlyView', function (Request $request, $line) {
         $line = $request->query('line');  // Access 'line' parameter
         $year = $request->query('year');  // Access 'year' parameter

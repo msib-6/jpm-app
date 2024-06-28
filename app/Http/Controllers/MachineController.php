@@ -40,7 +40,7 @@ class MachineController extends Controller
             $machine->machine_name = $validatedData['machine_name'];
             $machine->category = $validatedData['category'];
             $machine->line = $validatedData['line'];
-            
+
             $machine->save();
 
             Audits::create([
@@ -49,7 +49,9 @@ class MachineController extends Controller
                 'event' => 'add',
                 'changes' => json_encode([
                     'original_state' => '',
-                    'new_state' => array_merge($request->all(), ['updated_at' => $machine->updated_at]),
+                    'new_state' => array_merge($request->all(), [
+                        'updated_at' => $machine->updated_at,
+                        'users_id' => $userId,]),
                 ])
             ]);
 
@@ -108,7 +110,9 @@ class MachineController extends Controller
                 'event' => 'add',
                 'changes' => json_encode([
                     'original_state' => '',
-                    'new_state' => $request->all(),
+                    'new_state' => array_merge($request->all(), [
+                        'updated_at' => $newMachineData->updated_at,
+                        'users_id' => $userId,]),
                 ])
             ]);
 
@@ -121,7 +125,7 @@ class MachineController extends Controller
 
     //Add Machine Operation, input to machineOperation database
     public function addMachineOperation(Request $request, $line, $machineID) {
-        
+
         try {
             $userId = $request->input('userId');
             $day = $request->input('day');
@@ -129,7 +133,7 @@ class MachineController extends Controller
             $time = $request->input('time');
             $status = $request->input('status');
             $notes = $request->input('notes');
-            
+
 
             $machineData = MachineData::find($machineID);
             if (!$machineData) {
@@ -322,6 +326,7 @@ class MachineController extends Controller
             }
 
             $newState = [
+                'users_id' => $userId,
                 'id' => $machineOperation->id,
                 'year' => $machineOperation->year,
                 'month' => $machineOperation->month,
