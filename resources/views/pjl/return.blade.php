@@ -10,6 +10,7 @@
 </head>
 <body>
 <div class="container mx-auto px-4">
+    <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
     <!-- Breadcrumb -->
     <nav class="flex ml-16 mt-3" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">

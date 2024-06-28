@@ -8,6 +8,7 @@
 </head>
 <body class="bg-gray-100">
 <div class="container mx-auto px-4">
+    <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
     <!-- Card Title -->
     <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-center" style="width: 91.666667%;">
         <h3 class="text-3xl font-semibold">PJL Add Mesin</h3>

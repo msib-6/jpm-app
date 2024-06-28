@@ -60,6 +60,7 @@
 
 @section('content')
 <div class="container mx-auto px-4">
+    <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
     <div class="pl-6 my-4 mx-auto flex justify-start items-start" style="width: 91.666667%;">
         <div class="flex" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">

@@ -27,6 +27,7 @@
 @section('content')
 
 <div class='container mx-auto px-4'>
+    <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
     <div class='weeks-container my-4 mx-auto zoom-in flex justify-between items-center shadow-2xl rounded-3xl p-6' style="width: 91.666667%;backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <h1 class="text-4xl font-bold text-gray-800">Status</h1>
         <div class="mb-4 border-b border-gray-200 dark:border-gray-700">

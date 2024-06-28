@@ -10,6 +10,7 @@
 </head>
 <body>
 <div class="container mx-auto px-4">
+    <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
     <!-- Card Title -->
     <div class="bg-gray-100 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <h3 id="title" class="text-2xl font-bold">
@@ -178,6 +179,7 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Add Global Description</h2>
             <form id="addGlobalDescForm">
+                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
                 <div class="mb-4">
                     <label for="globalDesc" class="block text-gray-700">Description</label>
                     <textarea id="globalDesc" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
@@ -195,6 +197,7 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Edit Data</h2>
             <form id="editDataForm">
+                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
                 <!-- Code -->
                 <div class="mb-4">
                     <label for="editDataCode" class="block text-gray-700">Kode</label>
