@@ -10,6 +10,7 @@
 </head>
 <body>
 <div class="container mx-auto px-4">
+    <!-- Code -->
     <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
     <!-- Card Title -->
     <div class="bg-gray-100 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
@@ -112,9 +113,6 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Add Data</h2>
             <form id="addDataForm">
-                <!-- Code -->
-                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
-
                 <div class="mb-4">
                     <label for="dataCode" class="block text-gray-700">Kode</label>
                     <input type="text" id="dataCode" class="w-full px-3 py-2 border rounded-lg" required placeholder="Contoh: KTNLGG12345" maxlength="11">
@@ -179,7 +177,6 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Add Global Description</h2>
             <form id="addGlobalDescForm">
-                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
                 <div class="mb-4">
                     <label for="globalDesc" class="block text-gray-700">Description</label>
                     <textarea id="globalDesc" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
@@ -197,7 +194,6 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Edit Data</h2>
             <form id="editDataForm">
-                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
                 <!-- Code -->
                 <div class="mb-4">
                     <label for="editDataCode" class="block text-gray-700">Kode</label>
@@ -290,7 +286,6 @@
                 <!-- Machine data content will be populated here -->
             </div>
             <div class="flex justify-between items-center">
-                <button type="button" id="deleteMachineDataButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
                 <button type="button" id="closeViewMachineDataModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
             </div>
         </div>
@@ -367,7 +362,6 @@
         const viewMachineDataModal = document.getElementById('viewMachineDataModal');
         const closeViewMachineDataModalButton = document.getElementById('closeViewMachineDataModalButton');
         const machineDataContent = document.getElementById('machineDataContent');
-        const deleteMachineDataButton = document.getElementById('deleteMachineDataButton');
         const confirmDeleteModal = document.getElementById('confirmDeleteModal');
         const deleteConfirmMessage = document.getElementById('deleteConfirmMessage');
         const confirmDeleteButton = document.getElementById('confirmDeleteButton');
@@ -462,9 +456,6 @@
                 await deleteGlobalDescription(currentGlobalDescId);
                 viewGlobalDescModal.classList.add('hidden');
                 await fetchAndDisplayGlobalDescriptions();
-            } else if (deleteMode === 'machine') {
-                await deleteMachineData(currentMachineDataId);
-                viewMachineDataModal.classList.add('hidden');
             }
             confirmDeleteModal.classList.add('hidden');
         });
@@ -473,11 +464,9 @@
             viewMachineDataModal.classList.add('hidden');
         });
 
-        deleteMachineDataButton.addEventListener('click', function() {
-            confirmDeleteMachineData(currentMachineDataId);
-        });
 
         sendWeekButton.addEventListener('click', async function() {
+            const userId = document.getElementById('userId').value;
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
             const month = params.get('month');
@@ -490,7 +479,10 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                    }
+                    },
+                    body: JSON.stringify({
+                        userId
+                    }),
                 });
 
                 if (response.ok) {
@@ -558,6 +550,7 @@
             const month = params.get('month');
             const week = params.get('week');
             const year = params.get('year');
+            const userId = document.getElementById('userId').value;
 
             for (const machine of selectedMachines) {
                 const machineName = machine.value;
@@ -572,7 +565,8 @@
                         line,
                         month,
                         week,
-                        year
+                        year,
+                        userId
                     }),
                 });
 
@@ -652,6 +646,7 @@
             const line = params.get('line');
             const month = currentMonth; // Get the month from the header date
             const year = currentYear; // Get the year from the header date
+            const userId = document.getElementById('userId').value;
 
             const response = await fetch(`http://127.0.0.1:8000/api/editmachineoperation/${operationId}`, {
                 method: 'PUT',
@@ -667,7 +662,8 @@
                     line: line,
                     month: month,
                     week: params.get('week'),
-                    year: year
+                    year: year,
+                    userId,
                 }),
             });
 
@@ -680,11 +676,15 @@
         }
 
         async function deleteData(operationId) {
+            const userId = document.getElementById('userId').value;
             const response = await fetch(`http://127.0.0.1:8000/api/deletemachineoperation/${operationId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                }
+                },
+                body: JSON.stringify({
+                    userId
+                }),
             });
 
             if (response.ok) {
@@ -703,6 +703,7 @@
         }
 
         async function addGlobalDescription() {
+            const userId = document.getElementById('userId').value;
             const globalDesc = document.getElementById('globalDesc').value;
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
@@ -720,7 +721,8 @@
                     line,
                     month,
                     week,
-                    year
+                    year,
+                    userId
                 }),
             });
 
@@ -767,11 +769,15 @@
         }
 
         async function deleteGlobalDescription(id) {
+            const userId = document.getElementById('userId').value;
             const response = await fetch(`http://127.0.0.1:8000/api/deleteglobaldescription/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({
+                    userId
+                }),
             });
 
             if (response.ok) {
@@ -789,19 +795,17 @@
             confirmDeleteModal.classList.remove('hidden');
         }
 
-        function confirmDeleteMachineData(id) {
-            currentMachineDataId = id;
-            deleteConfirmMessage.textContent = "Are you sure you want to delete this machine data?";
-            confirmDeleteButton.setAttribute('data-delete-mode', 'machine');
-            confirmDeleteModal.classList.remove('hidden');
-        }
 
         async function deleteMachineData(id) {
+            const userId = document.getElementById('userId').value;
             const response = await fetch(`http://127.0.0.1:8000/api/deleteweeklymachine/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({
+                    userId
+                }),
             });
 
             if (response.ok) {
@@ -871,11 +875,22 @@
             });
 
             const revisionNumber = revision ? revision.revision_number : "0";
+            const returnNotes = revision ? revision.return_notes : "No notes available.";
 
             document.getElementById('revision_number').innerHTML = `
                 <h3 class="text-xl font-bold">${revisionNumber} Revisi</h3>
             `;
+
+            // Set the content of the notes popup
+            document.getElementById('revisionNotesPopup').textContent = returnNotes;
         }
+        document.getElementById('revision_number').addEventListener('mouseover', function() {
+            document.getElementById('revisionNotesPopup').classList.remove('hidden');
+        });
+
+        document.getElementById('revision_number').addEventListener('mouseout', function() {
+            document.getElementById('revisionNotesPopup').classList.add('hidden');
+        });
 
         async function fetchDataForWeek(line, year, month, week) {
             let operationsUrls = [];
@@ -1310,122 +1325,133 @@
                     if (!newState) return;
 
                     let historyEntry = document.createElement('div');
-                    historyEntry.className = 'bg-white p-4 shadow-md rounded-md mb-2';
+                    historyEntry.className = 'bg-white shadow-md rounded-lg p-4 mb-4';
+                    const actionDate = new Date(audit.timestamp);
+                    const actionTime = `${actionDate.getHours().toString().padStart(2, '0')}:${actionDate.getMinutes().toString().padStart(2, '0')}:${actionDate.getSeconds().toString().padStart(2, '0')}`;
+                    const actionDateFormatted = `${actionDate.getDate()} ${getMonthName(actionDate.getMonth() + 1)} ${actionDate.getFullYear()}`;
 
-                    if (newState.day) {
+                    if (audit.event === 'add') {
+                        if (newState.day && newState.code && newState.status && newState.notes) {
+                            historyEntry.innerHTML = `
+                        <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
+                        <p>Pada <span class="text-green-600">Week ${newState.week}</span>, <span class="text-green-600">${newState.day} ${getMonthName(newState.month)} ${newState.year}</span>. Kode Ruah <span class="text-green-600">${newState.code}</span>, Status: <span class="text-green-600">${newState.status}</span>, Catatan: <span class="text-green-600">${newState.notes}</span> telah ditambahkan oleh <span class="text-green-600">${newState.userId}</span></p>
+                    `;
+                        } else if (newState.machineName) {
+                            historyEntry.innerHTML = `
+                        <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
+                        <p>Pada <span class="text-green-600">Week ${newState.week}</span>. Machine <span class="text-green-600">${newState.machineName}</span> ditambahkan pada <span class="text-green-600">${actionDate}</span></p>
+                    `;
+                        }
+                    } else if (audit.event === 'edit') {
+                        const originalState = audit.changes.original_state;
+
+                        if (originalState && newState.day && newState.code && newState.status && newState.notes) {
+                            const originalDate = `${originalState.day} ${getMonthName(originalState.month)} ${originalState.year}`;
+                            const newDate = `${newState.day} ${getMonthName(newState.month)} ${newState.year}`;
+
+                            const newUpdatedAt = new Date(newState.updated_at);
+                            newUpdatedAt.setHours(newUpdatedAt.getHours() + 7); // Add 7 hours
+                            const updatedDate = `${newUpdatedAt.getDate()} ${getMonthName(newUpdatedAt.getMonth() + 1)} ${newUpdatedAt.getFullYear()}`;
+                            const updatedTime = `${newUpdatedAt.getHours().toString().padStart(2, '0')}:${newUpdatedAt.getMinutes().toString().padStart(2, '0')}`;
+
+                            historyEntry.innerHTML = `
+                        <p><strong>Action:</strong> <span class="text-green-600">EDIT</span></p>
+                        <p>Pada <span class="text-red-600">Week ${originalState.week}</span>, <span class="text-red-600">${originalDate}</span>. Kode Ruah <span class="text-red-600">${originalState.code}</span>, Status: <span class="text-red-600">${originalState.status}</span>, Catatan: <span class="text-red-600">${originalState.notes}</span> telah diubah oleh <span class="text-red-600">${newState.users_id}</span> pada <span class="text-red-600">${updatedDate}</span> pukul <span class="text-red-600">${updatedTime}</span> menjadi Kode Ruah <span class="text-blue-600">${newState.code}</span>, Status: <span class="text-blue-600">${newState.status}</span>, Catatan: <span class="text-blue-600">${newState.notes}</span> ke tanggal <span class="text-blue-600">${newState.day} Week ${newState.week}</span></p>
+                    `;
+                        }
+                    } else if (audit.event === 'delete') {
+                        const originalState = audit.changes.original_state;
+
+                        if (originalState && originalState.day && originalState.code) {
+                            const originalDate = `${originalState.day} ${getMonthName(originalState.month)} ${originalState.year}`;
+                            historyEntry.innerHTML = `
+                        <p><strong>Action:</strong> <span class="text-green-600">DELETE</span></p>
+                        <p>Pada <span class="text-green-600">Week ${originalState.week}</span>, <span class="text-green-600">${originalDate}</span>. Kode Ruah <span class="text-green-600">${originalState.code}</span>, Jam <span class="text-green-600">${originalState.time}</span> dihapus pada <span class="text-green-600">${actionDateFormatted}</span> pukul <span class="text-green-600">${actionTime}</span></p>
+                    `;
+                        } else if (originalState && originalState.description) {
+                            historyEntry.innerHTML = `
+                        <p><strong>Action:</strong> <span class="text-green-600">DELETE</span></p>
+                        <p>Pada <span class="text-green-600">Week ${originalState.week}</span>. Description <span class="text-green-600">"${originalState.description}"</span> dihapus pada <span class="text-green-600">${actionDateFormatted}</span></p>
+                    `;
+                        }
+                    } else if (audit.event === 'send_revision') {
                         historyEntry.innerHTML = `
-                            <p><strong>Changed By:</strong> ${audit.user_name}</p>
-                            <p><strong>Action:</strong> ${audit.event}</p>
-                            <p><strong>Date:</strong> ${new Date(audit.created_at).toLocaleString()}</p>
-                            <p><strong>Line:</strong> ${newState.line}</p>
-                            <p><strong>Machine Name:</strong> ${newState.machine_name}</p>
-                            <p><strong>Operation Day:</strong> ${newState.day}</p>
-                            <p><strong>Code:</strong> ${newState.code}</p>
-                            <p><strong>Time:</strong> ${newState.time}</p>
-                            <p><strong>Status:</strong> ${newState.status}</p>
-                            <p><strong>Notes:</strong> ${newState.notes}</p>
-                        `;
-                    } else if (newState.description) {
-                        historyEntry.innerHTML = `
-                            <p><strong>Changed By:</strong> ${audit.user_name}</p>
-                            <p><strong>Action:</strong> ${audit.event}</p>
-                            <p><strong>Date:</strong> ${new Date(audit.created_at).toLocaleString()}</p>
-                            <p><strong>Description:</strong> ${newState.description}</p>
-                        `;
-                    } else if (newState.machine_name) {
-                        historyEntry.innerHTML = `
-                            <p><strong>Changed By:</strong> ${audit.user_name}</p>
-                            <p><strong>Action:</strong> ${audit.event}</p>
-                            <p><strong>Date:</strong> ${new Date(audit.created_at).toLocaleString()}</p>
-                            <p><strong>Machine Name:</strong> ${newState.machine_name}</p>
-                        `;
-                    } else if (newState.user_name) {
-                        historyEntry.innerHTML = `
-                            <p><strong>Changed By:</strong> ${audit.user_name}</p>
-                            <p><strong>Action:</strong> ${audit.event}</p>
-                            <p><strong>Date:</strong> ${new Date(audit.created_at).toLocaleString()}</p>
-                            <p><strong>User Name:</strong> ${newState.user_name}</p>
-                        `;
-                    } else {
-                        historyEntry.innerHTML = `
-                            <p><strong>Changed By:</strong> ${audit.user_name}</p>
-                            <p><strong>Action:</strong> ${audit.event}</p>
-                            <p><strong>Date:</strong> ${new Date(audit.created_at).toLocaleString()}</p>
-                            <p><strong>Line:</strong> ${newState.line}</p>
-                        `;
+                    <p><strong>Action:</strong> <span class="text-green-600">SEND REVISION</span></p>
+                    <p>Revisi dikirim pada <span class="text-green-600">${actionDateFormatted}</span> pukul <span class="text-green-600">${actionTime}</span></p>
+                `;
                     }
-
                     historyContent.appendChild(historyEntry);
                 });
-
             } catch (error) {
-                console.error('Error fetching history:', error);
+                console.error("Error fetching history data:", error);
             }
         }
+
+
     });
 
+    // Custom function to increase hour in time picker
     function increaseHour() {
         const hoursInput = document.getElementById('hours');
-        const currentHours = parseInt(hoursInput.value);
-        if (currentHours < 23) {
-            hoursInput.value = (currentHours + 1).toString().padStart(2, '0');
-        }
+        let hours = parseInt(hoursInput.value);
+        hours = (hours + 1) % 24;
+        hoursInput.value = hours.toString().padStart(2, '0');
     }
 
+    // Custom function to decrease hour in time picker
     function decreaseHour() {
         const hoursInput = document.getElementById('hours');
-        const currentHours = parseInt(hoursInput.value);
-        if (currentHours > 0) {
-            hoursInput.value = (currentHours - 1).toString().padStart(2, '0');
-        }
+        let hours = parseInt(hoursInput.value);
+        hours = (hours - 1 + 24) % 24;
+        hoursInput.value = hours.toString().padStart(2, '0');
     }
 
+    // Custom function to increase minute in time picker
     function increaseMinute() {
         const minutesInput = document.getElementById('minutes');
-        const currentMinutes = parseInt(minutesInput.value);
-        if (currentMinutes < 59) {
-            minutesInput.value = (currentMinutes + 1).toString().padStart(2, '0');
-        }
+        let minutes = parseInt(minutesInput.value);
+        minutes = (minutes + 1) % 60;
+        minutesInput.value = minutes.toString().padStart(2, '0');
     }
 
+    // Custom function to decrease minute in time picker
     function decreaseMinute() {
         const minutesInput = document.getElementById('minutes');
-        const currentMinutes = parseInt(minutesInput.value);
-        if (currentMinutes > 0) {
-            minutesInput.value = (currentMinutes - 1).toString().padStart(2, '0');
-        }
+        let minutes = parseInt(minutesInput.value);
+        minutes = (minutes - 1 + 60) % 60;
+        minutesInput.value = minutes.toString().padStart(2, '0');
     }
 
+    // Custom function to increase hour in edit time picker
     function increaseHourEdit() {
         const hoursInput = document.getElementById('editHours');
-        const currentHours = parseInt(hoursInput.value);
-        if (currentHours < 23) {
-            hoursInput.value = (currentHours + 1).toString().padStart(2, '0');
-        }
+        let hours = parseInt(hoursInput.value);
+        hours = (hours + 1) % 24;
+        hoursInput.value = hours.toString().padStart(2, '0');
     }
 
+    // Custom function to decrease hour in edit time picker
     function decreaseHourEdit() {
         const hoursInput = document.getElementById('editHours');
-        const currentHours = parseInt(hoursInput.value);
-        if (currentHours > 0) {
-            hoursInput.value = (currentHours - 1).toString().padStart(2, '0');
-        }
+        let hours = parseInt(hoursInput.value);
+        hours = (hours - 1 + 24) % 24;
+        hoursInput.value = hours.toString().padStart(2, '0');
     }
 
+    // Custom function to increase minute in edit time picker
     function increaseMinuteEdit() {
         const minutesInput = document.getElementById('editMinutes');
-        const currentMinutes = parseInt(minutesInput.value);
-        if (currentMinutes < 59) {
-            minutesInput.value = (currentMinutes + 1).toString().padStart(2, '0');
-        }
+        let minutes = parseInt(minutesInput.value);
+        minutes = (minutes + 1) % 60;
+        minutesInput.value = minutes.toString().padStart(2, '0');
     }
 
+    // Custom function to decrease minute in edit time picker
     function decreaseMinuteEdit() {
         const minutesInput = document.getElementById('editMinutes');
-        const currentMinutes = parseInt(minutesInput.value);
-        if (currentMinutes > 0) {
-            minutesInput.value = (currentMinutes - 1).toString().padStart(2, '0');
-        }
+        let minutes = parseInt(minutesInput.value);
+        minutes = (minutes - 1 + 60) % 60;
+        minutesInput.value = minutes.toString().padStart(2, '0');
     }
 </script>
 </body>

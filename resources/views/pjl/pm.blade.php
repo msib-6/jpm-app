@@ -271,6 +271,7 @@
             notes: notes
         };
 
+        const userId = document.getElementById('userId').value;
         const operationId = document.getElementById('operationId').value;
         const apiUrl = operationId ? `http://127.0.0.1:8000/api/editmachineoperation/${operationId}` : `http://127.0.0.1:8000/api/addmachineoperation/${line}/${machineId}`;
         const method = operationId ? 'PUT' : 'POST';
@@ -280,7 +281,7 @@
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data, userId)
         })
             .then(response => {
                 if (!response.ok) {

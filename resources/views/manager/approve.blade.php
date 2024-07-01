@@ -494,6 +494,7 @@
         // Approve Button
         approveButton.onclick = async () => {
             showActionConfirmation('Approve Confirmation', 'Are you sure you want to approve this week?', async () => {
+                const userId = document.getElementById('userId').value;
                 const params = new URLSearchParams(window.location.search);
                 const line = params.get('line');
                 const year = params.get('year');
@@ -506,7 +507,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ line, year, month, week })
+                        body: JSON.stringify({ line, year, month, week, userId })
                     });
 
                     if (response.ok) {
@@ -541,6 +542,7 @@
         };
 
         submitReturnNotesButton.onclick = async () => {
+            const userId = document.getElementById('userId').value;
             const returnNotes = returnNotesInput.value.trim();
             const params = new URLSearchParams(window.location.search);
             const line = params.get('line');
@@ -559,7 +561,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ line, year, month, week, return_notes: returnNotes })
+                    body: JSON.stringify({ line, year, month, week, userId, return_notes: returnNotes })
                 });
 
                 if (response.ok) {

@@ -490,7 +490,7 @@ class MachineController extends Controller
                 'description' => $machineOperation->description,
                 'is_changed' => $machineOperation->is_changed,
                 'is_approved' => $machineOperation->is_approved,
-                'changedBy' => $machineOperation->changedBy,
+                'changedBy' => $userId,
                 'updated_at' => $machineOperation->updated_at,
             ];
 

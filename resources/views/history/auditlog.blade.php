@@ -13,37 +13,18 @@
 
     <div class='container mx-auto'>
         <div class='card flex justify-between opacity-75'>
-            <h1 class="text-left text-4xl font-bold text-gray-800'>History</h1>
-            <button class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-3 py-2.5 flex items-center float-right">
-            <svg class="w-6 h-6 mr-1 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4"/>
-            </svg>
-            Audit Trail
-            </button>
-        </div>
-        <div class='weeks-container opacity-75'>
-            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" type="button" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-                Select Line
-                <svg class="w-3 h-3 ml-1 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                </svg>
-            </button>
-
-            <div id="dropdown" class="hidden dropdown-menu bg-white divide-y divide-gray-100 rounded-lg shadow-md mt-2 w-44 dark:bg-gray-700">
-                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-
-                </ul>
-            </div>
+            <h1 class="text-left text-4xl font-bold text-gray-800">
+                Audit Trail
+            </h1>
         </div>
 
         <div class='bg-white opacity-75 p-6 rounded-xl shadow-2xl my-4 mx-auto' id="data-container">
-        <!--      Data Audit di sini      -->
+            <!--      Data Audit di sini      -->
         </div>
     </div>
 
 </section>
 
-<script src="{{ asset('css/flowbite.min.js') }}"></script>
 <script>
     async function fetchAuditData() {
         try {
@@ -74,12 +55,41 @@
                 const formattedDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
                 const formattedTime = `${date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()}`;
                 content = `
-                    <p>User: <strong>${user}</strong></p>
-                    <p>Data Week ${item.changes.original_state[0].week}, ${formattedDate} telah berhasil dikirim pada tanggal ${formattedDate}, pukul ${formattedTime}</p>
+                    <p>Action: <span class="text-green-500">Send JPM Week </span><span class="text-green-500">${item.changes.original_state[0].week}</p>
+                    <p>Data Week <span class="text-green-500">${item.changes.original_state[0].week}</span>, ${formattedDate} telah berhasil dikirim pada tanggal ${formattedDate}, pukul ${formattedTime}</p>
+                `;
+            } else if (item.event === 'add') {
+                content = `
+                    <p>Action: <span class="text-green-500">ADD</span></p>
+                    <p>Pada LINE: <span class="text-green-500">${item.changes.new_state.line}</span>. Week <span class="text-green-500">${item.changes.new_state.week}</span>, ${item.changes.new_state.day} ${new Date(item.changes.new_state.updated_at).toLocaleString('default', { month: 'long' })} ${item.changes.new_state.year}. Kode Ruah <span class="text-green-500">${item.changes.new_state.code}</span>, Status: <span class="text-green-500">${item.changes.new_state.status}</span>, Catatan: <span class="text-green-500">${item.changes.new_state.notes}</span> telah ditambahkan oleh <span class="text-green-500">${item.changes.new_state.userId}</span></p>
+                `;
+            } else if (item.event === 'delete') {
+                const date = new Date(item.changes.original_state.updated_at);
+                date.setHours(date.getUTCHours() + 7);
+                const formattedDate = `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
+                const formattedTime = `${date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()}`;
+                content = `
+                    <p>Action: <span class="text-green-500">DELETE</span></p>
+                    <p>Pada LINE: <span class="text-green-500">${item.changes.original_state.line}</span>. Week <span class="text-green-500">${item.changes.original_state.week}</span>, ${item.changes.original_state.day} ${new Date(item.changes.original_state.updated_at).toLocaleString('default', { month: 'long' })} ${item.changes.original_state.year}. Kode Ruah <span class="text-green-500">${item.changes.original_state.code}</span>, Jam <span class="text-green-500">${item.changes.original_state.time}</span>, description <span class="text-green-500">${item.changes.original_state.description}</span> dihapus oleh <span class="text-green-500">${item.changes.original_state.changedBy}</span> pada ${formattedDate} pukul ${formattedTime}</p>
+                `;
+            } else if (item.event === 'edit') {
+                const originalDate = new Date(item.changes.original_state.updated_at);
+                originalDate.setHours(originalDate.getUTCHours() + 7);
+                const formattedOriginalDate = `${originalDate.getDate()} ${originalDate.toLocaleString('default', { month: 'long' })} ${originalDate.getFullYear()}`;
+                const formattedOriginalTime = `${originalDate.getHours()}:${originalDate.getMinutes() < 10 ? '0' + originalDate.getMinutes() : originalDate.getMinutes()}`;
+
+                const newDate = new Date(item.changes.new_state.updated_at);
+                newDate.setHours(newDate.getUTCHours() + 7);
+                const formattedNewDate = `${newDate.getDate()} ${newDate.toLocaleString('default', { month: 'long' })} ${newDate.getFullYear()}`;
+                const formattedNewTime = `${newDate.getHours()}:${newDate.getMinutes() < 10 ? '0' + newDate.getMinutes() : newDate.getMinutes()}`;
+
+                content = `
+                    <p>Action: <span class="text-green-500">EDIT</span></p>
+                    <p>Pada LINE: <span class="text-green-500">${item.changes.original_state.line}</span>. Week <span class="text-green-500">${item.changes.original_state.week}</span>, ${item.changes.original_state.day} ${new Date(item.changes.original_state.updated_at).toLocaleString('default', { month: 'long' })} ${item.changes.original_state.year}. Kode Ruah <span class="text-green-500">${item.changes.original_state.code}</span>, Status: <span class="text-green-500">${item.changes.original_state.status}</span>, Catatan: <span class="text-green-500">${item.changes.original_state.notes}</span> telah diubah oleh <span class="text-green-500">${item.changes.new_state.users_id}</span> pada ${formattedOriginalDate} pukul ${formattedOriginalTime} menjadi Kode Ruah <span class="text-green-500">${item.changes.new_state.code}</span>, Status: <span class="text-green-500">${item.changes.new_state.status}</span>, Catatan: <span class="text-green-500">${item.changes.new_state.notes}</span> ke tanggal <span class="text-green-500">${item.changes.new_state.day}</span> ${new Date(item.changes.new_state.updated_at).toLocaleString('default', { month: 'long' })} ${item.changes.new_state.year}</p>
                 `;
             } else {
                 content = `
-                    <p>User: <strong>${user}</strong></p>
+                    <p>Action: <span class="text-green-500">${item.event.toUpperCase()}</span></p>
                     <p>${JSON.stringify(item)}</p>
                 `;
             }
