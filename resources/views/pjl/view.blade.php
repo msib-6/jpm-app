@@ -97,6 +97,8 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Add Mesin</h2>
             <form id="addMesinForm">
+                <!-- Code -->
+                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
                 <div id="mesinCheckboxContainer" class="mb-4" style="max-height: 450px; overflow-y: auto;">
                     <!-- Checkboxes will be appended here -->
                 </div>
@@ -113,6 +115,8 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Add Data</h2>
             <form id="addDataForm">
+                <!-- Code -->
+                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
                 <div class="mb-4">
                     <label for="dataCode" class="block text-gray-700">Kode</label>
                     <input type="text" id="dataCode" class="w-full px-3 py-2 border rounded-lg" required placeholder="Contoh: KTNLGG12345" maxlength="11">
@@ -177,6 +181,8 @@
         <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
             <h2 class="text-2xl mb-4">Add Global Description</h2>
             <form id="addGlobalDescForm">
+                <!-- Code -->
+                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
                 <div class="mb-4">
                     <label for="globalDesc" class="block text-gray-700">Description</label>
                     <textarea id="globalDesc" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
@@ -897,38 +903,21 @@
             let machinesUrls = [];
             let machineInfoUrls = [];
 
-            if (week === "1") {
-                const prevMonth = (month - 1 === 0) ? 12 : month - 1;
-                const prevYear = (month - 1 === 0) ? year - 1 : year;
+            const nextWeek = parseInt(week) + 1;
 
-                operationsUrls = [
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
-                ];
+            operationsUrls = [
+                `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
+                `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
+            ];
 
-                machinesUrls = [
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
-                ];
+            machinesUrls = [
+                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
+                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
+            ];
 
-                machineInfoUrls = [
-                    `http://127.0.0.1:8000/api/showmachine`
-                ];
-            } else {
-                operationsUrls = [
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
-                ];
-
-                machinesUrls = [
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`
-                ];
-
-                machineInfoUrls = [
-                    `http://127.0.0.1:8000/api/showmachine`
-                ];
-            }
+            machineInfoUrls = [
+                `http://127.0.0.1:8000/api/showmachine`
+            ];
 
             try {
                 const [operationsResponses, machinesResponses, machineInfoResponse] = await Promise.all([
@@ -978,15 +967,10 @@
                 machineOperationsMap.get(operation.machine_id).push(operation);
             });
 
-            // Sort machines by specified categories
-            const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating', 'Mixing', 'Filling', 'Kemas'];
-            machines.sort((a, b) => {
-                const categoryA = machineInfoMap.get(a.machine_id) || 'Unknown';
-                const categoryB = machineInfoMap.get(b.machine_id) || 'Unknown';
-                return categoryOrder.indexOf(categoryA) - categoryOrder.indexOf(categoryB);
-            });
+            // Combine machines data from week and week + 1
+            const combinedMachines = combineWeeklyMachines(machines);
 
-            machines.forEach(machine => {
+            combinedMachines.forEach(machine => {
                 const category = machineInfoMap.get(machine.machine_id);  // Fetch category using machine_id
 
                 const machineRow = document.createElement('div');
@@ -1387,6 +1371,19 @@
             }
         }
 
+        function combineWeeklyMachines(machines) {
+            const machineMap = new Map();
+
+            machines.forEach(machine => {
+                const key = `${machine.machine_id}-${machine.machine_name}`;
+
+                if (!machineMap.has(key)) {
+                    machineMap.set(key, machine);
+                }
+            });
+
+            return Array.from(machineMap.values());
+        }
 
     });
 
