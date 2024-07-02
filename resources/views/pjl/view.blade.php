@@ -378,21 +378,24 @@
                                 @php
                                     $newState = $audit['changes']['new_state'] ?? null;
                                     $originalState = $audit['changes']['original_state'] ?? null;
-                                    $actionDate = \Carbon\Carbon::parse($audit['timestamp'])->setTimezone('Asia/Jakarta');
+                                    $actionDate = \Carbon\Carbon::parse($audit['timestamp'])->setTimezone(
+                                        'Asia/Jakarta',
+                                    );
                                     $actionTime = $actionDate->format('H:i:s');
                                     $actionDateFormatted = $actionDate->format('d F Y');
                                 @endphp
 
                                 @if ($audit['event'] === 'add' && $newState)
                                     <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
-                                    <p>Pada <span class="text-green-600">Week {{ $newState['week'] }}</span>, <span
-                                            class="text-green-600">{{ $newState['day'] ?? 'NA' }}
-                                            {{ $newState['month'] ?? 'NA' }} {{ $newState['year'] ?? 'NA' }}</span>, Kode Ruah
+                                    <p>Pada <span class="text-green-600">Week {{ $newState['week'] }}</span>, Tanggal
+                                        <span class="text-green-600">{{ $newState['day'] ?? 'NA' }}
+                                            {{ $newState['month'] ?? 'NA' }} {{ $newState['year'] ?? 'NA' }}</span>,
+                                        Kode Ruah
                                         <span class="text-green-600">{{ $newState['code'] ?? 'NA' }}</span>, Status:
                                         <span class="text-green-600">{{ $newState['status'] ?? 'NA' }}</span>, Catatan:
                                         <span class="text-green-600">{{ $newState['notes'] ?? 'NA' }}</span> telah
                                         ditambahkan oleh
-                                        <span class="text-green-600">{{ $newState['userId'] ?? 'NA' }}</span>
+                                        <span class="text-green-600">{{ $audit['fullname'] ?? 'NA' }}</span>
                                     </p>
                                 @elseif ($audit['event'] === 'edit' && $newState && $originalState)
                                     @php
@@ -407,15 +410,16 @@
                                             'NA' . ' ' . $newState['month'] . ' ' . $newState['year'];
                                     @endphp
                                     <p><strong>Action:</strong> <span class="text-green-600">EDIT</span></p>
-                                    <p>Pada <span class="text-red-600">Week {{ $originalState['week'] }}</span>, <span
-                                            class="text-red-600">{{ $originalDate }}</span>. Kode Ruah <span
-                                            class="text-red-600">{{ $originalState['code'] }}</span>, Status: <span
-                                            class="text-red-600">{{ $originalState['status'] }}</span>, Catatan: <span
-                                            class="text-red-600">{{ $originalState['notes'] }}</span> telah diubah
+                                    <p>Pada <span class="text-yellow-600">Week {{ $originalState['week'] }}</span>,
+                                        <span class="text-yellow-600">{{ $originalDate }}</span>. Kode Ruah <span
+                                            class="text-yellow-600">{{ $originalState['code'] }}</span>, Status: <span
+                                            class="text-yellow-600">{{ $originalState['status'] }}</span>, Catatan:
+                                        <span class="text-yellow-600">{{ $originalState['notes'] }}</span> telah
+                                        diubah
                                         oleh
-                                        <span class="text-red-600">{{ $newState['users_id'] }}</span> pada <span
-                                            class="text-red-600">{{ $updatedDate }}</span> pukul <span
-                                            class="text-red-600">{{ $updatedTime }}</span> menjadi Kode Ruah <span
+                                        <span class="text-yellow-600">{{ $newState['users_id'] }}</span> pada <span
+                                            class="text-yellow-600">{{ $updatedDate }}</span> pukul <span
+                                            class="text-yellow-600">{{ $updatedTime }}</span> menjadi Kode Ruah <span
                                             class="text-blue-600">{{ $newState['code'] }}</span>, Status: <span
                                             class="text-blue-600">{{ $newState['status'] }}</span>, Catatan: <span
                                             class="text-blue-600">{{ $newState['notes'] }}</span> ke tanggal <span
@@ -423,17 +427,17 @@
                                             {{ $newState['week'] }}</span>
                                     </p>
                                 @elseif ($audit['event'] === 'delete' && $originalState)
-                                    <p><strong>Action:</strong> <span class="text-green-600">DELETE</span></p>
-                                    <p>Pada <span class="text-green-600">Week {{ $originalState['week'] }}</span>.
+                                    <p><strong>Action:</strong> <span class="text-red-600">DELETE</span></p>
+                                    <p>Pada <span class="text-red-600">Week {{ $originalState['week'] }}</span>.
                                         Description <span
-                                            class="text-green-600">"{{ $originalState['description'] }}"</span>
+                                            class="text-red-600">"{{ $originalState['description'] }}"</span>
                                         dihapus
-                                        pada <span class="text-green-600">{{ $actionDateFormatted }}</span></p>
+                                        pada <span class="text-red-600">{{ $actionDateFormatted }}</span></p>
                                 @elseif ($audit['event'] === 'send_revision')
-                                    <p><strong>Action:</strong> <span class="text-green-600">SEND REVISION</span></p>
+                                    <p><strong>Action:</strong> <span class="text-purple-600">SEND REVISION</span></p>
                                     <p>Revisi dikirim pada <span
-                                            class="text-green-600">{{ $actionDateFormatted }}</span>
-                                        pukul <span class="text-green-600">{{ $actionTime }}</span></p>
+                                            class="text-purple-600">{{ $actionDateFormatted }}</span>
+                                        pukul <span class="text-purple-600">{{ $actionTime }}</span></p>
                                 @endif
                             </div>
                         @endif
@@ -1026,6 +1030,7 @@
             document.getElementById('revision_number').addEventListener('mouseout', function() {
                 document.getElementById('revisionNotesPopup').classList.add('hidden');
             });
+            
 
             async function fetchDataForWeek(line, year, month, week) {
                 let operationsUrls = [];

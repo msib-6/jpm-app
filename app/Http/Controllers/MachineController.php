@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Machine;
 use App\Models\GlobalDescription;
 use App\Models\MachineData;
@@ -11,13 +12,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\FacadesLog;
 
 class MachineController extends Controller
 {
 
     // -------------------------------- ADD MACHINE FUNCTIONS --------------------------------
     //Add Machine. input to machine database
-    public function addMachine(Request $request) {
+    public function addMachine(Request $request)
+    {
 
         try {
             // Validate the incoming request data
@@ -51,19 +55,21 @@ class MachineController extends Controller
                     'original_state' => '',
                     'new_state' => array_merge($request->all(), [
                         'updated_at' => $machine->updated_at,
-                        'users_id' => $userId,]),
+                        'users_id' => $userId,
+                    ]),
                 ])
             ]);
 
             return response()->json(['message' => 'Machine added successfully'], 200);
         } catch (\Exception $e) {
-            \Log::error('Error adding machine: ' . $e->getMessage());
+            Log::error('Error adding machine: ' . $e->getMessage());
             return response()->json(['message' => 'Error adding machine. Please try again later.'], 500);
         }
     }
 
     // Add weekly Machine, input to machineData database
-    public function addWeeklyMachine(Request $request) {
+    public function addWeeklyMachine(Request $request)
+    {
         $userId = $request->input('userId');
         try {
             $machineOrigin = Machine::where('machine_name', $request->input('machineName'))->first();
@@ -74,17 +80,15 @@ class MachineController extends Controller
 
             $today = now();
 
-            if($request->input('month')){
+            if ($request->input('month')) {
                 $monthNumber = $request->input('month');
-            }
-            else{
+            } else {
                 $monthNumber = $today->month;
             }
 
-            if($request->input('week')){
+            if ($request->input('week')) {
                 $weekNumber = $request->input('week');
-            }
-            else{
+            } else {
                 $weekNumber = ceil(($today->day + $today->dayOfWeek) / 7);
             }
 
@@ -112,19 +116,21 @@ class MachineController extends Controller
                     'original_state' => '',
                     'new_state' => array_merge($request->all(), [
                         'updated_at' => $newMachineData->updated_at,
-                        'users_id' => $userId,]),
+                        'users_id' => $userId,
+                    ]),
                 ])
             ]);
 
             return response()->json(['message' => 'Machine added successfully'], 201);
         } catch (\Exception $e) {
-            \Log::error('Error adding weekly machine: ' . $e->getMessage());
+            Log::error('Error adding weekly machine: ' . $e->getMessage());
             return response()->json(['message' => 'Error adding weekly machine. Please try again later.'], 500);
         }
     }
 
     //Add Machine Operation, input to machineOperation database
-    public function addMachineOperation(Request $request, $line, $machineID) {
+    public function addMachineOperation(Request $request, $line, $machineID)
+    {
 
         try {
             $userId = $request->input('userId');
@@ -171,10 +177,10 @@ class MachineController extends Controller
             $machineOperation->save();
 
             $weekOperations = MachineOperation::where('week', $machineOperation->week)
-            ->where('month', $machineOperation->month)
-            ->where('year', $machineOperation->year)
-            ->where('current_line', $machineOperation->current_line)
-            ->get();
+                ->where('month', $machineOperation->month)
+                ->where('year', $machineOperation->year)
+                ->where('current_line', $machineOperation->current_line)
+                ->get();
 
             foreach ($weekOperations as $operation) {
                 $operation->update([
@@ -197,13 +203,14 @@ class MachineController extends Controller
 
             return response()->json($machineOperation, 201);
         } catch (\Exception $error) {
-            \Log::error('Error adding machine operation: ' . $error->getMessage());
+            Log::error('Error adding machine operation: ' . $error->getMessage());
             return response()->json(['message' => $error->getMessage()], 400);
         }
     }
 
     //Add Global Description below tables, input to globalDescription database
-    public function addGlobalDescription(Request $request) {
+    public function addGlobalDescription(Request $request)
+    {
 
         try {
             // Validate the incoming request data
@@ -251,7 +258,7 @@ class MachineController extends Controller
             // Return a success response
             return response()->json(['message' => 'Global description added successfully'], 200);
         } catch (\Exception $e) {
-            \Log::error('Error adding global description: ' . $e->getMessage());
+            Log::error('Error adding global description: ' . $e->getMessage());
             return response()->json(['message' => 'Error adding global description. Please try again later.'], 500);
         }
     }
@@ -261,7 +268,8 @@ class MachineController extends Controller
 
     // -------------------------------- EDIT MACHINE FUNCTIONS --------------------------------
     //Edit Machine, edit machine data
-    public function editMachineOperation(Request $request, $machineOperationID) {
+    public function editMachineOperation(Request $request, $machineOperationID)
+    {
         $userId = $request->input('userId');
         $validatedData = $request->validate([
             'day' => 'required',
@@ -352,12 +360,13 @@ class MachineController extends Controller
 
             return response()->json($machineOperation, 200);
         } catch (\Exception $error) {
-            \Log::error('Error editing machine operation: ' . $error->getMessage());
+            Log::error('Error editing machine operation: ' . $error->getMessage());
             return response()->json(['message' => $error->getMessage()], 400);
         }
     }
 
-    public function sendRevision(Request $request) {
+    public function sendRevision(Request $request)
+    {
         $userId = $request->input('userId');
 
         $validatedData = $request->validate([
@@ -376,12 +385,12 @@ class MachineController extends Controller
             $operations = MachineOperation::where('year', $year)
                 ->where('month', $month)
                 ->where('week', $week)
-//                ->whereHas('machineData', function($query) use ($line) {
-//                    $query->whereHas('machine', function($query) use ($line) {
-//                        $query->whereJsonContains('line', $line);
-//                    });
-//                })
-                ->where('current_line',$line)
+                //                ->whereHas('machineData', function($query) use ($line) {
+                //                    $query->whereHas('machine', function($query) use ($line) {
+                //                        $query->whereJsonContains('line', $line);
+                //                    });
+                //                })
+                ->where('current_line', $line)
                 ->get();
 
             if ($operations->isEmpty()) {
@@ -424,7 +433,7 @@ class MachineController extends Controller
 
             return response()->json(['message' => 'Machine operations marked as sent successfully'], 200);
         } catch (\Exception $e) {
-            \Log::error('Error sending revision: ' . $e->getMessage());
+            Log::error('Error sending revision: ' . $e->getMessage());
             return response()->json(['message' => 'Error sending revision. Please try again later.'], 500);
         }
     }
@@ -434,7 +443,8 @@ class MachineController extends Controller
 
     // ------------------------------- DELETE MACHINE FUNCTIONS -------------------------------
     //Delete Weekly Machine, delete machine data from database and all related Machine operation
-    public function deleteWeeklyMachine(Request $request, $machineID) {
+    public function deleteWeeklyMachine(Request $request, $machineID)
+    {
         $userId = $request->input('userId');
 
         try {
@@ -463,13 +473,14 @@ class MachineController extends Controller
 
             return response()->json(['message' => 'Machine data deleted successfully'], 200);
         } catch (\Exception $error) {
-            \Log::error('Error deleting machine data: ' . $error->getMessage());
+            Log::error('Error deleting machine data: ' . $error->getMessage());
             return response()->json(['message' => $error->getMessage()], 400);
         }
     }
 
     //Delete Machine operation, delete machine operation from the database
-    public function deleteMachineOperation(Request $request, $machineOperationID) {
+    public function deleteMachineOperation(Request $request, $machineOperationID)
+    {
         $userId = $request->input('userId');
 
         try {
@@ -507,13 +518,14 @@ class MachineController extends Controller
 
             return response()->json(['message' => 'Machine operation deleted successfully'], 200);
         } catch (\Exception $error) {
-            \Log::error('Error deleting machine operation: ' . $error->getMessage());
+            Log::error('Error deleting machine operation: ' . $error->getMessage());
             return response()->json(['message' => $error->getMessage()], 400);
         }
     }
 
     //Delete Global description, delete global description from the database
-    public function deleteGlobalDescription(Request $request, $globalDescriptionID) {
+    public function deleteGlobalDescription(Request $request, $globalDescriptionID)
+    {
         $userId = $request->input('userId');
 
         try {
@@ -541,7 +553,7 @@ class MachineController extends Controller
 
             return response()->json(['message' => 'Global description deleted successfully'], 200);
         } catch (\Exception $e) {
-            \Log::error('Error deleting global description: ' . $e->getMessage());
+            Log::error('Error deleting global description: ' . $e->getMessage());
             return response()->json(['message' => $e->getMessage()], 400);
         }
     }
@@ -552,14 +564,16 @@ class MachineController extends Controller
 
     // -------------------------------- SHOW MACHINE FUNCTIONS --------------------------------
     //Function to show all machines and its information
-    public function showAllMachines(){
+    public function showAllMachines()
+    {
         $machines = Machine::all();
         return response()->json($machines);
         //return view('machines', ['machines' => $machines]);
     }
 
     //Function to show all weekly machine that contains all of its date and name
-    public function showAllWeeklyMachine(Request $request){
+    public function showAllWeeklyMachine(Request $request)
+    {
         // $request->validate([
         //     'year' => 'required|string',
         //     'month' => 'required|string',
@@ -575,7 +589,7 @@ class MachineController extends Controller
         $machineData = MachineData::where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
-            ->whereHas('machine', function($query) use ($line) {
+            ->whereHas('machine', function ($query) use ($line) {
                 $query->whereJsonContains('line', $line);
             })
             ->get();
@@ -584,7 +598,8 @@ class MachineController extends Controller
     }
 
     // Function Show All Code Machine Operations For Guest
-    public function showAllMachineOperationGuest(){
+    public function showAllMachineOperationGuest()
+    {
         $operations = MachineOperation::select(
             'machine_operations.*',
             'machines.id as machine_id',
@@ -599,11 +614,11 @@ class MachineController extends Controller
         return response()->json([
             'operations' => $operations
         ]);
-
     }
 
     // Function Show All Code Machine Operations For PJL
-    public function showAllMachineOperationPjl() {
+    public function showAllMachineOperationPjl()
+    {
 
         $operations = MachineOperation::select(
             'machine_operations.*',
@@ -622,7 +637,8 @@ class MachineController extends Controller
     }
 
     //Function show all machine operation
-    public function showMachineOperation(Request $request){
+    public function showMachineOperation(Request $request)
+    {
         $request->validate([
             'year' => 'required|string',
             'month' => 'required|string',
@@ -639,12 +655,13 @@ class MachineController extends Controller
             ->where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
-            ->whereHas('machineData', function($query) use ($line) {
-                $query->whereHas('machine', function($query) use ($line) {
+            ->whereHas('machineData', function ($query) use ($line) {
+                $query->whereHas('machine', function ($query) use ($line) {
                     $query->whereJsonContains('line', $line);
                 });
             })
             ->get();
+        // dd($operationsBefore);
 
         return response()->json([
             'operations' => $operations
@@ -652,7 +669,8 @@ class MachineController extends Controller
     }
 
     // Function show all machine operation that has true 'is_approved' value
-    public function showApprovedMachineOperation(Request $request){
+    public function showApprovedMachineOperation(Request $request)
+    {
         $request->validate([
             'year' => 'required|string',
             'month' => 'required|string',
@@ -669,8 +687,8 @@ class MachineController extends Controller
             ->where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
-            ->whereHas('machineData', function($query) use ($line) {
-                $query->whereHas('machine', function($query) use ($line) {
+            ->whereHas('machineData', function ($query) use ($line) {
+                $query->whereHas('machine', function ($query) use ($line) {
                     $query->whereJsonContains('line', $line);
                 });
             })
@@ -683,14 +701,16 @@ class MachineController extends Controller
     }
 
     //function to show all global description
-    public function showAllGlobalDescription() {
+    public function showAllGlobalDescription()
+    {
         $globalDescription = GlobalDescription::all();
         return response()->json($globalDescription);
         //return view('globalDescriptions', ['globalDescriptions' => $globalDescriptions]);
     }
 
     //Show all code AND line to the table, take data from both machine and machineoperation database using relationship.
-    public function showCodeLine() {
+    public function showCodeLine()
+    {
         $machineOperations = MachineOperation::with('machine')->get();
 
         $data = $machineOperations->map(function ($operation) {
@@ -704,7 +724,8 @@ class MachineController extends Controller
     }
 
     //Function to show all PM
-    public function showPM(Request $request){
+    public function showPM(Request $request)
+    {
         $request->validate([
             'year' => 'required|string',
             'month' => 'required|string',
@@ -718,8 +739,8 @@ class MachineController extends Controller
         $operations = MachineOperation::select('id', 'machine_id', 'year', 'month', 'week', 'day', 'code', 'time', 'status', 'notes', 'current_line', 'is_changed', 'changed_by', 'change_date', 'is_approved', 'approved_by', 'is_rejected', 'rejected_by', 'created_at', 'updated_at')
             ->where('year', $year)
             ->where('month', $month)
-            ->whereHas('machineData', function($query) use ($line) {
-                $query->whereHas('machine', function($query) use ($line) {
+            ->whereHas('machineData', function ($query) use ($line) {
+                $query->whereHas('machine', function ($query) use ($line) {
                     $query->whereJsonContains('line', $line);
                 });
             })
@@ -732,7 +753,8 @@ class MachineController extends Controller
     }
 
     //Function to show all PM to guest
-    public function showPMGuest(Request $request){
+    public function showPMGuest(Request $request)
+    {
         $request->validate([
             'year' => 'required|string',
             'month' => 'required|string',
@@ -749,8 +771,8 @@ class MachineController extends Controller
             ->where('year', $year)
             ->where('month', $month)
             ->where('week', $week)
-            ->whereHas('machineData', function($query) use ($line) {
-                $query->whereHas('machine', function($query) use ($line) {
+            ->whereHas('machineData', function ($query) use ($line) {
+                $query->whereHas('machine', function ($query) use ($line) {
                     $query->whereJsonContains('line', $line);
                 });
             })

@@ -26,6 +26,7 @@ class PjlViewController extends Controller
             ->get();
 
         $list = [];
+        $adding = '';
 
         foreach ($data as $item) {
             # code...
