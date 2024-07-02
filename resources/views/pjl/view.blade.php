@@ -1030,28 +1030,45 @@
             document.getElementById('revision_number').addEventListener('mouseout', function() {
                 document.getElementById('revisionNotesPopup').classList.add('hidden');
             });
-            
+
 
             async function fetchDataForWeek(line, year, month, week) {
                 let operationsUrls = [];
                 let machinesUrls = [];
                 let machineInfoUrls = [];
 
-                const nextWeek = parseInt(week) + 1;
+                if (week === "1") {
+                    const prevMonth = (month - 1 === 0) ? 12 : month - 1;
+                    const prevYear = (month - 1 === 0) ? year - 1 : year;
 
-                operationsUrls = [
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
-                ];
+                    operationsUrls = [
+                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
+                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
+                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                    ];
 
-                machinesUrls = [
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
-                ];
+                    machinesUrls = [
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                    ];
 
-                machineInfoUrls = [
-                    `http://127.0.0.1:8000/api/showmachine`
-                ];
+                    machineInfoUrls = [
+                        `http://127.0.0.1:8000/api/showmachine`
+                    ];
+                } else {
+                    operationsUrls = [
+                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
+                    ];
+
+                    machinesUrls = [
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`
+                    ];
+
+                    machineInfoUrls = [
+                        `http://127.0.0.1:8000/api/showmachine`
+                    ];
+                }
 
                 try {
                     const [operationsResponses, machinesResponses, machineInfoResponse] = await Promise.all([
@@ -1074,14 +1091,11 @@
 
                     const machineInfoData = await machineInfoResponse.json();
 
-                    const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine
-                        .category || 'Unknown'
-                    ])); // Fallback to 'Unknown' if category is empty
+                    const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
                     updateURL(line, year, month, week);
                     displayMachineData(operationsData, machinesData, machineInfoMap, week);
-                    await fetchAndDisplayGlobalDescriptions
-                        (); // Fetch and display global descriptions for the selected week
+                    await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
                 } catch (error) {
                     console.error("Error fetching data:", error);
                 }
@@ -1108,8 +1122,7 @@
                 const combinedMachines = combineWeeklyMachines(machines);
 
                 combinedMachines.forEach(machine => {
-                    const category = machineInfoMap.get(machine
-                        .machine_id); // Fetch category using machine_id
+                    const category = machineInfoMap.get(machine.machine_id); // Fetch category using machine_id
 
                     const machineRow = document.createElement('div');
                     machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
@@ -1220,7 +1233,9 @@
                                 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white text-xs w-7 h-7 thin-plus'; // Set width and height to 10 each for circular shape
                             addButton.textContent = '+';
                             addButton.onclick = async function() {
-                                currentMachineId = machine.id;
+                                const params = new URLSearchParams(window.location.search);
+                                const line = params.get('line');
+                                currentMachineId = machine.machine_id;
                                 currentDay = day;
                                 currentMonth = getMonthNumber(dateParts[1]);
                                 currentYear = parseInt(dateParts[2]);
@@ -1228,17 +1243,15 @@
                                 const isLastMonday = i === 8;
                                 if (isLastMonday) {
                                     const nextWeek = parseInt(week) + 1;
-                                    const response = await fetch(
-                                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
-                                    );
+                                    const response = await fetch(`http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=${nextWeek}`);
                                     const nextWeekMachines = await response.json();
-                                    const nextWeekMachine = nextWeekMachines.find(m => m
-                                        .machine_id === parseInt(machine.machine_id));
+                                    const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === parseInt(machine.machine_name));
                                     if (nextWeekMachine) {
-                                        currentMachineId = nextWeekMachine.id;
+                                        currentMachineId = nextWeekMachine.machine_id;
                                         currentDay = 1; // Senin di minggu berikutnya
                                     }
                                 }
+
                                 addDataModal.classList.remove('hidden');
                             };
                             dayColumn.appendChild(addButton);
