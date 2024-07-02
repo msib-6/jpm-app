@@ -1036,6 +1036,7 @@
                 let operationsUrls = [];
                 let machinesUrls = [];
                 let machineInfoUrls = [];
+                const nextWeek = parseInt(week) + 1;
 
                 if (week === "1") {
                     const prevMonth = (month - 1 === 0) ? 12 : month - 1;
@@ -1044,13 +1045,15 @@
                     operationsUrls = [
                         `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
                         `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
-                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`,
+                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                     ];
 
                     machinesUrls = [
                         `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
                         `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
-                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`,
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                     ];
 
                     machineInfoUrls = [
@@ -1058,11 +1061,13 @@
                     ];
                 } else {
                     operationsUrls = [
-                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
+                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
+                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                     ];
 
                     machinesUrls = [
-                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                     ];
 
                     machineInfoUrls = [
@@ -1090,7 +1095,6 @@
                     }
 
                     const machineInfoData = await machineInfoResponse.json();
-
                     const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
                     updateURL(line, year, month, week);
@@ -1100,6 +1104,7 @@
                     console.error("Error fetching data:", error);
                 }
             }
+
 
             function updateURL(line, year, month, week) {
                 history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
@@ -1127,21 +1132,20 @@
                     const machineRow = document.createElement('div');
                     machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                     machineRow.innerHTML = `
-                    <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                        <div class="flex flex-col justify-center items-center w-full h-full">
-                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                                <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                                ${category}
-                            </span>
-                            <span class="text-sm">${machine.machine_name}</span>
+                        <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                            <div class="flex flex-col justify-center items-center w-full h-full">
+                                <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                                    ${category}
+                                </span>
+                                <span class="text-sm">${machine.machine_name}</span>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
 
                     // Add day columns based on header days
                     for (let i = 1; i <= 8; i++) {
-                        const headerDate = document.getElementById(`day${i}`).children[1].textContent
-                            .trim();
+                        const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
                         const dateParts = headerDate.split(' ');
                         const day = parseInt(dateParts[0]);
                         const dayColumn = document.createElement('div');
@@ -1163,8 +1167,7 @@
                     });
 
                     machineOperations.forEach(operation => {
-                        const dayColumn = document.getElementById(
-                            `daydata${machine.id}-${operation.day}`);
+                        const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
 
                         if (dayColumn) {
                             const entry = document.createElement('button');
@@ -1190,16 +1193,16 @@
                             entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN',
                                 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'
                             ].includes(operation.status) ? `
-                            <p class="status-only">${operation.status}</p>
-                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                            ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                        ` : `
-                            <p><strong>${operation.code}</strong></p>
-                            <p>${operation.time}</p>
-                            ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
-                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                            ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                        `;
+                                <p class="status-only">${operation.status}</p>
+                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                            ` : `
+                                <p><strong>${operation.code}</strong></p>
+                                <p>${operation.time}</p>
+                                ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
+                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                            `;
                             entry.onmouseenter = function(event) {
                                 if (operation.notes) {
                                     showNotesPopup(event,
@@ -1222,8 +1225,7 @@
 
                     // Add "+ Add Data" button at the end of each day column
                     for (let i = 1; i <= 8; i++) {
-                        const headerDate = document.getElementById(`day${i}`).children[1].textContent
-                            .trim();
+                        const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
                         const dateParts = headerDate.split(' ');
                         const day = parseInt(dateParts[0]);
                         const dayColumn = document.getElementById(`daydata${machine.id}-${day}`);
@@ -1245,7 +1247,7 @@
                                     const nextWeek = parseInt(week) + 1;
                                     const response = await fetch(`http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=${nextWeek}`);
                                     const nextWeekMachines = await response.json();
-                                    const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === parseInt(machine.machine_name));
+                                    const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === machine.machine_name);
                                     if (nextWeekMachine) {
                                         currentMachineId = nextWeekMachine.machine_id;
                                         currentDay = 1; // Senin di minggu berikutnya

@@ -705,327 +705,40 @@
             const userId = document.getElementById('userId').value;
             const hours = document.getElementById('hours').value;
             const minutes = document.getElementById('minutes').value;
-            const dataTime = `${hours}:${minutes}`;
-            const dataNotes = document.getElementById('dataNotes').value;
-            const dataStatus = document.getElementById('dataStatus').value;
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const week = params.get('week');
-            const daysInWeek = document.querySelectorAll('.day-column');
-            const lastMonday = daysInWeek[7].querySelector('.add-data-button') ? true : false;
-            let targetWeek = week;
-            let targetMachineId = machineId;
+            const time = `${hours}:${minutes}`;
+            const notes = document.getElementById('dataNotes').value;
+            const status = document.getElementById('dataStatus').value;
 
-            if (day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[
-                0]) && lastMonday) {
-                const nextWeek = parseInt(week) + 1;
-                const response = await fetch(
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
-                );
-                const nextWeekMachines = await response.json();
-
-                const nextWeekMachine = nextWeekMachines.find(machine => machine.machine_id === parseInt(
-                    machineId));
-                if (nextWeekMachine) {
-                    targetMachineId = nextWeekMachine.id;
-                    targetWeek = nextWeek;
-                }
-            }
-
-            const responseAdd = await fetch(
-                `http://127.0.0.1:8000/api/addmachineoperation/${line}/${targetMachineId}`, {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/addmachineoperation', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
+                        machineId,
+                        dataCode,
                         day,
-                        code: dataCode,
-                        time: dataTime,
-                        status: dataStatus,
-                        notes: dataNotes,
-                        line,
                         month,
-                        week: targetWeek,
                         year,
                         userId,
+                        time,
+                        notes,
+                        status
                     }),
                 });
 
-            if (responseAdd.ok) {
-                showAlert(`Data added successfully`);
-            } else {
-                const errorData = await responseAdd.json();
-                showAlert(`Error adding data: ${errorData.message}`);
-            }
-        }
-
-        async function editData(operationId) {
-            const dataCode = document.getElementById('editDataCode').value;
-            const day = document.getElementById('editDay').value;
-            const hours = document.getElementById('editHours').value;
-            const minutes = document.getElementById('editMinutes').value;
-            const dataTime = `${hours}:${minutes}`;
-            const dataNotes = document.getElementById('editDataNotes').value;
-            const dataStatus = document.getElementById('editDataStatus').value;
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const month = currentMonth; // Get the month from the header date
-            const year = currentYear; // Get the year from the header date
-            const userId = document.getElementById('userId').value;
-
-            const response = await fetch(`http://127.0.0.1:8000/api/editmachineoperation/${operationId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    day,
-                    code: dataCode,
-                    time: dataTime,
-                    status: dataStatus,
-                    notes: dataNotes,
-                    line: line,
-                    month: month,
-                    week: params.get('week'),
-                    year: year,
-                    userId,
-                }),
-            });
-
-            if (response.ok) {
-                showAlert(`Data updated successfully`);
-            } else {
-                const errorData = await response.json();
-                showAlert(`Error updating data: ${errorData.message}`);
-            }
-        }
-
-        async function deleteData(operationId) {
-            const userId = document.getElementById('userId').value;
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/deletemachineoperation/${operationId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId
-                    }),
-                });
-
-            if (response.ok) {
-                showAlert(`Data deleted successfully`);
-            } else {
-                const errorData = await response.json();
-                showAlert(`Error deleting data: ${errorData.message}`);
-            }
-        }
-
-        function confirmDeleteOperation(id) {
-            currentOperationId = id;
-            deleteConfirmMessage.textContent = "Are you sure you want to delete this machine operation?";
-            confirmDeleteButton.setAttribute('data-delete-mode', 'operation');
-            confirmDeleteModal.classList.remove('hidden');
-        }
-
-        async function addGlobalDescription() {
-            const userId = document.getElementById('userId').value;
-            const globalDesc = document.getElementById('globalDesc').value;
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const month = params.get('month');
-            const week = params.get('week');
-            const year = params.get('year');
-
-            const response = await fetch('http://127.0.0.1:8000/api/addglobaldescription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    description: globalDesc,
-                    line,
-                    month,
-                    week,
-                    year,
-                    userId
-                }),
-            });
-
-            if (response.ok) {
-                showAlert(`Global description added successfully`);
-            } else {
-                const errorData = await response.json();
-                showAlert(`Error adding global description: ${errorData.message}`);
-            }
-        }
-
-        function viewGlobalDescription(desc) {
-            globalDescContent.textContent = desc.description;
-            currentGlobalDescId = desc.id;
-            viewGlobalDescModal.classList.remove('hidden');
-        }
-
-        async function fetchAndDisplayGlobalDescriptions() {
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const month = params.get('month');
-            const week = params.get('week');
-            const year = params.get('year');
-
-            const response = await fetch(`http://127.0.0.1:8000/api/showglobaldescription`);
-            const descriptions = await response.json();
-
-            const filteredDescriptions = descriptions.filter(desc => {
-                return desc.line === line && desc.month === month && desc.week === week && desc
-                    .year === year;
-            });
-
-            globalDescs.innerHTML = ''; // Clear existing descriptions
-
-            filteredDescriptions.forEach(desc => {
-                const descButton = document.createElement('button');
-                descButton.className =
-                    'my-2 bg-white descWeek p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
-                descButton.style.width = '90%';
-                descButton.textContent = desc.description;
-                descButton.onclick = function() {
-                    viewGlobalDescription(desc);
-                };
-                globalDescs.appendChild(descButton);
-            });
-        }
-
-        async function deleteGlobalDescription(id) {
-            const userId = document.getElementById('userId').value;
-            const response = await fetch(`http://127.0.0.1:8000/api/deleteglobaldescription/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userId
-                }),
-            });
-
-            if (response.ok) {
-                showAlert(`Global description deleted successfully`);
-            } else {
-                const errorData = await response.json();
-                showAlert(`Error deleting global description: ${errorData.message}`);
-            }
-        }
-
-        function confirmDeleteGlobalDesc(id) {
-            currentGlobalDescId = id;
-            deleteConfirmMessage.textContent = "Are you sure you want to delete this global description?";
-            confirmDeleteButton.setAttribute('data-delete-mode', 'description');
-            confirmDeleteModal.classList.remove('hidden');
-        }
-
-
-        async function deleteMachineData(id) {
-            const userId = document.getElementById('userId').value;
-            const response = await fetch(`http://127.0.0.1:8000/api/deleteweeklymachine/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userId
-                }),
-            });
-
-            if (response.ok) {
-                showAlert(`Machine data deleted successfully`);
-            } else {
-                const errorData = await response.json();
-                showAlert(`Error deleting machine data: ${errorData.message}`);
-            }
-        }
-
-        function viewMachineData(machine) {
-            const machineContent = `
-                <p><strong>Machine Name:</strong> ${machine.machine_name}</p>
-            `;
-            machineDataContent.innerHTML = machineContent;
-            currentMachineDataId = machine.id;
-            viewMachineDataModal.classList.remove('hidden');
-        }
-
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const month = params.get('month');
-            const year = params.get('year');
-            const week = params.get('week');
-
-            document.getElementById('line-display').textContent = line ? line.replace('Line', 'Line ') : 'N/A';
-            document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
-            document.getElementById('year-display').textContent = year ? year : 'N/A';
-
-            setupWeekButtons(line, year, month);
-            fetchStatusWeek(line, year, month, week);
-            fetchRevisionNumber(line, year, month, week);
-        }
-
-        async function fetchStatusWeek(line, year, month, week) {
-            const response = await fetch(
-                `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
-            );
-            const operationsData = await response.json();
-
-            let status = "NEW";
-
-            if (operationsData.operations.length > 0) {
-                const allApproved = operationsData.operations.every(operation => operation.is_approved ===
-                    1);
-                const allWaitingApproval = operationsData.operations.every(operation => operation
-                    .is_approved === 0 && operation.is_rejected === 0);
-                const allRejected = operationsData.operations.every(operation => operation.is_rejected ===
-                    1);
-
-                if (allApproved) {
-                    status = "APPROVED";
-                } else if (allWaitingApproval) {
-                    status = "WAITING APPROVAL";
-                } else if (allRejected) {
-                    status = "REJECTED";
+                if (response.ok) {
+                    showAlert('Data added successfully');
+                    await fetchDataForWeek(line, year, month, week); // Refresh data after adding
+                } else {
+                    const errorData = await response.json();
+                    showAlert(`Error adding data: ${errorData.message}`);
                 }
+            } catch (error) {
+                showAlert(`Error adding data: ${error.message}`);
             }
-
-            document.getElementById('statusWeek').innerHTML = `
-                <h3 class="text-2xl font-bold">${status}</h3>
-            `;
         }
-
-        async function fetchRevisionNumber(line, year, month, week) {
-            const response = await fetch(`http://127.0.0.1:8000/api/showrevision`);
-            const revisionsData = await response.json();
-
-            const revision = revisionsData.find(revision => {
-                return revision.line === line && revision.year == year && revision.month == month &&
-                    revision.week == week;
-            });
-
-            const revisionNumber = revision ? revision.revision_number : "0";
-            const returnNotes = revision ? revision.return_notes : "No notes available.";
-
-            document.getElementById('revision_number').innerHTML = `
-                <h3 class="text-xl font-bold">${revisionNumber} Revisi</h3>
-            `;
-
-            // Set the content of the notes popup
-            document.getElementById('revisionNotesPopup').textContent = returnNotes;
-        }
-        document.getElementById('revision_number').addEventListener('mouseover', function() {
-            document.getElementById('revisionNotesPopup').classList.remove('hidden');
-        });
-
-        document.getElementById('revision_number').addEventListener('mouseout', function() {
-            document.getElementById('revisionNotesPopup').classList.add('hidden');
-        });
 
         async function fetchDataForWeek(line, year, month, week) {
             let operationsUrls = [];
@@ -1039,13 +752,15 @@
                 operationsUrls = [
                     `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
                     `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=2`
                 ];
 
                 machinesUrls = [
                     `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
                     `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=2`
                 ];
 
                 machineInfoUrls = [
@@ -1053,11 +768,13 @@
                 ];
             } else {
                 operationsUrls = [
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${parseInt(week)+1}`
                 ];
 
                 machinesUrls = [
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${parseInt(week)+1}`
                 ];
 
                 machineInfoUrls = [
@@ -1081,7 +798,7 @@
                 let machinesData = [];
                 for (const response of machinesResponses) {
                     const data = await response.json();
-                    machinesData = machinesData.concat(data);
+                    machinesData = combineMachineData(machinesData, data); // Combine machines data
                 }
 
                 const machineInfoData = await machineInfoResponse.json();
@@ -1096,646 +813,368 @@
             }
         }
 
-        function updateURL(line, year, month, week) {
-            history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
+        function combineMachineData(currentData, nextData) {
+            const combinedData = [...currentData];
+            nextData.forEach(nextItem => {
+                const existingItem = combinedData.find(item => item.machine_name === nextItem.machine_name);
+                if (!existingItem) {
+                    combinedData.push(nextItem);
+                }
+            });
+            return combinedData;
         }
 
-        function displayMachineData(operations, machines, machineInfoMap, week) {
-            const dataContainer = document.getElementById('dataContainer');
-            dataContainer.innerHTML = ''; // Clear existing rows
+        async function editData(operationId) {
+            const dataCode = document.getElementById('editDataCode').value;
+            const userId = document.getElementById('userId').value;
+            const day = document.getElementById('editDay').value;
+            const hours = document.getElementById('editHours').value;
+            const minutes = document.getElementById('editMinutes').value;
+            const time = `${hours}:${minutes}`;
+            const notes = document.getElementById('editDataNotes').value;
+            const status = document.getElementById('editDataStatus').value;
 
-            // Create a map for machine operations
-            const machineOperationsMap = new Map();
-            operations.forEach(operation => {
-                if (!machineOperationsMap.has(operation.machine_id)) {
-                    machineOperationsMap.set(operation.machine_id, []);
-                }
-                machineOperationsMap.get(operation.machine_id).push(operation);
-            });
-
-            // Combine machines data from week and week + 1
-            const combinedMachines = combineWeeklyMachines(machines);
-
-            combinedMachines.forEach(machine => {
-                const category = machineInfoMap.get(machine.machine_id); // Fetch category using machine_id
-
-                const machineRow = document.createElement('div');
-                machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
-                machineRow.innerHTML = `
-                    <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                        <div class="flex flex-col justify-center items-center w-full h-full">
-                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                                <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                                ${category}
-                            </span>
-                            <span class="text-sm">${machine.machine_name}</span>
-                        </div>
-                    </div>
-                `;
-
-                // Add day columns based on header days
-                for (let i = 1; i <= 8; i++) {
-                    const headerDate = document.getElementById(`day${i}`).children[1].textContent
-                        .trim();
-                    const dateParts = headerDate.split(' ');
-                    const day = parseInt(dateParts[0]);
-                    const dayColumn = document.createElement('div');
-                    dayColumn.id = `daydata${machine.id}-${day}`;
-                    dayColumn.className = 'col-span-1 day-column';
-                    machineRow.appendChild(dayColumn);
-                }
-
-                dataContainer.appendChild(machineRow);
-
-                // Sort machine operations by time in ascending order, with "PM" status given priority
-                const machineOperations = machineOperationsMap.get(machine.id) || [];
-                machineOperations.sort((a, b) => {
-                    if (a.status === 'PM') return -1;
-                    if (b.status === 'PM') return 1;
-                    const [hoursA, minutesA] = a.time.split(':').map(Number);
-                    const [hoursB, minutesB] = b.time.split(':').map(Number);
-                    return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/editmachineoperation/${operationId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        dataCode,
+                        day,
+                        userId,
+                        time,
+                        notes,
+                        status
+                    }),
                 });
 
-                machineOperations.forEach(operation => {
-                    const dayColumn = document.getElementById(
-                        `daydata${machine.id}-${operation.day}`);
-
-                    if (dayColumn) {
-                        const entry = document.createElement('button');
-                        const statusClass = {
-                                'PM': 'status-pm',
-                                'BCP': 'status-bcp',
-                                'OFF': 'status-off',
-                                'CUSU': 'status-cusu',
-                                'DHT': 'status-dht',
-                                'CHT': 'status-cht',
-                                'KALIBRASI': 'status-kalibrasi',
-                                'OVERHAUL': 'status-overhaul',
-                                'CV': 'status-cv',
-                                'CPV': 'status-cpv',
-                                'BREAKDOWN': 'status-breakdown',
-                            } [operation.status] ||
-                            ''; // Gunakan kelas sesuai status atau kelas kosong jika tidak ada
-
-                        entry.className =
-                            `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
-                        entry.style.minHeight = '6em'; // Set the height to 6em
-
-                        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN',
-                            'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'
-                        ].includes(operation.status) ? `
-                            <p class="status-only">${operation.status}</p>
-                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                            ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                        ` : `
-                            <p><strong>${operation.code}</strong></p>
-                            <p>${operation.time}</p>
-                            ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
-                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                            ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                        `;
-                        entry.onmouseenter = function(event) {
-                            if (operation.notes) {
-                                showNotesPopup(event,
-                                    `Line: ${operation.current_line}\nNotes: ${operation.notes}`
-                                );
-                            } else {
-                                showNotesPopup(event, `Line: ${operation.current_line}`);
-                            }
-                        };
-                        entry.onmouseleave = function() {
-                            hideNotesPopup();
-                        };
-                        entry.onclick = function() {
-                            openEditModal(operation);
-                        };
-
-                        dayColumn.appendChild(entry);
-                    }
-                });
-
-                // Add "+ Add Data" button at the end of each day column
-                for (let i = 1; i <= 8; i++) {
-                    const headerDate = document.getElementById(`day${i}`).children[1].textContent
-                        .trim();
-                    const dateParts = headerDate.split(' ');
-                    const day = parseInt(dateParts[0]);
-                    const dayColumn = document.getElementById(`daydata${machine.id}-${day}`);
-                    if (dayColumn) {
-                        const addButton = document.createElement('button');
-                        addButton.className =
-                            'add-jpm-button add-data-button rounded-full bg-grey-500 text-white text-xs w-7 h-7 thin-plus'; // Set width and height to 10 each for circular shape
-                        addButton.textContent = '+';
-                        addButton.onclick = async function() {
-                            const params = new URLSearchParams(window.location.search);
-                            const line = params.get('line');
-                            currentMachineId = machine.machine_id;
-                            currentDay = day;
-                            currentMonth = getMonthNumber(dateParts[1]);
-                            currentYear = parseInt(dateParts[2]);
-
-                            const isLastMonday = i === 8;
-                            if (isLastMonday) {
-                                const nextWeek = parseInt(week) + 1;
-                                const response = await fetch(`http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=${nextWeek}`);
-                                const nextWeekMachines = await response.json();
-                                const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === parseInt(machine.machine_name));
-                                if (nextWeekMachine) {
-                                    currentMachineId = nextWeekMachine.machine_id;
-                                    currentDay = 1; // Senin di minggu berikutnya
-                                }
-                            }
-
-                            addDataModal.classList.remove('hidden');
-                        };
-                        dayColumn.appendChild(addButton);
-                    }
-                }
-
-                // Add onclick event to view machine data modal
-                machineRow.querySelector('.mesin-jpm').onclick = function() {
-                    viewMachineData(machine);
-                };
-            });
-        }
-
-        function showNotesPopup(event, notes) {
-            const popup = document.createElement('div');
-            popup.className = 'notes-popup';
-            popup.innerHTML = notes.split('\n').map(line =>
-                `<strong>${line.split(':')[0]}</strong>: ${line.split(':')[1]}`).join('<br>');
-            document.body.appendChild(popup);
-            const rect = event.target.getBoundingClientRect();
-            popup.style.top = `${rect.top + window.scrollY}px`;
-            popup.style.left = `${rect.right + 5 + window.scrollX}px`;
-        }
-
-        function hideNotesPopup() {
-            const popup = document.querySelector('.notes-popup');
-            if (popup) {
-                popup.remove();
-            }
-        }
-
-        function createDayElement(id) {
-            const container = document.querySelector('.grid');
-            const newDayElement = document.createElement('div');
-            newDayElement.id = id;
-            newDayElement.className = 'col-span-1 grid grid-rows-3 gap-2';
-            container.appendChild(newDayElement);
-            return newDayElement;
-        }
-
-        function getMonthName(month) {
-            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
-                "September", "Oktober", "November", "Desember"
-            ];
-            return monthNames[month - 1];
-        }
-
-        function getMonthNumber(monthName) {
-            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
-                "September", "Oktober", "November", "Desember"
-            ];
-            return monthNames.indexOf(monthName) + 1;
-        }
-
-        function setupWeekButtons(line, year, month, activeWeek) {
-            const weeksList = document.getElementById('weeksList');
-            weeksList.innerHTML = ''; // Clear existing buttons
-
-            // Get the start and end dates of the month
-            const startDate = new Date(year, month - 1, 1);
-
-            // Adjust the startDate to the previous Monday if it does not start on a Monday
-            if (startDate.getDay() !== 1) {
-                while (startDate.getDay() !== 1) {
-                    startDate.setDate(startDate.getDate() + 1);
-                }
-                startDate.setDate(startDate.getDate() -
-                    7); // Go back 7 days to get the Monday of the previous week
-            } else {
-                startDate.setDate(startDate.getDate() - 7); // Go back 7 days even if it is already Monday
-            }
-
-            let currentDate = new Date(startDate);
-            let weeks = [];
-            let week = [formatDate(currentDate)]; // Start the first week with the adjusted or found Monday
-
-            currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
-
-            // Loop through the days, ensuring each week runs from Monday to the following Monday
-            while (true) {
-                week.push(formatDate(currentDate)); // Add the current day to the current week
-
-                if (currentDate.getDay() === 1 && week.length >
-                    1) { // If it's Monday and not the first iteration
-                    weeks.push(week); // Complete the current week
-                    week = [formatDate(currentDate)]; // Start a new week with this Monday
-                }
-                currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
-
-                // Break the loop if we've moved into the next month
-                if (currentDate.getMonth() !== month - 1 && currentDate.getDay() === 1) {
-                    break;
-                }
-            }
-
-            // Ensure the last week runs until the next Monday
-            while (currentDate.getDay() !== 1) { // Move to the last Monday of the month
-                week.push(formatDate(currentDate));
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-            week.push(formatDate(currentDate)); // Add the final Monday
-
-            if (week.length > 1) {
-                weeks.push(week);
-            }
-
-            // Create buttons for each week
-            weeks.forEach((week, index) => {
-                const weekButton = document.createElement('button');
-                weekButton.textContent = `W${index + 1}`;
-                weekButton.className =
-                    'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
-                if (index + 1 === parseInt(activeWeek)) {
-                    weekButton.classList.add('text-purple-600');
+                if (response.ok) {
+                    showAlert('Data updated successfully');
+                    await fetchDataForWeek(currentLine, currentYear, currentMonth, currentWeek); // Refresh data after updating
                 } else {
-                    weekButton.classList.add('text-gray-400', 'cursor-not-allowed');
+                    const errorData = await response.json();
+                    showAlert(`Error updating data: ${errorData.message}`);
                 }
-                weekButton.onclick = () => {
-                    fetchDataForWeek(line, year, month, index + 1);
-                    updateURL(line, year, month, index + 1);
-                    document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove(
-                        'text-purple-600'));
-                    weekButton.classList.add('text-purple-600');
-                    displayWeek(week);
-                };
-                weeksList.appendChild(weekButton);
-            });
-
-            // Automatically click the specified week button
-            const params = new URLSearchParams(window.location.search);
-            const weekParam = params.get('week');
-            if (weekParam && weeksList.children[weekParam - 1]) {
-                weeksList.children[weekParam - 1].click(); // Click the specified week
+            } catch (error) {
+                showAlert(`Error updating data: ${error.message}`);
             }
         }
 
-        function formatDate(date) {
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            return `${days[date.getDay()]}, ${date.getDate()} ${getMonthName(date.getMonth() + 1)} ${date.getFullYear()}`;
-        }
+        async function deleteData(operationId) {
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/deletemachineoperation/${operationId}`, {
+                    method: 'DELETE',
+                });
 
-        function getWeekNumber(date) {
-            const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-            const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
-            return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-        }
-
-        function displayWeek(dates) {
-            // Show the header days when a week is displayed
-            document.getElementById('headerDays').style.display = 'block';
-
-            dates.forEach((date, index) => {
-                if (index < 8) { // Ensure we only update the 8 days
-                    const dayElement = document.getElementById(`day${index + 1}`);
-                    const dateParts = date.split(" ");
-                    dayElement.children[0].textContent = dateParts[0]; // Day name
-                    dayElement.children[1].textContent =
-                        `${dateParts[1]} ${dateParts[2]} ${dateParts[3]}`; // Full date
+                if (response.ok) {
+                    showAlert('Data deleted successfully');
+                    await fetchDataForWeek(currentLine, currentYear, currentMonth, currentWeek); // Refresh data after deleting
+                } else {
+                    const errorData = await response.json();
+                    showAlert(`Error deleting data: ${errorData.message}`);
                 }
-            });
+            } catch (error) {
+                showAlert(`Error deleting data: ${error.message}`);
+            }
+        }
+
+        async function fetchAndDisplayGlobalDescriptions() {
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/getglobaldescription?line=${line}&year=${year}&month=${month}&week=${week}`);
+                const descriptions = await response.json();
+
+                globalDescs.innerHTML = ''; // Clear existing descriptions
+
+                descriptions.forEach(desc => {
+                    const descElement = document.createElement('div');
+                    descElement.className = 'bg-white shadow-md rounded-lg p-4 mb-4';
+                    descElement.innerHTML = `
+                        <p class="text-gray-700">${desc.description}</p>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 mt-2" onclick="viewGlobalDescription(${desc.id}, '${desc.description}')">View</button>
+                    `;
+                    globalDescs.appendChild(descElement);
+                });
+            } catch (error) {
+                console.error('Error fetching global descriptions:', error);
+            }
+        }
+
+        async function addGlobalDescription() {
+            const description = document.getElementById('globalDesc').value;
+            const params = new URLSearchParams(window.location.search);
+            const line = params.get('line');
+            const month = params.get('month');
+            const week = params.get('week');
+            const year = params.get('year');
+            const userId = document.getElementById('userId').value;
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/addglobaldescription', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        description,
+                        line,
+                        month,
+                        week,
+                        year,
+                        userId
+                    }),
+                });
+
+                if (response.ok) {
+                    showAlert('Description added successfully');
+                    await fetchAndDisplayGlobalDescriptions(); // Refresh global descriptions after adding
+                } else {
+                    const errorData = await response.json();
+                    showAlert(`Error adding description: ${errorData.message}`);
+                }
+            } catch (error) {
+                showAlert(`Error adding description: ${error.message}`);
+            }
+        }
+
+        function viewGlobalDescription(id, description) {
+            currentGlobalDescId = id;
+            document.getElementById('globalDescContent').textContent = description;
+            viewGlobalDescModal.classList.remove('hidden');
+        }
+
+        async function deleteGlobalDescription(id) {
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/deleteglobaldescription/${id}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    showAlert('Description deleted successfully');
+                    await fetchAndDisplayGlobalDescriptions(); // Refresh global descriptions after deleting
+                } else {
+                    const errorData = await response.json();
+                    showAlert(`Error deleting description: ${errorData.message}`);
+                }
+            } catch (error) {
+                showAlert(`Error deleting description: ${error.message}`);
+            }
+        }
+
+        function confirmDeleteOperation(operationId) {
+            currentOperationId = operationId;
+            deleteConfirmMessage.textContent = 'Are you sure you want to delete this operation?';
+            confirmDeleteButton.setAttribute('data-delete-mode', 'operation');
+            confirmDeleteModal.classList.remove('hidden');
+        }
+
+        function confirmDeleteGlobalDesc(descId) {
+            currentGlobalDescId = descId;
+            deleteConfirmMessage.textContent = 'Are you sure you want to delete this global description?';
+            confirmDeleteButton.setAttribute('data-delete-mode', 'description');
+            confirmDeleteModal.classList.remove('hidden');
+        }
+
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            currentLine = params.get('line');
+            currentMonth = params.get('month');
+            currentWeek = params.get('week');
+            currentYear = params.get('year');
+            document.getElementById('month-display').textContent = currentMonth;
+            document.getElementById('year-display').textContent = currentYear;
+            fetchDataForWeek(currentLine, currentYear, currentMonth, currentWeek);
+        }
+
+        function updateURL(line, year, month, week) {
+            const newUrl = `${window.location.pathname}?line=${line}&year=${year}&month=${month}&week=${week}`;
+            history.replaceState(null, '', newUrl);
         }
 
         function setupAutoRefresh() {
             setInterval(() => {
-                const params = new URLSearchParams(window.location.search);
-                const line = params.get('line');
-                const month = params.get('month');
-                const week = params.get('week');
-                const year = params.get('year');
-
-                if (line && month && week && year) {
-                    fetchDataForWeek(line, year, month, week);
-                }
-            }, 10000); // Refresh every 10 seconds
+                fetchDataForWeek(currentLine, currentYear, currentMonth, currentWeek);
+            }, 60000); // Refresh every 60 seconds
         }
 
-        function openEditModal(operation) {
-            document.getElementById('editDataCode').value = operation.code;
+        function increaseHour() {
+            const hourInput = document.getElementById('hours');
+            let hour = parseInt(hourInput.value, 10);
+            hour = (hour + 1) % 24;
+            hourInput.value = hour.toString().padStart(2, '0');
+        }
 
-            const editDaySelector = document.getElementById('editDay');
-            editDaySelector.innerHTML = ''; // Clear previous options
+        function decreaseHour() {
+            const hourInput = document.getElementById('hours');
+            let hour = parseInt(hourInput.value, 10);
+            hour = (hour - 1 + 24) % 24;
+            hourInput.value = hour.toString().padStart(2, '0');
+        }
 
-            for (let i = 1; i <= 8; i++) {
-                const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
-                const dateParts = headerDate.split(' ');
-                const day = parseInt(dateParts[0]);
-                const month = getMonthNumber(dateParts[1]);
-                const year = parseInt(dateParts[2]);
+        function increaseMinute() {
+            const minuteInput = document.getElementById('minutes');
+            let minute = parseInt(minuteInput.value, 10);
+            minute = (minute + 1) % 60;
+            minuteInput.value = minute.toString().padStart(2, '0');
+        }
 
-                const option = document.createElement('option');
-                option.value = day;
-                option.textContent = `${dateParts[0]} - ${dateParts[1]} ${dateParts[2]}`;
-                if (day === parseInt(operation.day) && month === parseInt(operation.month) && year === parseInt(
-                    operation.year)) {
-                    option.selected = true;
-                }
-                editDaySelector.appendChild(option);
+        function decreaseMinute() {
+            const minuteInput = document.getElementById('minutes');
+            let minute = parseInt(minuteInput.value, 10);
+            minute = (minute - 1 + 60) % 60;
+            minuteInput.value = minute.toString().padStart(2, '0');
+        }
+
+        function increaseHourEdit() {
+            const hourInput = document.getElementById('editHours');
+            let hour = parseInt(hourInput.value, 10);
+            hour = (hour + 1) % 24;
+            hourInput.value = hour.toString().padStart(2, '0');
+        }
+
+        function decreaseHourEdit() {
+            const hourInput = document.getElementById('editHours');
+            let hour = parseInt(hourInput.value, 10);
+            hour = (hour - 1 + 24) % 24;
+            hourInput.value = hour.toString().padStart(2, '0');
+        }
+
+        function increaseMinuteEdit() {
+            const minuteInput = document.getElementById('editMinutes');
+            let minute = parseInt(minuteInput.value, 10);
+            minute = (minute + 1) % 60;
+            minuteInput.value = minute.toString().padStart(2, '0');
+        }
+
+        function decreaseMinuteEdit() {
+            const minuteInput = document.getElementById('editMinutes');
+            let minute = parseInt(minuteInput.value, 10);
+            minute = (minute - 1 + 60) % 60;
+            minuteInput.value = minute.toString().padStart(2, '0');
+        }
+
+        async function displayMachineData(operationsData, machinesData, machineInfoMap, week) {
+            const dataContainer = document.getElementById('dataContainer');
+            dataContainer.innerHTML = ''; // Clear existing data
+
+            const headerDays = document.getElementById('headerDays');
+            headerDays.style.display = 'block'; // Ensure the header is displayed
+
+            // Date placeholders
+            const dayPlaceholders = ['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'day8'];
+
+            // Fill in the date placeholders
+            const currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 1); // Start of the week
+
+            for (let i = 0; i < dayPlaceholders.length; i++) {
+                const datePlaceholder = document.getElementById(dayPlaceholders[i]);
+                const day = currentDate.getDate();
+                const month = currentDate.getMonth() + 1; // Months are zero-based
+                datePlaceholder.innerHTML = `<span class="font-bold">${datePlaceholder.querySelector('span:first-child').textContent}</span><span style="font-size: 12px;">${day}/${month}</span>`;
+                currentDate.setDate(day + 1);
             }
 
-            const timeParts = operation.time.split(':');
-            document.getElementById('editHours').value = timeParts[0];
-            document.getElementById('editMinutes').value = timeParts[1];
-            document.getElementById('editDataNotes').value = operation.notes;
-            document.getElementById('editDataStatus').value = operation.status;
-            currentOperationId = operation.id;
-            editDataModal.classList.remove('hidden');
-        }
+            // Group operations by machine
+            const operationsByMachine = operationsData.reduce((acc, operation) => {
+                if (!acc[operation.machine_name]) {
+                    acc[operation.machine_name] = [];
+                }
+                acc[operation.machine_name].push(operation);
+                return acc;
+            }, {});
 
-        // async function fetchAndDisplayHistory() {
-        //     const params = new URLSearchParams(window.location.search);
-        //     const line = params.get('line');
-        //     const month = params.get('month');
-        //     const week = params.get('week');
-        //     const year = params.get('year');
+            // Display machines and their operations
+            machinesData.forEach(machine => {
+                const machineRow = document.createElement('div');
+                machineRow.className = 'grid grid-cols-10 gap-4 items-center mb-4';
 
-        //     try {
-        //         const response = await fetch(`http://127.0.0.1:8000/api/showaudit`);
-        //         const audits = await response.json();
+                const machineName = document.createElement('div');
+                machineName.className = 'col-span-2 font-bold';
+                machineName.textContent = machine.machine_name;
+                machineRow.appendChild(machineName);
 
-        //         const filteredAudits = audits.filter(audit => {
-        //             const newState = audit.changes ? audit.changes.new_state : null;
-        //             return newState && newState.line === line && newState.month == month && newState
-        //                 .week == week && newState.year == year;
-        //         });
+                for (let i = 0; i < 8; i++) {
+                    const dayCell = document.createElement('div');
+                    dayCell.className = 'flex flex-col justify-center items-center';
 
-        //         // Mengurutkan filteredAudits berdasarkan timestamp dalam urutan descending
-        //         filteredAudits.sort((a, b) => new Date(b.audit_id) - new Date(a.audit_id));
+                    const addButton = document.createElement('button');
+                    addButton.className = 'bg-green-500 text-white px-2 py-1 rounded-lg hover:bg-green-600';
+                    addButton.textContent = 'Add';
+                    addButton.addEventListener('click', () => {
+                        currentMachineId = machine.id;
+                        currentDay = i + 1;
+                        currentMonth = machine.month;
+                        currentYear = machine.year;
+                        addDataModal.classList.remove('hidden');
+                    });
 
-        //         const historyContent = document.getElementById('historyContent');
-        //         // historyContent.innerHTML = ''; // Clear existing content
+                    dayCell.appendChild(addButton);
+                    machineRow.appendChild(dayCell);
+                }
 
-        //         filteredAudits.forEach(audit => {
-        //             const newState = audit.changes ? audit.changes.new_state : null;
-        //             if (!newState) return;
+                dataContainer.appendChild(machineRow);
 
-        //             console.log(audit);
+                // Display operations for each machine
+                if (operationsByMachine[machine.machine_name]) {
+                    operationsByMachine[machine.machine_name].forEach(operation => {
+                        const operationRow = document.createElement('div');
+                        operationRow.className = 'grid grid-cols-10 gap-4 items-center mb-4';
 
-        //             let historyEntry = document.createElement('div');
-        //             historyEntry.className = 'bg-white shadow-md rounded-lg p-4 mb-4';
-        //             const actionDate = new Date(audit.timestamp);
-        //             const actionTime =
-        //                 `${actionDate.getHours().toString().padStart(2, '0')}:${actionDate.getMinutes().toString().padStart(2, '0')}:${actionDate.getSeconds().toString().padStart(2, '0')}`;
-        //             const actionDateFormatted =
-        //                 `${actionDate.getDate()} ${getMonthName(actionDate.getMonth() + 1)} ${actionDate.getFullYear()}`;
+                        const operationMachineName = document.createElement('div');
+                        operationMachineName.className = 'col-span-2 font-bold text-gray-600';
+                        operationMachineName.textContent = '';
+                        operationRow.appendChild(operationMachineName);
 
-        //             if (audit.event === 'add') {
-        //                 if (newState.day && newState.code && newState.status && newState.notes) {
-        //                     historyEntry.innerHTML = `
-        //             <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
-        //             <p>Pada <span class="text-green-600">Week ${newState.week}</span>, <span class="text-green-600">${newState.day} ${getMonthName(newState.month)} ${newState.year}</span>. Kode Ruah <span class="text-green-600">${newState.code}</span>, Status: <span class="text-green-600">${newState.status}</span>, Catatan: <span class="text-green-600">${newState.notes}</span> telah ditambahkan oleh <span class="text-green-600">${newState.userId}</span></p>
-        //         `;
-        //                 } else if (newState.machineName) {
-        //                     historyEntry.innerHTML = `
-        //             <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
-        //             <p>Pada <span class="text-green-600">Week ${newState.week}</span>. Machine <span class="text-green-600">${newState.machineName}</span> ditambahkan pada <span class="text-green-600">${actionDate}</span></p>
-        //         `;
-        //                 }
-        //             } else if (audit.event === 'edit') {
-        //                 const originalState = audit.changes.original_state;
+                        for (let i = 0; i < 8; i++) {
+                            const operationDayCell = document.createElement('div');
+                            operationDayCell.className = 'flex flex-col justify-center items-center';
 
-        //                 const originalDate =
-        //                     `${originalState.day} ${getMonthName(originalState.month)} ${originalState.year}`;
-        //                 const newDate =
-        //                     `${newState.day} ${getMonthName(newState.month)} ${newState.year}`;
+                            if (operation.day === i + 1) {
+                                const operationInfo = document.createElement('div');
+                                operationInfo.className = 'text-center';
+                                operationInfo.innerHTML = `
+                                    <div>${operation.dataCode}</div>
+                                    <div>${operation.time}</div>
+                                    <div>${operation.notes}</div>
+                                    <div>${operation.status}</div>
+                                `;
 
-        //                 const newUpdatedAt = new Date(newState.updated_at);
-        //                 newUpdatedAt.setHours(newUpdatedAt.getHours() + 7); // Add 7 hours
-        //                 const updatedDate =
-        //                     `${newUpdatedAt.getDate()} ${getMonthName(newUpdatedAt.getMonth() + 1)} ${newUpdatedAt.getFullYear()}`;
-        //                 const updatedTime =
-        //                     `${newUpdatedAt.getHours().toString().padStart(2, '0')}:${newUpdatedAt.getMinutes().toString().padStart(2, '0')}`;
+                                const editButton = document.createElement('button');
+                                editButton.className = 'bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600 mt-2';
+                                editButton.textContent = 'Edit';
+                                editButton.addEventListener('click', () => {
+                                    currentOperationId = operation.id;
+                                    document.getElementById('editDataCode').value = operation.dataCode;
+                                    document.getElementById('editDay').value = operation.day;
+                                    document.getElementById('editHours').value = operation.time.split(':')[0];
+                                    document.getElementById('editMinutes').value = operation.time.split(':')[1];
+                                    document.getElementById('editDataNotes').value = operation.notes;
+                                    document.getElementById('editDataStatus').value = operation.status;
+                                    editDataModal.classList.remove('hidden');
+                                });
 
-        //                 historyEntry.innerHTML = `
-        //                 <p><strong>Action:</strong> <span class="text-green-600">EDIT</span></p>
-        //                 <p>Pada <span class="text-red-600">Week ${originalState.week}</span>, <span class="text-red-600">${originalDate}</span>. Kode Ruah <span class="text-red-600">${originalState.code}</span>, Status: <span class="text-red-600">${originalState.status}</span>, Catatan: <span class="text-red-600">${originalState.notes}</span> telah diubah oleh <span class="text-red-600">${newState.users_id}</span> pada <span class="text-red-600">${updatedDate}</span> pukul <span class="text-red-600">${updatedTime}</span> menjadi Kode Ruah <span class="text-blue-600">${newState.code}</span>, Status: <span class="text-blue-600">${newState.status}</span>, Catatan: <span class="text-blue-600">${newState.notes}</span> ke tanggal <span class="text-blue-600">${newState.day} Week ${newState.week}</span></p>
-        //             `;
+                                operationDayCell.appendChild(operationInfo);
+                                operationDayCell.appendChild(editButton);
+                            }
 
-        //                 // if (originalState && newState.day && newState.code && newState.status &&
-        //                 //     newState.notes) {
+                            operationRow.appendChild(operationDayCell);
+                        }
 
-        //                 // }
-        //             } else if (audit.event === 'delete') {
-        //                 const originalState = audit.changes.original_state;
-        //                 historyEntry.innerHTML = `
-        //             <p><strong>Action:</strong> <span class="text-green-600">DELETE</span></p>
-        //             <p>Pada <span class="text-green-600">Week ${originalState.week}</span>. Description <span class="text-green-600">"${originalState.description}"</span> dihapus pada <span class="text-green-600">${actionDateFormatted}</span></p>
-        //         `;
-
-        //                 //         if (originalState && originalState.day && originalState.code) {
-        //                 //             const originalDate =
-        //                 //                 `${originalState.day} ${getMonthName(originalState.month)} ${originalState.year}`;
-        //                 //             historyEntry.innerHTML = `
-        //             //     <p><strong>Action:</strong> <span class="text-green-600">DELETE</span></p>
-        //             //     <p>Pada <span class="text-green-600">Week ${originalState.week}</span>, <span class="text-green-600">${originalDate}</span>. Kode Ruah <span class="text-green-600">${originalState.code}</span>, Jam <span class="text-green-600">${originalState.time}</span> dihapus pada <span class="text-green-600">${actionDateFormatted}</span> pukul <span class="text-green-600">${actionTime}</span></p>
-        //             // `;
-        //                 //         } else if (originalState && originalState.description) {
-        //                 //             historyEntry.innerHTML = `
-        //             //     <p><strong>Action:</strong> <span class="text-green-600">DELETE</span></p>
-        //             //     <p>Pada <span class="text-green-600">Week ${originalState.week}</span>. Description <span class="text-green-600">"${originalState.description}"</span> dihapus pada <span class="text-green-600">${actionDateFormatted}</span></p>
-        //             // `;
-        //                 //         }
-        //             } else if (audit.event === 'send_revision') {
-        //                 historyEntry.innerHTML = `
-        //         <p><strong>Action:</strong> <span class="text-green-600">SEND REVISION</span></p>
-        //         <p>Revisi dikirim pada <span class="text-green-600">${actionDateFormatted}</span> pukul <span class="text-green-600">${actionTime}</span></p>
-        //     `;
-        //             } else {
-        //                 historyEntry.innerHTML = ``;
-        //             }
-        //             historyContent.appendChild(historyEntry);
-        //         });
-        //     } catch (error) {
-        //         console.error("Error fetching history data:", error);
-        //     }
-        // }
-
-        // async function fetchAndDisplayHistory() {
-        //     const params = new URLSearchParams(window.location.search);
-        //     const line = params.get('line');
-        //     const month = params.get('month');
-        //     const week = params.get('week');
-        //     const year = params.get('year');
-
-        //     try {
-        //         const response = await fetch(`http://127.0.0.1:8000/api/showaudit`);
-        //         const audits = await response.json();
-
-        //         const filteredAudits = audits.filter(audit => {
-        //             const newState = audit.changes ? audit.changes.new_state : null;
-        //             return newState && newState.line === line && newState.month == month && newState
-        //                 .week == week && newState.year == year;
-        //         });
-
-        //         // Mengurutkan filteredAudits berdasarkan timestamp dalam urutan descending
-        //         filteredAudits.sort((a, b) => new Date(b.audit_id) - new Date(a.audit_id));
-
-        //         const historyContent = document.getElementById('historyContent');
-        //         // historyContent.innerHTML = ''; // Clear existing content
-
-        //         filteredAudits.forEach(audit => {
-        //             const newState = audit.changes ? audit.changes.new_state : null;
-        //             if (!newState) return;
-
-        //             console.log(audit);
-
-        //             let historyEntry = document.createElement('div');
-        //             historyEntry.className = 'bg-white shadow-md rounded-lg p-4 mb-4';
-        //             const actionDate = new Date(audit.timestamp);
-        //             const actionTime =
-        //                 `${actionDate.getHours().toString().padStart(2, '0')}:${actionDate.getMinutes().toString().padStart(2, '0')}:${actionDate.getSeconds().toString().padStart(2, '0')}`;
-        //             const actionDateFormatted =
-        //                 `${actionDate.getDate()} ${getMonthName(actionDate.getMonth() + 1)} ${actionDate.getFullYear()}`;
-
-        //             if (audit.event === 'add') {
-        //                 if (newState.day && newState.code && newState.status && newState.notes) {
-        //                     historyEntry.innerHTML = `
-        //             <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
-        //             <p>Pada <span class="text-green-600">Week ${newState.week}</span>, <span class="text-green-600">${newState.day} ${getMonthName(newState.month)} ${newState.year}</span>. Kode Ruah <span class="text-green-600">${newState.code}</span>, Status: <span class="text-green-600">${newState.status}</span>, Catatan: <span class="text-green-600">${newState.notes}</span> telah ditambahkan oleh <span class="text-green-600">${newState.userId}</span></p>
-        //         `;
-        //                 } else if (newState.machineName) {
-        //                     historyEntry.innerHTML = `
-        //             <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
-        //             <p>Pada <span class="text-green-600">Week ${newState.week}</span>. Machine <span class="text-green-600">${newState.machineName}</span> ditambahkan pada <span class="text-green-600">${actionDateFormatted}</span></p>
-        //         `;
-        //                 }
-        //             } else if (audit.event === 'edit') {
-        //                 const originalState = audit.changes ? audit.changes.original_state : null;
-        //                 if (!originalState) return;
-
-        //                 const originalDate =
-        //                     `${originalState.day} ${getMonthName(originalState.month)} ${originalState.year}`;
-        //                 const newDate =
-        //                     `${newState.day} ${getMonthName(newState.month)} ${newState.year}`;
-
-        //                 const newUpdatedAt = new Date(newState.updated_at);
-        //                 newUpdatedAt.setHours(newUpdatedAt.getHours() + 7); // Add 7 hours
-        //                 const updatedDate =
-        //                     `${newUpdatedAt.getDate()} ${getMonthName(newUpdatedAt.getMonth() + 1)} ${newUpdatedAt.getFullYear()}`;
-        //                 const updatedTime =
-        //                     `${newUpdatedAt.getHours().toString().padStart(2, '0')}:${newUpdatedAt.getMinutes().toString().padStart(2, '0')}`;
-
-        //                 historyEntry.innerHTML = `
-        //         <p><strong>Action:</strong> <span class="text-green-600">EDIT</span></p>
-        //         <p>Pada <span class="text-red-600">Week ${originalState.week}</span>, <span class="text-red-600">${originalDate}</span>. Kode Ruah <span class="text-red-600">${originalState.code}</span>, Status: <span class="text-red-600">${originalState.status}</span>, Catatan: <span class="text-red-600">${originalState.notes}</span> telah diubah oleh <span class="text-red-600">${newState.users_id}</span> pada <span class="text-red-600">${updatedDate}</span> pukul <span class="text-red-600">${updatedTime}</span> menjadi Kode Ruah <span class="text-blue-600">${newState.code}</span>, Status: <span class="text-blue-600">${newState.status}</span>, Catatan: <span class="text-blue-600">${newState.notes}</span> ke tanggal <span class="text-blue-600">${newState.day} Week ${newState.week}</span></p>
-        //     `;
-        //             } else if (audit.event === 'delete') {
-        //                 const originalState = audit.changes ? audit.changes.original_state : null;
-        //                 if (!originalState) return;
-
-        //                 historyEntry.innerHTML = `
-        //         <p><strong>Action:</strong> <span class="text-green-600">DELETE</span></p>
-        //         <p>Pada <span class="text-green-600">Week ${originalState.week}</span>. Description <span class="text-green-600">"${originalState.description}"</span> dihapus pada <span class="text-green-600">${actionDateFormatted}</span></p>
-        //     `;
-        //             } else if (audit.event === 'send_revision') {
-        //                 historyEntry.innerHTML = `
-        //         <p><strong>Action:</strong> <span class="text-green-600">SEND REVISION</span></p>
-        //         <p>Revisi dikirim pada <span class="text-green-600">${actionDateFormatted}</span> pukul <span class="text-green-600">${actionTime}</span></p>
-        //     `;
-        //             } else {
-        //                 historyEntry.innerHTML = ``;
-        //             }
-        //             historyContent.appendChild(historyEntry);
-        //         });
-        //     } catch (error) {
-        //         console.error("Error fetching history data:", error);
-        //     }
-        // }
-
-        function combineWeeklyMachines(machines) {
-            const machineMap = new Map();
-
-            machines.forEach(machine => {
-                const key = `${machine.machine_id}-${machine.machine_name}`;
-
-                if (!machineMap.has(key)) {
-                    machineMap.set(key, machine);
+                        dataContainer.appendChild(operationRow);
+                    });
                 }
             });
-
-            return Array.from(machineMap.values());
         }
-
     });
-
-    // Custom function to increase hour in time picker
-    function increaseHour() {
-        const hoursInput = document.getElementById('hours');
-        let hours = parseInt(hoursInput.value);
-        hours = (hours + 1) % 24;
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    // Custom function to decrease hour in time picker
-    function decreaseHour() {
-        const hoursInput = document.getElementById('hours');
-        let hours = parseInt(hoursInput.value);
-        hours = (hours - 1 + 24) % 24;
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    // Custom function to increase minute in time picker
-    function increaseMinute() {
-        const minutesInput = document.getElementById('minutes');
-        let minutes = parseInt(minutesInput.value);
-        minutes = (minutes + 1) % 60;
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
-
-    // Custom function to decrease minute in time picker
-    function decreaseMinute() {
-        const minutesInput = document.getElementById('minutes');
-        let minutes = parseInt(minutesInput.value);
-        minutes = (minutes - 1 + 60) % 60;
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
-
-    // Custom function to increase hour in edit time picker
-    function increaseHourEdit() {
-        const hoursInput = document.getElementById('editHours');
-        let hours = parseInt(hoursInput.value);
-        hours = (hours + 1) % 24;
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    // Custom function to decrease hour in edit time picker
-    function decreaseHourEdit() {
-        const hoursInput = document.getElementById('editHours');
-        let hours = parseInt(hoursInput.value);
-        hours = (hours - 1 + 24) % 24;
-        hoursInput.value = hours.toString().padStart(2, '0');
-    }
-
-    // Custom function to increase minute in edit time picker
-    function increaseMinuteEdit() {
-        const minutesInput = document.getElementById('editMinutes');
-        let minutes = parseInt(minutesInput.value);
-        minutes = (minutes + 1) % 60;
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
-
-    // Custom function to decrease minute in edit time picker
-    function decreaseMinuteEdit() {
-        const minutesInput = document.getElementById('editMinutes');
-        let minutes = parseInt(minutesInput.value);
-        minutes = (minutes - 1 + 60) % 60;
-        minutesInput.value = minutes.toString().padStart(2, '0');
-    }
 </script>
 </body>
 
 </html>
-
