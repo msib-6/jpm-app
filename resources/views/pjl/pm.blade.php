@@ -11,6 +11,7 @@
 </head>
 <body>
 <div class="container mx-auto px-4">
+    <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
     <nav class="flex ml-16 mt-3" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
             <li class="inline-flex items-center">
@@ -270,6 +271,7 @@
             notes: notes
         };
 
+        const userId = document.getElementById('userId').value;
         const operationId = document.getElementById('operationId').value;
         const apiUrl = operationId ? `http://127.0.0.1:8000/api/editmachineoperation/${operationId}` : `http://127.0.0.1:8000/api/addmachineoperation/${line}/${machineId}`;
         const method = operationId ? 'PUT' : 'POST';
@@ -279,7 +281,7 @@
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data, userId)
         })
             .then(response => {
                 if (!response.ok) {

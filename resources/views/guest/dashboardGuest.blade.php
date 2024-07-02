@@ -195,17 +195,17 @@
             <!--end::Col-->
             <!--begin::Col-->
             <div class=" w-7/12 pt-5 lg:pt-15">
-            <!--begin::Illustration-->
-            <div class="image bg-no-repeat bg-contain bg-right-bottom" style="background-image:url('{{ asset('') }}'); height: 48em; width: 24em;">
-            </div>
-            <!--begin::Illustration-->
+                <!--begin::Illustration-->
+                <div class="image bg-no-repeat bg-contain bg-right-bottom" style="background-image:url('{{ asset('') }}'); height: 48em; width: 24em;">
+                </div>
+                <!--begin::Illustration-->
             </div>
             <!--end::Col-->
         </div>
     </div>
-    </div>
-        <!--end::Row-->
-    </div>
+</div>
+<!--end::Row-->
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
@@ -221,18 +221,18 @@
 
         // Event listener for 'Pilih Line' button
         document.getElementById('pindah-ke-bagian-2').addEventListener('click', function () {
-        document.getElementById('bagian-1').classList.add('hidden');
-        document.getElementById('bagian-2').classList.remove('hidden');
-        document.getElementById('bagian-3').classList.add('hidden');
-        document.getElementById('bagian-4').classList.add('hidden');
-        fetchLines();
+            document.getElementById('bagian-1').classList.add('hidden');
+            document.getElementById('bagian-2').classList.remove('hidden');
+            document.getElementById('bagian-3').classList.add('hidden');
+            document.getElementById('bagian-4').classList.add('hidden');
+            fetchLines();
         });
 
         // Event listeners for back buttons
         document.getElementById('kembali-ke-bagian-1').addEventListener('click', function() {
-        document.getElementById('bagian-2').classList.add('hidden');
-        document.getElementById('bagian-1').classList.remove('hidden');
-    });
+            document.getElementById('bagian-2').classList.add('hidden');
+            document.getElementById('bagian-1').classList.remove('hidden');
+        });
 
         document.getElementById('kembali-ke-bagian-2').addEventListener('click', function () {
             document.getElementById('bagian-3').classList.add('hidden');
@@ -252,9 +252,9 @@
 
         // Fetch and display lines
         function fetchLines() {
-            axios.get('http://127.0.0.1:8000/api/showallmachineoperationguest')
+            axios.get('http://127.0.0.1:8000/api/showapprovedcard')
                 .then(function (response) {
-                    const lines = new Set(response.data.operations.map(machine => machine.current_line));
+                    const lines = new Set(response.data.ApprovedCard.map(card => card.current_line));
                     populateLines(Array.from(lines));
                 })
                 .catch(function (error) {
@@ -268,7 +268,7 @@
             lineContainer.innerHTML = '';
             lines.forEach(line => {
                 const button = document.createElement('button');
-                button.textContent = `${line}`;
+                button.textContent = line.replace(/(\d+)/g, ' $1'); // Add space before the number
                 button.className = 'btn w-48 h-16 text-lg ml-4 mb-4 text-left';
                 button.addEventListener('click', () => selectLine(line));
                 lineContainer.appendChild(button);
@@ -285,9 +285,9 @@
 
         // Fetch and display years based on the selected line
         function fetchYears(line) {
-            axios.get(`http://127.0.0.1:8000/api/showallmachineoperationguest?line=${line}`)
+            axios.get(`http://127.0.0.1:8000/api/showapprovedcard?line=${line}`)
                 .then(function (response) {
-                    const years = new Set(response.data.operations.filter(machine => machine.current_line === line).map(machine => machine.year));
+                    const years = new Set(response.data.ApprovedCard.filter(card => card.current_line === line).map(card => card.year));
                     populateYears(Array.from(years));
                 })
                 .catch(function (error) {
@@ -318,9 +318,9 @@
 
         // Fetch and display months based on the selected line and year
         function fetchMonths(line, year) {
-            axios.get(`http://127.0.0.1:8000/api/showallmachineoperationguest?line=${line}&year=${year}`)
+            axios.get(`http://127.0.0.1:8000/api/showapprovedcard?line=${line}&year=${year}`)
                 .then(function (response) {
-                    const months = new Set(response.data.operations.filter(machine => machine.current_line === line && machine.year === year).map(machine => machine.month));
+                    const months = new Set(response.data.ApprovedCard.filter(card => card.current_line === line && card.year === year).map(card => card.month));
                     populateMonths(Array.from(months));
                 })
                 .catch(function (error) {
@@ -345,7 +345,7 @@
     });
 </script>
 <script>
-console.clear();
+    console.clear();
 </script>
 </div>
 </body>

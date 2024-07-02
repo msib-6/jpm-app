@@ -10,12 +10,12 @@ class AuditController extends Controller
 {
     public function showAudit() {
         $audits = Audits::all();
-    
+
         $auditDetails = $audits->map(function ($audit) {
             $changes = json_decode($audit->changes, true);
 
             $machineoperationId = $audit->machineoperation_id ?? 'Unknown'; // Set default value if null
-    
+
             if (json_last_error() === JSON_ERROR_NONE && is_array($changes)) {
                 return [
                     'audit_id' => $audit->id,
@@ -27,7 +27,7 @@ class AuditController extends Controller
                     ],
                 ];
             }
-    
+
             return [
                 'audit_id' => $audit->id,
                 'machineoperation_id' => $machineoperationId,
@@ -35,7 +35,7 @@ class AuditController extends Controller
                 'error' => 'Failed to decode changes field',
             ];
         });
-    
+
         return response()->json($auditDetails);
     }
 }

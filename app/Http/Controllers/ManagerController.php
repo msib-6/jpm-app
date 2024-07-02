@@ -249,6 +249,7 @@ class ManagerController extends Controller
         $month = $request->input('month');
         $week = $request->input('week');
         $rejectedBy = $userId;
+        $returnNotes = $request->input('return_notes');
 
         $machineOperations = MachineOperation::where('current_line', $line)
             ->where('year', $year)
@@ -272,7 +273,6 @@ class ManagerController extends Controller
             $machineOperation->is_rejected = true;
             $machineOperation->rejected_by = $rejectedBy;
             $machineOperation->save();  // Use save() instead of update() to ensure proper field updates
-
         }
 
         foreach ($machineOperations as $machineOperation) {
@@ -284,8 +284,31 @@ class ManagerController extends Controller
             ]);
         }
 
+        $manager = Manager::where('line', $line)
+            ->where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->first();
+
+        if ($manager) {
+            $manager->update([
+                'revision_number' => $manager->revision_number + 1,
+                'return_notes' => $returnNotes,
+            ]);
+        } else {
+            Manager::create([
+                'line' => $line,
+                'year' => $year,
+                'month' => $month,
+                'week' => $week,
+                'revision_number' => 1, // Starting revision number if creating new
+                'return_notes' => $returnNotes,
+            ]);
+        }
+
         return response()->json(['message' => 'Return successful'], 200);
     }
+
 
 
 
