@@ -207,7 +207,7 @@
         weekSpan.textContent = 'No PM Data';
         weekDiv.appendChild(weekSpan);
     } else {
-        const weeksArray = Array.from(weeks).map(week => week === "1" ? "Ada Data PM" : `W${week}`).join(', ');
+        const weeksArray = Array.from(weeks).map(week => week === "1" ? "" : `W${week}`).join('');
         const weekSpan = document.createElement('span');
         weekSpan.textContent = weeksArray;
         weekSpan.className = 'week-item';
