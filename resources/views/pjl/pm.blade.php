@@ -41,7 +41,7 @@
     <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-start" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <div class="justify-start" style="max-height: 28em; overflow-y: auto;">
             <p class="text-2xl font-bold">View Data</p>
-            <div id="dataContainer">
+            <div id="dataContainer" style="max-width: 37em;">
                 <!-- Dynamic machine data will be loaded here -->
             </div>
         </div>
