@@ -717,11 +717,12 @@
                 const line = params.get('line');
                 const week = params.get('week');
                 const daysInWeek = document.querySelectorAll('.day-column');
-                const lastMonday = daysInWeek[7].querySelector('.add-data-button') ? true : false;
+                const isLastMonday = day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[0]);
+
                 let targetWeek = week;
                 let targetMachineId = machineId;
 
-                if (day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[0]) && lastMonday) {
+                if (isLastMonday) {
                     const nextWeek = parseInt(week) + 1;
                     const response = await fetch(
                         `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
