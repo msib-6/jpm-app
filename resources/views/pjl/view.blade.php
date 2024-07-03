@@ -705,6 +705,7 @@
                 }
             }
 
+            // Fungsi untuk menambahkan data ke mesin
             async function addDataToMachine(machineId, day, month, year) {
                 const dataCode = document.getElementById('dataCode').value;
                 const userId = document.getElementById('userId').value;
@@ -721,16 +722,14 @@
                 let targetWeek = week;
                 let targetMachineId = machineId;
 
-                if (day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[
-                        0]) && lastMonday) {
+                if (day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[0]) && lastMonday) {
                     const nextWeek = parseInt(week) + 1;
                     const response = await fetch(
                         `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                     );
                     const nextWeekMachines = await response.json();
 
-                    const nextWeekMachine = nextWeekMachines.find(machine => machine.machine_id === parseInt(
-                        machineId));
+                    const nextWeekMachine = nextWeekMachines.find(machine => machine.machine_id === parseInt(machineId));
                     if (nextWeekMachine) {
                         targetMachineId = nextWeekMachine.id;
                         targetWeek = nextWeek;
@@ -1111,10 +1110,10 @@
                 history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
             }
 
-            // Display machine data including operations for the next week
+            // Fungsi untuk menampilkan data mesin termasuk operasi untuk minggu berikutnya
             function displayMachineData(operations, machines, machineInfoMap, week) {
                 const dataContainer = document.getElementById('dataContainer');
-                dataContainer.innerHTML = ''; // Clear existing rows
+                dataContainer.innerHTML = ''; // Hapus baris yang ada
 
                 const machineOperationsMap = new Map();
                 operations.forEach(operation => {
@@ -1260,9 +1259,10 @@
 
                                     const response = await fetch(nextWeekUrl);
                                     const nextWeekMachines = await response.json();
-                                    const nextWeekMachine = nextWeekMachines.find(m => m.machine_id === machine.machine_id);
+                                    const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === machine.machine_name);
                                     if (nextWeekMachine) {
                                         currentMachineIdWeekly = nextWeekMachine.machine_id;
+                                        currentMachineId = nextWeekMachine.id; // Menggunakan ID dari mesin minggu berikutnya
                                         currentDay = day;
                                     }
                                 }
@@ -1278,8 +1278,6 @@
                     };
                 });
             }
-
-
 
             function showNotesPopup(event, notes) {
                 const popup = document.createElement('div');
