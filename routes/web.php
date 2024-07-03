@@ -95,8 +95,9 @@ Route::get('/guest/viewguest', function (Request $request) {
     $line = $request->query('line');
     $year = $request->query('year');
     $month = $request->query('month');
+    $month = $request->query('week');
     return view('guest.viewGuest', compact('line', 'year', 'month'));
-})->name('viewGuest');
+})->name('guest.viewGuest');
 
 Route::middleware('manager', 'auth')->group(function () {
     Route::get('/manager/dashboard', function () {
