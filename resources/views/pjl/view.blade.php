@@ -1236,8 +1236,29 @@
 
                                 const isLastMonday = i === 8;
                                 if (isLastMonday) {
-                                    const nextWeek = parseInt(week) + 1;
-                                    const response = await fetch(`http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=${nextWeek}`);
+                                    let nextWeekUrl = '';
+                                    switch (parseInt(week)) {
+                                        case 1:
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=2`;
+                                            break;
+                                        case 2:
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=3`;
+                                            break;
+                                        case 3:
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=4`;
+                                            break;
+                                        case 4:
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=5`;
+                                            break;
+                                        case 5:
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=6`;
+                                            break;
+                                        default:
+                                            console.error('Invalid week number');
+                                            return;
+                                    }
+
+                                    const response = await fetch(nextWeekUrl);
                                     const nextWeekMachines = await response.json();
                                     const nextWeekMachine = nextWeekMachines.find(m => m.machine_id === machine.machine_id);
                                     if (nextWeekMachine) {
@@ -1257,6 +1278,7 @@
                     };
                 });
             }
+
 
 
             function showNotesPopup(event, notes) {
