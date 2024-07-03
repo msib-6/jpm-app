@@ -1241,7 +1241,7 @@
                                     const nextWeekMachines = await response.json();
                                     const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === machine.machine_name);
                                     if (nextWeekMachine) {
-                                        currentMachineIdWeekly = nextWeekMachine.machine_id;
+                                        currentMachineIdWeekly = nextWeekMachine.id;
                                         currentDay = 1;
                                     }
                                 }
