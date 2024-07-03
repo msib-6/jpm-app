@@ -1124,6 +1124,15 @@
                     machineOperationsMap.get(machineIdKey).push(operation);
                 });
 
+                // Sort machines by specified categories
+                const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating', 'Mixing', 'Filling', 'Kemas'];
+                machines.sort((a, b) => {
+                    const categoryA = machineInfoMap.get(a.machine_id) || 'Unknown';
+                    const categoryB = machineInfoMap.get(b.machine_id) || 'Unknown';
+                    return categoryOrder.indexOf(categoryA) - categoryOrder.indexOf(categoryB);
+                });
+
+
                 const combinedMachines = combineWeeklyMachines(machines);
 
                 combinedMachines.forEach(machine => {
@@ -1132,16 +1141,16 @@
                     const machineRow = document.createElement('div');
                     machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                     machineRow.innerHTML = `
-            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                <div class="flex flex-col justify-center items-center w-full h-full">
-                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                        ${category}
-                    </span>
-                    <span class="text-sm">${machine.machine_name}</span>
-                </div>
-            </div>
-        `;
+                        <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                            <div class="flex flex-col justify-center items-center w-full h-full">
+                                <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                                    ${category}
+                                </span>
+                                <span class="text-sm">${machine.machine_name}</span>
+                            </div>
+                        </div>
+                    `;
 
                     for (let i = 1; i <= 8; i++) {
                         const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
@@ -1191,16 +1200,16 @@
                             entry.style.minHeight = '6em';
 
                             entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
-                    <p class="status-only">${operation.status}</p>
-                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                ` : `
-                    <p><strong>${operation.code}</strong></p>
-                    <p>${operation.time}</p>
-                    ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
-                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                `;
+                                <p class="status-only">${operation.status}</p>
+                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                            ` : `
+                                <p><strong>${operation.code}</strong></p>
+                                <p>${operation.time}</p>
+                                ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
+                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                            `;
                             entry.onmouseenter = function(event) {
                                 if (operation.notes) {
                                     showNotesPopup(event, `Line: ${operation.current_line}\nNotes: ${operation.notes}`);
@@ -1381,16 +1390,13 @@
                 weeks.forEach((week, index) => {
                     const weekButton = document.createElement('button');
                     weekButton.textContent = `W${index + 1}`;
-                    weekButton.className =
-                        'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
+                    weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 cursor-not-allowed py-2.5 h-auto border-0';
                     if (index + 1 === parseInt(activeWeek)) {
                         weekButton.classList.add('text-purple-600');
                     } else {
                         weekButton.classList.add('text-gray-400', 'cursor-not-allowed');
                     }
                     weekButton.onclick = () => {
-                        fetchDataForWeek(line, year, month, index + 1);
-                        updateURL(line, year, month, index + 1);
                         document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove(
                             'text-purple-600'));
                         weekButton.classList.add('text-purple-600');
