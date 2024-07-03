@@ -1155,8 +1155,12 @@
 
                     dataContainer.appendChild(machineRow);
 
-                    const machineOperations = machineOperationsMap.get(machine.id) || [];
-                    machineOperations.sort((a, b) => {
+                    // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
+                    const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
+                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) || [];
+                    const allMachineOperations = [...machineOperations, ...machineOperationsNextWeek];
+
+                    allMachineOperations.sort((a, b) => {
                         if (a.status === 'PM') return -1;
                         if (b.status === 'PM') return 1;
                         const [hoursA, minutesA] = a.time.split(':').map(Number);
@@ -1164,7 +1168,7 @@
                         return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
                     });
 
-                    machineOperations.forEach(operation => {
+                    allMachineOperations.forEach(operation => {
                         const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
 
                         if (dayColumn) {
@@ -1278,6 +1282,7 @@
                     };
                 });
             }
+
 
             function showNotesPopup(event, notes) {
                 const popup = document.createElement('div');
