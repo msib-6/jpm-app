@@ -1239,7 +1239,7 @@
                                 const params = new URLSearchParams(window.location.search);
                                 const line = params.get('line');
                                 currentMachineId = machine.id;
-                                currentMachineIdWeekly = machine.id;
+                                currentMachineIdWeekly = machine.machine_id;
                                 currentDay = day;
                                 currentMonth = getMonthNumber(dateParts[1]);
                                 currentYear = parseInt(dateParts[2]);
