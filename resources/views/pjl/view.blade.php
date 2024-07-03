@@ -716,21 +716,24 @@
                 const params = new URLSearchParams(window.location.search);
                 const line = params.get('line');
                 const week = params.get('week');
-                let targetWeek = parseInt(week);
+                const daysInWeek = document.querySelectorAll('.day-column');
+                const lastMonday = daysInWeek[7].querySelector('.add-data-button') ? true : false;
+                let targetWeek = week;
                 let targetMachineId = machineId;
 
-                // Check if the day is the last Monday of the week (day 8)
-                const isLastMonday = day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[0]);
-                if (isLastMonday) {
-                    targetWeek = targetWeek + 1;
+                if (day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[
+                        0]) && lastMonday) {
+                    const nextWeek = parseInt(week) + 1;
                     const response = await fetch(
-                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${targetWeek}`
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                     );
                     const nextWeekMachines = await response.json();
 
-                    const nextWeekMachine = nextWeekMachines.find(machine => machine.machine_name === machineId);
+                    const nextWeekMachine = nextWeekMachines.find(machine => machine.machine_id === parseInt(
+                        machineId));
                     if (nextWeekMachine) {
-                        targetMachineId = nextWeekMachine.machine_id;
+                        targetMachineId = nextWeekMachine.id;
+                        targetWeek = nextWeek;
                     }
                 }
 
@@ -761,7 +764,6 @@
                     showAlert(`Error adding data: ${errorData.message}`);
                 }
             }
-
 
             async function editData(operationId) {
                 const dataCode = document.getElementById('editDataCode').value;
