@@ -717,19 +717,20 @@
                 const line = params.get('line');
                 const week = params.get('week');
                 const daysInWeek = document.querySelectorAll('.day-column');
-                const isLastMonday = day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[0]);
-
+                const lastMonday = daysInWeek[7].querySelector('.add-data-button') ? true : false;
                 let targetWeek = week;
                 let targetMachineId = machineId;
 
-                if (isLastMonday) {
+                if (day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[
+                        0]) && lastMonday) {
                     const nextWeek = parseInt(week) + 1;
                     const response = await fetch(
                         `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                     );
                     const nextWeekMachines = await response.json();
 
-                    const nextWeekMachine = nextWeekMachines.find(machine => machine.machine_id === parseInt(machineId));
+                    const nextWeekMachine = nextWeekMachines.find(machine => machine.machine_id === parseInt(
+                        machineId));
                     if (nextWeekMachine) {
                         targetMachineId = nextWeekMachine.id;
                         targetWeek = nextWeek;
@@ -763,7 +764,6 @@
                     showAlert(`Error adding data: ${errorData.message}`);
                 }
             }
-
 
             async function editData(operationId) {
                 const dataCode = document.getElementById('editDataCode').value;
