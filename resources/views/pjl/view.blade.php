@@ -717,21 +717,19 @@
                 const params = new URLSearchParams(window.location.search);
                 const line = params.get('line');
                 const week = params.get('week');
-                const daysInWeek = document.querySelectorAll('.day-column');
-                const lastMonday = daysInWeek[7].querySelector('.add-data-button') ? true : false;
+                const isLastMonday = day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[0]);
+
                 let targetWeek = week;
                 let targetMachineId = machineId;
 
-                if (day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[
-                        0]) && lastMonday) {
+                if (isLastMonday) {
                     const nextWeek = parseInt(week) + 1;
                     const response = await fetch(
                         `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                     );
                     const nextWeekMachines = await response.json();
 
-                    const nextWeekMachine = nextWeekMachines.find(machine => machine.machine_id === parseInt(
-                        machineId));
+                    const nextWeekMachine = nextWeekMachines.find(machine => machine.machine_id === parseInt(machineId));
                     if (nextWeekMachine) {
                         targetMachineId = nextWeekMachine.id;
                         targetWeek = nextWeek;
@@ -765,6 +763,9 @@
                     showAlert(`Error adding data: ${errorData.message}`);
                 }
             }
+
+
+
 
             async function editData(operationId) {
                 const dataCode = document.getElementById('editDataCode').value;
@@ -1134,16 +1135,16 @@
                     const machineRow = document.createElement('div');
                     machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                     machineRow.innerHTML = `
-                        <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                            <div class="flex flex-col justify-center items-center w-full h-full">
-                                <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                                    ${category}
-                                </span>
-                                <span class="text-sm">${machine.machine_name}</span>
-                            </div>
-                        </div>
-                    `;
+            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                <div class="flex flex-col justify-center items-center w-full h-full">
+                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                        ${category}
+                    </span>
+                    <span class="text-sm">${machine.machine_name}</span>
+                </div>
+            </div>
+        `;
 
                     for (let i = 1; i <= 8; i++) {
                         const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
@@ -1189,16 +1190,16 @@
                             entry.style.minHeight = '6em';
 
                             entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
-                                <p class="status-only">${operation.status}</p>
-                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                            ` : `
-                                <p><strong>${operation.code}</strong></p>
-                                <p>${operation.time}</p>
-                                ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
-                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                            `;
+                    <p class="status-only">${operation.status}</p>
+                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                ` : `
+                    <p><strong>${operation.code}</strong></p>
+                    <p>${operation.time}</p>
+                    ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
+                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                `;
                             entry.onmouseenter = function(event) {
                                 if (operation.notes) {
                                     showNotesPopup(event, `Line: ${operation.current_line}\nNotes: ${operation.notes}`);
@@ -1229,7 +1230,6 @@
                             addButton.onclick = async function() {
                                 const params = new URLSearchParams(window.location.search);
                                 const line = params.get('line');
-                                const currentWeeks = params.get('week');
                                 currentMachineId = machine.id;
                                 currentMachineIdWeekly = machine.machine_id;
                                 currentDay = day;
@@ -1238,10 +1238,10 @@
 
                                 const isLastMonday = i === 8;
                                 if (isLastMonday) {
-                                    const nextWeek = currentWeeks + 1;
+                                    const nextWeek = parseInt(week) + 1;
                                     const response = await fetch(`http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=${nextWeek}`);
                                     const nextWeekMachines = await response.json();
-                                    const nextWeekMachine = nextWeekMachines.find(m => m.machine_id === machine.machine_id);
+                                    const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === machine.machine_name);
                                     if (nextWeekMachine) {
                                         currentMachineIdWeekly = nextWeekMachine.machine_id;
                                         currentDay = day;
@@ -1259,6 +1259,8 @@
                     };
                 });
             }
+
+
 
             function showNotesPopup(event, notes) {
                 const popup = document.createElement('div');
