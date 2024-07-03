@@ -660,13 +660,42 @@ class MachineController extends Controller
                     $query->whereJsonContains('line', $line);
                 });
             })
+            ->with(['machineData' => function ($query) {
+                $query->select('id', 'machine_id');
+            }])
             ->get();
-        // dd($operationsBefore);
+
+        $operations = $operations->map(function ($operation) {
+            return [
+                'id' => $operation->id,
+                'machine_id' => $operation->machine_id,
+                'year' => $operation->year,
+                'month' => $operation->month,
+                'week' => $operation->week,
+                'day' => $operation->day,
+                'code' => $operation->code,
+                'time' => $operation->time,
+                'status' => $operation->status,
+                'notes' => $operation->notes,
+                'current_line' => $operation->current_line,
+                'is_changed' => $operation->is_changed,
+                'changed_by' => $operation->changed_by,
+                'change_date' => $operation->change_date,
+                'is_approved' => $operation->is_approved,
+                'approved_by' => $operation->approved_by,
+                'is_rejected' => $operation->is_rejected,
+                'rejected_by' => $operation->rejected_by,
+                'created_at' => $operation->created_at,
+                'updated_at' => $operation->updated_at,
+                'machine_id_parent' => $operation->machineData->machine_id ?? null,
+            ];
+        });
 
         return response()->json([
             'operations' => $operations
         ]);
     }
+
 
     // Function show all machine operation that has true 'is_approved' value
     public function showApprovedMachineOperation(Request $request)
