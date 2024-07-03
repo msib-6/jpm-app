@@ -498,6 +498,7 @@
             let currentDay;
             let currentMonth;
             let currentYear;
+            let currentWeek;
             let currentOperationId;
             let currentGlobalDescId;
             let currentMachineDataId;
@@ -1228,6 +1229,7 @@
                             addButton.onclick = async function() {
                                 const params = new URLSearchParams(window.location.search);
                                 const line = params.get('line');
+                                const currentWeeks = params.get('week');
                                 currentMachineId = machine.id;
                                 currentMachineIdWeekly = machine.machine_id;
                                 currentDay = day;
@@ -1236,10 +1238,10 @@
 
                                 const isLastMonday = i === 8;
                                 if (isLastMonday) {
-                                    const nextWeek = parseInt(week) + 1;
+                                    const nextWeek = currentWeeks + 1;
                                     const response = await fetch(`http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=${nextWeek}`);
                                     const nextWeekMachines = await response.json();
-                                    const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === machine.machine_name);
+                                    const nextWeekMachine = nextWeekMachines.find(m => m.machine_id === machine.machine_id);
                                     if (nextWeekMachine) {
                                         currentMachineIdWeekly = nextWeekMachine.machine_id;
                                         currentDay = day;
