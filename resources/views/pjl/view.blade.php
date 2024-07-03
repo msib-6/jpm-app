@@ -494,6 +494,7 @@
             const closeHistoryModalButton = document.getElementById('closeHistoryModalButton');
             const historyContent = document.getElementById('historyContent');
             let currentMachineId;
+            let currentMachineIdWeekly;
             let currentDay;
             let currentMonth;
             let currentYear;
@@ -1238,6 +1239,7 @@
                                 const params = new URLSearchParams(window.location.search);
                                 const line = params.get('line');
                                 currentMachineId = machine.id;
+                                currentMachineIdWeekly = machine.id;
                                 currentDay = day;
                                 currentMonth = getMonthNumber(dateParts[1]);
                                 currentYear = parseInt(dateParts[2]);
@@ -1249,7 +1251,7 @@
                                     const nextWeekMachines = await response.json();
                                     const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === machine.machine_name);
                                     if (nextWeekMachine) {
-                                        currentMachineId = nextWeekMachine.machine_id;
+                                        currentMachineIdWeekly = nextWeekMachine.machine_id;
                                         currentDay = 1; // Senin di minggu berikutnya
                                     }
                                 }
