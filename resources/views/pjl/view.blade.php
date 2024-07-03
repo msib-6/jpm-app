@@ -1237,7 +1237,7 @@
                             addButton.onclick = async function() {
                                 const params = new URLSearchParams(window.location.search);
                                 const line = params.get('line');
-                                currentMachineId = machine.machine_id;
+                                currentMachineId = machine.id;
                                 currentDay = day;
                                 currentMonth = getMonthNumber(dateParts[1]);
                                 currentYear = parseInt(dateParts[2]);
