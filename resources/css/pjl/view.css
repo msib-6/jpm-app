@@ -13,6 +13,11 @@ body {
     right: 0;
     z-index: 1000; /* Ensure it is above other content */
 }
+.month-container {
+    text-align: left; /* Ensure left alignment */
+    width: 100%; /* Ensure it takes the full width */
+}
+
 
 
 .status-only {

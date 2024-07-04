@@ -220,7 +220,7 @@
                 const date = new Date(year, month-1, op.day);  // Month index is 0-based in JavaScript
                 const formattedDate = date.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 const content = document.createElement('button');
-                content.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-3 px-2 text-black rounded-md flex flex-col items-start justify-center w-full';
+                content.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-3 px-2 text-black rounded-md flex flex-col items-start  w-full';
                 content.innerHTML = `<p class="text-lg font-bold">Mesin: ${op.machine_name}</p>
                                      <p class="text-sm">
                                         <span class="font-bold">Tanggal:</span>

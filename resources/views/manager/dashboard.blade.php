@@ -4,9 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('css/tailwind.min.css') }}" rel="stylesheet">
-    @vite('public/css/history.css')
     <style>
-                .zoom-in {
+        .month-container {
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 1rem;
+            background-color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .month-container:hover {
+            transform: scale(1.1);
+        }
+        .month-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        .week-list {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+        .week-item {
+            background-color: #E9D5FF;
+            color: #7C3AED;
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 2rem;
+            height: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .zoom-in {
             opacity: 0;
             transform: scale(0.8);
             animation: zoomIn 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
@@ -42,7 +76,7 @@
     </div>
 
     <div id="default-styled-tab-content" class="bg-white zoom-in shadow-lg rounded-3xl my-4 mx-auto flex items-center" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
-        <div class=" p-6 rounded-3xl my-4 mx-auto hidden w-full" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab" style="min-height: 30em;">
+        <div class="p-6 rounded-3xl my-4 mx-auto hidden w-full" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab" style="min-height: 30em;">
             <!-- Data Need Approve Disini -->
         </div>
 
@@ -69,19 +103,18 @@
                     container.appendChild(message);
                 } else {
                     data.WaitingApproval.forEach(item => {
-                        const button = document.createElement('button');
-                        button.classList.add('my-2', 'bg-white', 'p-2', 'shadow-md', 'py-4', 'px-4', 'text-black', 'rounded-md', 'flex', 'justify-between', 'items-center', 'w-full');
-                        button.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'; // Tambahkan box-shadow
-                        button.innerHTML = `
-                            <div class="text-left">
-                                <h5 class="text-xl font-bold text-black">${item.current_line.replace(/(\D+)(\d+)/, '$1 $2')}</h5>
-                                <h5 class="text-md font-normal text-black">Week ${item.week}, ${getMonthName(item.month)} ${item.year}</h5>
-                            </div>
-                        `;
-                        button.onclick = function() {
+                        const div = document.createElement('div');
+                        div.className = 'month-container'; // Menggunakan kelas month-container
+
+                        const span = document.createElement('span');
+                        span.textContent = `${item.current_line.replace(/(\D+)(\d+)/, '$1 $2')} - Week ${item.week}, ${getMonthName(item.month)} ${item.year}`;
+                        span.className = 'month-name'; // Menggunakan kelas month-name
+                        
+                        div.appendChild(span);
+                        div.onclick = function() {
                             window.location.href = `http://127.0.0.1:8000/manager/approve?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
                         };
-                        container.appendChild(button);
+                        container.appendChild(div);
                     });
                 }
             })
@@ -99,19 +132,18 @@
                     container.appendChild(message);
                 } else {
                     data.ApprovedCard.forEach(item => {
-                        const button = document.createElement('button');
-                        button.classList.add('my-2', 'bg-white', 'p-2', 'shadow-md', 'py-4', 'px-4', 'text-black', 'rounded-md', 'flex', 'justify-between', 'items-center', 'w-full');
-                        button.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'; // Tambahkan box-shadow
-                        button.innerHTML = `
-                            <div class="text-left">
-                                <h5 class="text-xl font-bold text-black">${item.current_line.replace(/(\D+)(\d+)/, '$1 $2')}</h5>
-                                <h5 class="text-md font-normal text-black">Week ${item.week}, ${getMonthName(item.month)} ${item.year}</h5>
-                            </div>
-                        `;
-                        button.onclick = function() {
+                        const div = document.createElement('div');
+                        div.className = 'month-container'; // Menggunakan kelas month-container
+
+                        const span = document.createElement('span');
+                        span.textContent = `${item.current_line.replace(/(\D+)(\d+)/, '$1 $2')} - Week ${item.week}, ${getMonthName(item.month)} ${item.year}`;
+                        span.className = 'month-name'; // Menggunakan kelas month-name
+                        
+                        div.appendChild(span);
+                        div.onclick = function() {
                             window.location.href = `http://127.0.0.1:8000/manager/approve?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
                         };
-                        container.appendChild(button);
+                        container.appendChild(div);
                     });
                 }
             })
@@ -119,12 +151,14 @@
     });
 
     function getMonthName(monthNumber) {
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
         return months[monthNumber - 1];
     }
 </script>
 
 @endsection
-
 </body>
 </html>
