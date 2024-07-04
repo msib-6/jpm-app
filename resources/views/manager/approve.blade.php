@@ -425,7 +425,7 @@
             // Create buttons for each week
             weeks.forEach((week, index) => {
                 const weekButton = document.createElement('button');
-                weekButton.textContent = `Week ${index + 1}`;
+                weekButton.textContent = `W${index + 1}`;
                 weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0';
                 if (index + 1 === parseInt(activeWeek)) {
                     weekButton.classList.add('text-purple-600');

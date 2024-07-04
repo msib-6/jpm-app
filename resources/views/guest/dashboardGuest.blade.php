@@ -109,14 +109,6 @@
                                     <a href="/guest/dashboard" class="align-middle ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white" style="line-height: 1.5; margin-top: 2px; font-size: 1rem;">Line</a>
                                 </div>
                             </li>
-                            <li>
-                                <div class="flex items-center">
-                                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                                    </svg>
-                                    <a href="/guest/dashboard" class="align-middle ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white" style="line-height: 1.5; margin-top: 2px; font-size: 1rem;">Year</a>
-                                </div>
-                            </li>
                         </ol>
                     </nav>
                     <!-- Breadcrumb -->
@@ -191,6 +183,70 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Bagian 5 (Choose Week) -->
+                <div id="bagian-5" class="left-section hidden">
+                    <!-- Breadcrumb -->
+                    <nav class="flex " aria-label="Breadcrumb">
+                        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                            <li class="inline-flex items-center">
+                                <a href="/guest/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                                    <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                                    </svg>
+                                    <span class="align-middle" style="line-height: 1.5; margin-top: 2px; font-size: 1rem;">Home</span>
+                                </a>
+                            </li>
+                            <li>
+                                <div class="flex items-center">
+                                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                    </svg>
+                                    <a href="/guest/dashboard" class="align-middle ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white" style="line-height: 1.5; margin-top: 2px; font-size: 1rem;">Line</a>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex items-center">
+                                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                    </svg>
+                                    <a href="#" class="align-middle ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white" style="line-height: 1.5; margin-top: 2px; font-size: 1rem;">Year</a>
+                                </div>
+                            </li>
+                            <li aria-current="page">
+                                <div class="flex items-center">
+                                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                    </svg>
+                                    <a href="#" class="align-middle ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white" style="line-height: 1.5; margin-top: 2px; font-size: 1rem;">Month</a>
+                                </div>
+                            </li>
+                            <li aria-current="page">
+                                <div class="flex items-center">
+                                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                    </svg>
+                                    <a href="#" class="align-middle ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white" style="line-height: 1.5; margin-top: 2px; font-size: 1rem;">Week</a>
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
+                    <!-- Breadcrumb -->
+                    <div class=" p-0">
+                        <h3 class="text-3xl font-bold">PILIH WEEK</h3>
+                        <div id="week-container">
+                            <!-- Week buttons will be populated here -->
+                        </div>
+                        <div class="logo-container self-start">
+                            <a href="#bagian-4" id="kembali-ke-bagian-4" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-12 py-2.5 text-left inline-flex items-center">
+                                <svg class="rotate-180 w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                </svg>
+                                Back
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!--end::Col-->
             <!--begin::Col-->
@@ -212,6 +268,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         let selectedLine = null;
         let selectedYear = null;
+        let selectedMonth = null;
 
         // Helper function to convert month number to Indonesian month name
         function monthName(monthNumber) {
@@ -225,6 +282,7 @@
             document.getElementById('bagian-2').classList.remove('hidden');
             document.getElementById('bagian-3').classList.add('hidden');
             document.getElementById('bagian-4').classList.add('hidden');
+            document.getElementById('bagian-5').classList.add('hidden');
             fetchLines();
         });
 
@@ -247,6 +305,14 @@
             document.getElementById('bagian-3').classList.remove('hidden');
             if (selectedLine && selectedYear) {
                 fetchYears(selectedLine); // Refetch years to ensure context remains
+            }
+        });
+
+        document.getElementById('kembali-ke-bagian-4').addEventListener('click', function () {
+            document.getElementById('bagian-5').classList.add('hidden');
+            document.getElementById('bagian-4').classList.remove('hidden');
+            if (selectedLine && selectedYear && selectedMonth) {
+                fetchMonths(selectedLine, selectedYear); // Refetch months to ensure context remains
             }
         });
 
@@ -328,7 +394,7 @@
                 });
         }
 
-        // Populate month buttons and add click handler to redirect
+        // Populate month buttons
         function populateMonths(months) {
             const monthContainer = document.getElementById('month-container');
             monthContainer.innerHTML = '';
@@ -336,10 +402,43 @@
                 const button = document.createElement('button');
                 button.textContent = monthName(month);
                 button.className = 'btn w-48 h-16 text-lg ml-4 mb-4 text-left';
-                button.addEventListener('click', () => {
-                    window.location.href = `/guest/viewGuest?line=${selectedLine}&year=${selectedYear}&month=${month}`;
-                });
+                button.addEventListener('click', () => selectMonth(month));
                 monthContainer.appendChild(button);
+            });
+        }
+
+        // Select month and fetch weeks
+        function selectMonth(month) {
+            selectedMonth = month;
+            document.getElementById('bagian-4').classList.add('hidden');
+            document.getElementById('bagian-5').classList.remove('hidden');
+            fetchWeeks(selectedLine, selectedYear, month);
+        }
+
+        // Fetch and display weeks based on the selected line, year, and month
+        function fetchWeeks(line, year, month) {
+            axios.get(`http://127.0.0.1:8000/api/showapprovedcard?line=${line}&year=${year}&month=${month}`)
+                .then(function (response) {
+                    const weeks = new Set(response.data.ApprovedCard.filter(card => card.current_line === line && card.year === year && card.month === month).map(card => card.week));
+                    populateWeeks(Array.from(weeks));
+                })
+                .catch(function (error) {
+                    console.error('Error fetching weeks:', error);
+                });
+        }
+
+        // Populate week buttons and add click handler to redirect
+        function populateWeeks(weeks) {
+            const weekContainer = document.getElementById('week-container');
+            weekContainer.innerHTML = '';
+            weeks.forEach(week => {
+                const button = document.createElement('button');
+                button.textContent = "Week " + week;
+                button.className = 'btn w-48 h-16 text-lg ml-4 mb-4 text-left';
+                button.addEventListener('click', () => {
+                    window.location.href = `/guest/viewguest?line=${selectedLine}&year=${selectedYear}&month=${selectedMonth}&week=${week}`;
+                });
+                weekContainer.appendChild(button);
             });
         }
     });
