@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('css/tailwind.min.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-    <title>Approve / Return Manager</title>
+    <title>Returned JPM</title>
     @vite('resources/css/pjl/view.css')
 </head>
 <body>
@@ -275,7 +275,7 @@
                 if (revisionData.length > 0) {
                     const revision = revisionData[0].revision_number;
                     const returnMessage = revisionData[0].return_notes;
-                    const alertMessage = `Revisi ke = ${revision}\nPesan Return = ${returnMessage}`;
+                    const alertMessage = `Line: ${line}\nMonth: ${month}\nYear: ${year}\nWeek: ${week}\nRevisi ke = ${revision}\nPesan Return = ${returnMessage}`;
                     showAlert(alertMessage);
                 }
             } catch (error) {
