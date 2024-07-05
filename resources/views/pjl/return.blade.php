@@ -272,11 +272,17 @@
                 const response = await fetch(`http://127.0.0.1:8000/api/showrevision?line=${line}&year=${year}&month=${month}&week=${week}`);
                 const revisionData = await response.json();
 
-                if (revisionData.length > 0) {
-                    const revision = revisionData[0].revision_number;
-                    const returnMessage = revisionData[0].return_notes;
+                console.log("Fetched revision data:", revisionData);
+
+                const filteredRevisions = revisionData.filter(rev => rev.week === parseInt(week));
+
+                if (filteredRevisions.length > 0) {
+                    const revision = filteredRevisions[0].revision_number;
+                    const returnMessage = filteredRevisions[0].return_notes;
                     const alertMessage = `Line: ${line}\nMonth: ${month}\nYear: ${year}\nWeek: ${week}\nRevisi ke = ${revision}\nPesan Return = ${returnMessage}`;
                     showAlert(alertMessage);
+                } else {
+                    console.warn(`No revisions found for week ${week}`);
                 }
             } catch (error) {
                 console.error("Error fetching revision data:", error);
