@@ -127,7 +127,7 @@
                         row.innerHTML = `
                     <div class="col-span-1">${formattedDate}</div>
                     <div class="col-span-1">${newState.time}</div>
-                    <div class="col-span-1">Week ${newState.week} ${month}</div>
+                    <div class="col-span-1">Week ${newState.week}</div>
                     <div class="col-span-1">${formattedLine}</div>
                     <div class="col-span-1">${kodeProduk}</div>
                     <div class="col-span-1">${newState.code}</div>
@@ -192,7 +192,7 @@
             });
 
             const headers = [
-                ['Tanggal', 'Jam', 'Line', 'Kode Produk', 'No Batch', 'Data Update JPM', 'Keterangan']
+                ['Tanggal', 'Jam', 'Week', 'Line', 'Kode Produk', 'No Batch', 'Data Update JPM', 'Status']
             ];
 
             doc.autoTable({
