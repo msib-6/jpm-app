@@ -107,13 +107,13 @@ Route::middleware('manager', 'auth')->group(function () {
 
 //    Route::get('/manager/approve', [ManagerApprovalController::class, 'approveManagerController'])->name('manager.approve');
 
-//    Route::get('/manager/approve', function (Request $request) {
-//        $line = $request->query('line');
-//        $year = $request->query('year');
-//        $month = $request->query('month');
-//        $week = $request->query('week');
-//        return view('manager.approve', compact('line', 'year', 'month', 'week'));
-//    })->name('manager.approve');
+   Route::get('/manager/approve', function (Request $request) {
+       $line = $request->query('line');
+       $year = $request->query('year');
+       $month = $request->query('month');
+       $week = $request->query('week');
+       return view('manager.approve', compact('line', 'year', 'month', 'week'));
+   })->name('manager.approve');
 });
 
 Route::middleware('admin')->group(function () {

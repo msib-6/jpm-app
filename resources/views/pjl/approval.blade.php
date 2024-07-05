@@ -68,38 +68,38 @@
         const currentLine = '{{ ucfirst($line) }}'; // Replace with the actual current line value if available
 
         profileTab.addEventListener('click', function() {
-            // Fetch and display return approval data
-            fetch('http://127.0.0.1:8000/api/showreturncard')
-                .then(response => response.json())
-                .then(data => {
-                    profileContent.innerHTML = '';
-                    if (data.RejectedApproval.length === 0) {
-                        const message = document.createElement('p');
-                        message.classList.add('text-center', 'text-gray-500', 'font-bold');
-                        message.textContent = 'Tidak Ada Return Approval';
-                        container.appendChild(message);
-                    } else {
-                        noReturnApprovalMessage.classList.add('hidden');
-                        data.RejectedApproval.forEach(item => {
-                            if (item.current_line === currentLine) {
-                                const button = document.createElement('button');
-                                button.classList.add('my-2', 'bg-white', 'p-2', 'shadow-md', 'py-4', 'px-4', 'text-black', 'rounded-md', 'flex', 'justify-between', 'items-center', 'w-full');
-                                button.innerHTML = `
-                                    <div class="text-left">
-                                        <h5 class="text-xl font-bold text-black">${item.current_line.replace(/(\D+)(\d+)/, '$1 $2')}</h5>
-                                        <h5 class="text-md font-normal text-black">Week ${item.week}, ${getMonthName(item.month)} ${item.year}</h5>
-                                    </div>
-                                `;
-                                button.onclick = function() {
-                                    window.location.href = `http://127.0.0.1:8000/pjl/${item.current_line}/return?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
-                                };
-                                profileContent.appendChild(button);
-                            }
-                        });
+    // Fetch and display return approval data
+    fetch('http://127.0.0.1:8000/api/showreturncard')
+        .then(response => response.json())
+        .then(data => {
+            profileContent.innerHTML = '';
+            if (data.RejectedApproval.length === 0) {
+                const message = document.createElement('p');
+                message.classList.add('text-center', 'text-gray-500', 'font-bold');
+                message.textContent = 'Tidak Ada Return Approval';
+                profileContent.appendChild(message);  // Ubah dari 'container' ke 'profileContent'
+            } else {
+                noReturnApprovalMessage.classList.add('hidden');
+                data.RejectedApproval.forEach(item => {
+                    if (item.current_line === currentLine) {
+                        const button = document.createElement('button');
+                        button.classList.add('my-2', 'bg-white', 'p-2', 'shadow-md', 'py-4', 'px-4', 'text-black', 'rounded-md', 'flex', 'justify-between', 'items-center', 'w-full');
+                        button.innerHTML = `
+                            <div class="text-left">
+                                <h5 class="text-xl font-bold text-black">${item.current_line.replace(/(\D+)(\d+)/, '$1 $2')}</h5>
+                                <h5 class="text-md font-normal text-black">Week ${item.week}, ${getMonthName(item.month)} ${item.year}</h5>
+                            </div>
+                        `;
+                        button.onclick = function() {
+                            window.location.href = `http://127.0.0.1:8000/pjl/${item.current_line}/return?line=${item.current_line}&year=${item.year}&month=${item.month}&week=${item.week}`;
+                        };
+                        profileContent.appendChild(button);
                     }
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        });
+                });
+            }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+});
 
         dashboardTab.addEventListener('click', function() {
             // Fetch and display approved data
