@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuditTrailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Machine;
@@ -80,4 +81,7 @@ Route::post('/approve', [ManagerController::class, 'approve'])->name('approve');
 Route::post('/return', [ManagerController::class, 'return'])->name('return');
 Route::get('/notify', [ManagerController::class, 'notify'])->name('notify');
 Route::get('/notify-reject', [ManagerController::class, 'notifyRejection'])->name('notify.rejection');
+
+Route::get('/log/auditTrail', [AuditTrailController::class, 'index']);
+
 

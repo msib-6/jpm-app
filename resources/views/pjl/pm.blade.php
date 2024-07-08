@@ -42,7 +42,7 @@
     <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex justify-between items-start" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <div class="justify-start" style="max-height: 28em; overflow-y: auto;">
             <p class="text-2xl font-bold">View Data</p>
-            <div id="dataContainer">
+            <div id="dataContainer" style="max-width: 37em;">
                 <!-- Dynamic machine data will be loaded here -->
             </div>
         </div>
@@ -220,7 +220,7 @@
                 const date = new Date(year, month-1, op.day);  // Month index is 0-based in JavaScript
                 const formattedDate = date.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 const content = document.createElement('button');
-                content.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-3 px-2 text-black rounded-md flex flex-col items-start justify-center w-full';
+                content.className = 'month-container my-2 bg-white p-2 shadow-md rounded-md py-3 px-2 text-black rounded-md flex flex-col items-start  w-full';
                 content.innerHTML = `<p class="text-lg font-bold">Mesin: ${op.machine_name}</p>
                                      <p class="text-sm">
                                         <span class="font-bold">Tanggal:</span>

@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\System\AuditTrailController;
+use App\Http\Controllers\System\ManagerApprovalController;
+use App\Http\Controllers\System\PjlOnlyViewController;
+use App\Http\Controllers\System\PjlViewController;
 use Illuminate\Support\Facades\Route;
 //use App\Http\Controllers\MachineController;
 use Illuminate\Http\Request;
@@ -26,9 +30,14 @@ Route::get('/reset', function () {
 Route::get('/summary', function () {
     return view('history.summary');
 });
-Route::get('/auditlog', function () {
-    return view('history.auditlog');
-});
+// Route::get('/auditlog', function () {
+//     return view('history.auditlog');
+// });
+
+// new HIstory
+Route::get('/auditlog', [AuditTrailController::class, 'index']);
+
+
 Route::get('/logistik', function () {
     return view('logistik.dashboard');
 });
@@ -42,17 +51,17 @@ Route::middleware(['auth', 'line'])->group(function () {
         return view('pjl.mesin', ['line' => $line]);
     })->name('pjl.line.mesin');
 
-    Route::get('/pjl/{line}/view', function (Request $request, $line) {
+    // New PJL View Controller
+    Route::get('/pjl/{line}/view', [PjlViewController::class, 'index'])->name('pjl.view');
+    Route::get('/pjl/{line}/onlyView', [PjlOnlyViewController::class, 'onlyViewController'])->name('pjl.onlyView');
 
-        // $user = Auth::user()->id;
-        // dd('')
-        $line = $request->query('line');  // Access 'line' parameter
-        $year = $request->query('year');  // Access 'year' parameter
-        $month = $request->query('month'); // Access 'month' parameter
-        $week = $request->query('week');
-
-        return view('pjl.view', compact('line', 'year', 'month'));
-    })->name('pjl.view');
+//    Route::get('/pjl/{line}/onlyView', function (Request $request, $line) {
+//        $line = $request->query('line');  // Access 'line' parameter
+//        $year = $request->query('year');  // Access 'year' parameter
+//        $month = $request->query('month'); // Access 'month' parameter
+//
+//        return view('pjl.onlyView', compact('line', 'year', 'month'));
+//    })->name('pjl.onlyView');
 
     Route::get('/pjl/{line}/return', function (Request $request) {
         $line = $request->query('line');
@@ -61,14 +70,6 @@ Route::middleware(['auth', 'line'])->group(function () {
         $week = $request->query('week');
         return view('pjl.return', compact('line', 'year', 'month', 'week'));
     })->name('pjl.return');
-
-    Route::get('/pjl/{line}/onlyView', function (Request $request, $line) {
-        $line = $request->query('line');  // Access 'line' parameter
-        $year = $request->query('year');  // Access 'year' parameter
-        $month = $request->query('month'); // Access 'month' parameter
-
-        return view('pjl.onlyView', compact('line', 'year', 'month'));
-    })->name('pjl.onlyView');
 
     Route::get('/pjl/{line}/pm', function (Request $request, $line) {
         $line = $request->query('line');  // Access 'line' parameter
@@ -84,32 +85,35 @@ Route::middleware(['auth', 'line'])->group(function () {
     Route::get('/pjl/{line}/approval', function ($line) {
         return view('pjl.approval', ['line' => $line]);
     })->name('pjl.line.approval');
-
 });
 
 Route::get('/guest/index', function () {
     return view('guest.index');
 });
 
-Route::get('/guest/viewGuest', function (Request $request) {
+Route::get('/guest/viewguest', function (Request $request) {
     $line = $request->query('line');
     $year = $request->query('year');
     $month = $request->query('month');
+    $month = $request->query('week');
     return view('guest.viewGuest', compact('line', 'year', 'month'));
-})->name('viewGuest');
+})->name('guest.viewGuest');
 
 Route::middleware('manager', 'auth')->group(function () {
     Route::get('/manager/dashboard', function () {
         return view('manager.dashboard');
     })->name('manager.dashboard');
 
-    Route::get('/manager/approve', function (Request $request) {
-        $line = $request->query('line');
-        $year = $request->query('year');
-        $month = $request->query('month');
-        $week = $request->query('week');
-        return view('manager.approve', compact('line', 'year', 'month', 'week'));
-    })->name('manager.approve');
+
+//    Route::get('/manager/approve', [ManagerApprovalController::class, 'approveManagerController'])->name('manager.approve');
+
+   Route::get('/manager/approve', function (Request $request) {
+       $line = $request->query('line');
+       $year = $request->query('year');
+       $month = $request->query('month');
+       $week = $request->query('week');
+       return view('manager.approve', compact('line', 'year', 'month', 'week'));
+   })->name('manager.approve');
 });
 
 Route::middleware('admin')->group(function () {
@@ -124,4 +128,4 @@ Route::get('/guest/dashboard', function () {
 })->name('guest.dashboard');
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

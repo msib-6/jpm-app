@@ -34,13 +34,26 @@
     </nav>
 
     <!-- Card Title -->
-    <div class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
+    <div class="bg-gray-100 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between"
+         style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <h3 id="title" class="text-2xl font-bold">
-            <span id="line-display">Loading...</span>
+            <span id="line-display">{{ ucfirst(str_replace('Line', 'Line ', $line)) }}</span>
         </h3>
-        <div id="weeksList" class="mx-2">
-            <!-- Buttons for each week will be dynamically inserted here -->
+        <!-- Status WEEK "APPROVED", "WAITING APPROVAL", "REJECTED" -->
+        <div id="statusWeek" class="mx-2">
+            <!-- status week will be dynamically inserted here -->
         </div>
+
+        <!-- Container for buttons, each week's button will be appended here -->
+        <div id="weeksList" class="mx-2">
+            <!-- Buttons for each week will be inserted here -->
+        </div>
+
+        <!-- Revisi keberapa "revision_number" -->
+        <div id="revision_number" class="mx-2">
+            <!-- revision_number week will be inserted here -->
+        </div>
+
         <h3 class="text-2xl font-bold">
             <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>
         </h3>
@@ -114,17 +127,7 @@
     </div>
 
     <!-- History Modal -->
-    <div id="historyModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-3xl">
-            <h2 class="text-2xl mb-4">History</h2>
-            <div id="historyContent" class="mb-4 overflow-y-auto" style="max-height: 450px;">
-                <!-- History content will be populated here -->
-            </div>
-            <div class="flex justify-end">
-                <button type="button" id="closeHistoryModalButton" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Close</button>
-            </div>
-        </div>
-    </div>
+
 </div>
 
 <script>
@@ -146,9 +149,14 @@
         const closeHistoryModalButton = document.getElementById('closeHistoryModalButton');
         const historyContent = document.getElementById('historyContent');
         let currentMachineId;
+        let currentMachineIdWeekly;
         let currentDay;
         let currentMonth;
         let currentYear;
+        let currentOperationId;
+        let currentGlobalDescId;
+        let currentMachineDataId;
+
 
         getQueryParams();
         setupAutoRefresh();
@@ -193,7 +201,7 @@
             globalDescs.innerHTML = ''; // Clear existing descriptions
 
             filteredDescriptions.forEach(desc => {
-                const descButton = document.createElement('button');
+                const descButton = document.createElement('div');
                 descButton.className = 'my-2 bg-white descWeek p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
                 descButton.style.width = '90%';
                 descButton.textContent = desc.description;
@@ -205,23 +213,84 @@
         }
 
         function getQueryParams() {
-            const pathSegments = window.location.pathname.split('/');
-            const line = pathSegments[2];
             const params = new URLSearchParams(window.location.search);
+            const line = window.location.pathname.split('/')[2];
             const month = params.get('month');
             const year = params.get('year');
+            const week = params.get('week');
 
             document.getElementById('line-display').textContent = line ? line.replace('Line', 'Line ') : 'N/A';
             document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
             document.getElementById('year-display').textContent = year ? year : 'N/A';
 
             setupWeekButtons(line, year, month);
+            fetchStatusWeek(line, year, month, week);
+            fetchRevisionNumber(line, year, month, week);
         }
+
+        async function fetchStatusWeek(line, year, month, week) {
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
+            );
+            const operationsData = await response.json();
+
+            let status = "NEW";
+
+            if (operationsData.operations.length > 0) {
+                const allApproved = operationsData.operations.every(operation => operation.is_approved ===
+                    1);
+                const allWaitingApproval = operationsData.operations.every(operation => operation
+                    .is_approved === 0 && operation.is_rejected === 0);
+                const allRejected = operationsData.operations.every(operation => operation.is_rejected ===
+                    1);
+
+                if (allApproved) {
+                    status = "APPROVED";
+                } else if (allWaitingApproval) {
+                    status = "WAITING APPROVAL";
+                } else if (allRejected) {
+                    status = "REJECTED";
+                }
+            }
+
+            document.getElementById('statusWeek').innerHTML = `
+                <h3 class="text-2xl font-bold">${status}</h3>
+            `;
+        }
+
+        async function fetchRevisionNumber(line, year, month, week) {
+            const response = await fetch(`http://127.0.0.1:8000/api/showrevision`);
+            const revisionsData = await response.json();
+
+            const revision = revisionsData.find(revision => {
+                return revision.line === line && revision.year == year && revision.month == month &&
+                    revision.week == week;
+            });
+
+            const revisionNumber = revision ? revision.revision_number : "0";
+            const returnNotes = revision ? revision.return_notes : "No notes available.";
+
+            document.getElementById('revision_number').innerHTML = `
+                <h3 class="text-xl font-bold">${revisionNumber} Revisi</h3>
+            `;
+
+            // Set the content of the notes popup
+            document.getElementById('revisionNotesPopup').textContent = returnNotes;
+        }
+        document.getElementById('revision_number').addEventListener('mouseover', function() {
+            document.getElementById('revisionNotesPopup').classList.remove('hidden');
+        });
+
+        document.getElementById('revision_number').addEventListener('mouseout', function() {
+            document.getElementById('revisionNotesPopup').classList.add('hidden');
+        });
+
 
         async function fetchDataForWeek(line, year, month, week) {
             let operationsUrls = [];
             let machinesUrls = [];
             let machineInfoUrls = [];
+            const nextWeek = parseInt(week) + 1;
 
             if (week === "1") {
                 const prevMonth = (month - 1 === 0) ? 12 : month - 1;
@@ -230,13 +299,15 @@
                 operationsUrls = [
                     `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
                     `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                 ];
 
                 machinesUrls = [
                     `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
                     `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                 ];
 
                 machineInfoUrls = [
@@ -244,11 +315,13 @@
                 ];
             } else {
                 operationsUrls = [
-                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                 ];
 
                 machinesUrls = [
-                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                 ];
 
                 machineInfoUrls = [
@@ -276,7 +349,6 @@
                 }
 
                 const machineInfoData = await machineInfoResponse.json();
-
                 const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
                 updateURL(line, year, month, week);
@@ -298,10 +370,11 @@
             // Create a map for machine operations
             const machineOperationsMap = new Map();
             operations.forEach(operation => {
-                if (!machineOperationsMap.has(operation.machine_id)) {
-                    machineOperationsMap.set(operation.machine_id, []);
+                const machineIdKey = operation.week === week ? operation.machine_id : operation.machine_id_parent;
+                if (!machineOperationsMap.has(machineIdKey)) {
+                    machineOperationsMap.set(machineIdKey, []);
                 }
-                machineOperationsMap.get(operation.machine_id).push(operation);
+                machineOperationsMap.get(machineIdKey).push(operation);
             });
 
             // Sort machines by specified categories
@@ -312,22 +385,24 @@
                 return categoryOrder.indexOf(categoryA) - categoryOrder.indexOf(categoryB);
             });
 
-            machines.forEach(machine => {
-                const category = machineInfoMap.get(machine.machine_id);  // Fetch category using machine_id
+            const combinedMachines = combineWeeklyMachines(machines);
+
+            combinedMachines.forEach(machine => {
+                const category = machineInfoMap.get(machine.machine_id);
 
                 const machineRow = document.createElement('div');
                 machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                 machineRow.innerHTML = `
-                    <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                        <div class="flex flex-col justify-center items-center w-full h-full">
-                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                                <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                                ${category}
-                            </span>
-                            <span>${machine.machine_name}</span>
+                        <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                            <div class="flex flex-col justify-center items-center w-9/12 h-full">
+                                <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                                    ${category}
+                                </span>
+                                <span class="text-sm">${machine.machine_name}</span>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
 
                 // Add day columns based on header days
                 for (let i = 1; i <= 8; i++) {
@@ -342,9 +417,12 @@
 
                 dataContainer.appendChild(machineRow);
 
-                // Sort machine operations by time in ascending order, with "PM" status given priority
-                const machineOperations = machineOperationsMap.get(machine.id) || [];
-                machineOperations.sort((a, b) => {
+                // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
+                const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
+                const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) || [];
+                const allMachineOperations = [...machineOperations, ...machineOperationsNextWeek];
+
+                allMachineOperations.sort((a, b) => {
                     if (a.status === 'PM') return -1;
                     if (b.status === 'PM') return 1;
                     const [hoursA, minutesA] = a.time.split(':').map(Number);
@@ -352,11 +430,11 @@
                     return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
                 });
 
-                machineOperations.forEach(operation => {
+                allMachineOperations.forEach(operation => {
                     const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
 
                     if (dayColumn) {
-                        const entry = document.createElement('button');
+                        const entry = document.createElement('div');
                         const statusClass = {
                             'PM': 'status-pm',
                             'BCP': 'status-bcp',
@@ -367,21 +445,24 @@
                             'KALIBRASI': 'status-kalibrasi',
                             'OVERHAUL': 'status-overhaul',
                             'CV': 'status-cv',
-                            'CPV': 'status-cpv'
-                        }[operation.status] || '';  // Gunakan kelas sesuai status atau kelas kosong jika tidak ada
+                            'CPV': 'status-cpv',
+                            'BREAKDOWN': 'status-breakdown',
+                        }[operation.status] || '';
 
                         entry.className = `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
-                        entry.style.minHeight = '6em'; // Set the height to 6em
+                        entry.style.minHeight = '6em';
 
-                        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
-                            <p class="status-only">${operation.status}</p>
-                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                        ` : `
-                            <p><strong>${operation.code}</strong></p>
-                            <p>${operation.time}</p>
-                            ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
-                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                        `;
+                        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
+                                <p class="status-only">${operation.status}</p>
+                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                            ` : `
+                                <p><strong>${operation.code}</strong></p>
+                                <p>${operation.time}</p>
+                                ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
+                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                            `;
                         entry.onmouseenter = function(event) {
                             if (operation.notes) {
                                 showNotesPopup(event, `Line: ${operation.current_line}\nNotes: ${operation.notes}`);
@@ -400,17 +481,14 @@
                     }
                 });
 
-                // Add onclick event to view machine data modal
-                machineRow.querySelector('.mesin-jpm').onclick = function() {
-                    viewMachineData(machine);
-                };
             });
         }
 
         function showNotesPopup(event, notes) {
             const popup = document.createElement('div');
             popup.className = 'notes-popup';
-            popup.innerHTML = notes.split('\n').map(line => `<strong>${line.split(':')[0]}</strong>: ${line.split(':')[1]}`).join('<br>');
+            popup.innerHTML = notes.split('\n').map(line =>
+                `<strong>${line.split(':')[0]}</strong>: ${line.split(':')[1]}`).join('<br>');
             document.body.appendChild(popup);
             const rect = event.target.getBoundingClientRect();
             popup.style.top = `${rect.top + window.scrollY}px`;
@@ -488,8 +566,9 @@
             // Create buttons for each week
             weeks.forEach((week, index) => {
                 const weekButton = document.createElement('button');
-                weekButton.textContent = `Week ${index + 1}`;
-                weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
+                weekButton.textContent = `W${index + 1}`;
+                weekButton.className =
+                    'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
                 weekButton.onclick = () => {
                     fetchDataForWeek(line, year, month, index + 1);
                     updateURL(line, year, month, index + 1);
@@ -590,104 +669,20 @@
             checkWaitingApprovalStatus();
         });
 
+        function combineWeeklyMachines(machines) {
+            const machineMap = new Map();
 
-        async function fetchAndDisplayHistory() {
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            const month = params.get('month');
-            const week = params.get('week');
-            const year = params.get('year');
+            machines.forEach(machine => {
+                const key = `${machine.machine_id}-${machine.machine_name}`;
 
-            try {
-                const response = await fetch(`http://127.0.0.1:8000/api/showaudit`);
-                const audits = await response.json();
+                if (!machineMap.has(key)) {
+                    machineMap.set(key, machine);
+                }
+            });
 
-                const filteredAudits = audits.filter(audit => {
-                    const newState = audit.changes ? audit.changes.new_state : null;
-                    return newState && newState.line === line && newState.month == month && newState.week == week && newState.year == year;
-                });
-
-                const historyContent = document.getElementById('historyContent');
-                historyContent.innerHTML = ''; // Clear existing content
-
-                filteredAudits.forEach(audit => {
-                    const newState = audit.changes ? audit.changes.new_state : null;
-                    if (!newState) return;
-
-                    let historyEntry = document.createElement('div');
-                    historyEntry.className = 'bg-white p-4 shadow-md rounded-md mb-2';
-
-                    if (newState.day && newState.code && newState.time && newState.status) {
-                        historyEntry.innerHTML = `
-                            <p>
-                                <span><strong>Event:</strong></span>
-                                <span style="color: green;">${audit.event}</span>
-                            </p>
-                            <p>
-                                <span><strong>Add</strong></span>
-                                <span> data JPM pada Week </span>
-                                <span style="color: blue;">${newState.week}</span>,
-                                <span style="color: blue;">${newState.day}</span>
-                                <span>${getMonthName(newState.month)}</span>
-                                <span style="color: blue;">${newState.year}</span>.
-                                <span>Kode Ruah: </span>
-                                <span style="color: blue;">${newState.code}</span>,
-                                <span>Jam: </span>
-                                <span style="color: blue;">${newState.time}</span>,
-                                <span>Status: </span>
-                                <span style="color: blue;">${newState.status}</span>,
-                                <span>Notes: </span>
-                                <span style="color: blue;">${newState.notes}</span>
-                            </p>
-                        `;
-                    } else if (newState.description) {
-                        historyEntry.innerHTML = `
-                            <p>
-                                <span><strong>Event:</strong></span>
-                                <span style="color: green;">${audit.event}</span>
-                            </p>
-                            <p>
-                                <span><strong>Add description</strong></span>
-                                <span> pada Week </span>
-                                <span style="color: blue;">${newState.week}</span>,
-                                <span style="color: blue;">${getMonthName(newState.month)}</span>
-                                <span style="color: blue;">${newState.year}</span>.
-                                <span>Deskripsi: </span>
-                                <span style="color: blue;">${newState.description}</span>
-                            </p>
-                        `;
-                    } else if (newState.machineName) {
-                        historyEntry.innerHTML = `
-                            <p>
-                                <span><strong>Event:</strong></span>
-                                <span style="color: green;">${audit.event}</span>
-                            </p>
-                            <p>
-                                <span><strong>Add Mesin Data</strong></span>
-                                <span> pada Week </span>
-                                <span style="color: blue;">${newState.week}</span>,
-                                <span>${getMonthName(newState.month)}</span>
-                                <span style="color: blue;">${newState.year}</span>.
-                                <span>Nama Mesin : </span>
-                                <span style="color: blue;">${newState.machineName}</span>
-                            </p>
-                        `;
-                    } else {
-                        historyEntry.innerHTML = `
-                            <p><strong>Event:</strong> ${audit.event}</p>
-                            <p><strong>Audit ID:</strong> ${audit.audit_id}</p>
-                            <p><strong>Machine Operation ID:</strong> ${audit.machineoperation_id}</p>
-                            <p><strong>Changes:</strong></p>
-                            <pre>${JSON.stringify(audit.changes, null, 2)}</pre>
-                        `;
-                    }
-
-                    historyContent.appendChild(historyEntry);
-                });
-            } catch (error) {
-                console.error("Error fetching history:", error);
-            }
+            return Array.from(machineMap.values());
         }
+
         document.addEventListener('DOMContentLoaded', fetchAndDisplayHistory);
     });
 

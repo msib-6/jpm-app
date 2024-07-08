@@ -201,19 +201,31 @@
     monthDiv.appendChild(monthSpan);
 
     const weekDiv = document.createElement('div');
-    weekDiv.className = 'week-list';
-    if (weeks.size === 0) {
+weekDiv.className = 'week-list';
+if (weeks.size === 0) {
+    const weekSpan = document.createElement('span');
+    weekSpan.textContent = 'No PM Data';
+    weekDiv.appendChild(weekSpan);
+} else {
+    // Convert the weeks Set to an array, sort it numerically, and filter out empty strings
+    const weeksArray = Array.from(weeks)
+        .map(week => (week === "1" ? "" : `W${week}`))
+        .filter(week => week !== "")
+        .sort((a, b) => {
+            const weekA = parseInt(a.slice(1)); // Remove 'W' and convert to number
+            const weekB = parseInt(b.slice(1)); // Remove 'W' and convert to number
+            return weekA - weekB; // Sort numerically
+        });
+
+    weeksArray.forEach(week => {
         const weekSpan = document.createElement('span');
-        weekSpan.textContent = 'No PM Data';
-        weekDiv.appendChild(weekSpan);
-    } else {
-        const weeksArray = Array.from(weeks).map(week => week === "1" ? "Ada Data PM" : `W${week}`).join(', ');
-        const weekSpan = document.createElement('span');
-        weekSpan.textContent = weeksArray;
+        weekSpan.textContent = week;
         weekSpan.className = 'week-item';
         weekDiv.appendChild(weekSpan);
-    }
-    monthDiv.appendChild(weekDiv);
+    });
+}
+monthDiv.appendChild(weekDiv);
+
 
     monthDiv.onclick = () => {
         window.location.href = `/pjl/${encodeURIComponent(selectedLine)}/pm?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;

@@ -15,11 +15,11 @@ class Audits extends Model
     // Define relationships if needed
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'users_id', 'id');
     }
 
     public function machineOperation()
     {
-        return $this->belongsTo(MachineOperation::class);
+        return $this->belongsTo(MachineOperation::class, 'machineoperation_id');
     }
 }
