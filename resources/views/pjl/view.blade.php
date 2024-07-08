@@ -11,7 +11,7 @@
 <body>
 <div class="container mx-auto px-4">
     <!-- Code -->
-    <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
+    <input type="text" id="userId" hidden value="{{auth()->id()}}">
     <!-- Card Title -->
     <div class="bg-gray-100 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
         <h3 id="title" class="text-2xl font-bold">
@@ -98,7 +98,7 @@
             <h2 class="text-2xl mb-4">Add Mesin</h2>
             <form id="addMesinForm">
                 <!-- Code -->
-                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
+                <input type="text" id="userId" hidden value="{{auth()->id()}}">
                 <div id="mesinCheckboxContainer" class="mb-4" style="max-height: 450px; overflow-y: auto;">
                     <!-- Checkboxes will be appended here -->
                 </div>
@@ -116,7 +116,7 @@
             <h2 class="text-2xl mb-4">Add Data</h2>
             <form id="addDataForm">
                 <!-- Code -->
-                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
+                <input type="text" id="userId" hidden value="{{auth()->id()}}">
                 <div class="mb-4">
                     <label for="dataCode" class="block text-gray-700">Kode</label>
                     <input type="text" id="dataCode" class="w-full px-3 py-2 border rounded-lg" required placeholder="Contoh: KTNLGG12345" maxlength="11">
@@ -182,7 +182,7 @@
             <h2 class="text-2xl mb-4">Add Global Description</h2>
             <form id="addGlobalDescForm">
                 <!-- Code -->
-                <input type="text" id="userId" hidden value="{{auth()->user()->name}}">
+                <input type="text" id="userId" hidden value="{{auth()->id()}}">
                 <div class="mb-4">
                     <label for="globalDesc" class="block text-gray-700">Description</label>
                     <textarea id="globalDesc" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
