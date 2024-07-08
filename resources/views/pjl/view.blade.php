@@ -1057,6 +1057,7 @@
 
 
             async function fetchDataForWeek(line, year, month, week) {
+                console.log("Fetching data for:", {line, year, month, week});
                 let operationsUrls = [];
                 let machinesUrls = [];
                 let machineInfoUrls = [];
@@ -1110,27 +1111,28 @@
                     for (const response of operationsResponses) {
                         const data = await response.json();
                         operationsData = operationsData.concat(data.operations);
+                        console.log("Operations data:", data);
                     }
 
                     let machinesData = [];
                     for (const response of machinesResponses) {
                         const data = await response.json();
                         machinesData = machinesData.concat(data);
+                        console.log("Machines data:", data);
                     }
 
                     const machineInfoData = await machineInfoResponse.json();
-                    const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine
-                        .category || 'Unknown'
-                    ])); // Fallback to 'Unknown' if category is empty
+                    console.log("Machine info data:", machineInfoData);
+                    const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
                     updateURL(line, year, month, week);
                     displayMachineData(operationsData, machinesData, machineInfoMap, week);
-                    await fetchAndDisplayGlobalDescriptions
-                (); // Fetch and display global descriptions for the selected week
+                    await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
                 } catch (error) {
                     console.error("Error fetching data:", error);
                 }
             }
+
 
 
             function updateURL(line, year, month, week) {
@@ -1144,8 +1146,7 @@
 
                 const machineOperationsMap = new Map();
                 operations.forEach(operation => {
-                    const machineIdKey = operation.week === week ? operation.machine_id : operation
-                        .machine_id_parent;
+                    const machineIdKey = operation.week === week ? operation.machine_id : operation.machine_id_parent;
                     if (!machineOperationsMap.has(machineIdKey)) {
                         machineOperationsMap.set(machineIdKey, []);
                     }
@@ -1162,7 +1163,6 @@
                     return categoryOrder.indexOf(categoryA) - categoryOrder.indexOf(categoryB);
                 });
 
-
                 const combinedMachines = combineWeeklyMachines(machines);
 
                 combinedMachines.forEach(machine => {
@@ -1171,24 +1171,23 @@
                     const machineRow = document.createElement('div');
                     machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                     machineRow.innerHTML = `
-                        <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                            <div class="flex flex-col justify-center items-center w-9/12 h-full">
-                                <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                                    ${category}
-                                </span>
-                                <span class="text-sm">${machine.machine_name}</span>
-                            </div>
-                        </div>
-                    `;
+            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                <div class="flex flex-col justify-center items-center w-9/12 h-full">
+                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                        ${category}
+                    </span>
+                    <span class="text-sm">${machine.machine_name}</span>
+                </div>
+            </div>
+        `;
 
                     for (let i = 1; i <= 8; i++) {
-                        const headerDate = document.getElementById(`day${i}`).children[1].textContent
-                    .trim();
+                        const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
                         const dateParts = headerDate.split(' ');
                         const day = parseInt(dateParts[0]);
                         const dayColumn = document.createElement('div');
-                        dayColumn.id = `daydata${machine.id}-${day}`;
+                        dayColumn.id = `daydata${machine.machine_id}-${day}`;
                         dayColumn.className = 'col-span-1 day-column';
                         machineRow.appendChild(dayColumn);
                     }
@@ -1197,8 +1196,7 @@
 
                     // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
                     const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
-                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) ||
-                        [];
+                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) || [];
                     const allMachineOperations = [...machineOperations, ...machineOperationsNextWeek];
 
                     allMachineOperations.sort((a, b) => {
@@ -1210,9 +1208,7 @@
                     });
 
                     allMachineOperations.forEach(operation => {
-                        const dayColumn = document.getElementById(
-                            `daydata${machine.id}-${operation.day}`);
-
+                        const dayColumn = document.getElementById(`daydata${machine.machine_id}-${operation.day}`);
                         if (dayColumn) {
                             const entry = document.createElement('button');
                             const statusClass = {
@@ -1227,7 +1223,7 @@
                                 'CV': 'status-cv',
                                 'CPV': 'status-cpv',
                                 'BREAKDOWN': 'status-breakdown',
-                            } [operation.status] || '';
+                            }[operation.status] || '';
 
                             entry.className =
                                 `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
@@ -1236,21 +1232,21 @@
                             entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN',
                                 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'
                             ].includes(operation.status) ? `
-                                <p class="status-only">${operation.status}</p>
-                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                            ` : `
-                                <p><strong>${operation.code}</strong></p>
-                                <p>${operation.time}</p>
-                                ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
-                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                            `;
+                    <p class="status-only">${operation.status}</p>
+                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                ` : `
+                    <p><strong>${operation.code}</strong></p>
+                    <p>${operation.time}</p>
+                    ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
+                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                `;
                             entry.onmouseenter = function(event) {
                                 if (operation.notes) {
                                     showNotesPopup(event,
                                         `Line: ${operation.current_line}\nNotes: ${operation.notes}`
-                                        );
+                                    );
                                 } else {
                                     showNotesPopup(event, `Line: ${operation.current_line}`);
                                 }
@@ -1267,11 +1263,10 @@
                     });
 
                     for (let i = 1; i <= 8; i++) {
-                        const headerDate = document.getElementById(`day${i}`).children[1].textContent
-                    .trim();
+                        const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
                         const dateParts = headerDate.split(' ');
                         const day = parseInt(dateParts[0]);
-                        const dayColumn = document.getElementById(`daydata${machine.id}-${day}`);
+                        const dayColumn = document.getElementById(`daydata${machine.machine_id}-${day}`);
                         if (dayColumn) {
                             const addButton = document.createElement('button');
                             addButton.className =
@@ -1317,12 +1312,10 @@
 
                                     const response = await fetch(nextWeekUrl);
                                     const nextWeekMachines = await response.json();
-                                    const nextWeekMachine = nextWeekMachines.find(m => m
-                                        .machine_name === machine.machine_name);
+                                    const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === machine.machine_name);
                                     if (nextWeekMachine) {
                                         currentMachineIdWeekly = nextWeekMachine.machine_id;
-                                        currentMachineId = nextWeekMachine
-                                        .id; // Menggunakan ID dari mesin minggu berikutnya
+                                        currentMachineId = nextWeekMachine.id; // Menggunakan ID dari mesin minggu berikutnya
                                         currentDay = day;
                                     }
                                 }
