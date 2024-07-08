@@ -387,7 +387,8 @@
 
                                 @if ($audit['event'] === 'add' && $newState)
                                     <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
-                                    <p>Pada <span class="text-green-600">Week {{ $newState['week'] }}</span>, Tanggal
+                                    <p>Pada <span class="text-green-600">Week {{ $newState['week'] ?? 'NA' }}</span>,
+                                        Tanggal
                                         <span class="text-green-600">{{ $newState['day'] ?? 'NA' }}
                                             {{ $newState['month'] ?? 'NA' }} {{ $newState['year'] ?? 'NA' }}</span>,
                                         Kode Ruah
@@ -403,41 +404,62 @@
                                         $updatedDate = $newUpdatedAt->format('d F Y');
                                         $updatedTime = $newUpdatedAt->format('H:i');
                                         $originalDate =
-                                            $originalState['day'] ??
-                                            'NA' . ' ' . $originalState['month'] . ' ' . $originalState['year'];
+                                            ($originalState['day'] ?? 'NA') .
+                                            ' ' .
+                                            ($originalState['month'] ?? 'NA') .
+                                            ' ' .
+                                            ($originalState['year'] ?? 'NA');
                                         $newDate =
-                                            $newState['day'] ??
-                                            'NA' . ' ' . $newState['month'] . ' ' . $newState['year'];
+                                            ($newState['day'] ?? 'NA') .
+                                            ' ' .
+                                            ($newState['month'] ?? 'NA') .
+                                            ' ' .
+                                            ($newState['year'] ?? 'NA');
                                     @endphp
-                                    <p><strong>Action:</strong> <span class="text-green-600">EDIT</span></p>
-                                    <p>Pada <span class="text-yellow-600">Week {{ $originalState['week'] }}</span>,
+                                    <p><strong>Action:</strong> <span class="text-yellow-600">EDIT</span></p>
+                                    <p>Pada <span class="text-yellow-600">Week
+                                            {{ $originalState['week'] ?? 'NA' }}</span>,
                                         <span class="text-yellow-600">{{ $originalDate }}</span>. Kode Ruah <span
-                                            class="text-yellow-600">{{ $originalState['code'] }}</span>, Status: <span
-                                            class="text-yellow-600">{{ $originalState['status'] }}</span>, Catatan:
-                                        <span class="text-yellow-600">{{ $originalState['notes'] }}</span> telah
+                                            class="text-yellow-600">{{ $originalState['code'] ?? 'NA' }}</span>,
+                                        Status: <span
+                                            class="text-yellow-600">{{ $originalState['status'] ?? 'NA' }}</span>,
+                                        Catatan:
+                                        <span class="text-yellow-600">{{ $originalState['notes'] ?? 'NA' }}</span>
+                                        telah
                                         diubah
                                         oleh
-                                        <span class="text-yellow-600">{{ $newState['users_id'] }}</span> pada <span
-                                            class="text-yellow-600">{{ $updatedDate }}</span> pukul <span
+                                        <span class="text-yellow-600">{{ $audit['fullname'] ?? 'NA' }}</span> pada
+                                        <span class="text-yellow-600">{{ $updatedDate }}</span> pukul <span
                                             class="text-yellow-600">{{ $updatedTime }}</span> menjadi Kode Ruah <span
-                                            class="text-blue-600">{{ $newState['code'] }}</span>, Status: <span
-                                            class="text-blue-600">{{ $newState['status'] }}</span>, Catatan: <span
-                                            class="text-blue-600">{{ $newState['notes'] }}</span> ke tanggal <span
-                                            class="text-blue-600">{{ $newState['day'] ?? 'NA' }} Week
-                                            {{ $newState['week'] }}</span>
+                                            class="text-blue-600">{{ $newState['code'] ?? 'NA' }}</span>, Status:
+                                        <span class="text-blue-600">{{ $newState['status'] ?? 'NA' }}</span>, Catatan:
+                                        <span class="text-blue-600">{{ $newState['notes'] ?? 'NA' }}</span> ke tanggal
+                                        <span class="text-blue-600">{{ $newState['day'] ?? 'NA' }} {{ $newState['month'] ?? 'NA' }} {{ $newState['year'] ?? 'NA' }}</span> Pada
+                                        <span class="text-blue-600"> Week {{ $newState['week'] ?? 'NA' }}</span>
                                     </p>
                                 @elseif ($audit['event'] === 'delete' && $originalState)
                                     <p><strong>Action:</strong> <span class="text-red-600">DELETE</span></p>
-                                    <p>Pada <span class="text-red-600">Week {{ $originalState['week'] }}</span>.
-                                        Description <span
-                                            class="text-red-600">"{{ $originalState['description'] }}"</span>
-                                        dihapus
-                                        pada <span class="text-red-600">{{ $actionDateFormatted }}</span></p>
-                                @elseif ($audit['event'] === 'send_revision')
+                                    <p>Pada <span class="text-red-600">Week
+                                            {{ $originalState['week'] ?? 'NA' }}</span>,
+                                        Data tanggal <span class="text-red-600">{{ $originalState['day'] ?? 'NA' }}
+                                            {{ $originalState['month'] ?? 'NA' }}
+                                            {{ $originalState['year'] ?? 'NA' }}</span>,
+                                        Mesin <span class="text-red-600">{{ $originalState['machine_name'] ?? 'NA' }}</span>
+                                        telah
+                                        dihapus oleh
+                                        <span class="text-red-600">{{ $audit['fullname'] ?? 'NA' }}</span> pada
+                                        tanggal
+                                        <span class="text-red-600">{{ $actionDateFormatted }}</span>
+                                    </p>
+                                @elseif ($audit['event'] === 'send_revision' && $newState && $originalState)
                                     <p><strong>Action:</strong> <span class="text-purple-600">SEND REVISION</span></p>
-                                    <p>Revisi dikirim pada <span
-                                            class="text-purple-600">{{ $actionDateFormatted }}</span>
-                                        pukul <span class="text-purple-600">{{ $actionTime }}</span></p>
+                                    <p>Revisi pada <span class="text-purple-600">Week
+                                            {{ $originalState['month'] ?? 'NA' }}</span> dikirim pada tanggal
+                                        <span class="text-purple-600">{{ $actionDateFormatted }}</span> pukul <span
+                                            class="text-purple-600">{{ $actionTime }}</span>
+                                        oleh
+                                        <span class="text-purple-600">{{ $audit['fullname'] ?? 'NA' }}</span>
+                                    </p>
                                 @endif
                             </div>
                         @endif
@@ -722,14 +744,16 @@
                 let targetWeek = week;
                 let targetMachineId = machineId;
 
-                if (day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[0]) && lastMonday) {
+                if (day === parseInt(document.getElementById('day8').children[1].textContent.trim().split(' ')[
+                        0]) && lastMonday) {
                     const nextWeek = parseInt(week) + 1;
                     const response = await fetch(
                         `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
                     );
                     const nextWeekMachines = await response.json();
 
-                    const nextWeekMachine = nextWeekMachines.find(machine => machine.machine_id === parseInt(machineId));
+                    const nextWeekMachine = nextWeekMachines.find(machine => machine.machine_id === parseInt(
+                        machineId));
                     if (nextWeekMachine) {
                         targetMachineId = nextWeekMachine.id;
                         targetWeek = nextWeek;
@@ -1033,6 +1057,7 @@
 
 
             async function fetchDataForWeek(line, year, month, week) {
+                console.log("Fetching data for:", {line, year, month, week});
                 let operationsUrls = [];
                 let machinesUrls = [];
                 let machineInfoUrls = [];
@@ -1086,15 +1111,18 @@
                     for (const response of operationsResponses) {
                         const data = await response.json();
                         operationsData = operationsData.concat(data.operations);
+                        console.log("Operations data:", data);
                     }
 
                     let machinesData = [];
                     for (const response of machinesResponses) {
                         const data = await response.json();
                         machinesData = machinesData.concat(data);
+                        console.log("Machines data:", data);
                     }
 
                     const machineInfoData = await machineInfoResponse.json();
+                    console.log("Machine info data:", machineInfoData);
                     const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
 
                     updateURL(line, year, month, week);
@@ -1104,6 +1132,7 @@
                     console.error("Error fetching data:", error);
                 }
             }
+
 
 
             function updateURL(line, year, month, week) {
@@ -1125,13 +1154,14 @@
                 });
 
                 // Sort machines by specified categories
-                const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating', 'Mixing', 'Filling', 'Kemas'];
+                const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating',
+                    'Mixing', 'Filling', 'Kemas'
+                ];
                 machines.sort((a, b) => {
                     const categoryA = machineInfoMap.get(a.machine_id) || 'Unknown';
                     const categoryB = machineInfoMap.get(b.machine_id) || 'Unknown';
                     return categoryOrder.indexOf(categoryA) - categoryOrder.indexOf(categoryB);
                 });
-
 
                 const combinedMachines = combineWeeklyMachines(machines);
 
@@ -1141,23 +1171,23 @@
                     const machineRow = document.createElement('div');
                     machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                     machineRow.innerHTML = `
-                        <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                            <div class="flex flex-col justify-center mt-2 items-center w-full h-full">
-                                <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                                    ${category}
-                                </span>
-                                <span class="text-sm">${machine.machine_name}</span>
-                            </div>
-                        </div>
-                    `;
+            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                <div class="flex flex-col justify-center items-center w-9/12 h-full">
+                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                        ${category}
+                    </span>
+                    <span class="text-sm">${machine.machine_name}</span>
+                </div>
+            </div>
+        `;
 
                     for (let i = 1; i <= 8; i++) {
                         const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
                         const dateParts = headerDate.split(' ');
                         const day = parseInt(dateParts[0]);
                         const dayColumn = document.createElement('div');
-                        dayColumn.id = `daydata${machine.id}-${day}`;
+                        dayColumn.id = `daydata${machine.machine_id}-${day}`;
                         dayColumn.className = 'col-span-1 day-column';
                         machineRow.appendChild(dayColumn);
                     }
@@ -1178,8 +1208,7 @@
                     });
 
                     allMachineOperations.forEach(operation => {
-                        const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
-
+                        const dayColumn = document.getElementById(`daydata${machine.machine_id}-${operation.day}`);
                         if (dayColumn) {
                             const entry = document.createElement('button');
                             const statusClass = {
@@ -1196,23 +1225,28 @@
                                 'BREAKDOWN': 'status-breakdown',
                             }[operation.status] || '';
 
-                            entry.className = `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
+                            entry.className =
+                                `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
                             entry.style.minHeight = '6em';
 
-                            entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
-                                <p class="status-only">${operation.status}</p>
-                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                            ` : `
-                                <p><strong>${operation.code}</strong></p>
-                                <p>${operation.time}</p>
-                                ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
-                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                            `;
+                            entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN',
+                                'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'
+                            ].includes(operation.status) ? `
+                    <p class="status-only">${operation.status}</p>
+                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                ` : `
+                    <p><strong>${operation.code}</strong></p>
+                    <p>${operation.time}</p>
+                    ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
+                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                `;
                             entry.onmouseenter = function(event) {
                                 if (operation.notes) {
-                                    showNotesPopup(event, `Line: ${operation.current_line}\nNotes: ${operation.notes}`);
+                                    showNotesPopup(event,
+                                        `Line: ${operation.current_line}\nNotes: ${operation.notes}`
+                                    );
                                 } else {
                                     showNotesPopup(event, `Line: ${operation.current_line}`);
                                 }
@@ -1232,10 +1266,11 @@
                         const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
                         const dateParts = headerDate.split(' ');
                         const day = parseInt(dateParts[0]);
-                        const dayColumn = document.getElementById(`daydata${machine.id}-${day}`);
+                        const dayColumn = document.getElementById(`daydata${machine.machine_id}-${day}`);
                         if (dayColumn) {
                             const addButton = document.createElement('button');
-                            addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white text-xs w-7 h-7 thin-plus';
+                            addButton.className =
+                                'add-jpm-button add-data-button rounded-full bg-grey-500 text-white text-xs w-7 h-7 thin-plus';
                             addButton.textContent = '+';
                             addButton.onclick = async function() {
                                 const params = new URLSearchParams(window.location.search);
@@ -1251,19 +1286,24 @@
                                     let nextWeekUrl = '';
                                     switch (parseInt(week)) {
                                         case 1:
-                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=2`;
+                                            nextWeekUrl =
+                                                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=2`;
                                             break;
                                         case 2:
-                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=3`;
+                                            nextWeekUrl =
+                                                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=3`;
                                             break;
                                         case 3:
-                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=4`;
+                                            nextWeekUrl =
+                                                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=4`;
                                             break;
                                         case 4:
-                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=5`;
+                                            nextWeekUrl =
+                                                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=5`;
                                             break;
                                         case 5:
-                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=6`;
+                                            nextWeekUrl =
+                                                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=6`;
                                             break;
                                         default:
                                             console.error('Invalid week number');
@@ -1390,7 +1430,8 @@
                 weeks.forEach((week, index) => {
                     const weekButton = document.createElement('button');
                     weekButton.textContent = `W${index + 1}`;
-                    weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 cursor-not-allowed py-2.5 h-auto border-0';
+                    weekButton.className =
+                        'year-item text-black rounded-xl ml-1 text-xl px-2.5 cursor-not-allowed py-2.5 h-auto border-0';
                     if (index + 1 === parseInt(activeWeek)) {
                         weekButton.classList.add('text-purple-600');
                     } else {
