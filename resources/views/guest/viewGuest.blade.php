@@ -160,7 +160,7 @@
 
         <!-- Button to download PDF -->
         <div class="text-center my-4">
-            <button onclick="downloadPDF()" class="text-white bg-gradient-to-r mr-16 from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-3 py-2.5 flex items-center float-right">
+            <button id="downloadPDFButton" class="text-white bg-gradient-to-r mr-16 from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-3 py-2.5 flex items-center float-right">
                 <svg class="w-6 h-6 mr-1 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4"/>
                 </svg>
@@ -173,8 +173,9 @@
     <script src="{{ asset('js/dayjs-id.js') }}"></script>
     <script src="{{ asset('js/locale-Data.js') }}"></script>
     <script src="{{ asset('js/axios.min.js') }}"></script>
-    <script src="{{ asset('js/jspdf.umd.min.js') }}"></script>
-    <script src="{{ asset('js/jspdf.plugin.autotable.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+
     <script>
         const { jsPDF } = window.jspdf;
 
@@ -234,6 +235,7 @@
                     globalDescs.appendChild(descButton);
                 });
             }
+            
 
             function getQueryParams() {
                 const params = new URLSearchParams(window.location.search);
@@ -300,6 +302,7 @@
                 // Set the content of the notes popup
                 document.getElementById('revisionNotesPopup').textContent = returnNotes;
             }
+
             document.getElementById('revision_number').addEventListener('mouseover', function() {
                 document.getElementById('revisionNotesPopup').classList.remove('hidden');
             });
@@ -667,10 +670,72 @@
                 return Array.from(machineMap.values());
             }
 
-            // document.addEventListener('DOMContentLoaded', fetchAndDisplayHistory);
             // Add event listener for download button
             document.getElementById('downloadPDFButton').addEventListener('click', downloadPDF);
-        });
+
+            async function downloadPDF() {
+                const doc = new jsPDF(); // Pastikan jsPDF telah diinisialisasi dengan benar
+
+                // Get the header days and machine names
+                const headerDays = [];
+                const tableHeaders = ['Mesin'];
+
+                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+                for (let i = 1; i <= 8; i++) {
+                    const dayElement = document.getElementById(`day${i}`);
+                    if (dayElement) {
+                        const headerDate = dayElement.children[1].textContent.trim();
+                        const dateParts = headerDate.split(' ');
+                        const dateObj = new Date(dateParts[1] + ' ' + dateParts[2] + ', ' + dateParts[3]);
+                        const day = days[dateObj.getDay()];
+                        const date = `${day}, ${dateParts[1]} ${dateParts[2]} ${dateParts[3]}`;
+                        headerDays.push(date);
+                        tableHeaders.push(date);
+                    }
+                }
+
+                // Gather table data
+                const tableData = [];
+                const dataContainer = document.getElementById('dataContainer');
+                const machineRows = dataContainer.querySelectorAll('.grid');
+
+                machineRows.forEach(machineRow => {
+                    const machineName = machineRow.querySelector('.mesin-jpm .text-sm').textContent.trim();
+                    const rowData = [machineName];
+
+                    for (let i = 1; i <= 8; i++) {
+                        const dayDataElement = machineRow.querySelector(`#daydata${machineRow.id.split('-')[1]}-${i}`);
+                        if (dayDataElement) {
+                            const dayData = Array.from(dayDataElement.children).map(entry => entry.textContent.trim()).join('\n');
+                            rowData.push(dayData);
+                        } else {
+                            rowData.push('');
+                        }
+                    }
+
+                    tableData.push(rowData);
+                });
+
+                // Generate PDF using autoTable
+                doc.autoTable({
+                    head: [tableHeaders],
+                    body: tableData,
+                    startY: 10,
+                    theme: 'grid',
+                    styles: {
+                        fontSize: 8,
+                        cellPadding: 2,
+                    },
+                    headStyles: {
+                        fillColor: [22, 160, 133],
+                        textColor: [255, 255, 255],
+                    }
+                });
+
+                doc.save('machine_operations.pdf');
+            }
+       
 
         async function fetchWeeks(line, year, month, week) {
             try {
@@ -745,33 +810,8 @@
                 button.classList.toggle('bg-gray-200', !button.textContent.includes(`Week ${week}`));
             });
         }
+    });
 
-        function downloadPDF() {
-            const doc = new jsPDF();
-
-            // Add title
-            doc.text('Machine Schedule', 20, 10);
-
-            // Get schedule data
-            const scheduleData = [];
-            const rows = document.querySelectorAll('.day-column');
-            rows.forEach((row, rowIndex) => {
-                const rowData = [];
-                row.querySelectorAll('button').forEach(button => {
-                    rowData.push(button.textContent);
-                });
-                scheduleData.push(rowData);
-            });
-
-            // Add table to PDF
-            doc.autoTable({
-                head: [['Machine', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Next Monday']],
-                body: scheduleData,
-            });
-
-            // Save the PDF
-            doc.save('machine_schedule.pdf');
-        }
     </script>
 </body>
 </html>

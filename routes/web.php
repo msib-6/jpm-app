@@ -105,6 +105,8 @@ Route::middleware('manager', 'auth')->group(function () {
     })->name('manager.dashboard');
 
 
+
+
 //    Route::get('/manager/approve', [ManagerApprovalController::class, 'approveManagerController'])->name('manager.approve');
 
 //    Route::get('/manager/approve', function (Request $request) {
@@ -127,5 +129,10 @@ Route::get('/guest/dashboard', function () {
     return view('guest.dashboardGuest');
 })->name('guest.dashboard');
 
+Route::middleware(['auth', 'storage'])->group(function () {
+    Route::get('/logistik/dashboard', function () {
+        return view('logistik.dashboard');
+    })->name('logistik.dashboard');
+});
 
 require __DIR__ . '/auth.php';
