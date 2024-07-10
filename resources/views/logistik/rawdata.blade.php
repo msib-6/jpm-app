@@ -8,7 +8,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
         rel="stylesheet">
-    <title>Logistik</title>
+    <title>Raw Data Logistik</title>
     @vite('resources/css/logistik/logistik.css')
 </head>
 
@@ -18,7 +18,7 @@
         <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between"
             style="width: 100%;">
             <h3 id="title" class="text-3xl font-bold relative z-10">
-                <span id="line-display">Histori Perubahan</span>
+                <span id="line-display">Raw Data</span>
             </h3>
             <button id="exportPDF" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Export to
                 PDF</button>
@@ -27,19 +27,18 @@
         <!-- Header for Data -->
         <div class="header-days bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width:100%;"
             id="headerDays">
-            <div class="grid grid-cols-8 gap-4 text-center font-semibold">
-                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Tanggal</div>
-                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Jam</div>
+            <div class="grid grid-cols-12 gap-4 text-center font-semibold">
+                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Mesin</div>
+                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Kategori</div>
+                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Tahun</div>
+                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Bulan</div>
                 <div class="flex-1 flex-col font-bold items-center justify-center text-large">Week</div>
-                <div class="flex-1 flex-col font-bold items-center justify-center text-large">
-                    <select id="lineFilter" class="font-bold rounded-lg border">
-                        <option value="all">All Lines</option>
-                        <!-- Populate this dynamically -->
-                    </select>
-                </div>
+                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Hari/Tanggal</div>
                 <div class="flex-1 flex-col font-bold items-center justify-center text-large">Kode Produk</div>
-                <div class="flex-1 flex-col font-bold items-center justify-center text-large">No Batch</div>
-                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Data Update JPM</div>
+                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Jam</div>
+                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Status</div>
+                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Notes</div>
+                <div class="flex-1 flex-col font-bold items-center justify-center text-large">Line</div>
                 <div class="flex-1 flex-col font-bold items-center justify-center text-large">
                     <select id="statusFilter" class="font-bold rounded-lg border">
                         <option value="all">All Status</option>

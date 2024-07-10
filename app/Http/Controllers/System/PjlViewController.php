@@ -53,7 +53,8 @@ class PjlViewController extends Controller
                             $adding = [
                                 'time' => $mesin->time,
                                 'status' => $mesin->status,
-                                'notes' => $mesin->notes
+                                'notes' => $mesin->notes,
+                                'week' => $mesin->week
                             ];
                         }
                     }
@@ -69,6 +70,7 @@ class PjlViewController extends Controller
                 'return' => $item->changes,
                 'line' => $item->user == null ? 'NA' : $item->user->role,
                 'changes' => json_decode($item->changes, true),
+                'week' => Carbon::parse($item->created_at)->week,
             ];
         }
 
