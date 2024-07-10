@@ -177,7 +177,7 @@
             } = window.jspdf;
             const doc = new jsPDF('landscape');
 
-            doc.text('Logistik', 14, 16);
+            doc.text('Histori Logistik', 14, 16);
 
             const lineFilter = document.getElementById('lineFilter').value;
             const statusFilter = document.getElementById('statusFilter').value;
@@ -205,7 +205,7 @@
                 theme: 'striped',
             });
 
-            doc.save('logistik.pdf');
+            doc.save('HistoriLog.pdf');
         }
 
         document.addEventListener('DOMContentLoaded', function() {
