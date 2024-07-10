@@ -1154,9 +1154,7 @@
                 });
 
                 // Sort machines by specified categories
-                const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating',
-                    'Mixing', 'Filling', 'Kemas'
-                ];
+                const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating', 'Mixing', 'Filling', 'Kemas'];
                 machines.sort((a, b) => {
                     const categoryA = machineInfoMap.get(a.machine_id) || 'Unknown';
                     const categoryB = machineInfoMap.get(b.machine_id) || 'Unknown';
@@ -1187,7 +1185,7 @@
                         const dateParts = headerDate.split(' ');
                         const day = parseInt(dateParts[0]);
                         const dayColumn = document.createElement('div');
-                        dayColumn.id = `daydata${machine.machine_id}-${day}`;
+                        dayColumn.id = `daydata${machine.id}-${day}`;
                         dayColumn.className = 'col-span-1 day-column';
                         machineRow.appendChild(dayColumn);
                     }
@@ -1195,8 +1193,8 @@
                     dataContainer.appendChild(machineRow);
 
                     // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
-                    const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
-                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) || [];
+                    const machineOperations = machineOperationsMap.get(machine.id) || [];
+                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id) || [];
                     const allMachineOperations = [...machineOperations, ...machineOperationsNextWeek];
 
                     allMachineOperations.sort((a, b) => {
@@ -1208,8 +1206,7 @@
                     });
 
                     allMachineOperations.forEach(operation => {
-                        console.log(`Looking for element with ID: daydata${machine.machine_id}-${operation.day}`);
-                        const dayColumn = document.getElementById(`daydata${machine.machine_id}-${operation.day}`);
+                        const dayColumn = document.getElementById(`daydata${operation.machine_id}-${operation.day}`);
                         if (dayColumn) {
                             const entry = document.createElement('button');
                             const statusClass = {
@@ -1226,13 +1223,10 @@
                                 'BREAKDOWN': 'status-breakdown',
                             }[operation.status] || '';
 
-                            entry.className =
-                                `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
+                            entry.className = `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
                             entry.style.minHeight = '6em';
 
-                            entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN',
-                                'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'
-                            ].includes(operation.status) ? `
+                            entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
                     <p class="status-only">${operation.status}</p>
                     ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
                     ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
@@ -1245,9 +1239,7 @@
                 `;
                             entry.onmouseenter = function(event) {
                                 if (operation.notes) {
-                                    showNotesPopup(event,
-                                        `Line: ${operation.current_line}\nNotes: ${operation.notes}`
-                                    );
+                                    showNotesPopup(event, `Line: ${operation.current_line}\nNotes: ${operation.notes}`);
                                 } else {
                                     showNotesPopup(event, `Line: ${operation.current_line}`);
                                 }
@@ -1261,7 +1253,7 @@
 
                             dayColumn.appendChild(entry);
                         } else {
-                            console.error(`Element with ID daydata${machine.machine_id}-${operation.day} not found`);
+                            console.error(`Element with ID daydata${operation.machine_id}-${operation.day} not found`);
                         }
                     });
 
@@ -1269,11 +1261,10 @@
                         const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
                         const dateParts = headerDate.split(' ');
                         const day = parseInt(dateParts[0]);
-                        const dayColumn = document.getElementById(`daydata${machine.machine_id}-${day}`);
+                        const dayColumn = document.getElementById(`daydata${machine.id}-${day}`);
                         if (dayColumn) {
                             const addButton = document.createElement('button');
-                            addButton.className =
-                                'add-jpm-button add-data-button rounded-full bg-grey-500 text-white text-xs w-7 h-7 thin-plus';
+                            addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white text-xs w-7 h-7 thin-plus';
                             addButton.textContent = '+';
                             addButton.onclick = async function() {
                                 const params = new URLSearchParams(window.location.search);
@@ -1289,24 +1280,19 @@
                                     let nextWeekUrl = '';
                                     switch (parseInt(week)) {
                                         case 1:
-                                            nextWeekUrl =
-                                                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=2`;
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=2`;
                                             break;
                                         case 2:
-                                            nextWeekUrl =
-                                                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=3`;
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=3`;
                                             break;
                                         case 3:
-                                            nextWeekUrl =
-                                                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=4`;
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=4`;
                                             break;
                                         case 4:
-                                            nextWeekUrl =
-                                                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=5`;
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=5`;
                                             break;
                                         case 5:
-                                            nextWeekUrl =
-                                                `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=6`;
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=6`;
                                             break;
                                         default:
                                             console.error('Invalid week number');
@@ -1334,7 +1320,6 @@
                     };
                 });
             }
-
 
 
             function showNotesPopup(event, notes) {
