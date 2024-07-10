@@ -1196,9 +1196,8 @@
 
                     // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
                     const machineOperations = machineOperationsMap.get(machine.id) || [];
-                    const machineOperationsWeek = machineOperationsMap.get(machine.machine_id) || [];
-                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) || [];
-                    const allMachineOperations = [...machineOperations, ...machineOperationsNextWeek, ...machineOperationsWeek];
+                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id) || [];
+                    const allMachineOperations = [...machineOperations, ...machineOperationsNextWeek];
 
                     allMachineOperations.sort((a, b) => {
                         if (a.status === 'PM') return -1;
