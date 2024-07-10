@@ -1208,6 +1208,7 @@
                     });
 
                     allMachineOperations.forEach(operation => {
+                        console.log(`Looking for element with ID: daydata${machine.machine_id}-${operation.day}`);
                         const dayColumn = document.getElementById(`daydata${machine.machine_id}-${operation.day}`);
                         if (dayColumn) {
                             const entry = document.createElement('button');
@@ -1259,6 +1260,8 @@
                             };
 
                             dayColumn.appendChild(entry);
+                        } else {
+                            console.error(`Element with ID daydata${machine.machine_id}-${operation.day} not found`);
                         }
                     });
 
@@ -1331,6 +1334,7 @@
                     };
                 });
             }
+
 
 
             function showNotesPopup(event, notes) {
