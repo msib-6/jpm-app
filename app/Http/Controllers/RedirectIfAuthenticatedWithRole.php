@@ -42,6 +42,8 @@ class RedirectIfAuthenticatedWithRole
                     return redirect('/admin');
                 case 'Manager':
                     return redirect('/manager/dashboard');
+                case 'Storage':
+                    return redirect('/logistik/dashboard');
                 default:
                     return redirect('/home');
             }

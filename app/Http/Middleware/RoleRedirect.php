@@ -37,6 +37,8 @@ class RoleRedirect
             return redirect('/manager/dashboard');
         } elseif ($user->hasRole('admin')) {
             return redirect('/admin/dashboard');
+        } elseif ($user->hasRole('storage')) {
+            return redirect('/logistik/dashboard');
         }
 
         return redirect(RouteServiceProvider::HOME);

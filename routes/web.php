@@ -38,8 +38,11 @@ Route::get('/summary', function () {
 Route::get('/auditlog', [AuditTrailController::class, 'index']);
 
 
-Route::get('/logistik', function () {
+Route::get('/historilog', function () {
     return view('logistik.dashboard');
+});
+Route::get('/rawdata', function () {
+    return view('logistik.rawdata');
 });
 
 Route::middleware(['auth', 'line'])->group(function () {
