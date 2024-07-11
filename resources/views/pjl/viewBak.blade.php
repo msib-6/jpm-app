@@ -1,91 +1,43 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('css/tailwind.min.css') }}" rel="stylesheet">
-    <title>Machine Schedule Display</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Poppins:wght@400;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+        rel="stylesheet">
+    <title>Cba View</title>
     @vite('resources/css/pjl/view.css')
-    <style>
-        .day-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start; /* Align items at the top */
-            gap: 0.5rem;
-        }
-
-        .entry-button {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-    </style>
 </head>
-<body>
 
+<body>
     <div class="container mx-auto px-4">
+        <input type="text" id="userId" hidden value="{{ auth()->user()->name }}">
         <!-- Breadcrumb -->
         <nav class="flex ml-16 mt-3" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                 <li class="inline-flex items-center">
-                    <a href="/guest/dashboard" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                        <svg class="w-3 h-3 me-2.5 ml-2 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                    <a href="/pjl/{{ ucfirst($line) }}/dashboard"
+                        class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                        <svg class="w-3 h-3 me-2.5 ml-2 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 1 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
                         </svg>
-                        Dashboard
+                        Home
                     </a>
                 </li>
                 <li>
                     <div class="flex items-center">
-                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 9 4-4-4-4" />
                         </svg>
-                        <a href="/guest/dashboard" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
-                            Line
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                        </svg>
-                        <a href="/guest/dashboard" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
-                            Year
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                        </svg>
-                        <a href="/guest/dashboard" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
-                            Month
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                        </svg>
-                        <a href="/guest/dashboard" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
-                            Week
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                        </svg>
-                        <a href="/guest/view" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
-                            View
-                        </a>
+                        <a href="/pjl/view"
+                            class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">PJL</a>
                     </div>
                 </li>
             </ol>
@@ -93,9 +45,9 @@
 
         <!-- Card Title -->
         <div class="bg-gray-100 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between"
-             style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
+            style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
             <h3 id="title" class="text-2xl font-bold">
-                <span id="line-display">Loading...</span>
+                <span id="line-display">{{ ucfirst(str_replace('Line', 'Line ', $line)) }}</span>
             </h3>
             <!-- Status WEEK "APPROVED", "WAITING APPROVAL", "REJECTED" -->
             <div id="statusWeek" class="mx-2">
@@ -118,28 +70,41 @@
         </div>
 
         <!-- Header for Days -->
-        <div class="header-days bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; display: none;" id="headerDays">
+        <div class="header-days bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto"
+            style="width: 91.666667%; display: none; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);"
+            id="headerDays">
             <div class="grid grid-cols-10 gap-4 text-center font-semibold">
                 <div class="flex font-bold items-center justify-center col-span-2 text-xl">Mesin</div>
                 <!-- Dynamic date headers -->
-                <div id="day1" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 1</span></div>
-                <div id="day2" class="flex flex-col justify-center items-center"><span class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2</span></div>
-                <div id="day3" class="flex flex-col justify-center items-center"><span class="font-bold">Rabu</span><span style="font-size: 12px;">Date 3</span></div>
-                <div id="day4" class="flex flex-col justify-center items-center"><span class="font-bold">Kamis</span><span style="font-size: 12px;">Date 4"></span></div>
-                <div id="day5" class="flex flex-col justify-center items-center"><span class="font-bold">Jumat</span><span style="font-size: 12px;">Date 5"></span></div>
-                <div id="day6" class="flex flex-col justify-center items-center"><span class="font-bold">Sabtu</span><span style="font-size: 12px;">Date 6"></span></div>
-                <div id="day7" class="flex flex-col justify-center items-center"><span class="font-bold">Minggu</span><span style="font-size: 12px;">Date 7"></span></div>
-                <div id="day8" class="flex flex-col justify-center items-center"><span class="font-bold">Senin</span><span style="font-size: 12px;">Date 8"></span></div>
+                <div id="day1" class="flex flex-col justify-center items-center"><span
+                        class="font-bold">Senin</span><span style="font-size: 12px;">Date 1</span></div>
+                <div id="day2" class="flex flex-col justifycenter items-center"><span
+                        class="font-bold">Selasa</span><span style="font-size: 12px;">Date 2"></span></div>
+                <div id="day3" class="flex flex-col justify-center items-center"><span
+                        class="font-bold">Rabu</span><span style="font-size: 12px;">Date 3"></span></div>
+                <div id="day4" class="flex flex-col justify-center items-center"><span
+                        class="font-bold">Kamis</span><span style="font-size: 12px;">Date 4"></span></div>
+                <div id="day5" class="flex flex-col justify-center items-center"><span
+                        class="font-bold">Jumat</span><span style="font-size: 12px;">Date 5"></span></div>
+                <div id="day6" class="flex flex-col justify-center items-center"><span
+                        class="font-bold">Sabtu</span><span style="font-size: 12px;">Date 6"></span></div>
+                <div id="day7" class="flex flex-col justify-center items-center"><span
+                        class="font-bold">Minggu</span><span style="font-size: 12px;">Date 7"></span></div>
+                <div id="day8" class="flex flex-col justify-center items-center"><span
+                        class="font-bold">Senin</span><span style="font-size: 12px;">Date 8"></span></div>
             </div>
         </div>
 
         <!-- Data Container -->
-        <div id="dataContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto" style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
+        <div id="dataContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto"
+            style="width: 91.666667%; backdrop-filter: blur(7px); background-color: rgba(255, 255, 255, 0.5);">
             <!-- Dynamic rows for machines will be appended here -->
         </div>
 
         <!-- Global Description Container -->
-        <div id="globalDescContainer" class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex flex-col items-center" style="width: 91.666667%;">
+        <div id="globalDescContainer"
+            class="bg-white p-6 rounded-3xl shadow-2xl my-4 mx-auto flex flex-col items-center"
+            style="width: 91.666667%;">
             <h1 class="font-bold text-2xl mb-4">
                 Description
             </h1>
@@ -153,52 +118,89 @@
         <div class="my-4 mx-auto flex flex-col" style="width: 91.666667%;">
             <div class="flex justify-between items-center">
                 <div class="flex justify-start">
-                    <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
+                    <button
+                        class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
                 </div>
-
-                <!-- Button to download PDF -->
-        <div class="flex justify-between items-center">
-            <button id="downloadPDFButton" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-3 py-2.5 flex items-center float-right">
-                <svg class="w-6 h-6 mr-1 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4"/>
-                </svg>
-                Download PDF
-            </button>
-        </div>
-
-
-
-
+                <div class="flex justify-end">
+                    <button id="editWeekButton"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Edit</button>
+                </div>
             </div>
         </div>
+
+        <!-- Modal Confirm Delete -->
+        <div id="confirmDeleteModal"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+            <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+                <h2 class="text-2xl mb-4">Confirm Delete</h2>
+                <p id="deleteConfirmMessage" class="mb-4">Are you sure you want to delete this item?</p>
+                <div class="flex justify-between items-center">
+                    <button type="button" id="closeConfirmDeleteModalButton"
+                        class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Cancel</button>
+                    <button type="button" id="confirmDeleteButton"
+                        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Alert Modal -->
+        <div id="custom-alert" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
+                <h2 class="text-xl font-bold mb-4">Alert</h2>
+                <p id="custom-alert-message" class="mb-4">This is a custom alert message.</p>
+                <div class="flex justify-between items-end">
+                    <button onclick="closeAlert()"
+                        class="justify-end bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Modal -->
+
     </div>
 
-    <script src="{{ asset('js/dayjs.min.js') }}"></script>
-    <script src="{{ asset('js/dayjs-id.js') }}"></script>
-    <script src="{{ asset('js/locale-Data.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
-    <script src="{{ asset('js/jspdf.umd.min.js') }}"></script>
-    <script src="{{ asset('js/jspdf.plugin.autotable.js') }}"></script>
-
     <script>
-        const { jsPDF } = window.jspdf;
+        function showAlert(message) {
+            document.getElementById('custom-alert-message').textContent = message;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
 
-        document.addEventListener("DOMContentLoaded", function () {
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const editWeekButton = document.getElementById('editWeekButton');
+            const addDataModal = document.getElementById('addDataModal');
             const globalDescs = document.getElementById('globalDescs');
+            const historyButton = document.getElementById('historyButton');
+            const historyModal = document.getElementById('historyModal');
+            const closeHistoryModalButton = document.getElementById('closeHistoryModalButton');
+            const historyContent = document.getElementById('historyContent');
+            let currentMachineId;
+            let currentMachineIdWeekly;
+            let currentDay;
+            let currentMonth;
+            let currentYear;
+            let currentOperationId;
             let currentGlobalDescId;
+            let currentMachineDataId;
+
 
             getQueryParams();
             setupAutoRefresh();
-            checkIsSentStatus();
 
             async function checkIsSentStatus() {
+                const pathSegments = window.location.pathname.split('/');
+                const line = pathSegments[2];
                 const params = new URLSearchParams(window.location.search);
-                const line = params.get('line');
                 const month = params.get('month');
                 const week = params.get('week');
                 const year = params.get('year');
 
-                const response = await fetch(`http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`);
+                const response = await fetch(
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
+                );
                 const operations = await response.json();
 
                 if (operations.some(operation => operation.is_sent === 1)) {
@@ -214,7 +216,7 @@
 
             async function fetchAndDisplayGlobalDescriptions() {
                 const params = new URLSearchParams(window.location.search);
-                const line = params.get('line');
+                const line = window.location.pathname.split('/')[2];
                 const month = params.get('month');
                 const week = params.get('week');
                 const year = params.get('year');
@@ -223,14 +225,16 @@
                 const descriptions = await response.json();
 
                 const filteredDescriptions = descriptions.filter(desc => {
-                    return desc.line === line && desc.month === month && desc.week === week && desc.year === year;
+                    return desc.line === line && desc.month === month && desc.week === week && desc
+                        .year === year;
                 });
 
                 globalDescs.innerHTML = ''; // Clear existing descriptions
 
                 filteredDescriptions.forEach(desc => {
                     const descButton = document.createElement('div');
-                    descButton.className = 'my-2 bg-white descWeek p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
+                    descButton.className =
+                        'my-2 bg-white descWeek p-2 shadow-md rounded-md py-1 px-2 text-black items-center flex justify-center w-full';
                     descButton.style.width = '90%';
                     descButton.textContent = desc.description;
                     descButton.onclick = function() {
@@ -239,11 +243,10 @@
                     globalDescs.appendChild(descButton);
                 });
             }
-            
 
             function getQueryParams() {
                 const params = new URLSearchParams(window.location.search);
-                const line = params.get('line');
+                const line = window.location.pathname.split('/')[2];
                 const month = params.get('month');
                 const year = params.get('year');
                 const week = params.get('week');
@@ -252,9 +255,8 @@
                 document.getElementById('month-display').textContent = month ? getMonthName(month) : 'N/A';
                 document.getElementById('year-display').textContent = year ? year : 'N/A';
 
-                setupWeekButtons(line, year, month, week);
+                setupWeekButtons(line, year, month);
                 fetchStatusWeek(line, year, month, week);
-                fetchRevisionNumber(line, year, month, week);
             }
 
             async function fetchStatusWeek(line, year, month, week) {
@@ -306,7 +308,6 @@
                 // Set the content of the notes popup
                 document.getElementById('revisionNotesPopup').textContent = returnNotes;
             }
-
             document.getElementById('revision_number').addEventListener('mouseover', function() {
                 document.getElementById('revisionNotesPopup').classList.remove('hidden');
             });
@@ -322,7 +323,7 @@
                 let machineInfoUrls = [];
                 const nextWeek = parseInt(week) + 1;
 
-                if (week === "1") {
+                if (week === 1) {
                     const prevMonth = (month - 1 === 0) ? 12 : month - 1;
                     const prevYear = (month - 1 === 0) ? year - 1 : year;
 
@@ -379,11 +380,14 @@
                     }
 
                     const machineInfoData = await machineInfoResponse.json();
-                    const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
+                    const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine
+                        .category || 'Unknown'
+                    ])); // Fallback to 'Unknown' if category is empty
 
                     updateURL(line, year, month, week);
                     displayMachineData(operationsData, machinesData, machineInfoMap, week);
-                    await fetchAndDisplayGlobalDescriptions(); // Fetch and display global descriptions for the selected week
+                    await fetchAndDisplayGlobalDescriptions
+                        (); // Fetch and display global descriptions for the selected week
                 } catch (error) {
                     console.error("Error fetching data:", error);
                 }
@@ -395,12 +399,13 @@
 
             function displayMachineData(operations, machines, machineInfoMap, week) {
                 const dataContainer = document.getElementById('dataContainer');
-                dataContainer.innerHTML = '';  // Clear existing rows
+                dataContainer.innerHTML = ''; // Clear existing rows
 
                 // Create a map for machine operations
                 const machineOperationsMap = new Map();
                 operations.forEach(operation => {
-                    const machineIdKey = operation.week === week ? operation.machine_id : operation.machine_id_parent;
+                    const machineIdKey = operation.week === week ? operation.machine_id : operation
+                        .machine_id_parent;
                     if (!machineOperationsMap.has(machineIdKey)) {
                         machineOperationsMap.set(machineIdKey, []);
                     }
@@ -408,7 +413,9 @@
                 });
 
                 // Sort machines by specified categories
-                const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating', 'Mixing', 'Filling', 'Kemas'];
+                const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating',
+                    'Mixing', 'Filling', 'Kemas'
+                ];
                 machines.sort((a, b) => {
                     const categoryA = machineInfoMap.get(a.machine_id) || 'Unknown';
                     const categoryB = machineInfoMap.get(b.machine_id) || 'Unknown';
@@ -436,7 +443,8 @@
 
                     // Add day columns based on header days
                     for (let i = 1; i <= 8; i++) {
-                        const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
+                        const headerDate = document.getElementById(`day${i}`).children[1].textContent
+                            .trim();
                         const dateParts = headerDate.split(' ');
                         const day = parseInt(dateParts[0]);
                         const dayColumn = document.createElement('div');
@@ -449,7 +457,8 @@
 
                     // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
                     const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
-                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) || [];
+                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) ||
+                        [];
                     const allMachineOperations = [...machineOperations, ...machineOperationsNextWeek];
 
                     allMachineOperations.sort((a, b) => {
@@ -461,10 +470,11 @@
                     });
 
                     allMachineOperations.forEach(operation => {
-                        const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
+                        const dayColumn = document.getElementById(
+                            `daydata${machine.id}-${operation.day}`);
 
                         if (dayColumn) {
-                            const entry = document.createElement('button');
+                            const entry = document.createElement('div');
                             const statusClass = {
                                 'PM': 'status-pm',
                                 'BCP': 'status-bcp',
@@ -477,12 +487,15 @@
                                 'CV': 'status-cv',
                                 'CPV': 'status-cpv',
                                 'BREAKDOWN': 'status-breakdown',
-                            }[operation.status] || '';
+                            } [operation.status] || '';
 
-                            entry.className = `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
+                            entry.className =
+                                `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
                             entry.style.minHeight = '6em';
 
-                            entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN', 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'].includes(operation.status) ? `
+                            entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN',
+                                'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'
+                            ].includes(operation.status) ? `
                                 <p class="status-only">${operation.status}</p>
                                 ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
                                 ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
@@ -495,7 +508,9 @@
                             `;
                             entry.onmouseenter = function(event) {
                                 if (operation.notes) {
-                                    showNotesPopup(event, `Line: ${operation.current_line}\nNotes: ${operation.notes}`);
+                                    showNotesPopup(event,
+                                        `Line: ${operation.current_line}\nNotes: ${operation.notes}`
+                                    );
                                 } else {
                                     showNotesPopup(event, `Line: ${operation.current_line}`);
                                 }
@@ -513,7 +528,6 @@
 
                 });
             }
-
 
             function showNotesPopup(event, notes) {
                 const popup = document.createElement('div');
@@ -534,18 +548,22 @@
             }
 
             function getMonthName(month) {
-                const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
+                    "September", "Oktober", "November", "Desember"
+                ];
                 return monthNames[month - 1];
             }
 
             function getMonthNumber(monthName) {
-                const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
+                    "September", "Oktober", "November", "Desember"
+                ];
                 return monthNames.indexOf(monthName) + 1;
             }
 
-            function setupWeekButtons(current_line, year, month, activeWeek) {
+            function setupWeekButtons(line, year, month) {
                 const weeksList = document.getElementById('weeksList');
-                weeksList.innerHTML = '';  // Clear existing buttons
+                weeksList.innerHTML = ''; // Clear existing buttons
 
                 // Get the start and end dates of the month
                 const startDate = new Date(year, month - 1, 1);
@@ -555,7 +573,10 @@
                     while (startDate.getDay() !== 1) {
                         startDate.setDate(startDate.getDate() + 1);
                     }
-                    startDate.setDate(startDate.getDate() - 7); // Go back 7 days to get the Monday of the previous week
+                    startDate.setDate(startDate.getDate() -
+                        7); // Go back 7 days to get the Monday of the previous week
+                } else {
+                    startDate.setDate(startDate.getDate() - 7); // Go back 7 days even if it is already Monday
                 }
 
                 let currentDate = new Date(startDate);
@@ -564,11 +585,13 @@
 
                 currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
 
+
                 // Loop through the days, ensuring each week runs from Monday to the following Monday
                 while (true) {
                     week.push(formatDate(currentDate)); // Add the current day to the current week
 
-                    if (currentDate.getDay() === 1 && week.length > 1) { // If it's Monday and not the first iteration
+                    if (currentDate.getDay() === 1 && week.length >
+                        1) { // If it's Monday and not the first iteration
                         weeks.push(week); // Complete the current week
                         week = [formatDate(currentDate)]; // Start a new week with this Monday
                     }
@@ -595,29 +618,22 @@
                 weeks.forEach((week, index) => {
                     const weekButton = document.createElement('button');
                     weekButton.textContent = `W${index + 1}`;
-                    weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0';
-                    if (index + 1 === parseInt(activeWeek)) {
-                        weekButton.classList.add('text-purple-600');
-                    } else {
-                        weekButton.classList.add('text-gray-400', 'cursor-not-allowed');
-                    }
+                    weekButton.className =
+                        'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0 hover:text-purple-600 focus:text-purple-600';
                     weekButton.onclick = () => {
-                        if (weekButton.classList.contains('text-purple-600')) {
-                            fetchDataForWeek(current_line, year, month, index + 1);
-                            updateURL(current_line, year, month, index + 1);
-                            document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove('text-purple-600'));
-                            weekButton.classList.add('text-purple-600');
-                            displayWeek(week);
-                        }
+                        fetchDataForWeek(line, year, month, index + 1);
+                        updateURL(line, year, month, index + 1);
+                        document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove(
+                            'text-purple-600'));
+                        weekButton.classList.add('text-purple-600');
+                        displayWeek(week);
                     };
                     weeksList.appendChild(weekButton);
                 });
 
-                // Automatically click the specified week button
-                const params = new URLSearchParams(window.location.search);
-                const weekParam = params.get('week');
-                if (weekParam && weeksList.children[weekParam - 1]) {
-                    weeksList.children[weekParam - 1].click(); // Click the specified week
+                // Automatically click the first week button
+                if (weeksList.children.length > 0) {
+                    // weeksList.children[0].click(); // Using children[0] to ensure it's an element
                 }
             }
 
@@ -641,24 +657,91 @@
                         const dayElement = document.getElementById(`day${index + 1}`);
                         const dateParts = date.split(" ");
                         dayElement.children[0].textContent = dateParts[0]; // Day name
-                        dayElement.children[1].textContent = `${dateParts[1]} ${dateParts[2]} ${dateParts[3]}`; // Full date
+                        dayElement.children[1].textContent =
+                            `${dateParts[1]} ${dateParts[2]} ${dateParts[3]}`; // Full date
                     }
                 });
             }
 
             function setupAutoRefresh() {
+                const url = window.location.href;
+
+                // // Create a URL object
+                // const urlObj = new URL(url);
+
+                // // Extract parameters
+                // const line = urlObj.pathname.split('/')[2]; // Extracts 'Line1' from the pathname
+                // const year = urlObj.searchParams.get('year');
+                // const month = urlObj.searchParams.get('month');
+                // const week = urlObj.searchParams.get('week');
+
+                // console.log(`Line: ${line}, Year: ${year}, Month: ${month}, Week: ${week}`);
+                // // Call the function with the extracted parameters
+                // fetchDataForWeek(line, year, month, week);
+
                 setInterval(() => {
+                    const pathSegments = window.location.pathname.split('/');
+                    const line = pathSegments[2];
                     const params = new URLSearchParams(window.location.search);
-                    const line = params.get('line');
                     const month = params.get('month');
                     const week = params.get('week');
                     const year = params.get('year');
 
+                    console.log(line);
+                    console.log(pathSegments);
+
                     if (line && month && week && year) {
                         fetchDataForWeek(line, year, month, week);
                     }
-                }, 30000); // Refresh every 30 seconds
+
+                    // location.reload();
+                }, 20000); // Refresh every 60 seconds
             }
+
+            editWeekButton.addEventListener('click', function() {
+                const pathSegments = window.location.pathname.split('/');
+                const line = pathSegments[2];
+                const params = new URLSearchParams(window.location.search);
+                const month = params.get('month');
+                const week = params.get('week');
+                const year = params.get('year');
+
+                if (line && month && week && year) {
+                    window.location.href =
+                        `http://127.0.0.1:8000/pjl/${line}/view?line=${line}&year=${year}&month=${month}&week=${week}`;
+                } else {
+                    showAlert('Error: Missing line, year, month, or week.');
+                }
+            });
+
+            async function checkWaitingApprovalStatus() {
+                const pathSegments = window.location.pathname.split('/');
+                const line = pathSegments[2];
+                const params = new URLSearchParams(window.location.search);
+                const month = params.get('month');
+                const week = params.get('week');
+                const year = params.get('year');
+
+                const response = await fetch(`http://127.0.0.1:8000/api/showwaitingapprovalcard`);
+                const approvalData = await response.json();
+
+                if (approvalData.WaitingApproval.some(approval =>
+                        approval.year === year &&
+                        approval.month === month &&
+                        approval.week === week &&
+                        approval.current_line === line &&
+                        approval.is_sent === 1)) {
+                    const editWeekButton = document.getElementById('editWeekButton');
+                    editWeekButton.disabled = true;
+                    editWeekButton.classList.add('cursor-not-allowed', 'opacity-50');
+                    editWeekButton.classList.remove('hover:bg-blue-600');
+                }
+            }
+
+            // Panggil fungsi ini setelah DOM content loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                checkWaitingApprovalStatus();
+            });
 
             function combineWeeklyMachines(machines) {
                 const machineMap = new Map();
@@ -673,149 +756,9 @@
 
                 return Array.from(machineMap.values());
             }
-
-            // Add event listener for download button
-            document.getElementById('downloadPDFButton').addEventListener('click', downloadPDF);
-
-            async function downloadPDF() {
-                const doc = new jsPDF(); // Pastikan jsPDF telah diinisialisasi dengan benar
-
-                // Get the header days and machine names
-                const headerDays = [];
-                const tableHeaders = ['Mesin'];
-
-                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-
-                for (let i = 1; i <= 8; i++) {
-                    const dayElement = document.getElementById(`day${i}`);
-                    if (dayElement) {
-                        const headerDate = dayElement.children[1].textContent.trim();
-                        const dateParts = headerDate.split(' ');
-                        const dateObj = new Date(dateParts[1] + ' ' + dateParts[2] + ', ' + dateParts[3]);
-                        const day = days[dateObj.getDay()];
-                        const date = `${day}, ${dateParts[1]} ${dateParts[2]} ${dateParts[3]}`;
-                        headerDays.push(date);
-                        tableHeaders.push(date);
-                    }
-                }
-
-                // Gather table data
-                const tableData = [];
-                const dataContainer = document.getElementById('dataContainer');
-                const machineRows = dataContainer.querySelectorAll('.grid');
-
-                machineRows.forEach(machineRow => {
-                    const machineName = machineRow.querySelector('.mesin-jpm .text-sm').textContent.trim();
-                    const rowData = [machineName];
-
-                    for (let i = 1; i <= 8; i++) {
-                        const dayDataElement = machineRow.querySelector(`#daydata${machineRow.id.split('-')[1]}-${i}`);
-                        if (dayDataElement) {
-                            const dayData = Array.from(dayDataElement.children).map(entry => entry.textContent.trim()).join('\n');
-                            rowData.push(dayData);
-                        } else {
-                            rowData.push('');
-                        }
-                    }
-
-                    tableData.push(rowData);
-                });
-
-                // Generate PDF using autoTable
-                doc.autoTable({
-                    head: [tableHeaders],
-                    body: tableData,
-                    startY: 10,
-                    theme: 'grid',
-                    styles: {
-                        fontSize: 8,
-                        cellPadding: 2,
-                    },
-                    headStyles: {
-                        fillColor: [22, 160, 133],
-                        textColor: [255, 255, 255],
-                    }
-                });
-
-                doc.save('machine_operations.pdf');
-            }
-       
-
-        async function fetchWeeks(line, year, month, week) {
-            try {
-                const response = await axios.get(`/api/v1/weeks?line=${line}&year=${year}&month=${month}`);
-                const weeks = response.data;
-
-                displayWeeks(weeks, line, year, month, week);
-            } catch (error) {
-                console.error('Error fetching weeks:', error);
-            }
-        }
-
-        async function fetchMachineSchedule(line, year, month, week) {
-            try {
-                const response = await axios.get(`/api/v1/schedule?line=${line}&year=${year}&month=${month}&week=${week}`);
-                const schedule = response.data;
-
-                displaySchedule(schedule);
-            } catch (error) {
-                console.error('Error fetching schedule:', error);
-            }
-        }
-
-        function displayWeeks(weeks, line, year, month, selectedWeek) {
-            const weeksList = document.getElementById('weeksList');
-            weeksList.innerHTML = '';
-
-            weeks.forEach(week => {
-                const button = document.createElement('button');
-                button.textContent = `Week ${week.number}`;
-                button.classList.add('mx-1', 'px-2', 'py-1', 'rounded', selectedWeek == week.number ? 'bg-blue-600' : 'bg-gray-200');
-
-                button.addEventListener('click', () => {
-                    fetchMachineSchedule(line, year, month, week.number);
-                    highlightSelectedWeek(week.number);
-                });
-
-                weeksList.appendChild(button);
-            });
-        }
-
-        function displaySchedule(schedule) {
-            const daysContainer = document.getElementById('headerDays');
-            const dataContainer = document.getElementById('dataContainer');
-
-            // Populate header with dates
-            for (let i = 1; i <= 8; i++) {
-                document.getElementById(`day${i}`).querySelector('span:last-child').textContent = schedule.dates[i - 1];
-            }
-
-            // Populate schedule data
-            const columns = dataContainer.querySelectorAll('.day-column');
-            columns.forEach((column, columnIndex) => {
-                column.innerHTML = '';
-                schedule.data.forEach(row => {
-                    const entry = row[columnIndex];
-                    const button = document.createElement('button');
-                    button.textContent = entry.text;
-                    button.classList.add('entry-button', 'bg-gray-300', 'rounded');
-
-                    column.appendChild(button);
-                });
-            });
-
-            daysContainer.style.display = 'block';
-        }
-
-        function highlightSelectedWeek(week) {
-            const weeksList = document.getElementById('weeksList');
-            weeksList.querySelectorAll('button').forEach(button => {
-                button.classList.toggle('bg-blue-600', button.textContent.includes(`Week ${week}`));
-                button.classList.toggle('bg-gray-200', !button.textContent.includes(`Week ${week}`));
-            });
-        }
-    });
-
+        });
     </script>
+
 </body>
+
 </html>

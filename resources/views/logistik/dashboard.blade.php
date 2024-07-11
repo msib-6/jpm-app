@@ -18,7 +18,7 @@
         <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between"
             style="width: 100%;">
             <h3 id="title" class="text-3xl font-bold relative z-10">
-                <span id="line-display">Logistik</span>
+                <span id="line-display">Histori Perubahan</span>
             </h3>
             <button id="exportPDF" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Export to
                 PDF</button>
@@ -177,7 +177,7 @@
             } = window.jspdf;
             const doc = new jsPDF('landscape');
 
-            doc.text('Logistik', 14, 16);
+            doc.text('Histori Logistik', 14, 16);
 
             const lineFilter = document.getElementById('lineFilter').value;
             const statusFilter = document.getElementById('statusFilter').value;
@@ -205,7 +205,7 @@
                 theme: 'striped',
             });
 
-            doc.save('logistik.pdf');
+            doc.save('HistoriLog.pdf');
         }
 
         document.addEventListener('DOMContentLoaded', function() {

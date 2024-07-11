@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
-
+use Illuminate\Support\Facades\Log;
 
 class ManagerController extends Controller
 {
@@ -292,7 +292,7 @@ class ManagerController extends Controller
 
         if ($manager) {
             $manager->update([
-                'revision_number' => $manager->revision_number + 1,
+                // 'revision_number' => $manager->revision_number + 1, // ini revisi number jalan jika return kangsung tanpa approved dahulu
                 'return_notes' => $returnNotes,
             ]);
         } else {
@@ -301,7 +301,7 @@ class ManagerController extends Controller
                 'year' => $year,
                 'month' => $month,
                 'week' => $week,
-                'revision_number' => 1, // Starting revision number if creating new
+                // 'revision_number' => 1, // Starting revision number if creating new
                 'return_notes' => $returnNotes,
             ]);
         }
@@ -328,7 +328,7 @@ class ManagerController extends Controller
         try {
             Mail::to($recipients)->send(new NotificationEmail());
         } catch (\Exception $e) {
-            \Log::error('Error sending email: ' . $e->getMessage());
+            Log::error('Error sending email: ' . $e->getMessage());
             return response()->json(['error' => 'Failed to send email: ' . $e->getMessage()], 500);
         }
 
@@ -351,7 +351,7 @@ class ManagerController extends Controller
         try {
             Mail::to($recipients)->send(new RejectionEmail());
         } catch (\Exception $e) {
-            \Log::error('Error sending email: ' . $e->getMessage());
+            Log::error('Error sending email: ' . $e->getMessage());
             return response()->json(['error' => 'Failed to send email: ' . $e->getMessage()], 500);
         }
 

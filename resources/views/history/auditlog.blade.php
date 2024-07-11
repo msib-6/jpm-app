@@ -17,43 +17,48 @@
                 <h1 class="text-left text-4xl font-bold text-gray-800">
                     Audit Trail
                 </h1>
-                <button id="exportPDF" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-800">Export to PDF</button>
+                <button id="exportPDF" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-800">Export
+                    to PDF</button>
             </div>
 
             <hr class="mt-5">
 
             @foreach ($list as $item)
                 <div class="audit-item bg-white p-4 shadow-md rounded-md mb-2">
-                    <p>Action: <span class="text-green-500">
-                            @if ($item['event'] == 'send_revision')
-                                Send JPM Week {{ $item['changes']['original_state'][0]['week'] }}
-                            @elseif ($item['event'] == 'add')
-                                ADD
-                            @elseif ($item['event'] == 'delete')
-                                DELETE
-                            @elseif ($item['event'] == 'edit')
-                                EDIT
-                            @else
-                                {{ strtoupper($item['event']) }}
-                            @endif
-                        </span></p>
+                    <p>Action: 
+                        @if ($item['event'] == 'send_revision')
+                            <span class="text-blue-600">Send JPM Form</span>
+                        @elseif ($item['event'] == 'add')
+                            <span class="text-green-600">ADD</span>
+                        @elseif ($item['event'] == 'delete')
+                            <span class="text-red-600">DELETE</span>
+                        @elseif ($item['event'] == 'edit')
+                            <span class="text-yellow-600">EDIT</span>
+                        @elseif ($item['event'] == 'approve')
+                            <span class="text-purple-600">APPROVE</span>
+                        @elseif ($item['event'] == 'return')
+                            <span class="text-orange-600">RETURN</span>
+                        @else
+                            <span class="text-gray-600">{{ strtoupper($item['event']) }}</span>
+                        @endif
+                    </p>
 
                     @if ($item['event'] == 'send_revision')
                         @php
-                            $date = \Carbon\Carbon::parse(
-                                $item['timestamp'],
-                                )->setTimezone('Asia/Jakarta');
+                            $date = \Carbon\Carbon::parse($item['timestamp'])->setTimezone('Asia/Jakarta');
                             $formattedDate = $date->format('d F Y');
                             $formattedTime = $date->format('H:i');
                         @endphp
                         <p>Data Week <span
-                                class="text-green-500">{{ $item['changes']['original_state'][0]['week'] }}</span>,
-                             telah berhasil dikirim pada tanggal {{ $formattedDate }}, pukul
-                            {{ $formattedTime }}</p>
+                                class="text-blue-600">{{ $item['changes']['original_state'][0]['week'] }}</span>,
+                            telah berhasil dikirim pada tanggal <span class="text-blue-600"> {{ $formattedDate }} </span> pukul
+                            <span class="text-blue-600">{{ $formattedTime }}</span> Oleh
+                            <span class="text-blue-600">{{ $item['fullname'] }}</span>
+                        </p>
                     @elseif ($item['event'] == 'add')
                         <p>Pada LINE: <span
-                                class="text-green-500">{{ $item['changes']['new_state']['line'] ?? 'N/A' }}</span>, Week
-                            <span class="text-green-500">{{ $item['changes']['new_state']['week'] ?? 'N/A' }}</span>,
+                                class="text-green-600">{{ $item['changes']['new_state']['line'] ?? 'N/A' }}</span>, Week
+                            <span class="text-green-600">{{ $item['changes']['new_state']['week'] ?? 'N/A' }}</span>,
                             @if ($item['changes']['new_state'] == null)
                                 {{ $item['changes']['new_state']['day'] ?? 'N/A' }}
                                 {{ $item['changes']['new_state']['updated_at'] == null ? 'N/A' : \Carbon\Carbon::parse($item['changes']['new_state']['updated_at'])->format('F') }}
@@ -61,13 +66,12 @@
                             @else
                             @endif
                             Kode Ruah <span
-                                class="text-green-500">{{ $item['changes']['new_state']['code'] ?? 'N/A' }}</span>,
+                                class="text-green-600">{{ $item['changes']['new_state']['code'] ?? 'N/A' }}</span>,
                             Status: <span
-                                class="text-green-500">{{ $item['changes']['new_state']['status'] ?? 'N/A' }}</span>,
+                                class="text-green-600">{{ $item['changes']['new_state']['status'] ?? 'N/A' }}</span>,
                             Catatan: <span
-                                class="text-green-500">{{ $item['changes']['new_state']['notes'] ?? 'N/A' }}</span>
-                            telah ditambahkan oleh <span
-                                class="text-green-500">{{ $item['fullname'] }}</span>
+                                class="text-green-600">{{ $item['changes']['new_state']['notes'] ?? 'N/A' }}</span>
+                            telah ditambahkan oleh <span class="text-green-500">{{ $item['fullname'] }}</span>
                         </p>
                     @elseif ($item['event'] == 'delete')
                         @php
@@ -78,19 +82,19 @@
                             $formattedTime = $date->format('H:i');
                         @endphp
                         <p>Pada LINE: <span
-                                class="text-green-500">{{ $item['changes']['original_state']['line'] ?? 'N/A' }}</span>,
+                                class="text-red-600">{{ $item['changes']['original_state']['line'] ?? 'N/A' }}</span>,
                             Week <span
-                                class="text-green-500">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
+                                class="text-red-600">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
                             {{ $item['changes']['original_state']['day'] ?? 'N/A' }}
                             {{ $item['changes']['original_state']['updated_at'] == null ? 'NA' : \Carbon\Carbon::parse($item['changes']['original_state']['updated_at'])->format('F') }}
                             {{ $item['changes']['original_state']['year'] ?? 'N/A' }}, Kode Ruah <span
-                                class="text-green-500">{{ $item['changes']['original_state']['code'] ?? 'N/A' }}</span>,
+                                class="text-red-600">{{ $item['changes']['original_state']['code'] ?? 'N/A' }}</span>,
                             Jam <span
-                                class="text-green-500">{{ $item['changes']['original_state']['time'] ?? 'N/A' }}</span>,
+                                class="text-red-600">{{ $item['changes']['original_state']['time'] ?? 'N/A' }}</span>,
                             description <span
-                                class="text-green-500">{{ $item['changes']['original_state']['description'] ?? 'N/A' }}</span>
+                                class="text-red-600">{{ $item['changes']['original_state']['description'] ?? 'N/A' }}</span>
                             dihapus oleh <span
-                                class="text-green-500">{{ $item['changes']['original_state']['changedBy'] ?? 'N/A' }}</span>
+                                class="text-red-600">{{ $item['changes']['original_state']['changedBy'] ?? 'N/A' }}</span>
                             pada {{ $formattedDate }} pukul {{ $formattedTime }}</p>
                     @elseif ($item['event'] == 'edit')
                         @php
@@ -104,29 +108,73 @@
                             $formattedNewTime = $newDate->format('H:i');
                         @endphp
                         <p>Pada LINE: <span
-                                class="text-green-500">{{ $item['changes']['original_state']['line'] ?? 'N/A' }}</span>,
+                                class="text-yellow-600">{{ $item['changes']['original_state']['line'] ?? 'N/A' }}</span>,
                             Week <span
-                                class="text-green-500">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
+                                class="text-yellow-600">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
                             {{ $item['changes']['original_state']['day'] ?? 'N/A' }}
                             {{ \Carbon\Carbon::parse($item['changes']['original_state']['updated_at'])->format('F') ?? 'N/A' }}
                             {{ $item['changes']['original_state']['year'] ?? 'N/A' }}, Kode Ruah <span
-                                class="text-green-500">{{ $item['changes']['original_state']['code'] ?? 'N/A' }}</span>,
+                                class="text-yellow-600">{{ $item['changes']['original_state']['code'] ?? 'N/A' }}</span>,
                             Status: <span
-                                class="text-green-500">{{ $item['changes']['original_state']['status'] ?? 'N/A' }}</span>,
+                                class="text-yellow-600">{{ $item['changes']['original_state']['status'] ?? 'N/A' }}</span>,
                             Catatan: <span
-                                class="text-green-500">{{ $item['changes']['original_state']['notes'] ?? 'N/A' }}</span>
+                                class="text-yellow-600">{{ $item['changes']['original_state']['notes'] ?? 'N/A' }}</span>
                             telah diubah oleh <span
-                                class="text-green-500">{{ $item['changes']['new_state']['users_id'] ?? 'N/A' }}</span>
+                                class="text-yellow-600">{{ $item['changes']['new_state']['users_id'] ?? 'N/A' }}</span>
                             pada {{ $formattedOriginalDate }} pukul {{ $formattedOriginalTime }} menjadi Kode Ruah
-                            <span class="text-green-500">{{ $item['changes']['new_state']['code'] ?? 'N/A' }}</span>,
+                            <span class="text-yellow-600">{{ $item['changes']['new_state']['code'] ?? 'N/A' }}</span>,
                             Status: <span
-                                class="text-green-500">{{ $item['changes']['new_state']['status'] ?? 'N/A' }}</span>,
+                                class="text-yellow-600">{{ $item['changes']['new_state']['status'] ?? 'N/A' }}</span>,
                             Catatan: <span
-                                class="text-green-500">{{ $item['changes']['new_state']['notes'] ?? 'N/A' }}</span> ke
+                                class="text-yellow-600">{{ $item['changes']['new_state']['notes'] ?? 'N/A' }}</span> ke
                             tanggal <span
-                                class="text-green-500">{{ $item['changes']['new_state']['day'] ?? 'N/A' }}</span>
+                                class="text-yellow-600">{{ $item['changes']['new_state']['day'] ?? 'N/A' }}</span>
                             {{ \Carbon\Carbon::parse($item['changes']['new_state']['updated_at'])->format('F') ?? 'N/A' }}
                             {{ $item['changes']['new_state']['year'] ?? 'N/A' }}
+                        </p>
+                    @elseif ($item['event'] == 'approve')
+                        @php
+                            // Pastikan timestamp tidak null
+                            $timestamp = $item['timestamp'] ?? null;
+                            if ($timestamp) {
+                                $date = \Carbon\Carbon::parse($timestamp)->setTimezone('Asia/Jakarta');
+                                $formattedDate = $date->format('d F Y');
+                                $formattedTime = $date->format('H:i');
+                            } else {
+                                $formattedDate = 'N/A';
+                                $formattedTime = 'N/A';
+                            }
+
+                            // Pastikan changes dan original_state tidak null
+                            $week = $item['changes']['original_state'][0]['week'] ?? 'N/A';
+                            $fullname = $item['fullname'] ?? 'N/A';
+                        @endphp
+                        <p>Data Week <span class="text-purple-600">{{ $week }}</span>,
+                            telah berhasil approve pada tanggal <span class="text-purple-600"> {{ $formattedDate }} </span> pukul
+                            <span class="text-purple-600">{{ $formattedTime }}</span> Oleh
+                            <span class="text-purple-600">{{ $fullname }}</span>
+                        </p>
+                        @elseif ($item['event'] == 'return')
+                        @php
+                            // Pastikan timestamp tidak null
+                            $timestamp = $item['timestamp'] ?? null;
+                            if ($timestamp) {
+                                $date = \Carbon\Carbon::parse($timestamp)->setTimezone('Asia/Jakarta');
+                                $formattedDate = $date->format('d F Y');
+                                $formattedTime = $date->format('H:i');
+                            } else {
+                                $formattedDate = 'N/A';
+                                $formattedTime = 'N/A';
+                            }
+
+                            // Pastikan changes dan original_state tidak null
+                            $week = $item['changes']['original_state'][0]['week'] ?? 'N/A';
+                            $fullname = $item['fullname'] ?? 'N/A';
+                        @endphp
+                        <p>Data Week <span class="text-orange-600">{{ $week }}</span>,
+                            telah berhasil di return pada tanggal <span class="text-orange-600"> {{ $formattedDate }} </span> pukul
+                            <span class="text-orange-600">{{ $formattedTime }}</span> Oleh
+                            <span class="text-orange-600">{{ $fullname }}</span>
                         </p>
                     @else
                         <p>{{ json_encode($item) }}</p>
@@ -145,12 +193,14 @@
         </div>
     </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <script src="{{ asset('js/jspdf.umd.min.js') }}"></script>
+    <script src="{{ asset('js/jspdf.plugin.autotable.js') }}"></script>
     <script>
-        document.getElementById('exportPDF').addEventListener('click', function () {
+        document.getElementById('exportPDF').addEventListener('click', function() {
             console.log("Button clicked");
-            const { jsPDF } = window.jspdf;
+            const {
+                jsPDF
+            } = window.jspdf;
             const doc = new jsPDF();
 
             doc.text('Audit Log', 10, 10);
@@ -166,7 +216,9 @@
             });
 
             doc.autoTable({
-                head: [['No', 'Action', 'Details']],
+                head: [
+                    ['No', 'Action', 'Details']
+                ],
                 body: data
             });
 

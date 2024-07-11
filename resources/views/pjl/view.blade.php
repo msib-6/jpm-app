@@ -1171,16 +1171,16 @@
                     const machineRow = document.createElement('div');
                     machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                     machineRow.innerHTML = `
-            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                <div class="flex flex-col justify-center items-center w-9/12 h-full">
-                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                        ${category}
-                    </span>
-                    <span class="text-sm">${machine.machine_name}</span>
-                </div>
-            </div>
-        `;
+                        <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                            <div class="flex flex-col justify-center items-center w-9/12 h-full">
+                                <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                                    ${category}
+                                </span>
+                                <span class="text-sm">${machine.machine_name}</span>
+                            </div>
+                        </div>
+                    `;
 
                     for (let i = 1; i <= 8; i++) {
                         const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
@@ -1195,8 +1195,8 @@
                     dataContainer.appendChild(machineRow);
 
                     // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
-                    const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
-                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) || [];
+                    const machineOperations = machineOperationsMap.get(machine.id) || [];
+                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id) || [];
                     const allMachineOperations = [...machineOperations, ...machineOperationsNextWeek];
 
                     allMachineOperations.sort((a, b) => {
@@ -1208,6 +1208,7 @@
                     });
 
                     allMachineOperations.forEach(operation => {
+                        console.log(`Looking for element with ID: daydata${machine.machine_id}-${operation.day}`);
                         const dayColumn = document.getElementById(`daydata${machine.machine_id}-${operation.day}`);
                         if (dayColumn) {
                             const entry = document.createElement('button');
@@ -1259,6 +1260,8 @@
                             };
 
                             dayColumn.appendChild(entry);
+                        } else {
+                            console.error(`Element with ID daydata${machine.machine_id}-${operation.day} not found`);
                         }
                     });
 
@@ -1331,6 +1334,7 @@
                     };
                 });
             }
+
 
 
             function showNotesPopup(event, notes) {
