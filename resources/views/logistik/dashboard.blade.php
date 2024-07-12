@@ -20,8 +20,12 @@
             <h3 id="title" class="text-3xl font-bold relative z-10">
                 <span id="line-display">Histori Perubahan</span>
             </h3>
-            <button id="exportPDF" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Export to
-                PDF</button>
+            <div>
+                <button id="exportPDF" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">Export
+                    to PDF</button>
+                <button id="exportExcel"
+                    class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Export to Excel</button>
+            </div>
         </div>
 
         <!-- Header for Data -->
@@ -123,7 +127,7 @@
                         lines.add(formattedLine);
 
                         const row = document.createElement('div');
-                        row.className = 'grid grid-cols-8 gap-4 text-center p-2';
+                        row.className = 'grid grid-cols-8 gap-4 text-center p-2 text-sm';
                         row.innerHTML = `
                     <div class="col-span-1">${formattedDate}</div>
                     <div class="col-span-1">${newState.time}</div>
@@ -208,17 +212,41 @@
             doc.save('HistoriLog.pdf');
         }
 
+        function exportToExcel() {
+            const workbook = XLSX.utils.book_new();
+            const lineFilter = document.getElementById('lineFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            const rows = Array.from(document.querySelectorAll('#dataContainer > div')).filter(row => {
+                const line = row.children[3].textContent.trim();
+                const status = row.children[7].textContent.trim();
+                return (lineFilter === 'all' || line === lineFilter) && (statusFilter === 'all' || status === statusFilter);
+            }).map(row => {
+                return Array.from(row.children).map(cell => cell.textContent.trim());
+            });
+
+            const headers = [
+                ['Tanggal', 'Jam', 'Week', 'Line', 'Kode Produk', 'No Batch', 'Data Update JPM', 'Status']
+            ];
+
+            const worksheet = XLSX.utils.aoa_to_sheet([...headers, ...rows]);
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'HistoriLogistik');
+            XLSX.writeFile(workbook, 'HistoriLog.xlsx');
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             fetchAuditData();
 
             document.getElementById('lineFilter').addEventListener('change', filterData);
             document.getElementById('statusFilter').addEventListener('change', filterData);
             document.getElementById('exportPDF').addEventListener('click', exportToPDF);
+            document.getElementById('exportExcel').addEventListener('click', exportToExcel);
         });
     </script>
 
     <script src="{{ asset('js/jspdf.umd.min.js') }}"></script>
     <script src="{{ asset('js/jspdf.plugin.autotable.js') }}"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </body>
 
 </html>

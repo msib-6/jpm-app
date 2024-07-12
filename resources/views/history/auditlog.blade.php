@@ -81,20 +81,15 @@
                             $formattedDate = $date->format('d F Y');
                             $formattedTime = $date->format('H:i');
                         @endphp
-                        <p>Pada LINE: <span
-                                class="text-red-600">{{ $item['changes']['original_state']['line'] ?? 'N/A' }}</span>,
-                            Week <span
-                                class="text-red-600">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
-                            {{ $item['changes']['original_state']['day'] ?? 'N/A' }}
+                        <p>Pada Line: <span class="text-red-600">{{ $item['changes']['original_state']['line'] ?? 'N/A' }}</span>,
+                            Week <span class="text-red-600">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
+                            Tanggal <span class="text-red-600">{{ $item['changes']['original_state']['day'] ?? 'N/A' }}
                             {{ $item['changes']['original_state']['updated_at'] == null ? 'NA' : \Carbon\Carbon::parse($item['changes']['original_state']['updated_at'])->format('F') }}
-                            {{ $item['changes']['original_state']['year'] ?? 'N/A' }}, Kode Ruah <span
-                                class="text-red-600">{{ $item['changes']['original_state']['code'] ?? 'N/A' }}</span>,
-                            Jam <span
-                                class="text-red-600">{{ $item['changes']['original_state']['time'] ?? 'N/A' }}</span>,
-                            description <span
-                                class="text-red-600">{{ $item['changes']['original_state']['description'] ?? 'N/A' }}</span>
-                            dihapus oleh <span
-                                class="text-red-600">{{ $item['changes']['original_state']['changedBy'] ?? 'N/A' }}</span>
+                            {{ $item['changes']['original_state']['year'] ?? 'N/A' }}</span>,
+                             Kode Ruah <span class="text-red-600">{{ $item['changes']['original_state']['code'] ?? 'N/A' }}</span>,
+                            Jam <span class="text-red-600">{{ $item['changes']['original_state']['time'] ?? 'N/A' }}</span>,
+                            description <span class="text-red-600">{{ $item['changes']['original_state']['description'] ?? 'N/A' }}</span>
+                            dihapus oleh <span class="text-red-600">{{ $item['changes']['original_state']['changedBy'] ?? 'N/A' }}</span>
                             pada {{ $formattedDate }} pukul {{ $formattedTime }}</p>
                     @elseif ($item['event'] == 'edit')
                         @php
@@ -107,7 +102,7 @@
                             $formattedNewDate = $newDate->format('d F Y');
                             $formattedNewTime = $newDate->format('H:i');
                         @endphp
-                        <p>Pada LINE: <span
+                        <p>Pada Line: <span
                                 class="text-yellow-600">{{ $item['changes']['original_state']['line'] ?? 'N/A' }}</span>,
                             Week <span
                                 class="text-yellow-600">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
