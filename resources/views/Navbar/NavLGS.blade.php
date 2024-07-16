@@ -1,13 +1,19 @@
 <!-- SIDEBAR -->
 <section id="sidebar" class="hide">
     <a href="#" class="brand" style="display: flex; justify-content: center;">
-        <img class='bx bxs-smile mt-10 p-2 ml-2' src="{{ asset('Logo-Kalbe.0cf6623a.svg') }}" style="max-width: 150px; max-height: 140px; width: auto; height: auto;">
+        <img class='bx bxs-smile mt-10 p-1' src="{{ asset('Logo-Kalbe.0cf6623a.svg') }}" style="max-width: 150px; max-height: 140px; width: auto; height: auto;">
     </a>
     <ul class="side-menu top">
-        <li id="nav-dashboard" class="side-item">
-            <a href="{{ route('logistik.dashboard') }}">
-                <i class='bx bxs-doughnut-chart'></i>
-                <span class="text">Status</span>
+    <li id="nav-jpm" class="side-item">
+            <a href="{{ route('logistik.dashboard', ['line' => Auth::user()->role]) }}">
+                <i class='bx bxs-dashboard'></i>
+                <span class="text">History</span>
+            </a>
+        </li>
+        <li id="nav-pm" class="side-item">
+            <a href="{{ route('logistik.rawdata', ['line' => Auth::user()->role]) }}">
+                <i class='bx bx-grid'></i>
+                <span class="text">RawData</span>
             </a>
         </li>
     </ul>
@@ -23,7 +29,7 @@
         <div class="profile" style="position: relative;">
             <img src="{{ asset('profile.png') }}" id="profileImage" style="cursor: pointer;">
             <div class="dropdown" id="profileDropdown" style="display: none; position: absolute; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; z-index: 1000; width: 100px; opacity: 0; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease;">
-                <div class="py-0">
+            <div class="py-0">
                     <a href="#" id="signOut" class="block px-4 py-2 text-sm text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" style="display: block; width: 100%; transition: background-color 0.3s ease;">Sign out</a>
                 </div>
             </div>
@@ -35,11 +41,11 @@
     <div id="main-content"></div>
 </section>
 
-<!-- CONTENT -->
 
-<script>
+	</section>
+	<script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Function to remove 'active' class from all sidebar items
+    // Fungsi untuk menghapus kelas 'active' dari semua elemen sidebar
     function removeActiveClass() {
         const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li');
         allSideMenu.forEach(item => {
@@ -47,13 +53,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Function to set 'active' class to the relevant sidebar item
+    // Fungsi untuk menetapkan kelas 'active' ke elemen sidebar yang relevan
     function setActiveNavItem(activeId) {
         removeActiveClass();
         document.getElementById(activeId).classList.add('active');
     }
 
-    // Function to load content based on URL and set the active sidebar item
+    // Fungsi untuk memuat konten berdasarkan URL dan menetapkan elemen sidebar yang aktif
     function loadContent(url, activeId) {
         axios.get(url)
             .then(function (response) {
@@ -65,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    // Set event listener for elements with data-link
+    // Mengatur event listener untuk elemen dengan data-link
     document.querySelectorAll('[data-link]').forEach(function (link) {
         link.addEventListener('click', function (e) {
             e.preventDefault();
@@ -76,36 +82,42 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Set active sidebar item based on the URL when the page loads
+    // Menetapkan elemen sidebar yang aktif berdasarkan URL saat halaman dimuat
     function setInitialActiveItem() {
         const currentUrl = window.location.href;
-        const dashboardUrl = '{{ route('logistik.dashboard') }}';
+        const logistikUrl = '{{ route('logistik.dashboard', ['line' => Auth::user()->role]) }}';
+        const rawdataUrl = '{{ route('logistik.rawdata', ['line' => Auth::user()->role]) }}';
 
-        if (currentUrl === dashboardUrl) {
-            setActiveNavItem('nav-dashboard');
+        if (currentUrl === logistikUrl) {
+            setActiveNavItem('nav-jpm');
+        } else if (currentUrl === rawdataUrl) {
+            setActiveNavItem('nav-pm');
         } else {
-            setActiveNavItem('nav-dashboard'); // Default to Dashboard
+            setActiveNavItem('nav-jpm'); // Default to JPM
         }
     }
 
-    // Load initial content based on the URL when the page loads
+    // Memuat konten awal berdasarkan URL saat halaman dimuat
+ 
     function loadInitialContent() {
         const currentUrl = window.location.href;
-        const dashboardUrl = '{{ route('logistik.dashboard') }}';
+        const logistikUrl = '{{ route('logistik.dashboard', ['line' => Auth::user()->role]) }}';
+        const rawdataUrl = '{{ route('logistik.rawdata', ['line' => Auth::user()->role]) }}';
 
-        if (currentUrl === dashboardUrl) {
-            loadContent(dashboardUrl, 'nav-dashboard');
+        if (currentUrl === logistikUrl) {
+            setActiveNavItem('nav-jpm');
+        } else if (currentUrl === rawdataUrl) {
+            setActiveNavItem('nav-pm');
         } else {
-            loadContent(dashboardUrl, 'nav-dashboard'); // Default to Dashboard
+            setActiveNavItem('nav-jpm'); // Default to JPM
         }
     }
 
-    // Call functions to set the active sidebar item and load initial content
+    // Panggil fungsi untuk menetapkan elemen sidebar yang aktif dan memuat konten awal
     setInitialActiveItem();
     loadInitialContent();
 });
 </script>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const profileImage = document.getElementById('profileImage');

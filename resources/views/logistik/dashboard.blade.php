@@ -12,7 +12,12 @@
     @vite('resources/css/logistik/logistik.css')
 </head>
 
-<body>
+<body style="background-image: url('{{ asset('ELEMECH.png') }}'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
+@extends('logistik.layout')
+
+@section('title', 'Dashboard')
+
+@section('content')
     <div class="container mx-auto px-4">
         <!-- Card Title -->
         <div class="bg-white opacity-75 p-6 rounded-3xl shadow-2xl my-4 mx-auto flex items-center justify-between"
@@ -61,6 +66,9 @@
             <!-- Dynamic rows for machines will be appended here -->
         </div>
     </div>
+    @endsection
+
+@section('scripts')
 
     <script>
         async function fetchAuditData() {
@@ -247,6 +255,7 @@
     <script src="{{ asset('js/jspdf.umd.min.js') }}"></script>
     <script src="{{ asset('js/jspdf.plugin.autotable.js') }}"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    @endsection
 </body>
 
 </html>

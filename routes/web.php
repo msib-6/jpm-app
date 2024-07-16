@@ -38,12 +38,7 @@ Route::get('/summary', function () {
 Route::get('/auditlog', [AuditTrailController::class, 'index']);
 
 
-Route::get('/historilog', function () {
-    return view('logistik.dashboard');
-});
-Route::get('/rawdata', function () {
-    return view('logistik.rawdata');
-});
+
 
 Route::middleware(['auth', 'line'])->group(function () {
     Route::get('/pjl/{line}/dashboard', function ($line) {
@@ -136,6 +131,13 @@ Route::middleware(['auth', 'storage'])->group(function () {
     Route::get('/logistik/dashboard', function () {
         return view('logistik.dashboard');
     })->name('logistik.dashboard');
+
+    Route::get('losgistik/rawdata', function () {
+        return view('logistik.rawdata');
+    })->name('logistik.rawdata');
 });
+
+
+
 
 require __DIR__ . '/auth.php';
