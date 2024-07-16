@@ -8,6 +8,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 
@@ -34,7 +35,7 @@ class AuthenticatedSessionController extends Controller
     $role = ucfirst(strtolower($user->role)); // Ubah huruf pertama menjadi besar
 
     // Log the user's role
-    \Log::info('User role: ' . $role);
+    Log::info('User role: ' . $role);
 
     $lineRoles = [
         'Line1', 'Line2', 'Line3', 'Line4', 'Line5',
@@ -43,25 +44,28 @@ class AuthenticatedSessionController extends Controller
     ];
 
     // Log the line roles
-    \Log::info('Line roles: ' . implode(', ', $lineRoles));
+    Log::info('Line roles: ' . implode(', ', $lineRoles));
 
     if (in_array($role, $lineRoles)) {
-        \Log::info('Redirecting to pjl.line.dashboard with line: ' . $role);
+        Log::info('Redirecting to pjl.line.dashboard with line: ' . $role);
         return redirect()->route('pjl.line.dashboard', ['line' => $role]);
     } else {
-        \Log::info('Role not in line roles');
+        Log::info('Role not in line roles');
     }
 
     // Redirect to the appropriate dashboard based on the user's role
     switch ($role) {
         case 'Admin':
-            \Log::info('Redirecting to /admin');
+            Log::info('Redirecting to /admin');
             return redirect('/admin');
         case 'Manager':
-            \Log::info('Redirecting to /manager/dashboard');
+            Log::info('Redirecting to /manager/dashboard');
             return redirect('/manager/dashboard');
+        case 'Storage':
+            Log::info('Redirecting to /logistik/dashboard');
+            return redirect('/logistik/dashboard');
         default:
-            \Log::info('Redirecting to home');
+            Log::info('Redirecting to home');
             return redirect('/dashboard');
     }
 }
@@ -103,6 +107,8 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('pjl.line.dashboard', ['line' => $user->role]);
             } elseif ($user->role === 'Manager') {
                 return redirect('/manager/dashboard');
+            } elseif ($user->role === 'Storage') {
+                return redirect('/logistik/dashboard');
             } elseif ($user->role === 'Admin') {
                 return redirect('/admin');
             }

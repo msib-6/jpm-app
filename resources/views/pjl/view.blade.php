@@ -403,7 +403,8 @@
                                     </p>
                                 @elseif ($audit['event'] === 'edit' && $newState && $originalState)
                                     @php
-                                        $newUpdatedAt = \Carbon\Carbon::parse($newState['updated_at'])->addHours(7);
+                                        $newUpdatedAt = \Carbon\Carbon::parse($newState['updated_at'])->setTimezone(
+                                        'Asia/Jakarta');
                                         $updatedDate = $newUpdatedAt->format('d F Y');
                                         $updatedTime = $newUpdatedAt->format('H:i');
                                         $originalDate =
@@ -444,21 +445,19 @@
                                     </p>
                                 @elseif ($audit['event'] === 'delete' && $originalState)
                                     <p><strong>Action:</strong> <span class="text-red-600">DELETE</span></p>
-                                    <p>Pada <span class="text-red-600">Week
-                                            {{ $originalState['week'] ?? 'NA' }}</span>,
-                                        Data tanggal <span class="text-red-600">{{ $originalState['day'] ?? 'NA' }}
-                                            {{ $originalState['month'] ?? 'NA' }}
-                                            {{ $originalState['year'] ?? 'NA' }}</span>,
-                                        Mesin <span
-                                            class="text-red-600">{{ $originalState['machine_name'] ?? 'NA' }}</span>
-                                        telah
-                                        dihapus oleh
-                                        <span class="text-red-600">{{ $audit['fullname'] ?? 'NA' }}</span> pada
-                                        tanggal
-                                        <span class="text-red-600">{{ $actionDateFormatted }}</span>
+                                    <p>Pada Line: <span class="text-red-600">{{ $originalState['line'] ?? 'NA'  }}</span>
+                                         Week <span class="text-red-600">{{ $originalState['week'] ?? 'NA' }}</span>,
+                                        Data tanggal <span class="text-red-600">{{ $originalState['day'] ?? 'NA' }} {{ $originalState['month'] == null ? 'N/A' : \Carbon\Carbon::createFromFormat('m', $originalState['month'])->format('F') }} {{ $originalState['year'] ?? 'NA' }}</span>,
+                                        Mesin <span class="text-red-600">{{ $originalState['machine_name'] ?? 'NA' }}</span>,
+                                        Kode Ruah <span class="text-red-600">{{ $originalState['code'] ?? 'NA' }}</span>,
+                                        Jam <span class="text-red-600">{{ $originalState['time'] ?? 'NA' }}</span>,
+                                        Status <span class="text-red-600">{{ $originalState['status'] ?? 'NA' }}</span>,
+                                        Catatan <span class="text-red-600">{{ $originalState['notes'] ?? 'NA' }}</span>,
+                                        telah dihapus oleh <span class="text-red-600">{{ $audit['fullname'] ?? 'NA' }}</span>, 
+                                        pada tanggal <span class="text-red-600">{{ $actionDateFormatted }}</span>
                                     </p>
                                 @elseif ($audit['event'] === 'send_revision' && $newState && $originalState)
-                                    <p><strong>Action:</strong> <span class="text-purple-600">SEND REVISION</span></p>
+                                    <p><strong>Action:</strong> <span class="text-purple-600">SEND JPM FORM</span></p>
                                     <p>Revisi pada <span class="text-purple-600">Week
                                             {{ $originalState['month'] ?? 'NA' }}</span> dikirim pada tanggal
                                         <span class="text-purple-600">{{ $actionDateFormatted }}</span> pukul <span
@@ -1156,7 +1155,7 @@
                     updateURL(line, year, month, week);
                     displayMachineData(operationsData, machinesData, machineInfoMap, week);
                     await fetchAndDisplayGlobalDescriptions
-                (); // Fetch and display global descriptions for the selected week
+                        (); // Fetch and display global descriptions for the selected week
                 } catch (error) {
                     console.error("Error fetching data:", error);
                 }
@@ -1214,7 +1213,7 @@
 
                     for (let i = 1; i <= 8; i++) {
                         const headerDate = document.getElementById(`day${i}`).children[1].textContent
-                    .trim();
+                            .trim();
                         const dateParts = headerDate.split(' ');
                         const day = parseInt(dateParts[0]);
                         const dayColumn = document.createElement('div');
@@ -1297,7 +1296,7 @@
 
                     for (let i = 1; i <= 8; i++) {
                         const headerDate = document.getElementById(`day${i}`).children[1].textContent
-                    .trim();
+                            .trim();
                         const dateParts = headerDate.split(' ');
                         const day = parseInt(dateParts[0]);
                         const dayColumn = document.getElementById(`daydata${machine.machine_id}-${day}`);
@@ -1351,7 +1350,7 @@
                                     if (nextWeekMachine) {
                                         currentMachineIdWeekly = nextWeekMachine.machine_id;
                                         currentMachineId = nextWeekMachine
-                                        .id; // Menggunakan ID dari mesin minggu berikutnya
+                                            .id; // Menggunakan ID dari mesin minggu berikutnya
                                         currentDay = day;
                                     }
                                 }

@@ -236,11 +236,21 @@ class ManagerController extends Controller
             'users_id' => $userId,
             'machineoperation_id' => $machineOperation->id,
             'event' => 'approve',
-            'changes' => 'Approve changes',
+            'changes' => json_encode([
+                    'status' => 'Approve changes',
+                    'week' => $week,
+                    'year' => $year,
+                    'month' => $month,
+                    'line' => $line,
+                    'approved_by' => $approvedBy,
+                ]),
         ]);
 
         return response()->json(['message' => 'Approval successful'], 200);
     }
+
+
+
 
     public function return(Request $request) {
         $userId = $request->input('userId');
@@ -280,10 +290,17 @@ class ManagerController extends Controller
                 'users_id' => $userId,
                 'machineoperation_id' => $machineOperation->id,
                 'event' => 'return',
-                'changes' => 'Return changes',
+                'changes' => json_encode([
+                    'status' => 'Return changes',
+                    'week' => $week,
+                    'year' => $year,
+                    'month' => $month,
+                    'line' => $line,
+                    'rejected_by' => $rejectedBy,
+                    'return_notes' => $returnNotes,
+                ]),
             ]);
         }
-
         $manager = Manager::where('line', $line)
             ->where('year', $year)
             ->where('month', $month)

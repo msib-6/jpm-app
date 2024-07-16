@@ -7,6 +7,7 @@
     <title>Audit Log</title>
     <link href="{{ asset('css/history.css') }}" rel="stylesheet">
     <link href="{{ asset('css/flowbite.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/tailwind.min.css') }}" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100">
@@ -49,14 +50,13 @@
                             $formattedDate = $date->format('d F Y');
                             $formattedTime = $date->format('H:i');
                         @endphp
-                        <p>Data Week <span
-                                class="text-blue-600">{{ $item['changes']['original_state'][0]['week'] }}</span>,
+                        <p>Data Week <span class="text-blue-600">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
                             telah berhasil dikirim pada tanggal <span class="text-blue-600"> {{ $formattedDate }} </span> pukul
                             <span class="text-blue-600">{{ $formattedTime }}</span> Oleh
                             <span class="text-blue-600">{{ $item['fullname'] }}</span>
                         </p>
                     @elseif ($item['event'] == 'add')
-                        <p>Pada LINE: <span
+                        <p>Pada Line: <span
                                 class="text-green-600">{{ $item['changes']['new_state']['line'] ?? 'N/A' }}</span>, Week
                             <span class="text-green-600">{{ $item['changes']['new_state']['week'] ?? 'N/A' }}</span>,
                             @if ($item['changes']['new_state'] == null)
@@ -65,6 +65,8 @@
                                 {{ $item['changes']['new_state']['year'] ?? 'N/A' }}
                             @else
                             @endif
+                            Data tanggal <span class="text-red-600">{{ $item['changes']['new_state']['day'] ?? 'N/A' }}
+                                {{ $item['changes']['new_state']['month'] == null ? 'N/A' : \Carbon\Carbon::createFromFormat('m', $item['changes']['new_state']['month'])->format('F') }} {{ $item['changes']['new_state']['year'] ?? 'N/A' }}</span>,
                             Kode Ruah <span
                                 class="text-green-600">{{ $item['changes']['new_state']['code'] ?? 'N/A' }}</span>,
                             Status: <span
@@ -75,22 +77,29 @@
                         </p>
                     @elseif ($item['event'] == 'delete')
                         @php
-                            $date = \Carbon\Carbon::parse($item['changes']['original_state']['updated_at'])->addHours(
-                                7,
-                            );
-                            $formattedDate = $date->format('d F Y');
-                            $formattedTime = $date->format('H:i');
+                            // $date = \Carbon\Carbon::parse($item['changes']['original_state']['updated_at'])->setTimezone(
+                            //     'Asia/Jakarta',);
+                            $timestamp = $item['timestamp'] ?? null;
+                            if ($timestamp) {
+                                $date = \Carbon\Carbon::parse($timestamp)->setTimezone('Asia/Jakarta');
+                                $formattedDate = $date->format('d F Y');
+                                $formattedTime = $date->format('H:i');
+                            } else {
+                                $formattedDate = 'N/A';
+                                $formattedTime = 'N/A';
+                            };
                         @endphp
                         <p>Pada Line: <span class="text-red-600">{{ $item['changes']['original_state']['line'] ?? 'N/A' }}</span>,
                             Week <span class="text-red-600">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
-                            Tanggal <span class="text-red-600">{{ $item['changes']['original_state']['day'] ?? 'N/A' }}
-                            {{ $item['changes']['original_state']['updated_at'] == null ? 'NA' : \Carbon\Carbon::parse($item['changes']['original_state']['updated_at'])->format('F') }}
-                            {{ $item['changes']['original_state']['year'] ?? 'N/A' }}</span>,
-                             Kode Ruah <span class="text-red-600">{{ $item['changes']['original_state']['code'] ?? 'N/A' }}</span>,
+                            Data tanggal <span class="text-red-600">{{ $item['changes']['original_state']['day'] ?? 'N/A' }}
+                                {{ $item['changes']['original_state']['month'] == null ? 'N/A' : \Carbon\Carbon::createFromFormat('m', $item['changes']['original_state']['month'])->format('F') }} {{ $item['changes']['original_state']['year'] ?? 'N/A' }}</span>,
+                            Mesin <span class="text-red-600">{{ $item['changes']['original_state']['machine_name'] ?? 'N/A' }}</span>,
+                            Kode Ruah <span class="text-red-600">{{ $item['changes']['original_state']['code'] ?? 'N/A' }}</span>,
                             Jam <span class="text-red-600">{{ $item['changes']['original_state']['time'] ?? 'N/A' }}</span>,
-                            description <span class="text-red-600">{{ $item['changes']['original_state']['description'] ?? 'N/A' }}</span>
-                            dihapus oleh <span class="text-red-600">{{ $item['changes']['original_state']['changedBy'] ?? 'N/A' }}</span>
-                            pada {{ $formattedDate }} pukul {{ $formattedTime }}</p>
+                            Catatan <span class="text-red-600">{{ $item['changes']['original_state']['notes'] ?? 'N/A' }}</span>
+                            dihapus oleh <span class="text-red-600">{{ $item['fullname'] }}</span>
+                            pada <span class="text-red-600">{{ $formattedDate }}</span> pukul <span class="text-red-600">{{ $formattedTime }}</span>
+                            </p>
                     @elseif ($item['event'] == 'edit')
                         @php
                             $originalDate = \Carbon\Carbon::parse(
@@ -102,30 +111,22 @@
                             $formattedNewDate = $newDate->format('d F Y');
                             $formattedNewTime = $newDate->format('H:i');
                         @endphp
-                        <p>Pada Line: <span
-                                class="text-yellow-600">{{ $item['changes']['original_state']['line'] ?? 'N/A' }}</span>,
-                            Week <span
-                                class="text-yellow-600">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
-                            {{ $item['changes']['original_state']['day'] ?? 'N/A' }}
+                        <p>Pada Line: <span class="text-yellow-600">{{ $item['changes']['original_state']['line'] ?? 'N/A' }}</span>,
+                            Week <span class="text-yellow-600">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
+                            Pada <span class="text-yellow-600">{{ $item['changes']['original_state']['day'] ?? 'N/A' }}
                             {{ \Carbon\Carbon::parse($item['changes']['original_state']['updated_at'])->format('F') ?? 'N/A' }}
-                            {{ $item['changes']['original_state']['year'] ?? 'N/A' }}, Kode Ruah <span
-                                class="text-yellow-600">{{ $item['changes']['original_state']['code'] ?? 'N/A' }}</span>,
-                            Status: <span
-                                class="text-yellow-600">{{ $item['changes']['original_state']['status'] ?? 'N/A' }}</span>,
-                            Catatan: <span
-                                class="text-yellow-600">{{ $item['changes']['original_state']['notes'] ?? 'N/A' }}</span>
-                            telah diubah oleh <span
-                                class="text-yellow-600">{{ $item['changes']['new_state']['users_id'] ?? 'N/A' }}</span>
-                            pada {{ $formattedOriginalDate }} pukul {{ $formattedOriginalTime }} menjadi Kode Ruah
-                            <span class="text-yellow-600">{{ $item['changes']['new_state']['code'] ?? 'N/A' }}</span>,
-                            Status: <span
-                                class="text-yellow-600">{{ $item['changes']['new_state']['status'] ?? 'N/A' }}</span>,
-                            Catatan: <span
-                                class="text-yellow-600">{{ $item['changes']['new_state']['notes'] ?? 'N/A' }}</span> ke
-                            tanggal <span
-                                class="text-yellow-600">{{ $item['changes']['new_state']['day'] ?? 'N/A' }}</span>
+                            {{ $item['changes']['original_state']['year'] ?? 'N/A' }}</span>, Kode Ruah 
+                            <span class="text-yellow-600">{{ $item['changes']['original_state']['code'] ?? 'N/A' }}</span>,
+                            Status: <span class="text-yellow-600">{{ $item['changes']['original_state']['status'] ?? 'N/A' }}</span>,
+                            Catatan: <span class="text-yellow-600">{{ $item['changes']['original_state']['notes'] ?? 'N/A' }}</span>
+                            telah diubah oleh <span class="text-yellow-600">{{ $item['fullname'] ?? 'N/A' }}</span>
+                            Pada Tanggal <span class="text-yellow-600">{{ $formattedOriginalDate }}</span> pukul <span class="text-yellow-600">{{ $formattedOriginalTime }}</span> menjadi Kode Ruah
+                            <span class="text-blue-600">{{ $item['changes']['new_state']['code'] ?? 'N/A' }}</span>,
+                            Status: <span class="text-blue-600">{{ $item['changes']['new_state']['status'] ?? 'N/A' }}</span>,
+                            Catatan: <span class="text-blue-600">{{ $item['changes']['new_state']['notes'] ?? 'N/A' }}</span> ke
+                            tanggal <span class="text-blue-600">{{ $item['changes']['new_state']['day'] ?? 'N/A' }}
                             {{ \Carbon\Carbon::parse($item['changes']['new_state']['updated_at'])->format('F') ?? 'N/A' }}
-                            {{ $item['changes']['new_state']['year'] ?? 'N/A' }}
+                            {{ $item['changes']['new_state']['year'] ?? 'N/A' }}</span>
                         </p>
                     @elseif ($item['event'] == 'approve')
                         @php
@@ -141,13 +142,15 @@
                             }
 
                             // Pastikan changes dan original_state tidak null
-                            $week = $item['changes']['original_state'][0]['week'] ?? 'N/A';
+                            $week = $item['changes']['week'] ?? 'N/A';
                             $fullname = $item['fullname'] ?? 'N/A';
                         @endphp
-                        <p>Data Week <span class="text-purple-600">{{ $week }}</span>,
-                            telah berhasil approve pada tanggal <span class="text-purple-600"> {{ $formattedDate }} </span> pukul
+                        <p>Pada Line: <span class="text-purple-600">{{ $item['changes']['line'] ?? 'N/A' }}</span>,
+                            Bulan <span class="text-purple-600">{{ $item['changes']['month'] ?? 'N/A' }}</span>,
+                            Data Week <span class="text-purple-600">{{ $week }}</span>,
+                            telah berhasil di Approve pada tanggal <span class="text-purple-600"> {{ $formattedDate }} </span> pukul
                             <span class="text-purple-600">{{ $formattedTime }}</span> Oleh
-                            <span class="text-purple-600">{{ $fullname }}</span>
+                            <span class="text-purple-600">{{ $item['changes']['approved_by'] ?? 'N/A' }}</span>
                         </p>
                         @elseif ($item['event'] == 'return')
                         @php
@@ -163,13 +166,15 @@
                             }
 
                             // Pastikan changes dan original_state tidak null
-                            $week = $item['changes']['original_state'][0]['week'] ?? 'N/A';
+                            $week = $item['changes']['week'] ?? 'N/A';
                             $fullname = $item['fullname'] ?? 'N/A';
                         @endphp
-                        <p>Data Week <span class="text-orange-600">{{ $week }}</span>,
-                            telah berhasil di return pada tanggal <span class="text-orange-600"> {{ $formattedDate }} </span> pukul
-                            <span class="text-orange-600">{{ $formattedTime }}</span> Oleh
-                            <span class="text-orange-600">{{ $fullname }}</span>
+                        <p>Pada Line: <span class="text-orange-600">{{ $item['changes']['line'] ?? 'N/A' }}</span>,
+                        Bulan <span class="text-orange-600">{{ $item['changes']['month'] ?? 'N/A' }}</span>,
+                        Data Week <span class="text-orange-600">{{ $week }}</span>,
+                            telah berhasil di Return pada tanggal <span class="text-orange-600"> {{ $formattedDate }} </span>,
+                            pukul <span class="text-orange-600">{{ $formattedTime }}</span>,
+                            Oleh <span class="text-orange-600">{{ $item['changes']['rejected_by'] ?? 'N/A' }}</span>
                         </p>
                     @else
                         <p>{{ json_encode($item) }}</p>
@@ -198,7 +203,7 @@
             } = window.jspdf;
             const doc = new jsPDF();
 
-            doc.text('Audit Log', 10, 10);
+            doc.text('Audit Trail', 10, 10);
 
             const items = document.querySelectorAll('.audit-item');
             const data = [];
@@ -217,7 +222,7 @@
                 body: data
             });
 
-            doc.save('audit_log.pdf');
+            doc.save('audit_trail.pdf');
         });
     </script>
 </body>

@@ -13,7 +13,7 @@ class AuditTrailController extends Controller
     function index()
     {
         // Number of items per page
-        $perPage = 10;
+        $perPage = 20;
 
         // Retrieve paginated data
         $data = Audits::query()
@@ -45,6 +45,7 @@ class AuditTrailController extends Controller
                 'fullname' => $item->user == null ? 'NA' : $item->user->name,
                 'event' => $item->event,
                 'mesin' => $adding,
+                'week' => $adding,
                 'timestamp' => Carbon::parse($item->created_at)->format('d M Y H:i:s'),
                 'return' => $item->changes,
                 'line' => $item->user == null ? 'NA' : $item->user->role,
