@@ -185,7 +185,15 @@
             let currentOperationId;
             let currentGlobalDescId;
             let currentMachineDataId;
+            const urlParams = new URLSearchParams(window.location.search);
+            const week = urlParams.get('week');
 
+            if (week === '1') {
+                const editButton = document.getElementById('editWeekButton');
+                if (editButton) {
+                    editButton.style.display = 'none';
+                }
+            }
 
             getQueryParams();
             setupAutoRefresh();
