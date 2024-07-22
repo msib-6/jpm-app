@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Machine;
 use App\Models\GlobalDescription;
 use App\Models\MachineData;
@@ -20,43 +21,52 @@ class ManagerController extends Controller
 {
 
     //Show waiting approval in card
-    public function showWaitingApprovalCard(){
+    public function showWaitingApprovalCard()
+    {
         $waitingApproval = MachineOperation::where('is_approved', false)
-                                           ->where('is_sent', true)
-                                           ->get();
+            ->where('is_sent', true)
+            //    ->limit(5)
+            ->get();
 
         $waitingApprovalPerWeek = $waitingApproval->groupBy('week')->map(function ($weekGroup) {
-            return $weekGroup->first();
+            // return $weekGroup->first();
+            return collect($weekGroup)->unique('current_line')->values();
         });
 
-        // Transform the collection to hide certain fields
-        $waitingApprovalFiltered = $waitingApprovalPerWeek->map(function($machine) {
-            return collect($machine)->except([
-                'id',
-                'machine_id',
-                'day',
-                'code',
-                'time',
-                'status',
-                'notes',
-                'is_changed',
-                'changed_by',
-                'change_date',
-                'is_approved',
-                'approved_by',
-                'created_at',
-                'is_rejected',
-                'rejected_by',
-                'updated_at',
-            ]);
-        })->values();
 
+        $list = [];
+
+        foreach ($waitingApprovalPerWeek as $item) {
+            # code...
+            foreach ($item as $value) {
+                # code...
+                $list[] = [
+                    'year' => $value['year'],
+                    'month' => $value['month'],
+                    'week' => $value['week'],
+                    'current_line' => $value['current_line'],
+                    'is_sent' => $value['current_line'],
+                ];
+            }
+        }
+
+        // Sort the list by 'current_line' in ascending order
+        usort($list, function ($a, $b) {
+            if ($a['current_line'] === $b['current_line']) {
+                // If 'current_line' is the same, sort by 'week'
+                return $a['week'] <=> $b['week'];
+            }
+            // Otherwise, sort by 'current_line'
+            return $a['current_line'] <=> $b['current_line'];
+        });
+        
         // Return the transformed collection as a JSON response
-        return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
+        return response()->json(['WaitingApproval' => $list], 200);
     }
 
     //Show return in card
-    public function showReturnCard(){
+    public function showReturnCard()
+    {
         $returnApproval = MachineOperation::where('is_rejected', true)
             ->get();
 
@@ -65,7 +75,7 @@ class ManagerController extends Controller
         });
 
         // Transform the collection to hide certain fields
-        $returnApprovalFiltered = $returnApproval->map(function($machine) {
+        $returnApprovalFiltered = $returnApproval->map(function ($machine) {
             return collect($machine)->except([
                 'id',
                 'machine_id',
@@ -91,7 +101,8 @@ class ManagerController extends Controller
     }
 
     //    SHOW MANAGER REVISION
-    public function showRevision() {
+    public function showRevision()
+    {
         $revision = Manager::all();
         return response()->json($revision);
         //return view('globalDescriptions', ['globalDescriptions' => $globalDescriptions]);
@@ -99,17 +110,18 @@ class ManagerController extends Controller
 
 
     //Show waiting Approved in card
-    public function showApprovedCard(){
+    public function showApprovedCard()
+    {
         $ApprovedJPM = MachineOperation::where('is_approved', true)
-                                            ->where('is_sent', false)
-                                            ->get();
+            ->where('is_sent', false)
+            ->get();
 
         $ApprovedPerWeek = $ApprovedJPM->groupBy('week')->map(function ($weekGroup) {
             return $weekGroup->first();
         });
 
         // Transform the collection to hide certain fields
-        $ApprovedFiltered = $ApprovedPerWeek->map(function($machine) {
+        $ApprovedFiltered = $ApprovedPerWeek->map(function ($machine) {
             return collect($machine)->except([
                 'id',
                 'machine_id',
@@ -135,7 +147,8 @@ class ManagerController extends Controller
     }
 
     //Show waiting approval in detail (clicked card)
-    public function showWaitingApproval(Request $request){
+    public function showWaitingApproval(Request $request)
+    {
         $request->validate([
             'year' => 'required|string',
             'month' => 'required|string',
@@ -147,14 +160,14 @@ class ManagerController extends Controller
         $week = $request->input('week');
 
         $waitingApproval = MachineOperation::where('is_approved', false)
-                                            ->where('is_changed', true)
-                                            ->where('is_sent',true)
-                                            ->where('year', $year)
-                                            ->where('month', $month)
-                                            ->where('week', $week)
-                                            ->get();
+            ->where('is_changed', true)
+            ->where('is_sent', true)
+            ->where('year', $year)
+            ->where('month', $month)
+            ->where('week', $week)
+            ->get();
 
-        $waitingApprovalFiltered = $waitingApproval->map(function($machine) {
+        $waitingApprovalFiltered = $waitingApproval->map(function ($machine) {
             return collect($machine)->except([
                 'id',
                 'machine_id',
@@ -173,7 +186,8 @@ class ManagerController extends Controller
         return response()->json(['WaitingApproval' => $waitingApprovalFiltered], 200);
     }
 
-    public function approve(Request $request) {
+    public function approve(Request $request)
+    {
         $userId = $request->input('userId');
         $line = $request->input('line');
         $year = $request->input('year');
@@ -196,9 +210,9 @@ class ManagerController extends Controller
             $approvedBy = '';
         }
 
-//        if ($machineOperations->contains('is_changed', false)) {
-//            return response()->json(['message' => 'No changes to approve'], 404);
-//        }
+        //        if ($machineOperations->contains('is_changed', false)) {
+        //            return response()->json(['message' => 'No changes to approve'], 404);
+        //        }
 
         foreach ($machineOperations as $machineOperation) {
 
@@ -209,7 +223,6 @@ class ManagerController extends Controller
                 'approved_by' => $approvedBy,
                 'is_sent' => false,
             ]);
-
         }
 
         $manager = Manager::where('line', $line)
@@ -237,13 +250,13 @@ class ManagerController extends Controller
             'machineoperation_id' => $machineOperation->id,
             'event' => 'approve',
             'changes' => json_encode([
-                    'status' => 'Approve changes',
-                    'week' => $week,
-                    'year' => $year,
-                    'month' => $month,
-                    'line' => $line,
-                    'approved_by' => $approvedBy,
-                ]),
+                'status' => 'Approve changes',
+                'week' => $week,
+                'year' => $year,
+                'month' => $month,
+                'line' => $line,
+                'approved_by' => $approvedBy,
+            ]),
         ]);
 
         return response()->json(['message' => 'Approval successful'], 200);
@@ -252,7 +265,8 @@ class ManagerController extends Controller
 
 
 
-    public function return(Request $request) {
+    public function return(Request $request)
+    {
         $userId = $request->input('userId');
         $line = $request->input('line');
         $year = $request->input('year');
@@ -329,7 +343,8 @@ class ManagerController extends Controller
 
 
 
-    public function notify(Request $request) {
+    public function notify(Request $request)
+    {
         $validatedData = $request->validate([
             'line' => 'required|string'
         ]);
@@ -352,7 +367,8 @@ class ManagerController extends Controller
         return response()->json(['message' => 'Notifications sent successfully to all recipients.']);
     }
 
-    public function notifyRejection(Request $request) {
+    public function notifyRejection(Request $request)
+    {
         $validatedData = $request->validate([
             'line' => 'required|string'
         ]);
@@ -374,6 +390,4 @@ class ManagerController extends Controller
 
         return response()->json(['message' => 'Notifications sent successfully to all recipients.']);
     }
-
-
 }

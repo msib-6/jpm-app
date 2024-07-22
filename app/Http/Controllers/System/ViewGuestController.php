@@ -8,7 +8,7 @@ use App\Models\MachineOperation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class PjlViewController extends Controller
+class ViewGuestController extends Controller
 {
     public function index(Request $request)
     {
@@ -81,6 +81,6 @@ class PjlViewController extends Controller
 
         // dd($list);
 
-        return view('pjl.view', compact('line', 'year', 'month', 'list'));
+        return view('guest.viewGuest', compact('line', 'year', 'month', 'list'));
     }
 }

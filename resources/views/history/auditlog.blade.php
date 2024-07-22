@@ -18,8 +18,11 @@
                 <h1 class="text-left text-4xl font-bold text-gray-800">
                     Audit Trail
                 </h1>
-                <button id="exportPDF" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-800">Export
+                <div class="flex justify-end opacity-75">
+                <button id="exportPDF" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-800 mr-2">Export
                     to PDF</button>
+                <button id="exportExcel" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-800">Export to Excel</button>
+                </div>
             </div>
 
             <hr class="mt-5">
@@ -39,6 +42,10 @@
                             <span class="text-purple-600">APPROVE</span>
                         @elseif ($item['event'] == 'return')
                             <span class="text-orange-600">RETURN</span>
+                        @elseif ($item['event'] == 'login')
+                            <span class="text-green-600">LOGIN</span>
+                        @elseif ($item['event'] == 'logout')
+                            <span class="text-red-600">LOGOUT</span>
                         @else
                             <span class="text-gray-600">{{ strtoupper($item['event']) }}</span>
                         @endif
@@ -50,7 +57,7 @@
                             $formattedDate = $date->format('d F Y');
                             $formattedTime = $date->format('H:i');
                         @endphp
-                        <p>Data Week <span class="text-blue-600">{{ $item['changes']['original_state']['week'] ?? 'N/A' }}</span>,
+                        <p>Data Week <span class="text-blue-600">{{ $item['changes']['original_state'][0]['week'] ?? 'N/A' }}</span>,
                             telah berhasil dikirim pada tanggal <span class="text-blue-600"> {{ $formattedDate }} </span> pukul
                             <span class="text-blue-600">{{ $formattedTime }}</span> Oleh
                             <span class="text-blue-600">{{ $item['fullname'] }}</span>
@@ -65,7 +72,7 @@
                                 {{ $item['changes']['new_state']['year'] ?? 'N/A' }}
                             @else
                             @endif
-                            Data tanggal <span class="text-red-600">{{ $item['changes']['new_state']['day'] ?? 'N/A' }}
+                            Data tanggal <span class="text-green-600">{{ $item['changes']['new_state']['day'] ?? 'N/A' }}
                                 {{ $item['changes']['new_state']['month'] == null ? 'N/A' : \Carbon\Carbon::createFromFormat('m', $item['changes']['new_state']['month'])->format('F') }} {{ $item['changes']['new_state']['year'] ?? 'N/A' }}</span>,
                             Kode Ruah <span
                                 class="text-green-600">{{ $item['changes']['new_state']['code'] ?? 'N/A' }}</span>,
@@ -176,6 +183,26 @@
                             pukul <span class="text-orange-600">{{ $formattedTime }}</span>,
                             Oleh <span class="text-orange-600">{{ $item['changes']['rejected_by'] ?? 'N/A' }}</span>
                         </p>
+                        @elseif ($item['event'] == 'login')
+                        @php
+                            $date = \Carbon\Carbon::parse($item['timestamp'])->setTimezone('Asia/Jakarta');
+                            $formattedDate = $date->format('d F Y');
+                            $formattedTime = $date->format('H:i');
+                        @endphp
+                        <p><span class="text-green-600">{{ $item['fullname'] ?? 'N/A' }}</span>
+                            telah berhasil Log-in pada tanggal <span class="text-green-600"> {{ $formattedDate }} </span> pukul
+                            <span class="text-green-600">{{ $formattedTime }}</span>
+                        </p>
+                        @elseif ($item['event'] == 'logout')
+                        @php
+                            $date = \Carbon\Carbon::parse($item['timestamp'])->setTimezone('Asia/Jakarta');
+                            $formattedDate = $date->format('d F Y');
+                            $formattedTime = $date->format('H:i');
+                        @endphp
+                        <p><span class="text-red-600">{{ $item['fullname'] ?? 'N/A' }}</span>
+                            telah berhasil Log-out pada tanggal <span class="text-red-600"> {{ $formattedDate }} </span> pukul
+                            <span class="text-red-600">{{ $formattedTime }}</span>
+                        </p>
                     @else
                         <p>{{ json_encode($item) }}</p>
                     @endif
@@ -195,34 +222,42 @@
 
     <script src="{{ asset('js/jspdf.umd.min.js') }}"></script>
     <script src="{{ asset('js/jspdf.plugin.autotable.js') }}"></script>
+    <script src="{{ asset('js/xlsx.full.min.js') }}"></script>
     <script>
-        document.getElementById('exportPDF').addEventListener('click', function() {
-            console.log("Button clicked");
-            const {
-                jsPDF
-            } = window.jspdf;
+        document.getElementById('exportPDF').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
+            const elements = document.querySelectorAll('.audit-item');
+            let data = [];
 
-            doc.text('Audit Trail', 10, 10);
-
-            const items = document.querySelectorAll('.audit-item');
-            const data = [];
-
-            items.forEach((item, index) => {
-                const action = item.querySelector('p span.text-green-500').innerText;
-                const text = item.innerText.replace(/\n/g, ' ').trim();
-                console.log(`Item ${index + 1}: Action - ${action}, Text - ${text}`);
-                data.push([index + 1, action, text]);
+            elements.forEach((element, index) => {
+                const action = element.querySelector('p:first-of-type').textContent.trim();
+                const description = element.querySelector('p:nth-of-type(2)') ? element.querySelector('p:nth-of-type(2)').textContent.trim() : 'N/A';
+                data.push([index + 1, action, description]);
             });
 
             doc.autoTable({
-                head: [
-                    ['No', 'Action', 'Details']
-                ],
-                body: data
+                head: [['#', 'Action', 'Description']],
+                body: data,
             });
 
-            doc.save('audit_trail.pdf');
+            doc.save('audit_log.pdf');
+        });
+
+        document.getElementById('exportExcel').addEventListener('click', () => {
+            const elements = document.querySelectorAll('.audit-item');
+            let data = [];
+
+            elements.forEach((element, index) => {
+                const action = element.querySelector('p:first-of-type').textContent.trim();
+                const description = element.querySelector('p:nth-of-type(2)') ? element.querySelector('p:nth-of-type(2)').textContent.trim() : 'N/A';
+                data.push([index + 1, action, description]);
+            });
+
+            const worksheet = XLSX.utils.aoa_to_sheet([['#', 'Action', 'Description'], ...data]);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Audit Log');
+            XLSX.writeFile(workbook, 'audit_log.xlsx');
         });
     </script>
 </body>

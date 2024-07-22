@@ -81,7 +81,7 @@
                 <button id="returnWeekButton" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mr-2">Return JPM</button>
             </div>
             <div class="flex justify-end">
-                <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
+                <button id="historyButton" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mr-2">History</button>
                 <button id="approveWeekButton" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Approve</button>
             </div>
         </div>
@@ -133,6 +133,125 @@
             </div>
         </div>
     </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-3xl">
+            <h2 class="text-2xl mb-4">History</h2>
+            <div class="mb-4 overflow-y-auto" style="max-height: 450px;">
+                <!-- History content will be populated here -->
+
+                @foreach ($list as $audit)
+                    @if ($audit['changes'] != null)
+                        <div class="bg-white shadow-md rounded-lg p-4 mb-4">
+                            @php
+                                $newState = $audit['changes']['new_state'] ?? null;
+                                $originalState = $audit['changes']['original_state'] ?? null;
+                                $actionDate = \Carbon\Carbon::parse($audit['timestamp'])->setTimezone(
+                                    'Asia/Jakarta',
+                                );
+                                $actionTime = $actionDate->format('H:i:s');
+                                $actionDateFormatted = $actionDate->format('d F Y');
+                            @endphp
+
+                            @if ($audit['event'] === 'add' && $newState)
+                                <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
+                                <p>Pada <span class="text-green-600">Week {{ $newState['week'] ?? 'NA' }}</span>,
+                                    Tanggal
+                                    <span class="text-green-600">{{ $newState['day'] ?? 'NA' }}
+                                        {{ $newState['month'] ?? 'NA' }} {{ $newState['year'] ?? 'NA' }}</span>,
+                                    Kode Ruah
+                                    <span class="text-green-600">{{ $newState['code'] ?? 'NA' }}</span>, Status:
+                                    <span class="text-green-600">{{ $newState['status'] ?? 'NA' }}</span>, Catatan:
+                                    <span class="text-green-600">{{ $newState['notes'] ?? 'NA' }}</span> telah
+                                    ditambahkan oleh
+                                    <span class="text-green-600">{{ $audit['fullname'] ?? 'NA' }}</span>
+                                </p>
+                            @elseif ($audit['event'] === 'edit' && $newState && $originalState)
+                                @php
+                                    $newUpdatedAt = \Carbon\Carbon::parse($newState['updated_at'])->setTimezone(
+                                        'Asia/Jakarta',
+                                    );
+                                    $updatedDate = $newUpdatedAt->format('d F Y');
+                                    $updatedTime = $newUpdatedAt->format('H:i');
+                                    $originalDate =
+                                        ($originalState['day'] ?? 'NA') .
+                                        ' ' .
+                                        ($originalState['month'] ?? 'NA') .
+                                        ' ' .
+                                        ($originalState['year'] ?? 'NA');
+                                    $newDate =
+                                        ($newState['day'] ?? 'NA') .
+                                        ' ' .
+                                        ($newState['month'] ?? 'NA') .
+                                        ' ' .
+                                        ($newState['year'] ?? 'NA');
+                                @endphp
+                                <p><strong>Action:</strong> <span class="text-yellow-600">EDIT</span></p>
+                                <p>Pada <span class="text-yellow-600">Week
+                                        {{ $originalState['week'] ?? 'NA' }}</span>,
+                                    <span class="text-yellow-600">{{ $originalDate }}</span>. Kode Ruah <span
+                                        class="text-yellow-600">{{ $originalState['code'] ?? 'NA' }}</span>,
+                                    Status: <span
+                                        class="text-yellow-600">{{ $originalState['status'] ?? 'NA' }}</span>,
+                                    Catatan:
+                                    <span class="text-yellow-600">{{ $originalState['notes'] ?? 'NA' }}</span>
+                                    telah
+                                    diubah
+                                    oleh
+                                    <span class="text-yellow-600">{{ $audit['fullname'] ?? 'NA' }}</span> pada
+                                    <span class="text-yellow-600">{{ $updatedDate }}</span> pukul <span
+                                        class="text-yellow-600">{{ $updatedTime }}</span> menjadi Kode Ruah <span
+                                        class="text-blue-600">{{ $newState['code'] ?? 'NA' }}</span>, Status:
+                                    <span class="text-blue-600">{{ $newState['status'] ?? 'NA' }}</span>, Catatan:
+                                    <span class="text-blue-600">{{ $newState['notes'] ?? 'NA' }}</span> ke tanggal
+                                    <span class="text-blue-600">{{ $newState['day'] ?? 'NA' }}
+                                        {{ $newState['month'] ?? 'NA' }} {{ $newState['year'] ?? 'NA' }}</span>
+                                    Pada
+                                    <span class="text-blue-600"> Week {{ $newState['week'] ?? 'NA' }}</span>
+                                </p>
+                            @elseif ($audit['event'] === 'delete' && $originalState)
+                                <p><strong>Action:</strong> <span class="text-red-600">DELETE</span></p>
+                                <p>Pada Line: <span
+                                        class="text-red-600">{{ $originalState['line'] ?? 'NA' }}</span>
+                                    Week <span class="text-red-600">{{ $originalState['week'] ?? 'NA' }}</span>,
+                                    Data tanggal <span class="text-red-600">{{ $originalState['day'] ?? 'NA' }}
+                                        {{ $originalState['month'] == null ? 'N/A' : \Carbon\Carbon::createFromFormat('m', $originalState['month'])->format('F') }}
+                                        {{ $originalState['year'] ?? 'NA' }}</span>,
+                                    Mesin <span
+                                        class="text-red-600">{{ $originalState['machine_name'] ?? 'NA' }}</span>,
+                                    Kode Ruah <span
+                                        class="text-red-600">{{ $originalState['code'] ?? 'NA' }}</span>,
+                                    Jam <span class="text-red-600">{{ $originalState['time'] ?? 'NA' }}</span>,
+                                    Status <span
+                                        class="text-red-600">{{ $originalState['status'] ?? 'NA' }}</span>,
+                                    Catatan <span
+                                        class="text-red-600">{{ $originalState['notes'] ?? 'NA' }}</span>,
+                                    telah dihapus oleh <span
+                                        class="text-red-600">{{ $audit['fullname'] ?? 'NA' }}</span>,
+                                    pada tanggal <span class="text-red-600">{{ $actionDateFormatted }}</span>
+                                </p>
+                            @elseif ($audit['event'] === 'send_revision' && $newState && $originalState)
+                                <p><strong>Action:</strong> <span class="text-purple-600">SEND JPM FORM</span></p>
+                                <p>Revisi pada <span class="text-purple-600">Week
+                                        {{ $audit['changes']['original_state'][0]['week'] ?? 'NA' }}</span> dikirim pada tanggal
+                                    <span class="text-purple-600">{{ $actionDateFormatted }}</span> pukul <span
+                                        class="text-purple-600">{{ $actionTime }}</span>
+                                    oleh
+                                    <span class="text-purple-600">{{ $audit['fullname'] ?? 'NA' }}</span>
+                                </p>
+                            @endif
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+            <div class="flex justify-end">
+                <button type="button" id="closeHistoryModalButton"
+                    class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 mr-2">Close</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -149,6 +268,9 @@
         const globalDescs = document.getElementById('globalDescs');
         const approveButton = document.getElementById('approveWeekButton');
         const returnButton = document.getElementById('returnWeekButton');
+        const historyButton = document.getElementById('historyButton');
+        const historyModal = document.getElementById('historyModal');
+        const closeHistoryModalButton = document.getElementById('closeHistoryModalButton');
         const confirmActionModal = document.getElementById('confirmActionModal');
         const closeConfirmActionModalButton = document.getElementById('closeConfirmActionModalButton');
         const confirmActionButton = document.getElementById('confirmActionButton');
@@ -178,6 +300,15 @@
         function closeReturnNotesModal() {
             returnNotesModal.classList.add('hidden');
         }
+
+        historyButton.addEventListener('click', async function() {
+                // await fetchAndDisplayHistory();
+                historyModal.classList.remove('hidden');
+            });
+
+        closeHistoryModalButton.addEventListener('click', function() {
+                historyModal.classList.add('hidden');
+            });
 
         closeConfirmActionModalButton.addEventListener('click', closeActionConfirmation);
         closeReturnNotesModalButton.addEventListener('click', closeReturnNotesModal);

@@ -49,7 +49,7 @@ class MachineController extends Controller
 
             Audits::create([
                 'users_id' => $userId,
-                'machineoperation_id' => null,
+                'machineoperation_id' => $machine->id,
                 'event' => 'add',
                 'changes' => json_encode([
                     'original_state' => '',
@@ -110,7 +110,7 @@ class MachineController extends Controller
 
             Audits::create([
                 'users_id' => $userId,
-                'machineoperation_id' => null,
+                'machineoperation_id' => $newMachineData->id,
                 'event' => 'add',
                 'changes' => json_encode([
                     'original_state' => '',
@@ -193,7 +193,7 @@ class MachineController extends Controller
 
             Audits::create([
                 'users_id' => $userId,
-                'machineoperation_id' => null,
+                'machineoperation_id' => $machineOperation->id,
                 'event' => 'add',
                 'changes' => json_encode([
                     'original_state' => '',
@@ -414,22 +414,23 @@ class MachineController extends Controller
                 $operation->is_approved = false;
                 $operation->is_rejected = false;
                 $operation->save();
+
+                Audits::create([
+                    'users_id' => $userId,
+                    'machineoperation_id' => $operation->id,
+                    'event' => 'send_revision',
+                    'changes' => json_encode([
+                        'original_state' => $originalStates,
+                        'new_state' => $operations->map(function ($operation) {
+                            return [
+                                'id' => $operation->id,
+                                'is_sent' => true,
+                            ];
+                        }),
+                    ]),
+                ]);
             }
 
-            Audits::create([
-                'users_id' => $userId,
-                'machineoperation_id' => null,
-                'event' => 'send_revision',
-                'changes' => json_encode([
-                    'original_state' => $originalStates,
-                    'new_state' => $operations->map(function ($operation) {
-                        return [
-                            'id' => $operation->id,
-                            'is_sent' => true,
-                        ];
-                    }),
-                ]),
-            ]);
 
             return response()->json(['message' => 'Machine operations marked as sent successfully'], 200);
         } catch (\Exception $e) {
@@ -460,16 +461,16 @@ class MachineController extends Controller
                 'week' => $machineData->week,
             ];
 
-            $machineData->delete();
-
             Audits::create([
                 'users_id' => $userId,
-                'machineoperation_id' => null,
+                'machineoperation_id' => $machineData->id,
                 'event' => 'delete',
                 'changes' => json_encode([
                     'original_state' => $originalState,
                 ]),
             ]);
+
+            $machineData->delete();
 
             return response()->json(['message' => 'Machine data deleted successfully'], 200);
         } catch (\Exception $error) {
@@ -505,16 +506,16 @@ class MachineController extends Controller
                 'updated_at' => $machineOperation->updated_at,
             ];
 
-            $machineOperation->delete();
-
             Audits::create([
                 'users_id' => $userId,
-                'machineoperation_id' => $machineOperationID,
+                'machineoperation_id' => $machineOperation->id,
                 'event' => 'delete',
                 'changes' => json_encode([
                     'original_state' => $originalState,
                 ]),
             ]);
+
+            $machineOperation->delete();
 
             return response()->json(['message' => 'Machine operation deleted successfully'], 200);
         } catch (\Exception $error) {
@@ -540,7 +541,6 @@ class MachineController extends Controller
                 'week' => $globalDescription->week,
             ];
 
-            $globalDescription->delete();
 
             Audits::create([
                 'users_id' => $userId,
@@ -550,6 +550,8 @@ class MachineController extends Controller
                     'original_state' => $originalState,
                 ]),
             ]);
+
+            $globalDescription->delete();
 
             return response()->json(['message' => 'Global description deleted successfully'], 200);
         } catch (\Exception $e) {
