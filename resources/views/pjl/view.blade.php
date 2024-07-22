@@ -1057,9 +1057,15 @@
             `;
 
                 const savetodraftButton = document.getElementById('savetodraftButton');
+                const sendWeekButton = document.getElementById('sendWeekButton');
+                const openModalButton = document.getElementById('openModalButton');
                 if (status !== "NEW") {
                     savetodraftButton.style.display = 'none';
                 }
+                if (status === "Approved") {
+            sendWeekButton.style.display = 'none';
+            openModalButton.style.display = 'none';
+        }
             }
 
             async function fetchRevisionNumber(line, year, month, week) {
