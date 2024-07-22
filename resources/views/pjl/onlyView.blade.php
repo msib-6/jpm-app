@@ -700,7 +700,7 @@
                     if (line && month && week && year) {
                         fetchDataForWeek(line, year, month, week);
                     }
-                }, 5000); // Refresh every 5 seconds
+                }, 10000); // Refresh every 10 seconds
             }
 
             editWeekButton.addEventListener('click', function() {
