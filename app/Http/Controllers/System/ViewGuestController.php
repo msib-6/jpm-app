@@ -33,54 +33,56 @@ class ViewGuestController extends Controller
                 # code...
                 if ($item->user != null && $item->user->role == $line) {
                     # code...
-                    if ($item->machineOperation->current_line == $line) {
-                        # code...
-                        if ($item->machineoperation_id == null) {
+                    if ($item->machineOperation->week == $week) {
+
+                        if ($item->machineOperation->current_line == $line) {
                             # code...
-                            $adding = 'NA';
-                        } else {
-                            # code...
-                            $mesin = MachineOperation::whereId($item->machineoperation_id)->where([
-                                'year' => $year,
-                                'month' => $month,
-                                'week' => $week
-                            ])->first();
-    
-                            if (empty($mesin)) {
+                            if ($item->machineoperation_id == null) {
                                 # code...
                                 $adding = 'NA';
                             } else {
                                 # code...
-                                $adding = [
-                                    'time' => $mesin->time,
-                                    'status' => $mesin->status,
-                                    'notes' => $mesin->notes,
-                                    'week' => $mesin->week
-                                ];
-                            }
-                        }
-                    }else {
-                        $adding = 'NA';
-                    }
+                                $mesin = MachineOperation::whereId($item->machineoperation_id)->where([
+                                    'year' => $year,
+                                    'month' => $month,
+                                    'week' => $week
+                                ])->first();
 
-                    $list[] = [
-                        'id' => $item->id,
-                        'fullname' => $item->user == null ? 'NA' : $item->user->name,
-                        'event' => $item->event,
-                        'mesin' => $adding,
-                        'timestamp' => Carbon::parse($item->created_at)->format('d M Y H:i:s'),
-                        'return' => $item->changes,
-                        'line' => $item->machineOperation == null ? 'NA' : $item->machineOperation->current_line,
-                        'changes' => json_decode($item->changes, true),
-                        'week' => $adding == 'NA' ? 'NA' : $adding['week']
-                    ];
+                                if (empty($mesin)) {
+                                    # code...
+                                    $adding = 'NA';
+                                } else {
+                                    # code...
+                                    $adding = [
+                                        'time' => $mesin->time,
+                                        'status' => $mesin->status,
+                                        'notes' => $mesin->notes,
+                                        'week' => $mesin->week
+                                    ];
+                                }
+                            }
+                        } else {
+                            $adding = 'NA';
+                        }
+
+                        $list[] = [
+                            'id' => $item->id,
+                            'fullname' => $item->user == null ? 'NA' : $item->user->name,
+                            'event' => $item->event,
+                            'mesin' => $adding,
+                            'timestamp' => Carbon::parse($item->created_at)->format('d M Y H:i:s'),
+                            'return' => $item->changes,
+                            'line' => $item->machineOperation == null ? 'NA' : $item->machineOperation->current_line,
+                            'changes' => json_decode($item->changes, true),
+                            'week' => $adding == 'NA' ? 'NA' : $adding['week']
+                        ];
+                    }
                 }
-    
             }
         }
 
         // dd($list);
-
+        
         return view('guest.viewGuest', compact('line', 'year', 'month', 'list'));
     }
 }

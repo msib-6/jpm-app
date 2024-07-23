@@ -392,8 +392,7 @@
                                     <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
                                     <p>Pada <span class="text-green-600">Week {{ $newState['week'] ?? 'NA' }}</span>,
                                         Tanggal
-                                        <span class="text-green-600">{{ $newState['day'] ?? 'NA' }}
-                                            {{ $newState['month'] ?? 'NA' }} {{ $newState['year'] ?? 'NA' }}</span>,
+                                        <span class="text-green-600">{{ $actionDateFormatted }}</span>,
                                         Kode Ruah
                                         <span class="text-green-600">{{ $newState['code'] ?? 'NA' }}</span>, Status:
                                         <span class="text-green-600">{{ $newState['status'] ?? 'NA' }}</span>, Catatan:
@@ -465,7 +464,7 @@
                                             class="text-red-600">{{ $audit['fullname'] ?? 'NA' }}</span>,
                                         pada tanggal <span class="text-red-600">{{ $actionDateFormatted }}</span>
                                     </p>
-                                @elseif ($audit['event'] === 'send_revision' && $newState && $originalState)
+                                @elseif ($audit['event'] === 'send_revision')
                                     <p><strong>Action:</strong> <span class="text-purple-600">SEND JPM FORM</span></p>
                                     <p>Revisi pada <span class="text-purple-600">Week
                                             {{ $audit['changes']['original_state'][0]['week'] ?? 'NA' }}</span> dikirim pada tanggal

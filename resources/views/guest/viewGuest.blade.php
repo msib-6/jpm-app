@@ -189,8 +189,7 @@
                                     <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
                                     <p>Pada <span class="text-green-600">Week {{ $newState['week'] ?? 'NA' }}</span>,
                                         Tanggal
-                                        <span class="text-green-600">{{ $newState['day'] ?? 'NA' }}
-                                            {{ $newState['month'] ?? 'NA' }} {{ $newState['year'] ?? 'NA' }}</span>,
+                                        <span class="text-green-600">{{ $actionDateFormatted }}</span>,
                                         Kode Ruah
                                         <span class="text-green-600">{{ $newState['code'] ?? 'NA' }}</span>, Status:
                                         <span class="text-green-600">{{ $newState['status'] ?? 'NA' }}</span>, Catatan:
