@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Audits;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,55 +27,72 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-{
-    $request->authenticate();
-    $request->session()->regenerate();
+    {
+        $request->authenticate();
 
-    // Determine the user's role
-    $user = Auth::user();
-    $role = ucfirst(strtolower($user->role)); // Ubah huruf pertama menjadi besar
+        // Regenerate the session to protect against session fixation attacks
+        $request->session()->regenerate();
 
-    // Log the user's role
-    Log::info('User role: ' . $role);
+        // Get the authenticated user
+        $user = $request->user();
 
-    $lineRoles = [
-        'Line1', 'Line2', 'Line3', 'Line4', 'Line5',
-        'Line7', 'Line8a', 'Line8b', 'Line10', 'Line11',
-        'Line12', 'Line13', 'Line14'
-    ];
+        // Log the audit event using the method defined in the User model
+        $user->logAudit('login', $user);
 
-    // Log the line roles
-    Log::info('Line roles: ' . implode(', ', $lineRoles));
+        // Determine the user's role
+        $user = Auth::user();
+        $role = ucfirst(strtolower($user->role)); // Ubah huruf pertama menjadi besar
 
-    if (in_array($role, $lineRoles)) {
-        Log::info('Redirecting to pjl.line.dashboard with line: ' . $role);
-        return redirect()->route('pjl.line.dashboard', ['line' => $role]);
-    } else {
-        Log::info('Role not in line roles');
+        // Log the user's role
+        Log::info('User role: ' . $role);
+
+        $lineRoles = [
+            'Line1', 'Line2', 'Line3', 'Line4', 'Line5',
+            'Line7', 'Line8a', 'Line8b', 'Line10', 'Line11',
+            'Line12', 'Line13', 'Line14'
+        ];
+
+        // Log the line roles
+        Log::info('Line roles: ' . implode(', ', $lineRoles));
+
+        if (in_array($role, $lineRoles)) {
+            Log::info('Redirecting to pjl.line.dashboard with line: ' . $role);
+            return redirect()->route('pjl.line.dashboard', ['line' => $role]);
+        } else {
+            Log::info('Role not in line roles');
+        }
+        // dd($logAudits);
+
+        // Redirect to the appropriate dashboard based on the user's role
+        switch ($role) {
+            case 'Admin':
+                Log::info('Redirecting to /admin');
+                return redirect('/admin');
+            case 'Manager':
+                Log::info('Redirecting to /manager/dashboard');
+                return redirect('/manager/dashboard');
+            case 'Storage':
+                Log::info('Redirecting to /logistik/dashboard');
+                return redirect('/logistik/dashboard');
+            default:
+                Log::info('Redirecting to home');
+                return redirect('/dashboard');
+        }
     }
-
-    // Redirect to the appropriate dashboard based on the user's role
-    switch ($role) {
-        case 'Admin':
-            Log::info('Redirecting to /admin');
-            return redirect('/admin');
-        case 'Manager':
-            Log::info('Redirecting to /manager/dashboard');
-            return redirect('/manager/dashboard');
-        case 'Storage':
-            Log::info('Redirecting to /logistik/dashboard');
-            return redirect('/logistik/dashboard');
-        default:
-            Log::info('Redirecting to home');
-            return redirect('/dashboard');
-    }
-}
 
     /**
      * Destroy an authenticated session.
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Get the authenticated user
+        $user = $request->user();
+
+        // Log the audit event before logging out
+        if ($user) {
+            $user->logAudit('logout', $user);
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

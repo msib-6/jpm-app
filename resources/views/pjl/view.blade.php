@@ -392,8 +392,7 @@
                                     <p><strong>Action:</strong> <span class="text-green-600">ADD</span></p>
                                     <p>Pada <span class="text-green-600">Week {{ $newState['week'] ?? 'NA' }}</span>,
                                         Tanggal
-                                        <span class="text-green-600">{{ $newState['day'] ?? 'NA' }}
-                                            {{ $newState['month'] ?? 'NA' }} {{ $newState['year'] ?? 'NA' }}</span>,
+                                        <span class="text-green-600">{{ $actionDateFormatted }}</span>,
                                         Kode Ruah
                                         <span class="text-green-600">{{ $newState['code'] ?? 'NA' }}</span>, Status:
                                         <span class="text-green-600">{{ $newState['status'] ?? 'NA' }}</span>, Catatan:
@@ -404,7 +403,8 @@
                                 @elseif ($audit['event'] === 'edit' && $newState && $originalState)
                                     @php
                                         $newUpdatedAt = \Carbon\Carbon::parse($newState['updated_at'])->setTimezone(
-                                        'Asia/Jakarta');
+                                            'Asia/Jakarta',
+                                        );
                                         $updatedDate = $newUpdatedAt->format('d F Y');
                                         $updatedTime = $newUpdatedAt->format('H:i');
                                         $originalDate =
@@ -445,25 +445,64 @@
                                     </p>
                                 @elseif ($audit['event'] === 'delete' && $originalState)
                                     <p><strong>Action:</strong> <span class="text-red-600">DELETE</span></p>
-                                    <p>Pada Line: <span class="text-red-600">{{ $originalState['line'] ?? 'NA'  }}</span>
-                                         Week <span class="text-red-600">{{ $originalState['week'] ?? 'NA' }}</span>,
-                                        Data tanggal <span class="text-red-600">{{ $originalState['day'] ?? 'NA' }} {{ $originalState['month'] == null ? 'N/A' : \Carbon\Carbon::createFromFormat('m', $originalState['month'])->format('F') }} {{ $originalState['year'] ?? 'NA' }}</span>,
-                                        Mesin <span class="text-red-600">{{ $originalState['machine_name'] ?? 'NA' }}</span>,
-                                        Kode Ruah <span class="text-red-600">{{ $originalState['code'] ?? 'NA' }}</span>,
+                                    <p>Pada Line: <span
+                                            class="text-red-600">{{ $originalState['line'] ?? 'NA' }}</span>
+                                        Week <span class="text-red-600">{{ $originalState['week'] ?? 'NA' }}</span>,
+                                        Data tanggal <span class="text-red-600">{{ $originalState['day'] ?? 'NA' }}
+                                            {{ $originalState['month'] == null ? 'N/A' : \Carbon\Carbon::createFromFormat('m', $originalState['month'])->format('F') }}
+                                            {{ $originalState['year'] ?? 'NA' }}</span>,
+                                        Mesin <span
+                                            class="text-red-600">{{ $originalState['machine_name'] ?? 'NA' }}</span>,
+                                        Kode Ruah <span
+                                            class="text-red-600">{{ $originalState['code'] ?? 'NA' }}</span>,
                                         Jam <span class="text-red-600">{{ $originalState['time'] ?? 'NA' }}</span>,
-                                        Status <span class="text-red-600">{{ $originalState['status'] ?? 'NA' }}</span>,
-                                        Catatan <span class="text-red-600">{{ $originalState['notes'] ?? 'NA' }}</span>,
-                                        telah dihapus oleh <span class="text-red-600">{{ $audit['fullname'] ?? 'NA' }}</span>, 
+                                        Status <span
+                                            class="text-red-600">{{ $originalState['status'] ?? 'NA' }}</span>,
+                                        Catatan <span
+                                            class="text-red-600">{{ $originalState['notes'] ?? 'NA' }}</span>,
+                                        telah dihapus oleh <span
+                                            class="text-red-600">{{ $audit['fullname'] ?? 'NA' }}</span>,
                                         pada tanggal <span class="text-red-600">{{ $actionDateFormatted }}</span>
                                     </p>
-                                @elseif ($audit['event'] === 'send_revision' && $newState && $originalState)
+                                @elseif ($audit['event'] === 'send_revision')
                                     <p><strong>Action:</strong> <span class="text-purple-600">SEND JPM FORM</span></p>
                                     <p>Revisi pada <span class="text-purple-600">Week
-                                            {{ $originalState['month'] ?? 'NA' }}</span> dikirim pada tanggal
+                                            {{ $audit['changes']['original_state'][0]['week'] ?? 'NA' }}</span> dikirim
+                                        pada tanggal
                                         <span class="text-purple-600">{{ $actionDateFormatted }}</span> pukul <span
                                             class="text-purple-600">{{ $actionTime }}</span>
                                         oleh
                                         <span class="text-purple-600">{{ $audit['fullname'] ?? 'NA' }}</span>
+                                    </p>
+                                @elseif ($audit['event'] == 'descadd')
+                                    @php
+                                        $date = \Carbon\Carbon::parse($audit['timestamp'])->setTimezone('Asia/Jakarta');
+                                        $formattedDate = $date->format('F');
+                                        $formattedTime = $date->format('H:i');
+                                        $week = $audit['changes']['new_state']['week'] ?? 'N/A';
+                                    @endphp
+                                    <p><strong>Action:</strong> <span class="text-green-600">Add Global Desc</span>
+                                    </p>
+                                    <p>Pada Week <span class="text-green-600">{{ $week }}</span>,
+                                        <span class="text-green-600">{{ $audit['fullname'] ?? 'N/A' }}</span>,
+                                        telah menambahkan deskripsi <span class="text-green-600">
+                                            {{ $audit['changes']['new_state']['description'] }}</span>,
+                                        pukul <span class="text-green-600">{{ $formattedTime }}</span>
+                                    </p>
+                                @elseif ($audit['event'] == 'descdelete')
+                                    @php
+                                        $date = \Carbon\Carbon::parse($audit['timestamp'])->setTimezone('Asia/Jakarta');
+                                        $formattedDate = $date->format('F');
+                                        $formattedTime = $date->format('H:i');
+                                        $week = $audit['changes']['original_state']['week'] ?? 'N/A';
+                                    @endphp
+                                    <p><strong>Action:</strong> <span class="text-red-600">Delete Global Desc</span>
+                                    </p>
+                                    <p>Pada Week <span class="text-red-600">{{ $week }}</span>,
+                                        <span class="text-red-600">{{ $audit['fullname'] ?? 'N/A' }}</span>,
+                                        telah menghapus deskripsi <span class="text-red-600">
+                                            {{ $audit['changes']['original_state']['description'] }}</span>,
+                                        pukul <span class="text-red-600">{{ $formattedTime }}</span>
                                     </p>
                                 @endif
                             </div>
@@ -1028,24 +1067,35 @@
 
                 if (operationsData.operations.length > 0) {
                     const allApproved = operationsData.operations.every(operation => operation.is_approved ===
-                        1);
+                        true);
                     const allWaitingApproval = operationsData.operations.every(operation => operation
-                        .is_approved === 0 && operation.is_rejected === 0);
+                        .is_approved === false && operation.is_rejected === false);
                     const allRejected = operationsData.operations.every(operation => operation.is_rejected ===
-                        1);
+                        true);
 
                     if (allApproved) {
-                        status = "APPROVED";
+                        status = "Approved";
                     } else if (allWaitingApproval) {
-                        status = "WAITING APPROVAL";
+                        status = "Waiting Approval";
                     } else if (allRejected) {
-                        status = "REJECTED";
+                        status = "Rejected";
                     }
                 }
 
                 document.getElementById('statusWeek').innerHTML = `
                 <h3 class="text-2xl font-bold">${status}</h3>
             `;
+
+                const savetodraftButton = document.getElementById('savetodraftButton');
+                const sendWeekButton = document.getElementById('sendWeekButton');
+                const openModalButton = document.getElementById('openModalButton');
+                if (status !== "NEW") {
+                    savetodraftButton.style.display = 'none';
+                }
+                if (status === "Approved") {
+                    sendWeekButton.style.display = 'none';
+                    openModalButton.style.display = 'none';
+                }
             }
 
             async function fetchRevisionNumber(line, year, month, week) {
@@ -1150,7 +1200,7 @@
                     console.log("Machine info data:", machineInfoData);
                     const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine
                         .category || 'Unknown'
-                    ])); // Fallback to 'Unknown' if category is empty
+                    ])); // Fallback to'Unknown' if category is empty
 
                     updateURL(line, year, month, week);
                     displayMachineData(operationsData, machinesData, machineInfoMap, week);
@@ -1174,11 +1224,34 @@
 
                 const machineOperationsMap = new Map();
                 operations.forEach(operation => {
-                    const machineIdKey = operation.week === week ? operation.machine_id : operation
-                        .machine_id_parent;
+                    let machineIdKey;
+
+                    if (week === 1 && (operation.week === 1 || operation.week === 5 || operation.week ===
+                        6)) {
+                        machineIdKey = operation.machine_id;
+                    } else if (week === 2 && (operation.week === 1 || operation.week === 2 || operation
+                        .week === 3)) {
+                        machineIdKey = operation.machine_id;
+                    } else if (week === 3 && (operation.week === 2 || operation.week === 3 || operation
+                        .week === 4)) {
+                        machineIdKey = operation.machine_id;
+                    } else if (week === 4 && (operation.week === 3 || operation.week === 4 || operation
+                        .week === 5)) {
+                        machineIdKey = operation.machine_id;
+                    } else if (week === 5 && (operation.week === 4 || operation.week === 5 || operation
+                        .week === 6)) {
+                        machineIdKey = operation.machine_id;
+                    } else if (week === 6 && (operation.week === 5 || operation.week === 6 || operation
+                        .week === 1)) {
+                        machineIdKey = operation.machine_id;
+                    } else {
+                        machineIdKey = operation.machine_id_parent;
+                    }
+
                     if (!machineOperationsMap.has(machineIdKey)) {
                         machineOperationsMap.set(machineIdKey, []);
                     }
+
                     machineOperationsMap.get(machineIdKey).push(operation);
                 });
 
@@ -1200,16 +1273,16 @@
                     const machineRow = document.createElement('div');
                     machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                     machineRow.innerHTML = `
-            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                <div class="flex flex-col justify-center items-center w-9/12 h-full">
-                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                        ${category}
-                    </span>
-                    <span class="text-sm">${machine.machine_name}</span>
-                </div>
-            </div>
-        `;
+                        <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                            <div class="flex flex-col justify-center items-center w-9/12 h-full">
+                                <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                                    ${category}
+                                </span>
+                                <span class="text-sm">${machine.machine_name}</span>
+                            </div>
+                        </div>
+                    `;
 
                     for (let i = 1; i <= 8; i++) {
                         const headerDate = document.getElementById(`day${i}`).children[1].textContent
@@ -1264,16 +1337,16 @@
                             entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN',
                                 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'
                             ].includes(operation.status) ? `
-                    <p class="status-only">${operation.status}</p>
-                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                ` : `
-                    <p><strong>${operation.code}</strong></p>
-                    <p>${operation.time}</p>
-                    ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
-                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                `;
+                                <p class="status-only">${operation.status}</p>
+                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                            ` : `
+                                <p><strong>${operation.code}</strong></p>
+                                <p>${operation.time}</p>
+                                ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
+                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                            `;
                             entry.onmouseenter = function(event) {
                                 if (operation.notes) {
                                     showNotesPopup(event,

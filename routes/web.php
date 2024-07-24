@@ -5,6 +5,7 @@ use App\Http\Controllers\System\AuditTrailController;
 use App\Http\Controllers\System\ManagerApprovalController;
 use App\Http\Controllers\System\PjlOnlyViewController;
 use App\Http\Controllers\System\PjlViewController;
+use App\Http\Controllers\System\ViewGuestController;
 use Illuminate\Support\Facades\Route;
 //use App\Http\Controllers\MachineController;
 use Illuminate\Http\Request;
@@ -89,13 +90,13 @@ Route::get('/guest/index', function () {
     return view('guest.index');
 });
 
-Route::get('/guest/viewguest', function (Request $request) {
-    $line = $request->query('line');
-    $year = $request->query('year');
-    $month = $request->query('month');
-    $month = $request->query('week');
-    return view('guest.viewGuest', compact('line', 'year', 'month'));
-})->name('guest.viewGuest');
+// Route::get('/guest/viewguest', function (Request $request) {
+//     $line = $request->query('line');
+//     $year = $request->query('year');
+//     $month = $request->query('month');
+//     $month = $request->query('week');
+//     return view('guest.viewGuest', compact('line', 'year', 'month'));
+// })->name('guest.viewGuest');
 
 Route::middleware('manager', 'auth')->group(function () {
     Route::get('/manager/dashboard', function () {
@@ -107,13 +108,16 @@ Route::middleware('manager', 'auth')->group(function () {
 
 //    Route::get('/manager/approve', [ManagerApprovalController::class, 'approveManagerController'])->name('manager.approve');
 
-   Route::get('/manager/approve', function (Request $request) {
-       $line = $request->query('line');
-       $year = $request->query('year');
-       $month = $request->query('month');
-       $week = $request->query('week');
-       return view('manager.approve', compact('line', 'year', 'month', 'week'));
-   })->name('manager.approve');
+//    Route::get('', function (Request $request) {
+//        $line = $request->query('line');
+//        $year = $request->query('year');
+//        $month = $request->query('month');
+//        $week = $request->query('week');
+//        return view('manager.approve', compact('line', 'year', 'month', 'week'));
+//    })
+   
+   Route::get('/manager/approve', [ManagerApprovalController::class, 'index'])->name('manager.approve');
+
 });
 
 Route::middleware('admin')->group(function () {
@@ -126,6 +130,8 @@ Route::middleware('admin')->group(function () {
 Route::get('/guest/dashboard', function () {
     return view('guest.dashboardGuest');
 })->name('guest.dashboard');
+
+Route::get('/guest/viewguest', [ViewGuestController::class, 'index'])->name('guest.viewGuest');
 
 Route::middleware(['auth', 'storage'])->group(function () {
     Route::get('/logistik/dashboard', function () {

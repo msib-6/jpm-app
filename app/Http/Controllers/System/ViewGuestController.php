@@ -8,7 +8,7 @@ use App\Models\MachineOperation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class ManagerApprovalController extends Controller
+class ViewGuestController extends Controller
 {
     public function index(Request $request)
     {
@@ -82,7 +82,7 @@ class ManagerApprovalController extends Controller
         }
 
         // dd($list);
-
-        return view('manager.approve', compact('line', 'year', 'month', 'week', 'list'));
+        
+        return view('guest.viewGuest', compact('line', 'year', 'month', 'list'));
     }
 }

@@ -54,4 +54,14 @@ class User extends Authenticatable implements FilamentUser
     {
         return str_ends_with($this->email, '@admin.com');
     }
+
+    public function logAudit($event, $changes = null)
+    {
+        return Audits::create([
+            'users_id' => $this->id,
+            'machineoperation_id' => null,
+            'event' => $event,
+            'changes' => $changes ? json_encode($changes) : null,
+        ]);
+    }
 }
