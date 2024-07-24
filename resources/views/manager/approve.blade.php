@@ -358,25 +358,83 @@
         }
 
         async function fetchDataForWeek(line, year, month, week) {
-            const operationsUrl = `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`;
-            const machinesUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`;
-            const machineInfoUrl = `http://127.0.0.1:8000/api/showmachine`;
+            console.log("Fetching data for:", {
+                line,
+                year,
+                month,
+                week
+            });
+            let operationsUrls = [];
+            let machinesUrls = [];
+            let machineInfoUrls = [];
+            const nextWeek = parseInt(week) + 1;
+
+            if (week === "1") {
+                const prevMonth = (month - 1 === 0) ? 12 : month - 1;
+                const prevYear = (month - 1 === 0) ? year - 1 : year;
+
+                operationsUrls = [
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
+                ];
+
+                machinesUrls = [
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=5`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${prevYear}&month=${prevMonth}&week=6`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
+                ];
+
+                machineInfoUrls = [
+                    `http://127.0.0.1:8000/api/showmachine`
+                ];
+            } else {
+                operationsUrls = [
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
+                ];
+
+                machinesUrls = [
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
+                    `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`
+                ];
+
+                machineInfoUrls = [
+                    `http://127.0.0.1:8000/api/showmachine`
+                ];
+            }
 
             try {
-                const [operationsResponse, machinesResponse, machineInfoResponse] = await Promise.all([
-                    fetch(operationsUrl),
-                    fetch(machinesUrl),
-                    fetch(machineInfoUrl)
+                const [operationsResponses, machinesResponses, machineInfoResponse] = await Promise.all([
+                    Promise.all(operationsUrls.map(url => fetch(url))),
+                    Promise.all(machinesUrls.map(url => fetch(url))),
+                    fetch(machineInfoUrls[0])
                 ]);
 
-                const operationsData = await operationsResponse.json();
-                const machinesData = await machinesResponse.json();
-                const machineInfoData = await machineInfoResponse.json();
+                let operationsData = [];
+                for (const response of operationsResponses) {
+                    const data = await response.json();
+                    operationsData = operationsData.concat(data.operations);
+                    console.log("Operations data:", data);
+                }
 
-                const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine.category || 'Unknown'])); // Fallback to 'Unknown' if category is empty
+                let machinesData = [];
+                for (const response of machinesResponses) {
+                    const data = await response.json();
+                    machinesData = machinesData.concat(data);
+                    console.log("Machines data:", data);
+                }
+
+                const machineInfoData = await machineInfoResponse.json();
+                console.log("Machine info data:", machineInfoData);
+                const machineInfoMap = new Map(machineInfoData.map(machine => [machine.id, machine
+                    .category || 'Unknown'
+                ])); // Fallback to'Unknown' if category is empty
 
                 updateURL(line, year, month, week);
-                displayMachineData(operationsData.operations, machinesData, machineInfoMap, week);
+                displayMachineData(operationsData, machinesData, machineInfoMap, week);
 
                 const isApproved = operationsData.operations.some(operation => operation.is_approved === 1);
                 const isRejected = operationsData.operations.some(operation => operation.is_rejected === 1);
@@ -407,80 +465,159 @@
             history.pushState({}, '', `?line=${line}&year=${year}&month=${month}&week=${week}`);
         }
 
+        // Fungsi untuk menampilkan data mesin termasuk operasi untuk minggu berikutnya
         function displayMachineData(operations, machines, machineInfoMap, week) {
             const dataContainer = document.getElementById('dataContainer');
-            dataContainer.innerHTML = '';  // Clear existing rows
+            dataContainer.innerHTML = ''; // Hapus baris yang ada
 
-            // Create a map for machine operations
             const machineOperationsMap = new Map();
             operations.forEach(operation => {
-                if (!machineOperationsMap.has(operation.machine_id)) {
-                    machineOperationsMap.set(operation.machine_id, []);
+                let machineIdKey;
+
+                if (week === 1 && (operation.week === 1 || operation.week === 5 || operation.week ===
+                    6)) {
+                    machineIdKey = operation.machine_id;
+                } else if (week === 2 && (operation.week === 1 || operation.week === 2 || operation
+                    .week === 3)) {
+                    machineIdKey = operation.machine_id;
+                } else if (week === 3 && (operation.week === 2 || operation.week === 3 || operation
+                    .week === 4)) {
+                    machineIdKey = operation.machine_id;
+                } else if (week === 4 && (operation.week === 3 || operation.week === 4 || operation
+                    .week === 5)) {
+                    machineIdKey = operation.machine_id;
+                } else if (week === 5 && (operation.week === 4 || operation.week === 5 || operation
+                    .week === 6)) {
+                    machineIdKey = operation.machine_id;
+                } else if (week === 6 && (operation.week === 5 || operation.week === 6 || operation
+                    .week === 1)) {
+                    machineIdKey = operation.machine_id;
+                } else {
+                    machineIdKey = operation.machine_id_parent;
                 }
-                machineOperationsMap.get(operation.machine_id).push(operation);
+
+                if (!machineOperationsMap.has(machineIdKey)) {
+                    machineOperationsMap.set(machineIdKey, []);
+                }
+
+                machineOperationsMap.get(machineIdKey).push(operation);
             });
 
-            machines.forEach(machine => {
-                const category = machineInfoMap.get(machine.machine_id);  // Fetch category using machine_id
+
+            // Sort machines by specified categories
+            const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating',
+                'Mixing', 'Filling', 'Kemas'
+            ];
+            machines.sort((a, b) => {
+                const categoryA = machineInfoMap.get(a.machine_id) || 'Unknown';
+                const categoryB = machineInfoMap.get(b.machine_id) || 'Unknown';
+                return categoryOrder.indexOf(categoryA) - categoryOrder.indexOf(categoryB);
+            });
+
+            const combinedMachines = combineWeeklyMachines(machines);
+
+            combinedMachines.forEach(machine => {
+                const category = machineInfoMap.get(machine.machine_id);
 
                 const machineRow = document.createElement('div');
                 machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                 machineRow.innerHTML = `
-                    <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                        <div class="flex flex-col justify-center items-center w-full h-full">
-                            <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                                <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                                ${category}
-                            </span>
-                            <span>${machine.machine_name}</span>
-                        </div>
-                    </div>
-                `;
+            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                <div class="flex flex-col justify-center items-center w-9/12 h-full">
+                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                        ${category}
+                    </span>
+                    <span class="text-sm">${machine.machine_name}</span>
+                </div>
+            </div>
+        `;
 
-                // Add day columns based on header days
                 for (let i = 1; i <= 8; i++) {
-                    const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
+                    const headerDate = document.getElementById(`day${i}`).children[1].textContent
+                        .trim();
                     const dateParts = headerDate.split(' ');
                     const day = parseInt(dateParts[0]);
                     const dayColumn = document.createElement('div');
-                    dayColumn.id = `daydata${machine.id}-${day}`;
+                    dayColumn.id = `daydata${machine.machine_id}-${day}`;
                     dayColumn.className = 'col-span-1 day-column';
                     machineRow.appendChild(dayColumn);
                 }
 
                 dataContainer.appendChild(machineRow);
 
-                // Populate machine row with operations
-                const machineOperations = machineOperationsMap.get(machine.id) || [];
-                machineOperations.forEach(operation => {
-                    const dayColumn = document.getElementById(`daydata${machine.id}-${operation.day}`);
+                // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
+                // const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
+                const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id) || [];
+                const allMachineOperations = [...machineOperationsNextWeek];
+
+                allMachineOperations.sort((a, b) => {
+                    if (a.status === 'PM') return -1;
+                    if (b.status === 'PM') return 1;
+                    const [hoursA, minutesA] = a.time.split(':').map(Number);
+                    const [hoursB, minutesB] = b.time.split(':').map(Number);
+                    return hoursA * 60 + minutesA - (hoursB * 60 + minutesB);
+                });
+
+                allMachineOperations.forEach(operation => {
+                    const dayColumn = document.getElementById(
+                        `daydata${machine.machine_id}-${operation.day}`);
                     if (dayColumn) {
-                        const entry = document.createElement('div');
-                        entry.className = 'p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative';
-                        entry.innerHTML = `
-                            <p><strong>${operation.code}</strong></p>
-                            <p>${operation.time}</p>
-                            ${operation.status ? `<p>${operation.status}</p>` : ''}
-                            ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                        `;
+                        const entry = document.createElement('button');
+                        const statusClass = {
+                            'PM': 'status-pm',
+                            'BCP': 'status-bcp',
+                            'OFF': 'status-off',
+                            'CUSU': 'status-cusu',
+                            'DHT': 'status-dht',
+                            'CHT': 'status-cht',
+                            'KALIBRASI': 'status-kalibrasi',
+                            'OVERHAUL': 'status-overhaul',
+                            'CV': 'status-cv',
+                            'CPV': 'status-cpv',
+                            'BREAKDOWN': 'status-breakdown',
+                        } [operation.status] || '';
+
+                        entry.className =
+                            `p-2 border-2 text-xs flex flex-col justify-center isi-jpm text-center entry-button relative ${statusClass}`;
+                        entry.style.minHeight = '6em';
+
+                        entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN',
+                            'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'
+                        ].includes(operation.status) ? `
+                    <p class="status-only">${operation.status}</p>
+                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                ` : `
+                    <p><strong>${operation.code}</strong></p>
+                    <p>${operation.time}</p>
+                    ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
+                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                `;
+                        entry.onmouseenter = function(event) {
+                            if (operation.notes) {
+                                showNotesPopup(event,
+                                    `Line: ${operation.current_line}\nNotes: ${operation.notes}`
+                                );
+                            } else {
+                                showNotesPopup(event, `Line: ${operation.current_line}`);
+                            }
+                        };
+                        entry.onmouseleave = function() {
+                            hideNotesPopup();
+                        };
                         entry.onclick = function() {
                             openEditModal(operation);
                         };
 
-                        if (operation.notes) {
-                            entry.onmouseenter = function(event) {
-                                showNotesPopup(event, operation.notes);
-                            };
-                            entry.onmouseleave = function() {
-                                hideNotesPopup();
-                            };
-                        }
-
                         dayColumn.appendChild(entry);
                     }
                 });
+
             });
         }
+
 
         function showNotesPopup(event, notes) {
             const popup = document.createElement('div');
