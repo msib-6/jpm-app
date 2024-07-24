@@ -641,9 +641,9 @@
             return monthNames[month - 1];
         }
 
-        function setupWeekButtons(current_line, year, month, activeWeek) {
+        function setupWeekButtons(line, year, month, activeWeek) {
             const weeksList = document.getElementById('weeksList');
-            weeksList.innerHTML = '';  // Clear existing buttons
+            weeksList.innerHTML = ''; // Clear existing buttons
 
             // Get the start and end dates of the month
             const startDate = new Date(year, month - 1, 1);
@@ -653,7 +653,10 @@
                 while (startDate.getDay() !== 1) {
                     startDate.setDate(startDate.getDate() + 1);
                 }
-                startDate.setDate(startDate.getDate() - 7); // Go back 7 days to get the Monday of the previous week
+                startDate.setDate(startDate.getDate() -
+                    7); // Go back 7 days to get the Monday of the previous week
+            } else {
+                startDate.setDate(startDate.getDate() - 7); // Go back 7 days even if it is already Monday
             }
 
             let currentDate = new Date(startDate);
@@ -666,7 +669,8 @@
             while (true) {
                 week.push(formatDate(currentDate)); // Add the current day to the current week
 
-                if (currentDate.getDay() === 1 && week.length > 1) { // If it's Monday and not the first iteration
+                if (currentDate.getDay() === 1 && week.length >
+                    1) { // If it's Monday and not the first iteration
                     weeks.push(week); // Complete the current week
                     week = [formatDate(currentDate)]; // Start a new week with this Monday
                 }
@@ -693,20 +697,18 @@
             weeks.forEach((week, index) => {
                 const weekButton = document.createElement('button');
                 weekButton.textContent = `W${index + 1}`;
-                weekButton.className = 'year-item text-black rounded-xl ml-1 text-xl px-2.5 py-2.5 cursor-pointer h-auto border-0';
+                weekButton.className =
+                    'year-item text-black rounded-xl ml-1 text-xl px-2.5 cursor-not-allowed py-2.5 h-auto border-0';
                 if (index + 1 === parseInt(activeWeek)) {
                     weekButton.classList.add('text-purple-600');
                 } else {
                     weekButton.classList.add('text-gray-400', 'cursor-not-allowed');
                 }
                 weekButton.onclick = () => {
-                    if (weekButton.classList.contains('text-purple-600')) {
-                        fetchDataForWeek(current_line, year, month, index + 1);
-                        updateURL(current_line, year, month, index + 1);
-                        document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove('text-purple-600'));
-                        weekButton.classList.add('text-purple-600');
-                        displayWeek(week);
-                    }
+                    document.querySelectorAll('.year-item').forEach(btn => btn.classList.remove(
+                        'text-purple-600'));
+                    weekButton.classList.add('text-purple-600');
+                    displayWeek(week);
                 };
                 weeksList.appendChild(weekButton);
             });
@@ -718,6 +720,7 @@
                 weeksList.children[weekParam - 1].click(); // Click the specified week
             }
         }
+
 
         function formatDate(date) {
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
