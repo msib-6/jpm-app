@@ -467,11 +467,42 @@
                                 @elseif ($audit['event'] === 'send_revision')
                                     <p><strong>Action:</strong> <span class="text-purple-600">SEND JPM FORM</span></p>
                                     <p>Revisi pada <span class="text-purple-600">Week
-                                            {{ $audit['changes']['original_state'][0]['week'] ?? 'NA' }}</span> dikirim pada tanggal
+                                            {{ $audit['changes']['original_state'][0]['week'] ?? 'NA' }}</span> dikirim
+                                        pada tanggal
                                         <span class="text-purple-600">{{ $actionDateFormatted }}</span> pukul <span
                                             class="text-purple-600">{{ $actionTime }}</span>
                                         oleh
                                         <span class="text-purple-600">{{ $audit['fullname'] ?? 'NA' }}</span>
+                                    </p>
+                                @elseif ($audit['event'] == 'descadd')
+                                    @php
+                                        $date = \Carbon\Carbon::parse($audit['timestamp'])->setTimezone('Asia/Jakarta');
+                                        $formattedDate = $date->format('F');
+                                        $formattedTime = $date->format('H:i');
+                                        $week = $audit['changes']['new_state']['week'] ?? 'N/A';
+                                    @endphp
+                                    <p><strong>Action:</strong> <span class="text-green-600">Add Global Desc</span>
+                                    </p>
+                                    <p>Pada Week <span class="text-green-600">{{ $week }}</span>,
+                                        <span class="text-green-600">{{ $audit['fullname'] ?? 'N/A' }}</span>,
+                                        telah menambahkan deskripsi <span class="text-green-600">
+                                            {{ $audit['changes']['new_state']['description'] }}</span>,
+                                        pukul <span class="text-green-600">{{ $formattedTime }}</span>
+                                    </p>
+                                @elseif ($audit['event'] == 'descdelete')
+                                    @php
+                                        $date = \Carbon\Carbon::parse($audit['timestamp'])->setTimezone('Asia/Jakarta');
+                                        $formattedDate = $date->format('F');
+                                        $formattedTime = $date->format('H:i');
+                                        $week = $audit['changes']['original_state']['week'] ?? 'N/A';
+                                    @endphp
+                                    <p><strong>Action:</strong> <span class="text-red-600">Delete Global Desc</span>
+                                    </p>
+                                    <p>Pada Week <span class="text-red-600">{{ $week }}</span>,
+                                        <span class="text-red-600">{{ $audit['fullname'] ?? 'N/A' }}</span>,
+                                        telah menghapus deskripsi <span class="text-red-600">
+                                            {{ $audit['changes']['original_state']['description'] }}</span>,
+                                        pukul <span class="text-red-600">{{ $formattedTime }}</span>
                                     </p>
                                 @endif
                             </div>
@@ -1062,9 +1093,9 @@
                     savetodraftButton.style.display = 'none';
                 }
                 if (status === "Approved") {
-            sendWeekButton.style.display = 'none';
-            openModalButton.style.display = 'none';
-        }
+                    sendWeekButton.style.display = 'none';
+                    openModalButton.style.display = 'none';
+                }
             }
 
             async function fetchRevisionNumber(line, year, month, week) {
@@ -1193,11 +1224,25 @@
 
                 const machineOperationsMap = new Map();
                 operations.forEach(operation => {
-                    const machineIdKey = operation.week === week ? operation.machine_id : operation
-                        .machine_id_parent;
+                    let machineIdKey;
+
+                    if (week === 1) {
+                        // Jika week === 1, tambahkan data dari week 5 dan 6 juga
+                        if (operation.week === 5 || operation.week === 6 || operation.week === 1) {
+                            machineIdKey = operation.machine_id;
+                        } else {
+                            machineIdKey = operation.machine_id_parent;
+                        }
+                    } else {
+                        // Jika week bukan 1, gunakan logika awal
+                        machineIdKey = operation.week === week ? operation.machine_id : operation
+                            .machine_id_parent;
+                    }
+
                     if (!machineOperationsMap.has(machineIdKey)) {
                         machineOperationsMap.set(machineIdKey, []);
                     }
+
                     machineOperationsMap.get(machineIdKey).push(operation);
                 });
 
@@ -1244,8 +1289,9 @@
                     dataContainer.appendChild(machineRow);
 
                     // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
-                    const machineOperations = machineOperationsMap.get(machine.id) || [];
-                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id) || [];
+                    const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
+                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) ||
+                        [];
                     const allMachineOperations = [...machineOperations, ...machineOperationsNextWeek];
 
                     allMachineOperations.sort((a, b) => {

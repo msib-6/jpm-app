@@ -48,6 +48,12 @@
                             <span class="text-green-600">LOGIN</span>
                         @elseif ($item['event'] == 'logout')
                             <span class="text-red-600">LOGOUT</span>
+                        @elseif ($item['event'] == 'descadd')
+                            <span class="text-green-600">Add Global Desc</span>
+                        @elseif ($item['event'] == 'addweekmachine')
+                            <span class="text-green-600">Add Machine Weekly</span>
+                        @elseif ($item['event'] == 'descdelete')
+                            <span class="text-red-600">Delete Global Desc</span>
                         @else
                             <span class="text-gray-600">{{ strtoupper($item['event']) }}</span>
                         @endif
@@ -85,7 +91,9 @@
                             Status: <span
                                 class="text-green-600">{{ $item['changes']['new_state']['status'] ?? 'N/A' }}</span>,
                             Catatan: <span
-                                class="text-green-600">{{ $item['changes']['new_state']['notes'] ?? 'N/A' }}</span>
+                                class="text-green-600">{{ $item['changes']['new_state']['notes'] ?? 'N/A' }}</span>,
+                            Global Desc: <span
+                                class="text-green-600">{{ $item['changes']['new_state']['description'] ?? 'N/A' }}</span>    
                             telah ditambahkan oleh <span class="text-green-500">{{ $item['fullname'] }}</span>
                         </p>
                     @elseif ($item['event'] == 'delete')
@@ -229,6 +237,51 @@
                             telah berhasil Log-out pada tanggal <span class="text-red-600"> {{ $formattedDate }}
                             </span> pukul
                             <span class="text-red-600">{{ $formattedTime }}</span>
+                        </p>
+                    @elseif ($item['event'] == 'descadd')
+                        @php
+                            $date = \Carbon\Carbon::parse($item['timestamp'])->setTimezone('Asia/Jakarta');
+                            $formattedDate = $date->format('F');
+                            $formattedTime = $date->format('H:i');
+                            $week = $item['changes']['new_state']['week'] ?? 'N/A';
+                        @endphp
+                        <p>Pada Line: <span class="text-green-600">{{ $item['changes']['new_state']['line'] ?? 'N/A' }}</span>,
+                            Bulan <span class="text-green-600">{{ $formattedDate }}</span>,
+                            Week <span class="text-green-600">{{ $week }}</span>,
+                            telah menambahkan deskripsi <span class="text-green-600"> {{ $item['changes']['new_state']['description'] }}
+                            </span>,
+                            pukul <span class="text-green-600">{{ $formattedTime }}</span>,
+                            Oleh <span class="text-green-600">{{ $item['fullname'] ?? 'N/A' }}</span>
+                        </p>
+                    @elseif ($item['event'] == 'descdelete')
+                        @php
+                            $date = \Carbon\Carbon::parse($item['timestamp'])->setTimezone('Asia/Jakarta');
+                            $formattedDate = $date->format('F');
+                            $formattedTime = $date->format('H:i');
+                            $week = $item['changes']['original_state']['week'] ?? 'N/A';
+                        @endphp
+                        <p>Pada Line: <span class="text-red-600">{{ $item['changes']['original_state']['line'] ?? 'N/A' }}</span>,
+                            Bulan <span class="text-red-600">{{ $formattedDate }}</span>,
+                            Week <span class="text-red-600">{{ $week }}</span>,
+                            telah menghapus deskripsi <span class="text-red-600"> {{ $item['changes']['original_state']['description'] }}
+                            </span>,
+                            pukul <span class="text-red-600">{{ $formattedTime }}</span>,
+                            Oleh <span class="text-red-600">{{ $item['fullname'] ?? 'N/A' }}</span>
+                        </p>
+                    @elseif ($item['event'] == 'addweekmachine')
+                        @php
+                            $date = \Carbon\Carbon::parse($item['timestamp'])->setTimezone('Asia/Jakarta');
+                            $formattedDate = $date->format('F');
+                            $formattedTime = $date->format('H:i');
+                            $week = $item['changes']['new_state']['week'] ?? 'N/A';
+                        @endphp
+                        <p>Pada Line: <span class="text-green-600">{{ $item['changes']['new_state']['line'] ?? 'N/A' }}</span>,
+                            Bulan <span class="text-green-600">{{ $formattedDate }}</span>,
+                            Week <span class="text-green-600">{{ $week }}</span>,
+                            telah menambahkan mesin <span class="text-green-600"> {{ $item['changes']['new_state']['machineName'] }}
+                            </span>,
+                            pukul <span class="text-green-600">{{ $formattedTime }}</span>,
+                            Oleh <span class="text-green-600">{{ $item['fullname'] ?? 'N/A' }}</span>
                         </p>
                     @else
                         <p>{{ json_encode($item) }}</p>

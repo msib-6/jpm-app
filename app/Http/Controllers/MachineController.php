@@ -50,7 +50,7 @@ class MachineController extends Controller
             Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => $machine->id,
-                'event' => 'add',
+                'event' => 'addmachine',
                 'changes' => json_encode([
                     'original_state' => '',
                     'new_state' => array_merge($request->all(), [
@@ -111,7 +111,7 @@ class MachineController extends Controller
             Audits::create([
                 'users_id' => $userId,
                 'machineoperation_id' => $newMachineData->id,
-                'event' => 'add',
+                'event' => 'addweekmachine',
                 'changes' => json_encode([
                     'original_state' => '',
                     'new_state' => array_merge($request->all(), [
@@ -247,8 +247,8 @@ class MachineController extends Controller
             // Create audit entry
             Audits::create([
                 'users_id' => $userId,
-                'machineoperation_id' => null,
-                'event' => 'add',
+                'machineoperation_id' => $globalDescription->id,
+                'event' => 'descadd',
                 'changes' => json_encode([
                     'original_state' => '',
                     'new_state' => $request->all(),
@@ -544,8 +544,8 @@ class MachineController extends Controller
 
             Audits::create([
                 'users_id' => $userId,
-                'machineoperation_id' => null,
-                'event' => 'delete',
+                'machineoperation_id' => $globalDescription->id,
+                'event' => 'descdelete',
                 'changes' => json_encode([
                     'original_state' => $originalState,
                 ]),

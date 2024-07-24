@@ -186,14 +186,14 @@
             let currentGlobalDescId;
             let currentMachineDataId;
             const urlParams = new URLSearchParams(window.location.search);
-            const week = urlParams.get('week');
+            // const week = urlParams.get('week');
 
-            if (week === '1') {
-                const editButton = document.getElementById('editWeekButton');
-                if (editButton) {
-                    editButton.style.display = 'none';
-                }
-            }
+            // if (week === '1') {
+            //     const editButton = document.getElementById('editWeekButton');
+            //     if (editButton) {
+            //         editButton.style.display = 'none';
+            //     }
+            // }
 
             getQueryParams();
             setupAutoRefresh();
@@ -491,8 +491,8 @@
                     dataContainer.appendChild(machineRow);
 
                     // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
-                    const machineOperations = machineOperationsMap.get(machine.id) || [];
-                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id) || [];
+                    const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
+                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) || [];
                     const allMachineOperations = [...machineOperations, ...machineOperationsNextWeek];
 
                     allMachineOperations.sort((a, b) => {
