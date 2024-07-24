@@ -427,17 +427,26 @@
                 operations.forEach(operation => {
                     let machineIdKey;
 
-                    if (week === 1) {
-                        // Jika week === 1, tambahkan data dari week 5 dan 6 juga
-                        if (operation.week === 5 || operation.week === 6 || operation.week === 1) {
-                            machineIdKey = operation.machine_id;
-                        } else {
-                            machineIdKey = operation.machine_id_parent;
-                        }
+                    if (week === 1 && (operation.week === 1 || operation.week === 5 || operation.week ===
+                        6)) {
+                        machineIdKey = operation.machine_id;
+                    } else if (week === 2 && (operation.week === 1 || operation.week === 2 || operation
+                        .week === 3)) {
+                        machineIdKey = operation.machine_id;
+                    } else if (week === 3 && (operation.week === 2 || operation.week === 3 || operation
+                        .week === 4)) {
+                        machineIdKey = operation.machine_id;
+                    } else if (week === 4 && (operation.week === 3 || operation.week === 4 || operation
+                        .week === 5)) {
+                        machineIdKey = operation.machine_id;
+                    } else if (week === 5 && (operation.week === 4 || operation.week === 5 || operation
+                        .week === 6)) {
+                        machineIdKey = operation.machine_id;
+                    } else if (week === 6 && (operation.week === 5 || operation.week === 6 || operation
+                        .week === 1)) {
+                        machineIdKey = operation.machine_id;
                     } else {
-                        // Jika week bukan 1, gunakan logika awal
-                        machineIdKey = operation.week === week ? operation.machine_id : operation
-                            .machine_id_parent;
+                        machineIdKey = operation.machine_id_parent;
                     }
 
                     if (!machineOperationsMap.has(machineIdKey)) {
@@ -446,7 +455,6 @@
 
                     machineOperationsMap.get(machineIdKey).push(operation);
                 });
-
 
                 // Sort machines by specified categories
                 const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating',
@@ -466,16 +474,16 @@
                     const machineRow = document.createElement('div');
                     machineRow.className = 'grid grid-cols-10 gap-4 mb-2';
                     machineRow.innerHTML = `
-            <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
-                <div class="flex flex-col justify-center items-center w-9/12 h-full">
-                    <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
-                        <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
-                        ${category}
-                    </span>
-                    <span class="text-sm">${machine.machine_name}</span>
-                </div>
-            </div>
-        `;
+                        <div class="font-bold border-2 mesin-jpm p-2 row-span-3 col-span-2 flex items-center justify-center text-center" style="height: 90%;">
+                            <div class="flex flex-col justify-center items-center w-9/12 h-full">
+                                <span class="inline-flex items-center ${category === 'Granulasi' ? 'custom-badge1' : category === 'Drying' ? 'custom-badge2' : category.includes('Final') ? 'custom-badge3' : category === 'Cetak' ? 'custom-badge4' : category === 'Coating' ? 'custom-badge5' : category === 'Kemas' ? 'custom-badge6' : category === 'Mixing' ? 'custom-badge7' : category === 'Filling' ? 'custom-badge8' : category === 'Kompaksi' ? 'custom-badge9' : ''} text-white text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                                    <span class="w-2 h-2 mr-1 bg-white rounded-full"></span>
+                                    ${category}
+                                </span>
+                                <span class="text-sm">${machine.machine_name}</span>
+                            </div>
+                        </div>
+                    `;
 
                     for (let i = 1; i <= 8; i++) {
                         const headerDate = document.getElementById(`day${i}`).children[1].textContent
@@ -492,7 +500,8 @@
 
                     // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
                     const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
-                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) || [];
+                    const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id_parent) ||
+                        [];
                     const allMachineOperations = [...machineOperations, ...machineOperationsNextWeek];
 
                     allMachineOperations.sort((a, b) => {
@@ -529,16 +538,16 @@
                             entry.innerHTML = operation.status && ['PM', 'BCP', 'OFF', 'BREAKDOWN',
                                 'CUSU', 'DHT', 'CHT', 'KALIBRASI', 'OVERHAUL', 'CV', 'CPV'
                             ].includes(operation.status) ? `
-                    <p class="status-only">${operation.status}</p>
-                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                ` : `
-                    <p><strong>${operation.code}</strong></p>
-                    <p>${operation.time}</p>
-                    ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
-                    ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
-                    ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
-                `;
+                                <p class="status-only">${operation.status}</p>
+                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                            ` : `
+                                <p><strong>${operation.code}</strong></p>
+                                <p>${operation.time}</p>
+                                ${operation.status ? `<p class="text-green-600">${operation.status}</p>` : ''}
+                                ${operation.notes ? `<span class="absolute top-0 right-0 w-2 h-2 bg-yellow-500 rounded-full"></span>` : ''}
+                                ${operation.is_approved != 1 ? `<span class="absolute bottom-0 left-0 w-2 h-2 bg-red-500 rounded-full"></span>` : ''}
+                            `;
                             entry.onmouseenter = function(event) {
                                 if (operation.notes) {
                                     showNotesPopup(event,
@@ -551,14 +560,10 @@
                             entry.onmouseleave = function() {
                                 hideNotesPopup();
                             };
-                            entry.onclick = function() {
-                                openEditModal(operation);
-                            };
 
                             dayColumn.appendChild(entry);
                         }
                     });
-
                 });
             }
 
@@ -607,7 +612,7 @@
                         startDate.setDate(startDate.getDate() + 1);
                     }
                     startDate.setDate(startDate.getDate() -
-                    7); // Go back 7 days to get the Monday of the previous week
+                        7); // Go back 7 days to get the Monday of the previous week
                 } else {
                     startDate.setDate(startDate.getDate() - 7); // Go back 7 days even if it is already Monday
                 }
@@ -664,9 +669,11 @@
                     weeksList.appendChild(weekButton);
                 });
 
-                // Automatically click the first week button
-                if (weeksList.children.length > 0) {
-                    weeksList.children[0].click(); // Using children[0] to ensure it's an element
+                // Automatically click the specified week button
+                const params = new URLSearchParams(window.location.search);
+                const weekParam = params.get('week');
+                if (weekParam && weeksList.children[weekParam - 1]) {
+                    weeksList.children[weekParam - 1].click(); // Click the specified week
                 }
             }
 

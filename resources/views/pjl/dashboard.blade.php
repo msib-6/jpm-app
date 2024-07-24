@@ -213,7 +213,7 @@
 
             // Add click event to navigate to the view page with parameters
             monthDiv.onclick = () => {
-                window.location.href = `/pjl/${encodeURIComponent(selectedLine)}/onlyView?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}`;
+                window.location.href = `/pjl/${encodeURIComponent(selectedLine)}/onlyView?line=${encodeURIComponent(selectedLine)}&year=${encodeURIComponent(selectedYear)}&month=${encodeURIComponent(monthIndex)}&week=1`;
             };
 
             if (index % 3 === 0) {
