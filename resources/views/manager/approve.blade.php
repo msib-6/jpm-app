@@ -858,6 +858,21 @@
                 showAlert('An error occurred while returning the week');
             }
         };
+
+        function combineWeeklyMachines(machines) {
+            const machineMap = new Map();
+
+            machines.forEach(machine => {
+                const key = `${machine.machine_id}-${machine.machine_name}`;
+
+                if (!machineMap.has(key)) {
+                    machineMap.set(key, machine);
+                }
+            });
+
+            return Array.from(machineMap.values());
+        }
+
     });
 </script>
 
