@@ -1163,6 +1163,31 @@
                     machineInfoUrls = [
                         `http://127.0.0.1:8000/api/showmachine`
                     ];
+                } else if (week === "5" || week === "6") {
+                    // Calculate the next month and adjust the year if needed
+                    let nextMonth = parseInt(month) + 1;
+                    let nextYear = parseInt(year);
+
+                    if (nextMonth > 12) {
+                        nextMonth = 1;
+                        nextYear += 1;
+                    }
+
+                    operationsUrls = [
+                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
+                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${nextWeek}`,
+                        `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${nextYear}&month=${nextMonth}&week=2`
+                    ];
+
+                    machinesUrls = [
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${week}`,
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${year}&month=${month}&week=${nextWeek}`,
+                        `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${nextYear}&month=${nextMonth}&week=2`
+                    ];
+
+                    machineInfoUrls = [
+                        `http://127.0.0.1:8000/api/showmachine`
+                    ];
                 } else {
                     operationsUrls = [
                         `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`,
@@ -1231,20 +1256,20 @@
                     let machineIdKey;
 
                     if (week === 1 && (operation.week === 1 || operation.week === 5 || operation.week ===
-                            6)) {
+                        6)) {
                         machineIdKey = operation.machine_id;
                     } else if (week === 2 && (operation.week === 5 || operation.week === 6 || operation
-                            .week === 2 || operation.week === 3)) {
+                        .week === 2 || operation.week === 3)) {
                         machineIdKey = operation.machine_id;
                     } else if (week === 3 && (operation.week === 3 || operation.week === 4)) {
                         machineIdKey = operation.machine_id;
                     } else if (week === 4 && (operation.week === 4 || operation.week === 5)) {
                         machineIdKey = operation.machine_id;
                     } else if (week === 5 && (operation.week === 5 || operation.week === 6 || operation
-                            .week === 1)) {
+                        .week === 1)) {
                         machineIdKey = operation.machine_id;
                     } else if (week === 6 && (operation.week === 5 || operation.week === 6 || operation
-                            .week === 1)) {
+                        .week === 1)) {
                         machineIdKey = operation.machine_id;
                     } else {
                         machineIdKey = operation.machine_id_parent;
@@ -1370,87 +1395,88 @@
                     });
 
                     function getWeeksInMonth(year, month) {
-    const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
-    const lastDateOfMonth = new Date(year, month, 0).getDate();
-    const daysInMonth = firstDayOfMonth + lastDateOfMonth;
+                        const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
+                        const lastDateOfMonth = new Date(year, month, 0).getDate();
+                        const daysInMonth = firstDayOfMonth + lastDateOfMonth;
 
-    return Math.ceil(daysInMonth / 7);
-}
+                        return Math.ceil(daysInMonth / 7);
+                    }
 
-for (let i = 1; i <= 8; i++) {
-    const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
-    const dateParts = headerDate.split(' ');
-    const day = parseInt(dateParts[0]);
-    const dayColumn = document.getElementById(`daydata${machine.machine_id}-${day}`);
-    if (dayColumn) {
-        const addButton = document.createElement('button');
-        addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white text-xs w-7 h-7 thin-plus';
-        addButton.textContent = '+';
-        addButton.onclick = async function() {
-            const params = new URLSearchParams(window.location.search);
-            const line = params.get('line');
-            currentMachineId = machine.id;
-            currentMachineIdWeekly = machine.machine_id;
-            currentDay = day;
-            currentMonth = getMonthNumber(dateParts[1]);
-            currentYear = parseInt(dateParts[2]);
+                    for (let i = 1; i <= 8; i++) {
+                        const headerDate = document.getElementById(`day${i}`).children[1].textContent.trim();
+                        const dateParts = headerDate.split(' ');
+                        const day = parseInt(dateParts[0]);
+                        const dayColumn = document.getElementById(`daydata${machine.machine_id}-${day}`);
+                        if (dayColumn) {
+                            const addButton = document.createElement('button');
+                            addButton.className = 'add-jpm-button add-data-button rounded-full bg-grey-500 text-white text-xs w-7 h-7 thin-plus';
+                            addButton.textContent = '+';
+                            addButton.onclick = async function() {
+                                const params = new URLSearchParams(window.location.search);
+                                const line = params.get('line');
+                                currentMachineId = machine.id;
+                                currentMachineIdWeekly = machine.machine_id;
+                                currentDay = day;
+                                currentMonth = getMonthNumber(dateParts[1]);
+                                currentYear = parseInt(dateParts[2]);
 
-            const isLastMonday = i === 8;
-            if (isLastMonday) {
-                const totalWeeks = getWeeksInMonth(currentYear, currentMonth);
-                let nextWeekUrl = '';
-                switch (parseInt(week)) {
-                    case 1:
-                        nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=2`;
-                        break;
-                    case 2:
-                        nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=3`;
-                        break;
-                    case 3:
-                        nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=4`;
-                        break;
-                    case 4:
-                        nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=5`;
-                        break;
-                    case 5:
-                        if (totalWeeks === 6) {
-                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=6`;
-                        } else {
-                            const nextMonth = (currentMonth % 12);
-                            const nextYear = nextMonth === 1 ? currentYear + 1 : currentYear;
-                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${nextYear}&month=${nextMonth}&week=2`;
+                                const isLastMonday = i === 8;
+                                if (isLastMonday) {
+                                    const totalWeeks = getWeeksInMonth(currentYear, currentMonth);
+                                    let nextWeekUrl = '';
+                                    switch (parseInt(week)) {
+                                        case 1:
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=2`;
+                                            break;
+                                        case 2:
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=3`;
+                                            break;
+                                        case 3:
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=4`;
+                                            break;
+                                        case 4:
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=5`;
+                                            break;
+                                        case 5:
+                                            if (totalWeeks === 6) {
+                                                nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${currentYear}&month=${currentMonth}&week=6`;
+                                            } else {
+                                                const nextMonth = (currentMonth % 12);
+                                                const nextYear = nextMonth === 1 ? currentYear + 1 : currentYear;
+                                                nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${nextYear}&month=${nextMonth}&week=2`;
+                                            }
+                                            break;
+                                        case 6:
+                                            const nextMonth = (currentMonth % 12);
+                                            const nextYear = nextMonth === 1 ? currentYear + 1 : currentYear;
+                                            nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${nextYear}&month=${nextMonth}&week=2`;
+                                            break;
+                                        default:
+                                            console.error('Invalid week number');
+                                            return;
+                                    }
+
+                                    const response = await fetch(nextWeekUrl);
+                                    const nextWeekMachines = await response.json();
+                                    const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === machine.machine_name);
+                                    if (nextWeekMachine) {
+                                        currentMachineIdWeekly = nextWeekMachine.machine_id;
+                                        currentMachineId = nextWeekMachine.id;
+                                        currentDay = day;
+                                    }
+                                }
+
+                                addDataModal.classList.remove('hidden');
+                            };
+                            dayColumn.appendChild(addButton);
                         }
-                        break;
-                    case 6:
-                        const nextMonth = (currentMonth % 12);
-                        const nextYear = nextMonth === 1 ? currentYear + 1 : currentYear;
-                        nextWeekUrl = `http://127.0.0.1:8000/api/showweeklymachine?line=${line}&year=${nextYear}&month=${nextMonth}&week=2`;
-                        break;
-                    default:
-                        console.error('Invalid week number');
-                        return;
-                }
+                    }
 
-                const response = await fetch(nextWeekUrl);
-                const nextWeekMachines = await response.json();
-                const nextWeekMachine = nextWeekMachines.find(m => m.machine_name === machine.machine_name);
-                if (nextWeekMachine) {
-                    currentMachineIdWeekly = nextWeekMachine.machine_id;
-                    currentMachineId = nextWeekMachine.id;
-                    currentDay = day;
-                }
+                    machineRow.querySelector('.mesin-jpm').onclick = function() {
+                        viewMachineData(machine);
+                    };
+                });
             }
-
-            addDataModal.classList.remove('hidden');
-        };
-        dayColumn.appendChild(addButton);
-    }
-}
-
-machineRow.querySelector('.mesin-jpm').onclick = function() {
-    viewMachineData(machine);
-}
-})}
 
 
             function showNotesPopup(event, notes) {
