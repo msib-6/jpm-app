@@ -436,9 +436,9 @@
                         machineIdKey = operation.machine_id;
                     } else if (week === 4 && (operation.week === 4 || operation.week === 5)) {
                         machineIdKey = operation.machine_id;
-                    } else if (week === 5 && (operation.week === 5 || operation.week === 6 || operation.week === 1)) {
+                    } else if (week === 5 && (operation.week === 5 || operation.week === 6 || operation.week === 2)) {
                         machineIdKey = operation.machine_id;
-                    } else if (week === 6 && (operation.week === 5 || operation.week === 6 || operation.week === 1)) {
+                    } else if (week === 6 && (operation.week === 5 || operation.week === 6 || operation.week === 2)) {
                         machineIdKey = operation.machine_id;
                     } else {
                         machineIdKey = operation.machine_id_parent;

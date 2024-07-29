@@ -344,7 +344,7 @@
                     }
                 },
                 headStyles: {
-                    fillColor: [100, 100, 100],
+                    fillColor: [146, 97, 232],
                     textColor: [255, 255, 255]
                 },
                 theme: 'striped'
