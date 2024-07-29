@@ -38,9 +38,19 @@
         <h3 id="title" class="text-2xl font-bold">
             <span id="line-display">Loading...</span>
         </h3>
+        <div id="statusWeek" class="mx-2">
+            <!-- status week will be dynamically inserted here -->
+        </div>
+
         <div id="weeksList" class="mx-2">
             <!-- Buttons for each week will be dynamically inserted here -->
         </div>
+
+        <!-- Revisi keberapa "revision_number" -->
+        <div id="revision_number" class="mx-2">
+            <!-- revision_number week will be inserted here -->
+        </div>
+
         <h3 class="text-2xl font-bold">
             <span id="month-display">Loading...</span> <span id="year-display">Loading...</span>
         </h3>
@@ -355,7 +365,65 @@
             document.getElementById('year-display').textContent = year ? year : 'N/A';
 
             setupWeekButtons(line, year, month, week);
+            fetchStatusWeek(line, year, month, week);
+            fetchRevisionNumber(line, year, month, week);
         }
+        async function fetchStatusWeek(line, year, month, week) {
+                const response = await fetch(
+                    `http://127.0.0.1:8000/api/showmachineoperation?line=${line}&year=${year}&month=${month}&week=${week}`
+                );
+                const operationsData = await response.json();
+
+                let status = "NEW";
+
+                if (operationsData.operations.length > 0) {
+                    const allApproved = operationsData.operations.every(operation => operation.is_approved ===
+                        true);
+                    const allWaitingApproval = operationsData.operations.every(operation => operation
+                        .is_approved === false && operation.is_rejected === false);
+                    const allRejected = operationsData.operations.every(operation => operation.is_rejected ===
+                        true);
+
+                    if (allApproved) {
+                        status = "Approved";
+                    } else if (allWaitingApproval) {
+                        status = "Waiting Approval";
+                    } else if (allRejected) {
+                        status = "Rejected";
+                    }
+                }
+
+                document.getElementById('statusWeek').innerHTML = `
+                <h3 class="text-2xl font-bold">${status}</h3>
+            `;
+            }
+
+            async function fetchRevisionNumber(line, year, month, week) {
+                const response = await fetch(`http://127.0.0.1:8000/api/showrevision`);
+                const revisionsData = await response.json();
+
+                const revision = revisionsData.find(revision => {
+                    return revision.line === line && revision.year == year && revision.month == month &&
+                        revision.week == week;
+                });
+
+                const revisionNumber = revision ? revision.revision_number : "0";
+                const returnNotes = revision ? revision.return_notes : "No notes available.";
+
+                document.getElementById('revision_number').innerHTML = `
+                <h3 class="text-xl font-bold">${revisionNumber} Revisi</h3>
+            `;
+
+                // Set the content of the notes popup
+                document.getElementById('revisionNotesPopup').textContent = returnNotes;
+            }
+            document.getElementById('revision_number').addEventListener('mouseover', function() {
+                document.getElementById('revisionNotesPopup').classList.remove('hidden');
+            });
+
+            document.getElementById('revision_number').addEventListener('mouseout', function() {
+                document.getElementById('revisionNotesPopup').classList.add('hidden');
+            });
 
         async function fetchDataForWeek(line, year, month, week) {
             console.log("Fetching data for:", {
@@ -758,7 +826,7 @@
                 if (line && month && week && year) {
                     fetchDataForWeek(line, year, month, week);
                 }
-            }, 30000); // Refresh every 30 seconds
+            }, 8000); // Refresh every 10 seconds
         }
 
         // Approve Button

@@ -430,20 +430,15 @@
                     if (week === 1 && (operation.week === 1 || operation.week === 5 || operation.week ===
                         6)) {
                         machineIdKey = operation.machine_id;
-                    } else if (week === 2 && (operation.week === 1 || operation.week === 2 || operation
-                        .week === 3)) {
+                    } else if (week === 2 && (operation.week === 5 || operation.week === 6 || operation.week === 2 || operation.week === 3)) {
                         machineIdKey = operation.machine_id;
-                    } else if (week === 3 && (operation.week === 2 || operation.week === 3 || operation
-                        .week === 4)) {
+                    } else if (week === 3 && (operation.week === 3 || operation.week === 4)) {
                         machineIdKey = operation.machine_id;
-                    } else if (week === 4 && (operation.week === 3 || operation.week === 4 || operation
-                        .week === 5)) {
+                    } else if (week === 4 && (operation.week === 4 || operation.week === 5)) {
                         machineIdKey = operation.machine_id;
-                    } else if (week === 5 && (operation.week === 4 || operation.week === 5 || operation
-                        .week === 6)) {
+                    } else if (week === 5 && (operation.week === 5 || operation.week === 6 || operation.week === 1)) {
                         machineIdKey = operation.machine_id;
-                    } else if (week === 6 && (operation.week === 5 || operation.week === 6 || operation
-                        .week === 1)) {
+                    } else if (week === 6 && (operation.week === 5 || operation.week === 6 || operation.week === 1)) {
                         machineIdKey = operation.machine_id;
                     } else {
                         machineIdKey = operation.machine_id_parent;
@@ -456,6 +451,12 @@
                     machineOperationsMap.get(machineIdKey).push(operation);
                 });
 
+                // const editWeekButton = document.getElementById('editWeekButton'); 
+                // if (week === 1) {
+                //     editWeekButton.style.display = 'none';
+                // } else {
+                //     editWeekButton.style.display = 'block';
+                // }
 
                 // Sort machines by specified categories
                 const categoryOrder = ['Granulasi', 'Drying', 'Final mix/camas', 'kompaksi', 'Cetak', 'Coating',
@@ -500,7 +501,7 @@
                     dataContainer.appendChild(machineRow);
 
                     // Mendapatkan operasi mesin untuk minggu ini atau minggu berikutnya
-                    // const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
+                    const machineOperations = machineOperationsMap.get(machine.machine_id) || [];
                     const machineOperationsNextWeek = machineOperationsMap.get(machine.machine_id) || [];
                     const allMachineOperations = [...machineOperationsNextWeek];
 
