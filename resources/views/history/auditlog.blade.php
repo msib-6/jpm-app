@@ -350,7 +350,7 @@
                 theme: 'striped'
             });
 
-            doc.save('audit_log.pdf');
+            doc.save('audits_log.pdf');
         });
 
         document.getElementById('exportExcel').addEventListener('click', () => {
@@ -386,7 +386,7 @@
             ws['!cols'] = colWidths;
 
             // Export the workbook to an Excel file
-            XLSX.writeFile(wb, 'audit_log.xlsx');
+            XLSX.writeFile(wb, 'audits_log.xlsx');
         });
     </script>
 </body>
