@@ -268,7 +268,7 @@
 
         <script src="{{ asset('js/jspdf.umd.min.js') }}"></script>
         <script src="{{ asset('js/jspdf.plugin.autotable.js') }}"></script>
-        <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+        <script src="{{ asset('js/xlsx.full.min.js') }}"></script>
     @endsection
 </body>
 

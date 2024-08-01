@@ -253,6 +253,8 @@
 
         const params = new URLSearchParams(window.location.search);
         const line = params.get('line');
+        const month = params.get('month');
+        const year = params.get('year');
         const machineId = document.getElementById('machineSelect').value;
 
         const dateInput = new Date(document.getElementById('dateInput').value);
@@ -265,6 +267,9 @@
 
         const data = {
             day: day,
+            month: month,
+            year: year,
+            line: line,
             code: code,
             time: time,
             status: status,
