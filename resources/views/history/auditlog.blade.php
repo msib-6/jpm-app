@@ -23,7 +23,22 @@
                         class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-800 mr-2">Export
                         to PDF</button>
                     <button id="exportExcel"
-                        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-800">Export to Excel</button>
+                        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-800 mr-2">Export to Excel</button>
+                        <select id="actionFilter" class="bg-white border border-gray-300 rounded-md px-4 py-2 mr-4">
+                            <option value="all">All Actions</option>
+                            <option value="Send JPM Form">Send JPM Form</option>
+                            <option value="ADD">ADD</option>
+                            <option value="DELETE">DELETE</option>
+                            <option value="EDIT">EDIT</option>
+                            <option value="APPROVE">APPROVE</option>
+                            <option value="RETURN">RETURN</option>
+                            <option value="LOGIN">LOGIN</option>
+                            <option value="LOGOUT">LOGOUT</option>
+                            <option value="Add Global Desc">Add Global Desc</option>
+                            <option value="Add Machine Weekly">Add Machine Weekly</option>
+                            <option value="Delete Global Desc">Delete Global Desc</option>
+                            <option value="Other">Other</option>
+                        </select>
                 </div>
             </div>
 
@@ -387,6 +402,21 @@
 
             // Export the workbook to an Excel file
             XLSX.writeFile(wb, 'audits_log.xlsx');
+        });
+
+         // Filter functionality
+        document.getElementById('actionFilter').addEventListener('change', function () {
+            const filterValue = this.value.toLowerCase();
+            const items = document.querySelectorAll('.audit-item');
+
+            items.forEach(item => {
+                const action = item.querySelector('p:first-of-type span').textContent.toLowerCase();
+                if (filterValue === 'all' || action.includes(filterValue)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         });
     </script>
 </body>

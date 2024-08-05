@@ -13,7 +13,7 @@ class AuditTrailController extends Controller
     function index()
     {
         // Number of items per page
-        $perPage = 20;
+        $perPage = 30;
 
         // Retrieve paginated data
         $data = Audits::query()

@@ -37,55 +37,61 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Card::make()
-                ->schema([
-                    TextInput::make('name')
-                        ->required(),
-                    TextInput::make('email')->email()
-                        ->required(),
-                    Select::make('role')
-                        ->options([
-                            'Manager' => 'Manager',
-                            'Storage' => 'Storage',
-                            'Line1' => 'Line 1',
-                            'Line2' => 'Line 2',
-                            'Line3' => 'Line 3',
-                            'Line4' => 'Line 4',
-                            'Line5' => 'Line 5',
-                            'Line7' => 'Line 7',
-                            'Line8a' => 'Line 8A',
-                            'Line8b' => 'Line 8B',
-                            'Line10' => 'Line 10',
-                            'Line11' => 'Line 11',
-                            'Line12' => 'Line 12',
-                            'Line13' => 'Line 13',
-                            'Line14' => 'Line 14',
-                        ])
-                        ->required()
-                        ->native(false),
-                    CheckboxList::make('email_role')
-                        ->options([
-                            'Line1' => 'Line 1',
-                            'Line2' => 'Line 2',
-                            'Line3' => 'Line 3',
-                            'Line4' => 'Line 4',
-                            'Line5' => 'Line 5',
-                            'Line7' => 'Line 7',
-                            'Line8a' => 'Line 8A',
-                            'Line8b' => 'Line 8B',
-                            'Line10' => 'Line 10',
-                            'Line11' => 'Line 11',
-                            'Line12' => 'Line 12',
-                            'Line13' => 'Line 13',
-                            'Line14' => 'Line 14',
-                        ])
-                        ->columns(2)
-                        ->bulkToggleable(),
-                    TextInput::make('password')
-                        ->password()
-                        ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
-                        ->dehydrated(fn (?string $state): bool => filled($state))
-                        ->required(fn (string $operation): bool => $operation === 'create')
-                ]),
+                    ->schema([
+                        TextInput::make('name')
+                            ->required(),
+                        TextInput::make('email')->email()
+                            ->required(),
+                        Select::make('role')
+                            ->options([
+                                'Manager' => 'Manager',
+                                'Storage' => 'Storage',
+                                'Line1' => 'Line 1',
+                                'Line2' => 'Line 2',
+                                'Line3' => 'Line 3',
+                                'Line4' => 'Line 4',
+                                'Line5' => 'Line 5',
+                                'Line6' => 'Line 6',
+                                'Line7' => 'Line 7',
+                                'Line8' => 'Line 8',
+                                'Line9' => 'Line 9',
+                                'Line8a' => 'Line 8A',
+                                'Line8b' => 'Line 8B',
+                                'Line10' => 'Line 10',
+                                'Line11' => 'Line 11',
+                                'Line12' => 'Line 12',
+                                'Line13' => 'Line 13',
+                                'Line14' => 'Line 14',
+                            ])
+                            ->required()
+                            ->native(false),
+                        CheckboxList::make('email_role')
+                            ->options([
+                                'Line1' => 'Line 1',
+                                'Line2' => 'Line 2',
+                                'Line3' => 'Line 3',
+                                'Line4' => 'Line 4',
+                                'Line5' => 'Line 5',
+                                'Line6' => 'Line 6',
+                                'Line7' => 'Line 7',
+                                'Line8' => 'Line 8',
+                                'Line9' => 'Line 9',
+                                'Line8a' => 'Line 8A',
+                                'Line8b' => 'Line 8B',
+                                'Line10' => 'Line 10',
+                                'Line11' => 'Line 11',
+                                'Line12' => 'Line 12',
+                                'Line13' => 'Line 13',
+                                'Line14' => 'Line 14',
+                            ])
+                            ->columns(2)
+                            ->bulkToggleable(),
+                        TextInput::make('password')
+                            ->password()
+                            ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
+                            ->dehydrated(fn (?string $state): bool => filled($state))
+                            ->required(fn (string $operation): bool => $operation === 'create')
+                    ]),
             ]);
     }
 
@@ -131,7 +137,10 @@ class UserResource extends Resource
                         'Line3' => 'Line 3',
                         'Line4' => 'Line 4',
                         'Line5' => 'Line 5',
+                        'Line6' => 'Line 6',
                         'Line7' => 'Line 7',
+                        'Line8' => 'Line 8',
+                        'Line9' => 'Line 9',
                         'Line8a' => 'Line 8A',
                         'Line8b' => 'Line 8B',
                         'Line10' => 'Line 10',
@@ -146,7 +155,7 @@ class UserResource extends Resource
                             ->placeholder(fn ($state): string => 'Dec 18, ' . now()->subYear()->format('Y')),
                         DatePicker::make('created_until')
                             ->placeholder(fn ($state): string => now()->format('M d, Y')),
-                        ])
+                    ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
@@ -166,10 +175,10 @@ class UserResource extends Resource
                         if ($data['created_until'] ?? null) {
                             $indicators['created_until'] = 'Order until ' . Carbon::parse($data['created_until'])->toFormattedDateString();
                         }
- 
+
                         return $indicators;
                     }),
-                ])
+            ])
             ->deferFilters()
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -178,14 +187,14 @@ class UserResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -193,5 +202,5 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
-    }    
+    }
 }

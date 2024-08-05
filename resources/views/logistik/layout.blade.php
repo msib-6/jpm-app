@@ -9,7 +9,7 @@
     <link href="{{ asset('css/boxicons-2.1.4/css/boxicons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/navbar.css') }}" rel="stylesheet">
 </head>
-<body>
+<body class="bg-gray-100">
     @include('Navbar.NavLGS')
     <section id="content" class="py-8 px-4">
         <div id="main-content">

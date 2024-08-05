@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\MachineResource\Pages;
 use App\Filament\Resources\MachineResource\RelationManagers;
 use App\Models\Machine;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -59,7 +60,10 @@ class MachineResource extends Resource
                                 'Line3' => 'Line 3',
                                 'Line4' => 'Line 4',
                                 'Line5' => 'Line 5',
+                                'Line6' => 'Line 6',
                                 'Line7' => 'Line 7',
+                                'Line8' => 'Line 8',
+                                'Line9' => 'Line 9',
                                 'Line8a' => 'Line 8A',
                                 'Line8b' => 'Line 8B',
                                 'Line10' => 'Line 10',
@@ -123,10 +127,10 @@ class MachineResource extends Resource
                         if ($data['created_until'] ?? null) {
                             $indicators['created_until'] = 'Order until ' . Carbon::parse($data['created_until'])->toFormattedDateString();
                         }
- 
+
                         return $indicators;
                     }),
-                ])
+            ])
             ->deferFilters()
             ->actions([
                 Tables\Actions\EditAction::make(),
