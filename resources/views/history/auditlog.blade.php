@@ -7,7 +7,7 @@
     <title>Audit Log</title>
     <link href="{{ asset('css/history.css') }}" rel="stylesheet">
     <link href="{{ asset('css/flowbite.min.css') }}" rel="stylesheet" />
-    <link href="{{ asset('css/tailwind.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/output.css') }}" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100">
